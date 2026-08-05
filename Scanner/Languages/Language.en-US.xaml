@@ -1,0 +1,56 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="WindowTitle">SN Label Printer</system:String>
+
+    <system:String x:Key="MainTitle">SN Label Printing</system:String>
+
+    <system:String x:Key="ScanInputTitle">Scan or enter a code</system:String>
+
+    <system:String x:Key="AutoPrint">Auto print</system:String>
+
+    <system:String x:Key="PrintTwoCopies">Print</system:String>
+
+    <system:String x:Key="OpenScanLog">Open scan log</system:String>
+
+    <system:String x:Key="RuntimeInformation">Runtime information</system:String>
+
+    <system:String x:Key="LabelInformation">Label: 6 × 4 inches, landscape</system:String>
+
+    <system:String x:Key="CopiesInformation">Copies per code: 1</system:String>
+
+    <system:String x:Key="ReadingPrinter">Default printer: Reading</system:String>
+
+    <system:String x:Key="DefaultPrinter">Default printer: {0}</system:String>
+
+    <system:String x:Key="PrinterNotFound">Default printer: Not found</system:String>
+
+    <system:String x:Key="LogFile">Log file:</system:String>
+
+    <system:String x:Key="LogFileValue">Log file: {0}</system:String>
+
+    <system:String x:Key="ScanCountZero">Scanned this session: 0</system:String>
+
+    <system:String x:Key="ScanCount">Scanned this session: {0}</system:String>
+
+    <system:String x:Key="WaitingForScan">Waiting for scan</system:String>
+
+    <system:String x:Key="ScannerHelp">Set the scanner to HID Keyboard mode and send Enter after each scan.</system:String>
+
+    <system:String x:Key="Processing">Processing: {0}</system:String>
+
+    <system:String x:Key="EmptyCode">The code cannot be empty. Please scan again.</system:String>
+
+    <system:String x:Key="BusyProcessing">The previous code is still being processed. Please wait.</system:String>
+
+    <system:String x:Key="SavedAndPrinted">Saved and submitted two print copies: {0}</system:String>
+
+    <system:String x:Key="SavedWithoutPrint">Scan saved without printing: {0}</system:String>
+
+    <system:String x:Key="ProcessFailed">Processing failed: {0}</system:String>
+
+    <system:String x:Key="OpenLogFailed">Unable to open scan log: {0}</system:String>
+
+</ResourceDictionary>
