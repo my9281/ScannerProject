@@ -74,6 +74,7 @@
     <Compile Include="Services\WorkOrderRemarkService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\OidService.cs" />
+    <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
     <Compile Include="Helpers\CsvImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />

@@ -15,6 +15,7 @@ namespace Scanner.ViewModels
         private readonly NetworkHelper _network;
         private readonly PrintingHelper _printing;
         private readonly ScanService _scanning;
+        private readonly MeterModelService _meterModels;
         private readonly WorkOrderSearchService _search;
         private readonly CsvImportHelper _csvImport;
         private readonly DialogHelper _dialogs;
@@ -26,15 +27,16 @@ namespace Scanner.ViewModels
         private string _webLastTime;
         private bool _isPrint = true;
         private bool _isBusy;
-        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
+        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
         {
         }
 
-        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
+        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));
             _scanning = scanning ?? throw new ArgumentNullException(nameof(scanning));
+            _meterModels = meterModels ?? throw new ArgumentNullException(nameof(meterModels));
             _search = search ?? throw new ArgumentNullException(nameof(search));
             _csvImport = csvImport ?? throw new ArgumentNullException(nameof(csvImport));
             _dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
@@ -117,6 +119,7 @@ namespace Scanner.ViewModels
                 SetStatus(FormatResource("Processing", code), false);
                 ScanResult scan = _scanning.Record(code);
                 code = scan.Code;
+                string meterModel = _meterModels.FindModel(code);
                 if (scan.WasRecorded)
                 {
                     RaisePropertyChanged(nameof(CountText));
@@ -129,12 +132,12 @@ namespace Scanner.ViewModels
                 }
                 else if (scan.Oid.ShouldPrint)
                 {
-                    _printing.PrintLabel(printCode, 1, matched);
+                    _printing.PrintLabel(printCode, 1, matched, meterModel);
                     SetStatus("OID 重复扫描，已打印标签：" + printCode, false);
                 }
                 else if (IsPrint)
                 {
-                    _printing.PrintLabel(printCode, 2, matched);
+                    _printing.PrintLabel(printCode, 2, matched, meterModel);
                     SetStatus(matched != null && matched.IsUrgent ? "已打印紧急工单标签：" + printCode : FormatResource("SavedAndPrinted", printCode), false);
                 }
                 else

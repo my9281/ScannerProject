@@ -36,7 +36,7 @@ namespace Scanner.Helpers
             }
         }
 
-        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder)
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel)
         {
             if (string.IsNullOrWhiteSpace(serialNumber))
             {
@@ -46,7 +46,7 @@ namespace Scanner.Helpers
             {
                 throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
             }
-            BitmapSource source = Render(CreateLabel(serialNumber.Trim(), workOrder));
+            BitmapSource source = Render(CreateLabel(serialNumber.Trim(), workOrder, meterModel));
             using (Bitmap bitmap = ToBitmap(source))
             {
                 for (int i = 0; i < copies; i++)
@@ -56,7 +56,7 @@ namespace Scanner.Helpers
             }
         }
 
-        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder)
+        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             string remark = urgent ? Shorten(workOrder.Remark, 50) : string.Empty;
@@ -67,7 +67,12 @@ namespace Scanner.Helpers
                 Background = WpfBrushes.White
             };
             AddText(canvas, "SN : " + serialNumber, 27, 35, 12, LabelWidth - 70);
-            AddText(canvas, LastFive(serialNumber), 52, 30, 62, 280);
+            string tailText = LastFive(serialNumber);
+            if (!string.IsNullOrWhiteSpace(meterModel))
+            {
+                tailText += "  " + meterModel;
+            }
+            AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 52 : 40, 30, 62, string.IsNullOrWhiteSpace(meterModel) ? 280 : 390);
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), LabelWidth - 135, 52, 105, 105, Stretch.Uniform);
             if (urgent)
             {
