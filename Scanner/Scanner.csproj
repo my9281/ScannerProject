@@ -71,6 +71,16 @@
     </ApplicationDefinition>
     <Compile Include="Models\WorkOrderRemarkResponse.cs" />
     <Compile Include="Services\WorkOrderRemarkService.cs" />
+    <Compile Include="Services\ScanService.cs" />
+    <Compile Include="Services\WorkOrderSearchService.cs" />
+    <Compile Include="Helpers\CsvImportHelper.cs" />
+    <Compile Include="Helpers\DialogHelper.cs" />
+    <Compile Include="Helpers\NetworkHelper.cs" />
+    <Compile Include="Helpers\PrintingHelper.cs" />
+    <Compile Include="Helpers\ScanLogHelper.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\RelayCommand.cs" />
+    <Compile Include="ViewModels\ViewModelBase.cs" />
     <Page Include="Languages\Language.en-US.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

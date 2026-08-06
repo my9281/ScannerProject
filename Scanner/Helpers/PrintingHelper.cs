@@ -14,6 +14,8 @@ using ZXing.Common;
 using ZXing.QrCode;
 using DrawingImage = System.Drawing.Image;
 using WpfImage = System.Windows.Controls.Image;
+using WpfBrushes = System.Windows.Media.Brushes;
+using WpfFontFamily = System.Windows.Media.FontFamily;
 
 namespace Scanner.Helpers
 {
@@ -62,7 +64,7 @@ namespace Scanner.Helpers
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             string remark = urgent ? Shorten(workOrder.Remark, 50) : string.Empty;
-            var canvas = new Canvas { Width = LabelWidth, Height = LabelHeight, Background = Brushes.White };
+            var canvas = new Canvas { Width = LabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
 
             AddText(canvas, "SN : " + serialNumber, 27, 35, 12, LabelWidth - 70);
             AddText(canvas, LastFive(serialNumber), 52, 30, 62, 280);
@@ -75,8 +77,8 @@ namespace Scanner.Helpers
                     Text = "紧急",
                     FontSize = 32,
                     FontWeight = FontWeights.Bold,
-                    FontFamily = new FontFamily("Microsoft YaHei UI"),
-                    Foreground = Brushes.Black,
+                    FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
+                    Foreground = WpfBrushes.Black,
                     TextAlignment = TextAlignment.Center,
                     VerticalAlignment = VerticalAlignment.Center
                 };
@@ -84,9 +86,9 @@ namespace Scanner.Helpers
                 {
                     Width = 150,
                     Height = 46,
-                    BorderBrush = Brushes.Black,
+                    BorderBrush = WpfBrushes.Black,
                     BorderThickness = new Thickness(3),
-                    Background = Brushes.White,
+                    Background = WpfBrushes.White,
                     Child = urgentText
                 };
                 Canvas.SetLeft(border, 95);
@@ -127,8 +129,8 @@ namespace Scanner.Helpers
                 Width = width,
                 FontSize = fontSize,
                 FontWeight = FontWeights.Bold,
-                FontFamily = new FontFamily("Microsoft YaHei UI"),
-                Foreground = Brushes.Black,
+                FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
+                Foreground = WpfBrushes.Black,
                 TextAlignment = TextAlignment.Center,
                 TextWrapping = TextWrapping.NoWrap
             };
