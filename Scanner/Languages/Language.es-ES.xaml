@@ -3,9 +3,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
-    <system:String x:Key="WindowTitle">Escáner de números (S/N) de serie</system:String>
+    <system:String x:Key="WindowTitle">Sistema de Escaneo YM-Star</system:String>
 
-    <system:String x:Key="MainTitle">Escáner de números (S/N) de serie</system:String>
+    <system:String x:Key="MainTitle">Sistema de Escaneo YM-Star</system:String>
 
     <system:String x:Key="ScanInputTitle">Escanee o ingrese un código</system:String>
 
