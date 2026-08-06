@@ -1,21 +1,19 @@
-namespace MaUIScanner
-{
-    public partial class MainPage : ContentPage
-    {
-        int count = 0;
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+using MaUIScanner.ViewModels;
 
-        private void OnCounterClicked(object? sender, EventArgs e)
-        {
-            count++;
-            if (count == 1)
-                CounterBtn.Text = $"Clicked {count} time";
-            else
-                CounterBtn.Text = $"Clicked {count} times";
-            SemanticScreenReader.Announce(CounterBtn.Text);
-        }
+namespace MaUIScanner;
+
+public partial class MainPage : ContentPage
+{
+    private readonly MainViewModel _viewModel;
+    public MainPage(MainViewModel viewModel)
+    {
+        InitializeComponent();
+        BindingContext = _viewModel = viewModel;
+        _viewModel.FocusRequested += (_, _) => MainThread.BeginInvokeOnMainThread(() => ScanEntry.Focus());
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        ScanEntry.Focus();
     }
 }

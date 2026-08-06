@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Logging;
+using MaUIScanner.Services;
+using MaUIScanner.ViewModels;
 
 namespace MaUIScanner
 {
@@ -12,6 +14,17 @@ namespace MaUIScanner
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+            builder.Services.AddSingleton<WorkOrderSearchService>();
+            builder.Services.AddSingleton<OidService>();
+            builder.Services.AddSingleton<ScanLogService>();
+            builder.Services.AddSingleton<ScanService>();
+            builder.Services.AddSingleton<MeterModelService>();
+            builder.Services.AddSingleton<SpeechService>();
+            builder.Services.AddSingleton<CsvImportService>();
+            builder.Services.AddSingleton<LocalizationService>();
+            builder.Services.AddSingleton<ILabelPrinter, LabelPrinter>();
+            builder.Services.AddTransient<MainViewModel>();
+            builder.Services.AddTransient<MainPage>();
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
