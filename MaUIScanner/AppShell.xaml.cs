@@ -1,4 +1,4 @@
-﻿namespace MaUIScanner
+namespace MaUIScanner
 {
     public partial class AppShell : Shell
     {

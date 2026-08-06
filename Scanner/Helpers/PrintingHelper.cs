@@ -23,7 +23,6 @@ namespace Scanner.Helpers
     {
         private const double LabelWidth = 576.0;
         private const double LabelHeight = 384.0;
-
         public string GetDefaultPrinterName()
         {
             using (var server = new LocalPrintServer())
@@ -33,7 +32,6 @@ namespace Scanner.Helpers
                 {
                     throw new InvalidOperationException("没有找到 Windows 默认打印机。");
                 }
-
                 return queue.FullName;
             }
         }
@@ -44,12 +42,10 @@ namespace Scanner.Helpers
             {
                 throw new ArgumentException("打印序列号不能为空。", nameof(serialNumber));
             }
-
             if (copies <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
             }
-
             BitmapSource source = Render(CreateLabel(serialNumber.Trim(), workOrder));
             using (Bitmap bitmap = ToBitmap(source))
             {
@@ -64,12 +60,15 @@ namespace Scanner.Helpers
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             string remark = urgent ? Shorten(workOrder.Remark, 50) : string.Empty;
-            var canvas = new Canvas { Width = LabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
-
+            var canvas = new Canvas
+            {
+                Width = LabelWidth,
+                Height = LabelHeight,
+                Background = WpfBrushes.White
+            };
             AddText(canvas, "SN : " + serialNumber, 27, 35, 12, LabelWidth - 70);
             AddText(canvas, LastFive(serialNumber), 52, 30, 62, 280);
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), LabelWidth - 135, 52, 105, 105, Stretch.Uniform);
-
             if (urgent)
             {
                 var urgentText = new TextBlock
@@ -95,7 +94,6 @@ namespace Scanner.Helpers
                 Canvas.SetTop(border, 118);
                 canvas.Children.Add(border);
             }
-
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 430, 85), 78, 170, 420, 68, Stretch.Fill);
             AddText(canvas, serialNumber, 17, 35, 238, LabelWidth - 70);
             if (urgent && !string.IsNullOrWhiteSpace(remark))
@@ -108,7 +106,6 @@ namespace Scanner.Helpers
                 Canvas.SetTop(remarkText, 267);
                 canvas.Children.Add(remarkText);
             }
-
             AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, LabelWidth - 70);
             return canvas;
         }
@@ -138,7 +135,13 @@ namespace Scanner.Helpers
 
         private static void AddImage(Canvas canvas, BitmapSource source, double left, double top, double width, double height, Stretch stretch)
         {
-            var image = new WpfImage { Source = source, Width = width, Height = height, Stretch = stretch };
+            var image = new WpfImage
+            {
+                Source = source,
+                Width = width,
+                Height = height,
+                Stretch = stretch
+            };
             Canvas.SetLeft(image, left);
             Canvas.SetTop(image, top);
             canvas.Children.Add(image);
@@ -146,10 +149,25 @@ namespace Scanner.Helpers
 
         private static BitmapSource CreateCode(string content, BarcodeFormat format, int width, int height)
         {
-            EncodingOptions options = format == BarcodeFormat.QR_CODE
-                ? (EncodingOptions)new QrCodeEncodingOptions { Width = width, Height = height, Margin = 1, CharacterSet = "UTF-8" }
-                : new EncodingOptions { Width = width, Height = height, Margin = 2, PureBarcode = true };
-            var writer = new BarcodeWriter { Format = format, Options = options };
+            EncodingOptions options = format == BarcodeFormat.QR_CODE ? (EncodingOptions)new QrCodeEncodingOptions
+            {
+                Width = width,
+                Height = height,
+                Margin = 1,
+                CharacterSet = "UTF-8"
+            }
+            : new EncodingOptions
+            {
+                Width = width,
+                Height = height,
+                Margin = 2,
+                PureBarcode = true
+            };
+            var writer = new BarcodeWriter
+            {
+                Format = format,
+                Options = options
+            };
             using (Bitmap bitmap = writer.Write(content))
             using (var stream = new MemoryStream())
             {
@@ -200,7 +218,6 @@ namespace Scanner.Helpers
                 {
                     throw new InvalidOperationException("Windows 默认打印机无效或不可用。");
                 }
-
                 document.DefaultPageSettings.PaperSize = new PaperSize("4x6", 400, 600);
                 document.DefaultPageSettings.Landscape = true;
                 document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
@@ -211,7 +228,6 @@ namespace Scanner.Helpers
                     {
                         throw new InvalidOperationException("无法创建打印绘图环境。");
                     }
-
                     args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
                     args.HasMorePages = false;
                 };
@@ -230,7 +246,6 @@ namespace Scanner.Helpers
             {
                 return string.Empty;
             }
-
             string clean = value.Replace("\r", " ").Replace("\n", " ").Trim();
             return clean.Length <= maxLength ? clean : clean.Substring(0, maxLength) + "…";
         }

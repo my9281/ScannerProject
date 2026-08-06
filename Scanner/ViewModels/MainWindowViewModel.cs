@@ -26,25 +26,11 @@ namespace Scanner.ViewModels
         private string _webLastTime;
         private bool _isPrint = true;
         private bool _isBusy;
-
-        public MainWindowViewModel()
-            : this(
-                new NetworkHelper(),
-                new PrintingHelper(),
-                new ScanService(),
-                new WorkOrderSearchService(),
-                new CsvImportHelper(),
-                new DialogHelper())
+        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
         {
         }
 
-        internal MainWindowViewModel(
-            NetworkHelper network,
-            PrintingHelper printing,
-            ScanService scanning,
-            WorkOrderSearchService search,
-            CsvImportHelper csvImport,
-            DialogHelper dialogs)
+        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));
@@ -52,38 +38,22 @@ namespace Scanner.ViewModels
             _search = search ?? throw new ArgumentNullException(nameof(search));
             _csvImport = csvImport ?? throw new ArgumentNullException(nameof(csvImport));
             _dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
-
             ProcessScanCommand = new RelayCommand(ProcessScan, () => !IsBusy);
             OpenLogCommand = new RelayCommand(OpenLog, () => !IsBusy);
-            RefreshCommand = new RelayCommand(
-                async () => await RefreshWorkOrdersAsync(true),
-                () => !IsBusy);
+            RefreshCommand = new RelayCommand(async () => await RefreshWorkOrdersAsync(true), () => !IsBusy);
             ImportCsvCommand = new RelayCommand(ImportCsv, () => !IsBusy);
-            ChangeLanguageCommand = new RelayCommand(
-                parameter => ChangeLanguage(parameter as string));
-
+            ChangeLanguageCommand = new RelayCommand(parameter => ChangeLanguage(parameter as string));
             RefreshLocalizedText();
         }
 
         public event EventHandler FocusRequested;
-
         public ICommand ProcessScanCommand { get; }
         public ICommand OpenLogCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand ImportCsvCommand { get; }
         public ICommand ChangeLanguageCommand { get; }
-
-        public string ScanCode
-        {
-            get => _scanCode;
-            set => SetProperty(ref _scanCode, value);
-        }
-
-        public bool IsPrint
-        {
-            get => _isPrint;
-            set => SetProperty(ref _isPrint, value);
-        }
+        public string ScanCode { get => _scanCode; set => SetProperty(ref _scanCode, value); }
+        public bool IsPrint { get => _isPrint; set => SetProperty(ref _isPrint, value); }
 
         public bool IsBusy
         {
@@ -99,46 +69,14 @@ namespace Scanner.ViewModels
         }
 
         public bool IsInputEnabled => !IsBusy;
-
-        public string OperatorText => App.CurrentSession == null
-            ? string.Empty
-            : App.CurrentSession.Operator + " / " + App.CurrentSession.Role;
-
-        public string LogFileText =>
-            FormatResource("LogFileValue", _scanning.LogFilePath);
-
-        public string CountText =>
-            FormatResource("ScanCount", _scanning.ScanCount);
-
-        public string PrinterText
-        {
-            get => _printerText;
-            private set => SetProperty(ref _printerText, value);
-        }
-
-        public string StatusText
-        {
-            get => _statusText;
-            private set => SetProperty(ref _statusText, value);
-        }
-
-        public Brush StatusBrush
-        {
-            get => _statusBrush;
-            private set => SetProperty(ref _statusBrush, value);
-        }
-
-        public string WebStatus
-        {
-            get => _webStatus;
-            private set => SetProperty(ref _webStatus, value);
-        }
-
-        public string WebLastTime
-        {
-            get => _webLastTime;
-            private set => SetProperty(ref _webLastTime, value);
-        }
+        public string OperatorText => App.CurrentSession == null ? string.Empty : App.CurrentSession.Operator + " / " + App.CurrentSession.Role;
+        public string LogFileText => FormatResource("LogFileValue", _scanning.LogFilePath);
+        public string CountText => FormatResource("ScanCount", _scanning.ScanCount);
+        public string PrinterText { get => _printerText; private set => SetProperty(ref _printerText, value); }
+        public string StatusText { get => _statusText; private set => SetProperty(ref _statusText, value); }
+        public Brush StatusBrush { get => _statusBrush; private set => SetProperty(ref _statusBrush, value); }
+        public string WebStatus { get => _webStatus; private set => SetProperty(ref _webStatus, value); }
+        public string WebLastTime { get => _webLastTime; private set => SetProperty(ref _webLastTime, value); }
 
         public async Task InitializeAsync()
         {
@@ -151,15 +89,12 @@ namespace Scanner.ViewModels
         {
             try
             {
-                PrinterText = FormatResource(
-                    "DefaultPrinter",
-                    _printing.GetDefaultPrinterName());
+                PrinterText = FormatResource("DefaultPrinter", _printing.GetDefaultPrinterName());
             }
             catch
             {
                 PrinterText = Resource("PrinterNotFound");
             }
-
             RaisePropertyChanged(nameof(LogFileText));
             RaisePropertyChanged(nameof(CountText));
             SetStatus(Resource("WaitingForScan"), false);
@@ -175,34 +110,37 @@ namespace Scanner.ViewModels
                 RequestFocus();
                 return;
             }
-
             IsBusy = true;
             try
             {
                 TryCopy(code);
                 SetStatus(FormatResource("Processing", code), false);
-                code = _scanning.Record(code);
-                RaisePropertyChanged(nameof(CountText));
-
+                ScanResult scan = _scanning.Record(code);
+                code = scan.Code;
+                if (scan.WasRecorded)
+                {
+                    RaisePropertyChanged(nameof(CountText));
+                }
                 WorkOrderRemark matched = _search.Find(code);
-                string printCode = matched == null || string.IsNullOrWhiteSpace(matched.Sn)
-                    ? code
-                    : matched.Sn.Trim();
-
-                if (IsPrint)
+                string printCode = matched == null || string.IsNullOrWhiteSpace(matched.Sn) ? code : matched.Sn.Trim();
+                if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
+                {
+                    SetStatus("识别为 OID，已记录，本次不打印。", false);
+                }
+                else if (scan.Oid.ShouldPrint)
                 {
                     _printing.PrintLabel(printCode, 1, matched);
-                    SetStatus(
-                        matched != null && matched.IsUrgent
-                            ? "已打印紧急工单标签：" + printCode
-                            : FormatResource("SavedAndPrinted", printCode),
-                        false);
+                    SetStatus("OID 重复扫描，已打印标签：" + printCode, false);
+                }
+                else if (IsPrint)
+                {
+                    _printing.PrintLabel(printCode, 2, matched);
+                    SetStatus(matched != null && matched.IsUrgent ? "已打印紧急工单标签：" + printCode : FormatResource("SavedAndPrinted", printCode), false);
                 }
                 else
                 {
                     SetStatus(FormatResource("SavedWithoutPrint", code), false);
                 }
-
                 ScanCode = string.Empty;
             }
             catch (Exception ex)
@@ -219,35 +157,24 @@ namespace Scanner.ViewModels
 
         private async Task RefreshWorkOrdersAsync(bool showResult)
         {
-            if (App.CurrentSession == null ||
-                string.IsNullOrWhiteSpace(App.CurrentSession.Token))
+            if (App.CurrentSession == null || string.IsNullOrWhiteSpace(App.CurrentSession.Token))
             {
                 _dialogs.Warning("当前没有有效登录信息，请重新登录。", "未登录");
                 App.Logout();
                 return;
             }
-
             IsBusy = true;
             try
             {
                 SetStatus("正在获取工单备注……", false);
-                WorkOrderRemarkResponse response =
-                    await _network.GetWorkOrderRemarksAsync(App.CurrentSession.Token);
-
+                WorkOrderRemarkResponse response = await _network.GetWorkOrderRemarksAsync(App.CurrentSession.Token);
                 _search.Replace(response.WorkOrders);
                 WebStatus = "正常";
                 WebLastTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                SetStatus(
-                    $"工单备注获取成功，共返回 {_search.Count} 条，紧急工单 {response.UrgentCount} 条。",
-                    false);
-
+                SetStatus($"工单备注获取成功，共返回 {_search.Count} 条，紧急工单 {response.UrgentCount} 条。", false);
                 if (showResult)
                 {
-                    _dialogs.Information(
-                        $"接口调用成功。\n\n返回工单：{response.ReturnedCount}\n" +
-                        $"紧急工单：{response.UrgentCount}\n" +
-                        $"是否还有更多：{(response.HasMore ? "是" : "否")}",
-                        "工单备注");
+                    _dialogs.Information($"接口调用成功。\n\n返回工单：{response.ReturnedCount}\n" + $"紧急工单：{response.UrgentCount}\n" + $"是否还有更多：{(response.HasMore ? "是" : "否")}", "工单备注");
                 }
             }
             catch (UnauthorizedAccessException ex)
@@ -280,19 +207,12 @@ namespace Scanner.ViewModels
                 RequestFocus();
                 return;
             }
-
             try
             {
-                IReadOnlyList<WorkOrderRemark> imported =
-                    _csvImport.ImportUrgentWorkOrders(filePath);
+                IReadOnlyList<WorkOrderRemark> imported = _csvImport.ImportUrgentWorkOrders(filePath);
                 _search.MergeImported(imported);
-
-                SetStatus(
-                    $"CSV 导入完成，共导入 {imported.Count} 条紧急工单。",
-                    false);
-                _dialogs.Information(
-                    $"成功导入 {imported.Count} 条紧急工单。",
-                    "导入完成");
+                SetStatus($"CSV 导入完成，共导入 {imported.Count} 条紧急工单。", false);
+                _dialogs.Information($"成功导入 {imported.Count} 条紧急工单。", "导入完成");
             }
             catch (Exception ex)
             {
@@ -336,7 +256,6 @@ namespace Scanner.ViewModels
                     path = "Languages/Language.zh-CN.xaml";
                     break;
             }
-
             var dictionary = new ResourceDictionary
             {
                 Source = new Uri(path, UriKind.Relative)
@@ -372,7 +291,6 @@ namespace Scanner.ViewModels
             }
             catch
             {
-                // Clipboard contention must not block scanning or printing.
             }
         }
 

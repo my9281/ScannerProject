@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Runtime;
 
 namespace MaUIScanner
@@ -6,8 +6,7 @@ namespace MaUIScanner
     [Application]
     public class MainApplication : MauiApplication
     {
-        public MainApplication(IntPtr handle, JniHandleOwnership ownership)
-            : base(handle, ownership)
+        public MainApplication(IntPtr handle, JniHandleOwnership ownership) : base(handle, ownership)
         {
         }
 

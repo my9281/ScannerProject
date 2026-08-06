@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Scanner.Models
@@ -6,97 +6,45 @@ namespace Scanner.Models
     public class WorkOrderRemarkResponse
     {
         [JsonProperty("success")]
-        public bool Success
-        {
-            get;
-            set;
-        }
+        public bool Success { get; set; }
 
         [JsonProperty("urgent_count")]
-        public int UrgentCount
-        {
-            get;
-            set;
-        }
+        public int UrgentCount { get; set; }
 
         [JsonProperty("returned_count")]
-        public int ReturnedCount
-        {
-            get;
-            set;
-        }
+        public int ReturnedCount { get; set; }
 
         [JsonProperty("has_more")]
-        public bool HasMore
-        {
-            get;
-            set;
-        }
+        public bool HasMore { get; set; }
 
         [JsonProperty("start_timestamp")]
-        public long StartTimestamp
-        {
-            get;
-            set;
-        }
+        public long StartTimestamp { get; set; }
 
         [JsonProperty("server_timestamp")]
-        public long ServerTimestamp
-        {
-            get;
-            set;
-        }
+        public long ServerTimestamp { get; set; }
 
         [JsonProperty("work_orders")]
-        public List<WorkOrderRemark> WorkOrders
-        {
-            get;
-            set;
-        }
+        public List<WorkOrderRemark> WorkOrders { get; set; }
     }
 
     public class WorkOrderRemark
     {
         [JsonProperty("id")]
-        public string Id
-        {
-            get;
-            set;
-        }
+        public string Id { get; set; }
 
         [JsonProperty("sn")]
-        public string Sn
-        {
-            get;
-            set;
-        }
+        public string Sn { get; set; }
 
         [JsonProperty("tracking_number")]
-        public string TrackingNumber
-        {
-            get;
-            set;
-        }
+        public string TrackingNumber { get; set; }
 
         [JsonProperty("remark")]
-        public string Remark
-        {
-            get;
-            set;
-        }
+        public string Remark { get; set; }
 
         [JsonProperty("remark_timestamp")]
-        public long RemarkTimestamp
-        {
-            get;
-            set;
-        }
+        public long RemarkTimestamp { get; set; }
 
         [JsonProperty("is_urgent")]
-        public bool IsUrgent
-        {
-            get;
-            set;
-        }
+        public bool IsUrgent { get; set; }
     }
 }

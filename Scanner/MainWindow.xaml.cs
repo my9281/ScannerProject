@@ -1,4 +1,4 @@
-﻿using Scanner.ViewModels;
+using Scanner.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Input;
@@ -8,7 +8,6 @@ namespace Scanner
     public partial class MainWindow : Window
     {
         private readonly MainWindowViewModel _viewModel;
-
         public MainWindow()
         {
             InitializeComponent();

@@ -8,7 +8,6 @@ namespace Scanner.Helpers
     public sealed class NetworkHelper
     {
         private readonly WorkOrderRemarkService _workOrderService;
-
         public NetworkHelper() : this(new WorkOrderRemarkService())
         {
         }
@@ -24,7 +23,6 @@ namespace Scanner.Helpers
             {
                 throw new UnauthorizedAccessException("没有登录 Token，请重新登录。");
             }
-
             return _workOrderService.GetRemarksAsync(token);
         }
     }

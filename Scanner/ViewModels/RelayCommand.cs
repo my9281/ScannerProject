@@ -7,9 +7,7 @@ namespace Scanner.ViewModels
     {
         private readonly Action<object> _execute;
         private readonly Predicate<object> _canExecute;
-
-        public RelayCommand(Action execute, Func<bool> canExecute = null)
-            : this(_ => execute(), canExecute == null ? (Predicate<object>)null : _ => canExecute())
+        public RelayCommand(Action execute, Func<bool> canExecute = null) : this(_ => execute(), canExecute == null ? (Predicate<object>)null : _ => canExecute())
         {
         }
 
@@ -34,10 +32,6 @@ namespace Scanner.ViewModels
             CommandManager.InvalidateRequerySuggested();
         }
 
-        public event EventHandler CanExecuteChanged
-        {
-            add => CommandManager.RequerySuggested += value;
-            remove => CommandManager.RequerySuggested -= value;
-        }
+        public event EventHandler CanExecuteChanged { add => CommandManager.RequerySuggested += value; remove => CommandManager.RequerySuggested -= value; }
     }
 }

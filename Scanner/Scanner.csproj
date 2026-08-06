@@ -44,6 +44,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Printing" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -72,6 +73,7 @@
     <Compile Include="Models\WorkOrderRemarkResponse.cs" />
     <Compile Include="Services\WorkOrderRemarkService.cs" />
     <Compile Include="Services\ScanService.cs" />
+    <Compile Include="Services\OidService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
     <Compile Include="Helpers\CsvImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
