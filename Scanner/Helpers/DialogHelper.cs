@@ -9,8 +9,8 @@ namespace Scanner.Helpers
         {
             var dialog = new OpenFileDialog
             {
-                Title = "选择紧急工单 CSV 文件",
-                Filter = "CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*",
+                Title = Resource("SelectCsvTitle"),
+                Filter = Resource("CsvFilter"),
                 Multiselect = false
             };
             return dialog.ShowDialog() == true ? dialog.FileName : null;
@@ -29,6 +29,12 @@ namespace Scanner.Helpers
         public void Error(string message, string title)
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private static string Resource(string key)
+        {
+            object value = Application.Current.TryFindResource(key);
+            return value == null ? key : value.ToString();
         }
     }
 }

@@ -19,7 +19,7 @@
 
     <system:String x:Key="LabelInformation">标签：6 × 4 英寸，横向</system:String>
 
-    <system:String x:Key="CopiesInformation">每个编码：打印一份</system:String> 
+    <system:String x:Key="CopiesInformation">普通编码：自动打印两份</system:String>
     <system:String x:Key="ReadingPrinter">默认打印机：正在读取</system:String> 
     <system:String x:Key="DefaultPrinter">默认打印机：{0}</system:String> 
     <system:String x:Key="PrinterNotFound">默认打印机：未找到</system:String> 
@@ -45,4 +45,34 @@
 
     <system:String x:Key="OpenLogFailed">无法打开扫描记录：{0}</system:String>
 
+    <system:String x:Key="ScanHint">扫码后按 Enter 自动处理</system:String>
+    <system:String x:Key="ProcessingStatusTitle">处理状态</system:String>
+    <system:String x:Key="ServiceStatusLabel">服务状态</system:String>
+    <system:String x:Key="LastRefreshLabel">最近刷新</system:String>
+    <system:String x:Key="ImportUrgentCsv">导入紧急 CSV</system:String>
+    <system:String x:Key="ManualRefresh">手动刷新</system:String>
+    <system:String x:Key="OidRecorded">识别为 OID，已记录，本次不打印。</system:String>
+    <system:String x:Key="OidReprinted">OID 重复扫描，已打印标签：{0}</system:String>
+    <system:String x:Key="UrgentPrinted">已打印紧急工单标签：{0}</system:String>
+    <system:String x:Key="NoSessionMessage">当前没有有效登录信息，请重新登录。</system:String>
+    <system:String x:Key="NotLoggedInTitle">未登录</system:String>
+    <system:String x:Key="FetchingRemarks">正在获取工单备注……</system:String>
+    <system:String x:Key="WebNormal">正常</system:String>
+    <system:String x:Key="FetchSuccess">工单备注获取成功，共返回 {0} 条，紧急工单 {1} 条。</system:String>
+    <system:String x:Key="FetchDialogMessage">接口调用成功。&#10;&#10;返回工单：{0}&#10;紧急工单：{1}&#10;是否还有更多：{2}</system:String>
+    <system:String x:Key="WorkOrderRemarksTitle">工单备注</system:String>
+    <system:String x:Key="Yes">是</system:String>
+    <system:String x:Key="No">否</system:String>
+    <system:String x:Key="WebSessionExpired">登录失效</system:String>
+    <system:String x:Key="LoginExpiredTitle">登录已失效</system:String>
+    <system:String x:Key="WebError">异常</system:String>
+    <system:String x:Key="FetchFailed">获取工单备注失败：{0}</system:String>
+    <system:String x:Key="FetchFailedTitle">获取失败</system:String>
+    <system:String x:Key="CsvImportSuccess">CSV 导入完成，共导入 {0} 条紧急工单。</system:String>
+    <system:String x:Key="CsvImportDialog">成功导入 {0} 条紧急工单。</system:String>
+    <system:String x:Key="ImportCompleteTitle">导入完成</system:String>
+    <system:String x:Key="CsvImportFailed">CSV 导入失败：{0}</system:String>
+    <system:String x:Key="CsvImportFailedTitle">CSV 导入失败</system:String>
+    <system:String x:Key="SelectCsvTitle">选择紧急工单 CSV 文件</system:String>
+    <system:String x:Key="CsvFilter">CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*</system:String>
 </ResourceDictionary>

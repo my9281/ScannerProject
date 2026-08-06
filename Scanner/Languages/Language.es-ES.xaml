@@ -19,7 +19,7 @@
 
     <system:String x:Key="LabelInformation">Etiqueta: 6 × 4 pulgadas, horizontal</system:String>
 
-    <system:String x:Key="CopiesInformation">Copias por código: 1</system:String>
+    <system:String x:Key="CopiesInformation">Códigos normales: 2 copias con impresión automática</system:String>
 
     <system:String x:Key="ReadingPrinter">Impresora predeterminada: Leyendo</system:String>
 
@@ -53,4 +53,34 @@
 
     <system:String x:Key="OpenLogFailed">No se pudo abrir el registro: {0}</system:String>
 
+    <system:String x:Key="ScanHint">Pulse Enter después de escanear para procesar automáticamente</system:String>
+    <system:String x:Key="ProcessingStatusTitle">Estado del proceso</system:String>
+    <system:String x:Key="ServiceStatusLabel">Estado del servicio</system:String>
+    <system:String x:Key="LastRefreshLabel">Última actualización</system:String>
+    <system:String x:Key="ImportUrgentCsv">Importar CSV urgente</system:String>
+    <system:String x:Key="ManualRefresh">Actualizar ahora</system:String>
+    <system:String x:Key="OidRecorded">OID detectado y registrado. No se imprimió esta vez.</system:String>
+    <system:String x:Key="OidReprinted">OID escaneado nuevamente. Etiqueta impresa: {0}</system:String>
+    <system:String x:Key="UrgentPrinted">Etiqueta de orden urgente impresa: {0}</system:String>
+    <system:String x:Key="NoSessionMessage">No hay una sesión válida. Inicie sesión nuevamente.</system:String>
+    <system:String x:Key="NotLoggedInTitle">Sesión no iniciada</system:String>
+    <system:String x:Key="FetchingRemarks">Obteniendo observaciones de órdenes…</system:String>
+    <system:String x:Key="WebNormal">En línea</system:String>
+    <system:String x:Key="FetchSuccess">Observaciones obtenidas: {0} devueltas, {1} urgentes.</system:String>
+    <system:String x:Key="FetchDialogMessage">Solicitud completada correctamente.&#10;&#10;Devueltas: {0}&#10;Urgentes: {1}&#10;Hay más disponibles: {2}</system:String>
+    <system:String x:Key="WorkOrderRemarksTitle">Observaciones de órdenes</system:String>
+    <system:String x:Key="Yes">Sí</system:String>
+    <system:String x:Key="No">No</system:String>
+    <system:String x:Key="WebSessionExpired">Sesión caducada</system:String>
+    <system:String x:Key="LoginExpiredTitle">Sesión caducada</system:String>
+    <system:String x:Key="WebError">Error</system:String>
+    <system:String x:Key="FetchFailed">No se pudieron obtener las observaciones: {0}</system:String>
+    <system:String x:Key="FetchFailedTitle">Error de consulta</system:String>
+    <system:String x:Key="CsvImportSuccess">Importación CSV completada. Se importaron {0} órdenes urgentes.</system:String>
+    <system:String x:Key="CsvImportDialog">Se importaron correctamente {0} órdenes urgentes.</system:String>
+    <system:String x:Key="ImportCompleteTitle">Importación completada</system:String>
+    <system:String x:Key="CsvImportFailed">Error al importar el CSV: {0}</system:String>
+    <system:String x:Key="CsvImportFailedTitle">Error de importación CSV</system:String>
+    <system:String x:Key="SelectCsvTitle">Seleccione un archivo CSV de órdenes urgentes</system:String>
+    <system:String x:Key="CsvFilter">Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
 </ResourceDictionary>

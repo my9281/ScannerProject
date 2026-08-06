@@ -123,7 +123,7 @@
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0" Margin="2,0,2,10">
                     <TextBlock Text="{DynamicResource ScanInputTitle}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="16" FontWeight="SemiBold"/>
-                    <TextBlock Text="扫码后按 Enter 自动处理" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource ScanHint}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                 </Grid>
                 <Border Grid.Row="1" Background="#F8FAFD" BorderBrush="#9CB5F5" BorderThickness="2" CornerRadius="10">
                     <TextBox x:Name="SnTextBox"
@@ -181,7 +181,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="处理状态" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold"/>
+                    <TextBlock Text="{DynamicResource ProcessingStatusTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold"/>
                     <StackPanel Grid.Row="1" VerticalAlignment="Center">
                         <Ellipse Width="11" Height="11" Fill="{Binding StatusBrush}" HorizontalAlignment="Left" Margin="0,0,0,12"/>
                         <TextBlock x:Name="StatusTextBlock" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
@@ -197,14 +197,14 @@
                 </Grid.ColumnDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#35B879" Margin="0,0,8,0"/>
-                    <TextBlock Text="服务状态" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource ServiceStatusLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
                     <TextBlock x:Name="WebStatus" Text="{Binding WebStatus}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="6,0,18,0" VerticalAlignment="Center"/>
-                    <TextBlock Text="最近刷新" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
+                    <TextBlock Text="{DynamicResource LastRefreshLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
                     <TextBlock x:Name="WebLastTime" Text="{Binding WebLastTime}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button x:Name="ImportCsvButton" Content="导入紧急 CSV" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportCsvCommand}"/>
-                    <Button Content="手动刷新" Style="{StaticResource BaseButtonStyle}" Height="34" Command="{Binding RefreshCommand}"/>
+                    <Button x:Name="ImportCsvButton" Content="{DynamicResource ImportUrgentCsv}" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportCsvCommand}"/>
+                    <Button Content="{DynamicResource ManualRefresh}" Style="{StaticResource BaseButtonStyle}" Height="34" Command="{Binding RefreshCommand}"/>
                 </StackPanel>
             </Grid>
         </Border>

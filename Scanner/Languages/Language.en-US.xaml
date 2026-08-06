@@ -19,7 +19,7 @@
 
     <system:String x:Key="LabelInformation">Label: 6 × 4 inches, landscape</system:String>
 
-    <system:String x:Key="CopiesInformation">Copies per code: 1</system:String>
+    <system:String x:Key="CopiesInformation">Regular codes: 2 copies with auto print</system:String>
 
     <system:String x:Key="ReadingPrinter">Default printer: Reading</system:String>
 
@@ -53,4 +53,34 @@
 
     <system:String x:Key="OpenLogFailed">Unable to open scan log: {0}</system:String>
 
+    <system:String x:Key="ScanHint">Press Enter after scanning to process automatically</system:String>
+    <system:String x:Key="ProcessingStatusTitle">Processing status</system:String>
+    <system:String x:Key="ServiceStatusLabel">Service status</system:String>
+    <system:String x:Key="LastRefreshLabel">Last refresh</system:String>
+    <system:String x:Key="ImportUrgentCsv">Import urgent CSV</system:String>
+    <system:String x:Key="ManualRefresh">Refresh now</system:String>
+    <system:String x:Key="OidRecorded">OID detected and recorded. Not printed this time.</system:String>
+    <system:String x:Key="OidReprinted">OID scanned again. Label printed: {0}</system:String>
+    <system:String x:Key="UrgentPrinted">Urgent work-order label printed: {0}</system:String>
+    <system:String x:Key="NoSessionMessage">No valid login session is available. Please sign in again.</system:String>
+    <system:String x:Key="NotLoggedInTitle">Not signed in</system:String>
+    <system:String x:Key="FetchingRemarks">Retrieving work-order remarks…</system:String>
+    <system:String x:Key="WebNormal">Online</system:String>
+    <system:String x:Key="FetchSuccess">Work-order remarks retrieved: {0} returned, {1} urgent.</system:String>
+    <system:String x:Key="FetchDialogMessage">Request completed successfully.&#10;&#10;Returned: {0}&#10;Urgent: {1}&#10;More available: {2}</system:String>
+    <system:String x:Key="WorkOrderRemarksTitle">Work-order remarks</system:String>
+    <system:String x:Key="Yes">Yes</system:String>
+    <system:String x:Key="No">No</system:String>
+    <system:String x:Key="WebSessionExpired">Session expired</system:String>
+    <system:String x:Key="LoginExpiredTitle">Session expired</system:String>
+    <system:String x:Key="WebError">Error</system:String>
+    <system:String x:Key="FetchFailed">Unable to retrieve work-order remarks: {0}</system:String>
+    <system:String x:Key="FetchFailedTitle">Retrieval failed</system:String>
+    <system:String x:Key="CsvImportSuccess">CSV import completed. {0} urgent work orders imported.</system:String>
+    <system:String x:Key="CsvImportDialog">Successfully imported {0} urgent work orders.</system:String>
+    <system:String x:Key="ImportCompleteTitle">Import complete</system:String>
+    <system:String x:Key="CsvImportFailed">CSV import failed: {0}</system:String>
+    <system:String x:Key="CsvImportFailedTitle">CSV import failed</system:String>
+    <system:String x:Key="SelectCsvTitle">Select an urgent work-order CSV file</system:String>
+    <system:String x:Key="CsvFilter">CSV files (*.csv)|*.csv|All files (*.*)|*.*</system:String>
 </ResourceDictionary>

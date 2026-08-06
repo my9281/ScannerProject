@@ -130,18 +130,18 @@ namespace Scanner.ViewModels
                 string printCode = matched == null || string.IsNullOrWhiteSpace(matched.Sn) ? code : matched.Sn.Trim();
                 if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
                 {
-                    SetStatus("识别为 OID，已记录，本次不打印。", false);
+                    SetStatus(Resource("OidRecorded"), false);
                 }
                 else if (scan.Oid.ShouldPrint)
                 {
                     _printing.PrintLabel(printCode, 1, matched, meterModel);
-                    SetStatus("OID 重复扫描，已打印标签：" + printCode, false);
+                    SetStatus(FormatResource("OidReprinted", printCode), false);
                 }
                 else if (IsPrint)
                 {
                     _printing.PrintLabel(printCode, 2, matched, meterModel);
                     _speech.SpeakChineseTail(printCode);
-                    SetStatus(matched != null && matched.IsUrgent ? "已打印紧急工单标签：" + printCode : FormatResource("SavedAndPrinted", printCode), false);
+                    SetStatus(matched != null && matched.IsUrgent ? FormatResource("UrgentPrinted", printCode) : FormatResource("SavedAndPrinted", printCode), false);
                 }
                 else
                 {
@@ -165,37 +165,37 @@ namespace Scanner.ViewModels
         {
             if (App.CurrentSession == null || string.IsNullOrWhiteSpace(App.CurrentSession.Token))
             {
-                _dialogs.Warning("当前没有有效登录信息，请重新登录。", "未登录");
+                _dialogs.Warning(Resource("NoSessionMessage"), Resource("NotLoggedInTitle"));
                 App.Logout();
                 return;
             }
             IsBusy = true;
             try
             {
-                SetStatus("正在获取工单备注……", false);
+                SetStatus(Resource("FetchingRemarks"), false);
                 WorkOrderRemarkResponse response = await _network.GetWorkOrderRemarksAsync(App.CurrentSession.Token);
                 _search.Replace(response.WorkOrders);
-                WebStatus = "正常";
+                WebStatus = Resource("WebNormal");
                 WebLastTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                SetStatus($"工单备注获取成功，共返回 {_search.Count} 条，紧急工单 {response.UrgentCount} 条。", false);
+                SetStatus(FormatResource("FetchSuccess", _search.Count, response.UrgentCount), false);
                 if (showResult)
                 {
-                    _dialogs.Information($"接口调用成功。\n\n返回工单：{response.ReturnedCount}\n" + $"紧急工单：{response.UrgentCount}\n" + $"是否还有更多：{(response.HasMore ? "是" : "否")}", "工单备注");
+                    _dialogs.Information(FormatResource("FetchDialogMessage", response.ReturnedCount, response.UrgentCount, response.HasMore ? Resource("Yes") : Resource("No")), Resource("WorkOrderRemarksTitle"));
                 }
             }
             catch (UnauthorizedAccessException ex)
             {
-                WebStatus = "登录失效";
-                _dialogs.Warning(ex.Message, "登录已失效");
+                WebStatus = Resource("WebSessionExpired");
+                _dialogs.Warning(ex.Message, Resource("LoginExpiredTitle"));
                 App.Logout();
             }
             catch (Exception ex)
             {
-                WebStatus = "异常";
-                SetStatus("获取工单备注失败：" + ex.Message, true);
+                WebStatus = Resource("WebError");
+                SetStatus(FormatResource("FetchFailed", ex.Message), true);
                 if (showResult)
                 {
-                    _dialogs.Error(ex.Message, "获取失败");
+                    _dialogs.Error(ex.Message, Resource("FetchFailedTitle"));
                 }
             }
             finally
@@ -217,13 +217,13 @@ namespace Scanner.ViewModels
             {
                 IReadOnlyList<WorkOrderRemark> imported = _csvImport.ImportUrgentWorkOrders(filePath);
                 _search.MergeImported(imported);
-                SetStatus($"CSV 导入完成，共导入 {imported.Count} 条紧急工单。", false);
-                _dialogs.Information($"成功导入 {imported.Count} 条紧急工单。", "导入完成");
+                SetStatus(FormatResource("CsvImportSuccess", imported.Count), false);
+                _dialogs.Information(FormatResource("CsvImportDialog", imported.Count), Resource("ImportCompleteTitle"));
             }
             catch (Exception ex)
             {
-                SetStatus("CSV 导入失败：" + ex.Message, true);
-                _dialogs.Error(ex.Message, "CSV 导入失败");
+                SetStatus(FormatResource("CsvImportFailed", ex.Message), true);
+                _dialogs.Error(ex.Message, Resource("CsvImportFailedTitle"));
             }
             finally
             {
@@ -239,7 +239,7 @@ namespace Scanner.ViewModels
             }
             catch (Exception ex)
             {
-                SetStatus("无法打开扫描记录：" + ex.Message, true);
+                SetStatus(FormatResource("OpenLogFailed", ex.Message), true);
             }
             finally
             {
