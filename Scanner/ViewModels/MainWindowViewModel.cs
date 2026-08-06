@@ -16,6 +16,7 @@ namespace Scanner.ViewModels
         private readonly PrintingHelper _printing;
         private readonly ScanService _scanning;
         private readonly MeterModelService _meterModels;
+        private readonly SpeechService _speech;
         private readonly WorkOrderSearchService _search;
         private readonly CsvImportHelper _csvImport;
         private readonly DialogHelper _dialogs;
@@ -27,16 +28,17 @@ namespace Scanner.ViewModels
         private string _webLastTime;
         private bool _isPrint = true;
         private bool _isBusy;
-        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
+        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new SpeechService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
         {
         }
 
-        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
+        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));
             _scanning = scanning ?? throw new ArgumentNullException(nameof(scanning));
             _meterModels = meterModels ?? throw new ArgumentNullException(nameof(meterModels));
+            _speech = speech ?? throw new ArgumentNullException(nameof(speech));
             _search = search ?? throw new ArgumentNullException(nameof(search));
             _csvImport = csvImport ?? throw new ArgumentNullException(nameof(csvImport));
             _dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
@@ -138,6 +140,7 @@ namespace Scanner.ViewModels
                 else if (IsPrint)
                 {
                     _printing.PrintLabel(printCode, 2, matched, meterModel);
+                    _speech.SpeakChineseTail(printCode);
                     SetStatus(matched != null && matched.IsUrgent ? "已打印紧急工单标签：" + printCode : FormatResource("SavedAndPrinted", printCode), false);
                 }
                 else
