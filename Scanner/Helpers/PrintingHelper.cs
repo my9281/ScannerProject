@@ -70,7 +70,7 @@ namespace Scanner.Helpers
             string tailText = LastFive(serialNumber);
             if (!string.IsNullOrWhiteSpace(meterModel))
             {
-                tailText += "  " + meterModel;
+                tailText = meterModel + "  " + tailText;
             }
             AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 52 : 40, 30, 62, string.IsNullOrWhiteSpace(meterModel) ? 280 : 390);
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), LabelWidth - 135, 52, 105, 105, Stretch.Uniform);

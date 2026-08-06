@@ -11,7 +11,14 @@ namespace Scanner.Services
         private static readonly Regex FedExOid = new Regex(@"^\d{12}$", RegexOptions.Compiled);
         private static readonly Regex AmazonOid = new Regex(@"^1Z[A-Z0-9]{16}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Dictionary<string, int> _scanCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-        private readonly SpeechSynthesizer _speech = new SpeechSynthesizer();
+        private readonly SpeechSynthesizer _speech;
+        public OidService()
+        {
+            _speech = new SpeechSynthesizer();
+            _speech.SetOutputToDefaultAudioDevice();
+            _speech.Volume = 100;
+            _speech.Rate = 0;
+        }
         public OidScanResult Inspect(string code)
         {
             string normalized = (code ?? string.Empty).Trim();
@@ -44,14 +51,7 @@ namespace Scanner.Services
 
         private void SpeakOid()
         {
-            try
-            {
-                _speech.SpeakAsyncCancelAll();
-                _speech.SpeakAsync("OID");
-            }
-            catch (InvalidOperationException)
-            {
-            }
+            _speech.Speak("O I D");
         }
     }
 
