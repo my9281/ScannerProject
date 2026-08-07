@@ -15,12 +15,24 @@ namespace MaUIScanner.Services;
 
 public interface ILabelPrinter
 {
+    bool IsSupported { get; }
     string GetDefaultPrinterName();
     Task PrintAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel);
 }
 
 public sealed class LabelPrinter : ILabelPrinter
 {
+    public bool IsSupported
+    {
+        get
+        {
+#if WINDOWS
+            return true;
+#else
+            return false;
+#endif
+        }
+    }
     public string GetDefaultPrinterName()
     {
 #if WINDOWS

@@ -57,7 +57,12 @@ public sealed class MainViewModel : ObservableObject
             ScanResult result = await _scan.RecordAsync(code);
             string model = _models.Find(result.Code);
             if (result.Oid.IsOid) await _speech.SpeakOidAsync();
-            if (result.Oid.IsOid && !result.Oid.ShouldPrint) SetHint($"已记录 OID：{result.Code}，本次不打印。", false);
+            if (!_printer.IsSupported)
+            {
+                if (!result.Oid.IsOid) await _speech.SpeakTailAsync(result.Code);
+                SetHint(result.WasRecorded ? $"已记录：{result.Code}" : $"扫描完成，记录已存在：{result.Code}", false);
+            }
+            else if (result.Oid.IsOid && !result.Oid.ShouldPrint) SetHint($"已记录 OID：{result.Code}，本次不打印。", false);
             else if (result.Oid.ShouldPrint)
             {
                 await _printer.PrintAsync(result.Code, 1, null, model);
