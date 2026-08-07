@@ -6,6 +6,7 @@ public sealed class SpeechService
 {
     private static readonly Dictionary<char, string> Digits = new() { ['0'] = "零", ['1'] = "一", ['2'] = "二", ['3'] = "三", ['4'] = "四", ['5'] = "五", ['6'] = "六", ['7'] = "七", ['8'] = "八", ['9'] = "九" };
     public Task SpeakOidAsync() => TextToSpeech.Default.SpeakAsync("O I D");
+    public Task SpeakGs1AreaWarningAsync() => TextToSpeech.Default.SpeakAsync("警告，地区码");
     public Task SpeakTailAsync(string serialNumber)
     {
         string value = serialNumber.Length > 5 ? serialNumber[^5..] : serialNumber;
@@ -41,4 +42,3 @@ public sealed class ScanLogService
         await Launcher.Default.OpenAsync(new OpenFileRequest("Scan log", new ReadOnlyFile(FilePath)));
     }
 }
-
