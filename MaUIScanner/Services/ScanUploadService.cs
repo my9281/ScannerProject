@@ -14,9 +14,10 @@ public sealed class ScanUploadService
     public async Task<ScanUploadResult> UploadAsync(string filePath)
     {
         if (!File.Exists(filePath)) throw new FileNotFoundException("尚无可导出的扫描记录。", filePath);
-        await using FileStream stream = File.OpenRead(filePath);
+        byte[] fileBytes = await File.ReadAllBytesAsync(filePath);
+        if (fileBytes.Length == 0) throw new InvalidOperationException("扫描记录为空，请先完成至少一次有效扫描。温馨提示：GS1 AI 420 地区码不会写入扫描记录。");
         using MultipartFormDataContent content = new();
-        using StreamContent fileContent = new(stream);
+        using ByteArrayContent fileContent = new(fileBytes);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue("text/plain");
         content.Add(fileContent, "file", $"scanned_codes_{DateTime.Now:yyyyMMdd_HHmmss}.txt");
         content.Add(new StringContent(DeviceInfo.Current.Name ?? "unknown"), "deviceName");
