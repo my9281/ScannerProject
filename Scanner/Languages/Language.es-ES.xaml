@@ -10,6 +10,11 @@
     <system:String x:Key="ScanInputTitle">Escanee o ingrese un código</system:String>
 
     <system:String x:Key="AutoPrint">Impresión automática</system:String>
+    <system:String x:Key="PrintNone">No imprimir</system:String>
+    <system:String x:Key="PrintOnce">1 copia</system:String>
+    <system:String x:Key="PrintTwice">2 copias</system:String>
+
+    <system:String x:Key="LabelSizeSettingLabel">Tamaño de papel</system:String>
 
     <system:String x:Key="PrintTwoCopies">Imprimir</system:String>
 
@@ -17,9 +22,9 @@
 
     <system:String x:Key="RuntimeInformation">Información de ejecución</system:String>
 
-    <system:String x:Key="LabelInformation">Etiqueta: 6 × 4 pulgadas, horizontal</system:String>
+    <system:String x:Key="LabelInformation">Etiqueta actual: {0} pulgadas, sin bordes</system:String>
 
-    <system:String x:Key="CopiesInformation">Códigos normales: 2 copias con impresión automática</system:String>
+    <system:String x:Key="CopiesInformation">Impresión automática: {0}</system:String>
 
     <system:String x:Key="ReadingPrinter">Impresora predeterminada: Leyendo</system:String>
 
@@ -45,7 +50,7 @@
 
     <system:String x:Key="BusyProcessing">El código anterior todavía se está procesando. Espere.</system:String>
 
-    <system:String x:Key="SavedAndPrinted">Registro guardado y dos copias enviadas: {0}</system:String>
+    <system:String x:Key="SavedAndPrinted">Guardado y enviado a imprimir {0} copia(s): {1}</system:String>
 
     <system:String x:Key="SavedWithoutPrint">Escaneo guardado sin imprimir: {0}</system:String>
 
@@ -53,19 +58,23 @@
 
     <system:String x:Key="OpenLogFailed">No se pudo abrir el registro: {0}</system:String>
 
+    <system:String x:Key="SettingsSaveFailed">La configuración cambió, pero no se pudo guardar: {0}</system:String>
+
     <system:String x:Key="ScanHint">Pulse Enter después de escanear para procesar automáticamente</system:String>
     <system:String x:Key="ProcessingStatusTitle">Estado del proceso</system:String>
     <system:String x:Key="ServiceStatusLabel">Estado del servicio</system:String>
     <system:String x:Key="LastRefreshLabel">Última actualización</system:String>
-    <system:String x:Key="ImportUrgentCsv">Importar CSV urgente</system:String>
+    <system:String x:Key="ImportUrgentWorkOrders">Importar órdenes urgentes</system:String>
     <system:String x:Key="ManualRefresh">Actualizar ahora</system:String>
     <system:String x:Key="OidRecorded">OID detectado y registrado. No se imprimió esta vez.</system:String>
-    <system:String x:Key="OidReprinted">OID escaneado nuevamente. Etiqueta impresa: {0}</system:String>
-    <system:String x:Key="UrgentPrinted">Etiqueta de orden urgente impresa: {0}</system:String>
+    <system:String x:Key="OidReprinted">OID escaneado de nuevo; se imprimieron {0} copia(s): {1}</system:String>
+    <system:String x:Key="UrgentPrinted">Se imprimieron {0} copia(s) urgentes: {1}</system:String>
     <system:String x:Key="NoSessionMessage">No hay una sesión válida. Inicie sesión nuevamente.</system:String>
     <system:String x:Key="NotLoggedInTitle">Sesión no iniciada</system:String>
     <system:String x:Key="FetchingRemarks">Obteniendo observaciones de órdenes…</system:String>
     <system:String x:Key="WebNormal">En línea</system:String>
+    <system:String x:Key="WebLocalMode">Modo local</system:String>
+    <system:String x:Key="LocalModeReady">El modo de escaneo local está listo. El servicio de órdenes en línea no está conectado.</system:String>
     <system:String x:Key="FetchSuccess">Observaciones obtenidas: {0} devueltas, {1} urgentes.</system:String>
     <system:String x:Key="FetchDialogMessage">Solicitud completada correctamente.&#10;&#10;Devueltas: {0}&#10;Urgentes: {1}&#10;Hay más disponibles: {2}</system:String>
     <system:String x:Key="WorkOrderRemarksTitle">Observaciones de órdenes</system:String>
@@ -76,11 +85,12 @@
     <system:String x:Key="WebError">Error</system:String>
     <system:String x:Key="FetchFailed">No se pudieron obtener las observaciones: {0}</system:String>
     <system:String x:Key="FetchFailedTitle">Error de consulta</system:String>
-    <system:String x:Key="CsvImportSuccess">Importación CSV completada. Se importaron {0} órdenes urgentes.</system:String>
-    <system:String x:Key="CsvImportDialog">Se importaron correctamente {0} órdenes urgentes.</system:String>
+    <system:String x:Key="UrgentImportSuccess">Importación urgente completada: {0} filas, {1} reglas SN y {2} reglas OID.</system:String>
+    <system:String x:Key="UrgentImportDialog">Se importaron {0} filas válidas.&#10;&#10;Reglas SN urgentes: {1}&#10;Reglas OID por contenido: {2}</system:String>
     <system:String x:Key="ImportCompleteTitle">Importación completada</system:String>
-    <system:String x:Key="CsvImportFailed">Error al importar el CSV: {0}</system:String>
-    <system:String x:Key="CsvImportFailedTitle">Error de importación CSV</system:String>
-    <system:String x:Key="SelectCsvTitle">Seleccione un archivo CSV de órdenes urgentes</system:String>
-    <system:String x:Key="CsvFilter">Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
+    <system:String x:Key="UrgentImportFailed">Error al importar órdenes urgentes: {0}</system:String>
+    <system:String x:Key="UrgentImportFailedTitle">Error de importación urgente</system:String>
+    <system:String x:Key="SelectUrgentWorkOrderTitle">Seleccione un archivo Excel o CSV de órdenes urgentes</system:String>
+    <system:String x:Key="UrgentWorkOrderFilter">Libros de Excel (*.xlsx)|*.xlsx|Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
+    <system:String x:Key="Gs1AreaWarning">Advertencia: se detectó el código de zona GS1 AI 420. No se registró ni imprimió.</system:String>
 </ResourceDictionary>

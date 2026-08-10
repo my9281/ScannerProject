@@ -10,6 +10,11 @@
     <system:String x:Key="ScanInputTitle">扫描或输入编码</system:String>
 
     <system:String x:Key="AutoPrint">自动打印</system:String>
+    <system:String x:Key="PrintNone">不打印</system:String>
+    <system:String x:Key="PrintOnce">打印一次</system:String>
+    <system:String x:Key="PrintTwice">打印两次</system:String>
+
+    <system:String x:Key="LabelSizeSettingLabel">纸张规格</system:String>
 
     <system:String x:Key="PrintTwoCopies">打印</system:String>
 
@@ -17,9 +22,9 @@
 
     <system:String x:Key="RuntimeInformation">运行信息</system:String>
 
-    <system:String x:Key="LabelInformation">标签：6 × 4 英寸，横向</system:String>
+    <system:String x:Key="LabelInformation">当前标签：{0} 英寸，无页边距</system:String>
 
-    <system:String x:Key="CopiesInformation">普通编码：自动打印两份</system:String>
+    <system:String x:Key="CopiesInformation">自动打印：{0}</system:String>
     <system:String x:Key="ReadingPrinter">默认打印机：正在读取</system:String> 
     <system:String x:Key="DefaultPrinter">默认打印机：{0}</system:String> 
     <system:String x:Key="PrinterNotFound">默认打印机：未找到</system:String> 
@@ -37,7 +42,7 @@
 
     <system:String x:Key="BusyProcessing">上一条编码仍在处理中，请稍后再扫。</system:String>
 
-    <system:String x:Key="SavedAndPrinted">已保存记录并提交两份打印：{0}</system:String>
+    <system:String x:Key="SavedAndPrinted">已保存记录并提交 {0} 份打印：{1}</system:String>
 
     <system:String x:Key="SavedWithoutPrint">已保存扫描记录，未打印：{0}</system:String>
 
@@ -45,19 +50,23 @@
 
     <system:String x:Key="OpenLogFailed">无法打开扫描记录：{0}</system:String>
 
+    <system:String x:Key="SettingsSaveFailed">设置已切换，但保存失败：{0}</system:String>
+
     <system:String x:Key="ScanHint">扫码后按 Enter 自动处理</system:String>
     <system:String x:Key="ProcessingStatusTitle">处理状态</system:String>
     <system:String x:Key="ServiceStatusLabel">服务状态</system:String>
     <system:String x:Key="LastRefreshLabel">最近刷新</system:String>
-    <system:String x:Key="ImportUrgentCsv">导入紧急 CSV</system:String>
+    <system:String x:Key="ImportUrgentWorkOrders">导入紧急工单</system:String>
     <system:String x:Key="ManualRefresh">手动刷新</system:String>
     <system:String x:Key="OidRecorded">识别为 OID，已记录，本次不打印。</system:String>
-    <system:String x:Key="OidReprinted">OID 重复扫描，已打印标签：{0}</system:String>
-    <system:String x:Key="UrgentPrinted">已打印紧急工单标签：{0}</system:String>
+    <system:String x:Key="OidReprinted">OID 重复扫描，已打印 {0} 份标签：{1}</system:String>
+    <system:String x:Key="UrgentPrinted">已打印 {0} 份紧急工单标签：{1}</system:String>
     <system:String x:Key="NoSessionMessage">当前没有有效登录信息，请重新登录。</system:String>
     <system:String x:Key="NotLoggedInTitle">未登录</system:String>
     <system:String x:Key="FetchingRemarks">正在获取工单备注……</system:String>
     <system:String x:Key="WebNormal">正常</system:String>
+    <system:String x:Key="WebLocalMode">本地模式</system:String>
+    <system:String x:Key="LocalModeReady">本地扫描模式已就绪，不连接在线工单服务。</system:String>
     <system:String x:Key="FetchSuccess">工单备注获取成功，共返回 {0} 条，紧急工单 {1} 条。</system:String>
     <system:String x:Key="FetchDialogMessage">接口调用成功。&#10;&#10;返回工单：{0}&#10;紧急工单：{1}&#10;是否还有更多：{2}</system:String>
     <system:String x:Key="WorkOrderRemarksTitle">工单备注</system:String>
@@ -68,11 +77,12 @@
     <system:String x:Key="WebError">异常</system:String>
     <system:String x:Key="FetchFailed">获取工单备注失败：{0}</system:String>
     <system:String x:Key="FetchFailedTitle">获取失败</system:String>
-    <system:String x:Key="CsvImportSuccess">CSV 导入完成，共导入 {0} 条紧急工单。</system:String>
-    <system:String x:Key="CsvImportDialog">成功导入 {0} 条紧急工单。</system:String>
+    <system:String x:Key="UrgentImportSuccess">紧急工单导入完成：{0} 行，SN 规则 {1} 条，OID 规则 {2} 条。</system:String>
+    <system:String x:Key="UrgentImportDialog">成功导入 {0} 行有效数据。&#10;&#10;SN 紧急规则：{1} 条&#10;OID 包含匹配规则：{2} 条</system:String>
     <system:String x:Key="ImportCompleteTitle">导入完成</system:String>
-    <system:String x:Key="CsvImportFailed">CSV 导入失败：{0}</system:String>
-    <system:String x:Key="CsvImportFailedTitle">CSV 导入失败</system:String>
-    <system:String x:Key="SelectCsvTitle">选择紧急工单 CSV 文件</system:String>
-    <system:String x:Key="CsvFilter">CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*</system:String>
+    <system:String x:Key="UrgentImportFailed">紧急工单导入失败：{0}</system:String>
+    <system:String x:Key="UrgentImportFailedTitle">紧急工单导入失败</system:String>
+    <system:String x:Key="SelectUrgentWorkOrderTitle">选择紧急工单 Excel 或 CSV 文件</system:String>
+    <system:String x:Key="UrgentWorkOrderFilter">Excel 工作簿 (*.xlsx)|*.xlsx|CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*</system:String>
+    <system:String x:Key="Gs1AreaWarning">警告：扫描到 GS1 AI 420 地区码，本次不记录、不打印。</system:String>
 </ResourceDictionary>

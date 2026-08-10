@@ -23,9 +23,19 @@ namespace Scanner.Services
         public int ScanCount => _scanCount;
         public string LogFilePath => _log.FilePath;
 
+        public static bool IsGs1AreaCode(string input)
+        {
+            string value = WorkOrderSearchService.NormalizeCode(input);
+            if (value.StartsWith("]C1", StringComparison.OrdinalIgnoreCase))
+            {
+                value = value.Substring(3);
+            }
+            return value.StartsWith("420", StringComparison.Ordinal);
+        }
+
         public ScanResult Record(string input)
         {
-            string code = (input ?? string.Empty).Trim();
+            string code = WorkOrderSearchService.NormalizeCode(input);
             if (string.IsNullOrWhiteSpace(code))
             {
                 throw new ArgumentException("扫描内容不能为空。", nameof(input));

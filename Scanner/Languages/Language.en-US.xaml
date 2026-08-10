@@ -10,6 +10,11 @@
     <system:String x:Key="ScanInputTitle">Scan or enter a code</system:String>
 
     <system:String x:Key="AutoPrint">Auto print</system:String>
+    <system:String x:Key="PrintNone">Off</system:String>
+    <system:String x:Key="PrintOnce">1 copy</system:String>
+    <system:String x:Key="PrintTwice">2 copies</system:String>
+
+    <system:String x:Key="LabelSizeSettingLabel">Paper size</system:String>
 
     <system:String x:Key="PrintTwoCopies">Print</system:String>
 
@@ -17,9 +22,9 @@
 
     <system:String x:Key="RuntimeInformation">Runtime information</system:String>
 
-    <system:String x:Key="LabelInformation">Label: 6 × 4 inches, landscape</system:String>
+    <system:String x:Key="LabelInformation">Current label: {0} inches, borderless</system:String>
 
-    <system:String x:Key="CopiesInformation">Regular codes: 2 copies with auto print</system:String>
+    <system:String x:Key="CopiesInformation">Auto print: {0}</system:String>
 
     <system:String x:Key="ReadingPrinter">Default printer: Reading</system:String>
 
@@ -45,7 +50,7 @@
 
     <system:String x:Key="BusyProcessing">The previous code is still being processed. Please wait.</system:String>
 
-    <system:String x:Key="SavedAndPrinted">Saved and submitted two print copies: {0}</system:String>
+    <system:String x:Key="SavedAndPrinted">Saved and submitted {0} print copy/copies: {1}</system:String>
 
     <system:String x:Key="SavedWithoutPrint">Scan saved without printing: {0}</system:String>
 
@@ -53,19 +58,23 @@
 
     <system:String x:Key="OpenLogFailed">Unable to open scan log: {0}</system:String>
 
+    <system:String x:Key="SettingsSaveFailed">The setting changed, but could not be saved: {0}</system:String>
+
     <system:String x:Key="ScanHint">Press Enter after scanning to process automatically</system:String>
     <system:String x:Key="ProcessingStatusTitle">Processing status</system:String>
     <system:String x:Key="ServiceStatusLabel">Service status</system:String>
     <system:String x:Key="LastRefreshLabel">Last refresh</system:String>
-    <system:String x:Key="ImportUrgentCsv">Import urgent CSV</system:String>
+    <system:String x:Key="ImportUrgentWorkOrders">Import urgent work orders</system:String>
     <system:String x:Key="ManualRefresh">Refresh now</system:String>
     <system:String x:Key="OidRecorded">OID detected and recorded. Not printed this time.</system:String>
-    <system:String x:Key="OidReprinted">OID scanned again. Label printed: {0}</system:String>
-    <system:String x:Key="UrgentPrinted">Urgent work-order label printed: {0}</system:String>
+    <system:String x:Key="OidReprinted">OID scanned again; {0} label copy/copies printed: {1}</system:String>
+    <system:String x:Key="UrgentPrinted">Printed {0} urgent label copy/copies: {1}</system:String>
     <system:String x:Key="NoSessionMessage">No valid login session is available. Please sign in again.</system:String>
     <system:String x:Key="NotLoggedInTitle">Not signed in</system:String>
     <system:String x:Key="FetchingRemarks">Retrieving work-order remarks…</system:String>
     <system:String x:Key="WebNormal">Online</system:String>
+    <system:String x:Key="WebLocalMode">Local mode</system:String>
+    <system:String x:Key="LocalModeReady">Local scanning mode is ready. The online work-order service is not connected.</system:String>
     <system:String x:Key="FetchSuccess">Work-order remarks retrieved: {0} returned, {1} urgent.</system:String>
     <system:String x:Key="FetchDialogMessage">Request completed successfully.&#10;&#10;Returned: {0}&#10;Urgent: {1}&#10;More available: {2}</system:String>
     <system:String x:Key="WorkOrderRemarksTitle">Work-order remarks</system:String>
@@ -76,11 +85,12 @@
     <system:String x:Key="WebError">Error</system:String>
     <system:String x:Key="FetchFailed">Unable to retrieve work-order remarks: {0}</system:String>
     <system:String x:Key="FetchFailedTitle">Retrieval failed</system:String>
-    <system:String x:Key="CsvImportSuccess">CSV import completed. {0} urgent work orders imported.</system:String>
-    <system:String x:Key="CsvImportDialog">Successfully imported {0} urgent work orders.</system:String>
+    <system:String x:Key="UrgentImportSuccess">Urgent import completed: {0} rows, {1} SN rules, {2} OID rules.</system:String>
+    <system:String x:Key="UrgentImportDialog">Imported {0} valid rows.&#10;&#10;Urgent SN rules: {1}&#10;OID contains rules: {2}</system:String>
     <system:String x:Key="ImportCompleteTitle">Import complete</system:String>
-    <system:String x:Key="CsvImportFailed">CSV import failed: {0}</system:String>
-    <system:String x:Key="CsvImportFailedTitle">CSV import failed</system:String>
-    <system:String x:Key="SelectCsvTitle">Select an urgent work-order CSV file</system:String>
-    <system:String x:Key="CsvFilter">CSV files (*.csv)|*.csv|All files (*.*)|*.*</system:String>
+    <system:String x:Key="UrgentImportFailed">Urgent work-order import failed: {0}</system:String>
+    <system:String x:Key="UrgentImportFailedTitle">Urgent import failed</system:String>
+    <system:String x:Key="SelectUrgentWorkOrderTitle">Select an urgent work-order Excel or CSV file</system:String>
+    <system:String x:Key="UrgentWorkOrderFilter">Excel workbooks (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv|All files (*.*)|*.*</system:String>
+    <system:String x:Key="Gs1AreaWarning">Warning: GS1 AI 420 area code detected. Nothing was recorded or printed.</system:String>
 </ResourceDictionary>

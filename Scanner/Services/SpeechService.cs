@@ -33,6 +33,11 @@ namespace Scanner.Services
             _speech.SpeakAsync("O I D");
         }
 
+        public void SpeakGs1AreaWarning()
+        {
+            _speech.SpeakAsync("警告，地区码");
+        }
+
         public void SpeakChineseTail(string serialNumber)
         {
             string value = (serialNumber ?? string.Empty).Trim();

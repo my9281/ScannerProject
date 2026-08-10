@@ -3,4 +3,5 @@
     <Deploy Solution="Debug|*" />
   </Project>
   <Project Path="Scanner/Scanner.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
+  <Project Path="WmsUploadSite/WmsUploadSite.csproj" />
 </Solution>

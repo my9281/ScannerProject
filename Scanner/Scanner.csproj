@@ -43,6 +43,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Printing" />
     <Reference Include="System.Speech" />
     <Reference Include="System.Security" />
@@ -77,7 +79,7 @@
     <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\SpeechService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
-    <Compile Include="Helpers\CsvImportHelper.cs" />
+    <Compile Include="Helpers\UrgentWorkOrderImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\PrintingHelper.cs" />

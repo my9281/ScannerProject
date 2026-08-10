@@ -21,8 +21,11 @@ namespace Scanner.Helpers
 {
     public sealed class PrintingHelper
     {
-        private const double LabelWidth = 576.0;
+        public const string DefaultPaperSize = "4x6";
+        public const string SquarePaperSize = "4x4";
+        private const double WideLabelWidth = 576.0;
         private const double LabelHeight = 384.0;
+        private const double SquareLabelWidth = 384.0;
         public string GetDefaultPrinterName()
         {
             using (var server = new LocalPrintServer())
@@ -38,6 +41,11 @@ namespace Scanner.Helpers
 
         public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel)
         {
+            PrintLabel(serialNumber, copies, workOrder, meterModel, DefaultPaperSize);
+        }
+
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize)
+        {
             if (string.IsNullOrWhiteSpace(serialNumber))
             {
                 throw new ArgumentException("打印序列号不能为空。", nameof(serialNumber));
@@ -46,64 +54,60 @@ namespace Scanner.Helpers
             {
                 throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
             }
-            BitmapSource source = Render(CreateLabel(serialNumber.Trim(), workOrder, meterModel));
+            string normalizedPaperSize = NormalizePaperSize(paperSize);
+            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize);
+            BitmapSource source = Render(label, normalizedPaperSize);
             using (Bitmap bitmap = ToBitmap(source))
             {
                 for (int i = 0; i < copies; i++)
                 {
-                    PrintBitmap(bitmap);
+                    PrintBitmap(bitmap, normalizedPaperSize);
                 }
             }
         }
 
-        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
+        public static string NormalizePaperSize(string paperSize)
+        {
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.OrdinalIgnoreCase) ? SquarePaperSize : DefaultPaperSize;
+        }
+
+        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize)
+        {
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel) : CreateWideLabel(serialNumber, workOrder, meterModel);
+        }
+
+        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
+            bool repair = workOrder != null && workOrder.IsRepair;
             string remark = urgent ? Shorten(workOrder.Remark, 50) : string.Empty;
             var canvas = new Canvas
             {
-                Width = LabelWidth,
+                Width = WideLabelWidth,
                 Height = LabelHeight,
                 Background = WpfBrushes.White
             };
-            AddText(canvas, "SN : " + serialNumber, 27, 35, 12, LabelWidth - 70);
+            AddText(canvas, "SN : " + serialNumber, 27, 35, 12, WideLabelWidth - 70);
             string tailText = LastFive(serialNumber);
             if (!string.IsNullOrWhiteSpace(meterModel))
             {
                 tailText = meterModel + "  " + tailText;
             }
             AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 52 : 40, 30, 62, string.IsNullOrWhiteSpace(meterModel) ? 280 : 390);
-            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), LabelWidth - 135, 52, 105, 105, Stretch.Uniform);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), WideLabelWidth - 135, 52, 105, 105, Stretch.Uniform);
             if (urgent)
             {
-                var urgentText = new TextBlock
-                {
-                    Text = "紧急",
-                    FontSize = 32,
-                    FontWeight = FontWeights.Bold,
-                    FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
-                    Foreground = WpfBrushes.Black,
-                    TextAlignment = TextAlignment.Center,
-                    VerticalAlignment = VerticalAlignment.Center
-                };
-                var border = new Border
-                {
-                    Width = 150,
-                    Height = 46,
-                    BorderBrush = WpfBrushes.Black,
-                    BorderThickness = new Thickness(3),
-                    Background = WpfBrushes.White,
-                    Child = urgentText
-                };
-                Canvas.SetLeft(border, 95);
-                Canvas.SetTop(border, 118);
-                canvas.Children.Add(border);
+                AddMarker(canvas, "紧急", 95, 118, 150, 46, 32);
+            }
+            if (repair)
+            {
+                AddMarker(canvas, "修", urgent ? 265 : 95, 118, 62, 46, 32);
             }
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 430, 85), 78, 170, 420, 68, Stretch.Fill);
-            AddText(canvas, serialNumber, 17, 35, 238, LabelWidth - 70);
+            AddText(canvas, serialNumber, 17, 35, 238, WideLabelWidth - 70);
             if (urgent && !string.IsNullOrWhiteSpace(remark))
             {
-                var remarkText = CreateText("备注：" + remark, 18, LabelWidth - 60);
+                var remarkText = CreateText("备注：" + remark, 18, WideLabelWidth - 60);
                 remarkText.Height = 58;
                 remarkText.TextAlignment = TextAlignment.Left;
                 remarkText.TextWrapping = TextWrapping.Wrap;
@@ -111,8 +115,77 @@ namespace Scanner.Helpers
                 Canvas.SetTop(remarkText, 267);
                 canvas.Children.Add(remarkText);
             }
-            AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, LabelWidth - 70);
+            AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, WideLabelWidth - 70);
             return canvas;
+        }
+
+        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
+        {
+            bool urgent = workOrder != null && workOrder.IsUrgent;
+            bool repair = workOrder != null && workOrder.IsRepair;
+            string remark = urgent ? Shorten(workOrder.Remark, 38) : string.Empty;
+            var canvas = new Canvas
+            {
+                Width = SquareLabelWidth,
+                Height = LabelHeight,
+                Background = WpfBrushes.White
+            };
+            AddText(canvas, "SN : " + serialNumber, 20, 15, 8, SquareLabelWidth - 30);
+            string tailText = LastFive(serialNumber);
+            if (!string.IsNullOrWhiteSpace(meterModel))
+            {
+                tailText = meterModel + "  " + tailText;
+            }
+            AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 40 : 31, 15, 48, 245);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 170, 170), SquareLabelWidth - 100, 43, 85, 85, Stretch.Uniform);
+            if (urgent)
+            {
+                AddMarker(canvas, "紧急", 35, 101, 110, 40, 26);
+            }
+            if (repair)
+            {
+                AddMarker(canvas, "修", urgent ? 157 : 35, 101, 52, 40, 26);
+            }
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 360, 80), 30, 151, 324, 60, Stretch.Fill);
+            AddText(canvas, serialNumber, 14, 15, 211, SquareLabelWidth - 30);
+            if (urgent && !string.IsNullOrWhiteSpace(remark))
+            {
+                var remarkText = CreateText("备注：" + remark, 15, SquareLabelWidth - 30);
+                remarkText.Height = 84;
+                remarkText.TextAlignment = TextAlignment.Left;
+                remarkText.TextWrapping = TextWrapping.Wrap;
+                Canvas.SetLeft(remarkText, 15);
+                Canvas.SetTop(remarkText, 238);
+                canvas.Children.Add(remarkText);
+            }
+            AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 17 : 21, 15, urgent ? 352 : 320, SquareLabelWidth - 30);
+            return canvas;
+        }
+
+        private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize)
+        {
+            var markerText = new TextBlock
+            {
+                Text = text,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Bold,
+                FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
+                Foreground = WpfBrushes.Black,
+                TextAlignment = TextAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            };
+            var border = new Border
+            {
+                Width = width,
+                Height = height,
+                BorderBrush = WpfBrushes.Black,
+                BorderThickness = new Thickness(3),
+                Background = WpfBrushes.White,
+                Child = markerText
+            };
+            Canvas.SetLeft(border, left);
+            Canvas.SetTop(border, top);
+            canvas.Children.Add(border);
         }
 
         private static void AddText(Canvas canvas, string text, double fontSize, double left, double top, double width)
@@ -188,12 +261,13 @@ namespace Scanner.Helpers
             }
         }
 
-        private static BitmapSource Render(Canvas canvas)
+        private static BitmapSource Render(Canvas canvas, string paperSize)
         {
-            canvas.Measure(new System.Windows.Size(LabelWidth, LabelHeight));
-            canvas.Arrange(new Rect(0, 0, LabelWidth, LabelHeight));
+            canvas.Measure(new System.Windows.Size(canvas.Width, canvas.Height));
+            canvas.Arrange(new Rect(0, 0, canvas.Width, canvas.Height));
             canvas.UpdateLayout();
-            var bitmap = new RenderTargetBitmap(1800, 1200, 300, 300, PixelFormats.Pbgra32);
+            int pixelWidth = string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? 1200 : 1800;
+            var bitmap = new RenderTargetBitmap(pixelWidth, 1200, 300, 300, PixelFormats.Pbgra32);
             bitmap.Render(canvas);
             bitmap.Freeze();
             return bitmap;
@@ -214,7 +288,7 @@ namespace Scanner.Helpers
             }
         }
 
-        private static void PrintBitmap(Bitmap bitmap)
+        private static void PrintBitmap(Bitmap bitmap, string paperSize)
         {
             using (var document = new PrintDocument())
             {
@@ -223,8 +297,9 @@ namespace Scanner.Helpers
                 {
                     throw new InvalidOperationException("Windows 默认打印机无效或不可用。");
                 }
-                document.DefaultPageSettings.PaperSize = new PaperSize("4x6", 400, 600);
-                document.DefaultPageSettings.Landscape = true;
+                bool square = string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal);
+                document.DefaultPageSettings.PaperSize = square ? new PaperSize("4x4", 400, 400) : new PaperSize("4x6", 400, 600);
+                document.DefaultPageSettings.Landscape = !square;
                 document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
                 document.OriginAtMargins = false;
                 document.PrintPage += (sender, args) =>
@@ -251,7 +326,7 @@ namespace Scanner.Helpers
             {
                 return string.Empty;
             }
-            string clean = value.Replace("\r", " ").Replace("\n", " ").Trim();
+            string clean = string.Join(" ", value.Split((char[])null, StringSplitOptions.RemoveEmptyEntries));
             return clean.Length <= maxLength ? clean : clean.Substring(0, maxLength) + "…";
         }
     }

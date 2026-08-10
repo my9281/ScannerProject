@@ -60,6 +60,21 @@ namespace Scanner
             StartLogin();
         }
 
+        private void LocalModeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (_isLoggingIn)
+            {
+                return;
+            }
+            Session = new AuthSession
+            {
+                Operator = "本地扫描",
+                Role = "本地模式",
+                IsLocalMode = true
+            };
+            DialogResult = true;
+        }
+
         private async void StartLogin()
         {
             if (_isLoggingIn)
@@ -112,6 +127,7 @@ namespace Scanner
             PasswordInput.IsEnabled = isEnabled;
             RememberPasswordCheckBox.IsEnabled = isEnabled;
             LoginButton.IsEnabled = isEnabled;
+            LocalModeButton.IsEnabled = isEnabled;
         }
 
         private void ShowError(string message)

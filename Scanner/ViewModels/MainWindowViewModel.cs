@@ -2,7 +2,6 @@ using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Services;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -18,7 +17,7 @@ namespace Scanner.ViewModels
         private readonly MeterModelService _meterModels;
         private readonly SpeechService _speech;
         private readonly WorkOrderSearchService _search;
-        private readonly CsvImportHelper _csvImport;
+        private readonly UrgentWorkOrderImportHelper _workOrderImport;
         private readonly DialogHelper _dialogs;
         private string _scanCode;
         private string _statusText;
@@ -26,13 +25,14 @@ namespace Scanner.ViewModels
         private string _printerText;
         private string _webStatus;
         private string _webLastTime;
-        private bool _isPrint = true;
+        private string _labelPaperSize;
+        private int _printCopies;
         private bool _isBusy;
-        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new SpeechService(), new WorkOrderSearchService(), new CsvImportHelper(), new DialogHelper())
+        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new SpeechService(), new WorkOrderSearchService(), new UrgentWorkOrderImportHelper(), new DialogHelper())
         {
         }
 
-        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, CsvImportHelper csvImport, DialogHelper dialogs)
+        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, UrgentWorkOrderImportHelper workOrderImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));
@@ -40,12 +40,14 @@ namespace Scanner.ViewModels
             _meterModels = meterModels ?? throw new ArgumentNullException(nameof(meterModels));
             _speech = speech ?? throw new ArgumentNullException(nameof(speech));
             _search = search ?? throw new ArgumentNullException(nameof(search));
-            _csvImport = csvImport ?? throw new ArgumentNullException(nameof(csvImport));
+            _workOrderImport = workOrderImport ?? throw new ArgumentNullException(nameof(workOrderImport));
             _dialogs = dialogs ?? throw new ArgumentNullException(nameof(dialogs));
+            _labelPaperSize = PrintingHelper.NormalizePaperSize(Properties.Settings.Default.LabelPaperSize);
+            _printCopies = NormalizePrintCopies(Properties.Settings.Default.PrintCopies);
             ProcessScanCommand = new RelayCommand(ProcessScan, () => !IsBusy);
             OpenLogCommand = new RelayCommand(OpenLog, () => !IsBusy);
             RefreshCommand = new RelayCommand(async () => await RefreshWorkOrdersAsync(true), () => !IsBusy);
-            ImportCsvCommand = new RelayCommand(ImportCsv, () => !IsBusy);
+            ImportUrgentWorkOrdersCommand = new RelayCommand(ImportUrgentWorkOrders, () => !IsBusy);
             ChangeLanguageCommand = new RelayCommand(parameter => ChangeLanguage(parameter as string));
             RefreshLocalizedText();
         }
@@ -54,10 +56,104 @@ namespace Scanner.ViewModels
         public ICommand ProcessScanCommand { get; }
         public ICommand OpenLogCommand { get; }
         public ICommand RefreshCommand { get; }
-        public ICommand ImportCsvCommand { get; }
+        public ICommand ImportUrgentWorkOrdersCommand { get; }
         public ICommand ChangeLanguageCommand { get; }
         public string ScanCode { get => _scanCode; set => SetProperty(ref _scanCode, value); }
-        public bool IsPrint { get => _isPrint; set => SetProperty(ref _isPrint, value); }
+
+        public int PrintCopies
+        {
+            get => _printCopies;
+            set
+            {
+                int normalized = NormalizePrintCopies(value);
+                if (!SetProperty(ref _printCopies, normalized))
+                {
+                    return;
+                }
+                RaisePropertyChanged(nameof(IsPrintDisabled));
+                RaisePropertyChanged(nameof(IsPrintOnce));
+                RaisePropertyChanged(nameof(IsPrintTwice));
+                RaisePropertyChanged(nameof(CopiesInformationText));
+                try
+                {
+                    Properties.Settings.Default.PrintCopies = normalized;
+                    Properties.Settings.Default.Save();
+                }
+                catch (Exception ex)
+                {
+                    _scanning.WriteError(ex);
+                    SetStatus(FormatResource("SettingsSaveFailed", ex.Message), true);
+                }
+            }
+        }
+
+        public bool IsPrintDisabled
+        {
+            get => PrintCopies == 0;
+            set { if (value) PrintCopies = 0; }
+        }
+
+        public bool IsPrintOnce
+        {
+            get => PrintCopies == 1;
+            set { if (value) PrintCopies = 1; }
+        }
+
+        public bool IsPrintTwice
+        {
+            get => PrintCopies == 2;
+            set { if (value) PrintCopies = 2; }
+        }
+
+        public string LabelPaperSize
+        {
+            get => _labelPaperSize;
+            set
+            {
+                string normalized = PrintingHelper.NormalizePaperSize(value);
+                if (!SetProperty(ref _labelPaperSize, normalized))
+                {
+                    return;
+                }
+                RaisePropertyChanged(nameof(IsWideLabelPaper));
+                RaisePropertyChanged(nameof(IsSquareLabelPaper));
+                RaisePropertyChanged(nameof(LabelInformationText));
+                try
+                {
+                    Properties.Settings.Default.LabelPaperSize = normalized;
+                    Properties.Settings.Default.Save();
+                }
+                catch (Exception ex)
+                {
+                    _scanning.WriteError(ex);
+                    SetStatus(FormatResource("SettingsSaveFailed", ex.Message), true);
+                }
+            }
+        }
+
+        public bool IsWideLabelPaper
+        {
+            get => LabelPaperSize == PrintingHelper.DefaultPaperSize;
+            set
+            {
+                if (value)
+                {
+                    LabelPaperSize = PrintingHelper.DefaultPaperSize;
+                }
+            }
+        }
+
+        public bool IsSquareLabelPaper
+        {
+            get => LabelPaperSize == PrintingHelper.SquarePaperSize;
+            set
+            {
+                if (value)
+                {
+                    LabelPaperSize = PrintingHelper.SquarePaperSize;
+                }
+            }
+        }
 
         public bool IsBusy
         {
@@ -76,6 +172,8 @@ namespace Scanner.ViewModels
         public string OperatorText => App.CurrentSession == null ? string.Empty : App.CurrentSession.Operator + " / " + App.CurrentSession.Role;
         public string LogFileText => FormatResource("LogFileValue", _scanning.LogFilePath);
         public string CountText => FormatResource("ScanCount", _scanning.ScanCount);
+        public string LabelInformationText => FormatResource("LabelInformation", LabelPaperSize == PrintingHelper.SquarePaperSize ? "4 × 4" : "4 × 6");
+        public string CopiesInformationText => FormatResource("CopiesInformation", Resource(PrintCopies == 0 ? "PrintNone" : PrintCopies == 1 ? "PrintOnce" : "PrintTwice"));
         public string PrinterText { get => _printerText; private set => SetProperty(ref _printerText, value); }
         public string StatusText { get => _statusText; private set => SetProperty(ref _statusText, value); }
         public Brush StatusBrush { get => _statusBrush; private set => SetProperty(ref _statusBrush, value); }
@@ -101,6 +199,8 @@ namespace Scanner.ViewModels
             }
             RaisePropertyChanged(nameof(LogFileText));
             RaisePropertyChanged(nameof(CountText));
+            RaisePropertyChanged(nameof(LabelInformationText));
+            RaisePropertyChanged(nameof(CopiesInformationText));
             SetStatus(Resource("WaitingForScan"), false);
         }
 
@@ -110,6 +210,14 @@ namespace Scanner.ViewModels
             if (string.IsNullOrWhiteSpace(code))
             {
                 SetStatus(Resource("EmptyCode"), true);
+                ScanCode = string.Empty;
+                RequestFocus();
+                return;
+            }
+            if (ScanService.IsGs1AreaCode(code))
+            {
+                _speech.SpeakGs1AreaWarning();
+                SetStatus(Resource("Gs1AreaWarning"), true);
                 ScanCode = string.Empty;
                 RequestFocus();
                 return;
@@ -126,22 +234,25 @@ namespace Scanner.ViewModels
                 {
                     RaisePropertyChanged(nameof(CountText));
                 }
-                WorkOrderRemark matched = _search.Find(code);
-                string printCode = matched == null || string.IsNullOrWhiteSpace(matched.Sn) ? code : matched.Sn.Trim();
+                WorkOrderMatch match = _search.Resolve(code, scan.Oid.IsOid);
+                WorkOrderRemark matched = match == null ? null : match.WorkOrder;
+                string printCode = match == null ? code : match.GetPrintCode(code);
                 if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
                 {
                     SetStatus(Resource("OidRecorded"), false);
                 }
-                else if (scan.Oid.ShouldPrint)
+                else if (PrintCopies > 0)
                 {
-                    _printing.PrintLabel(printCode, 1, matched, meterModel);
-                    SetStatus(FormatResource("OidReprinted", printCode), false);
-                }
-                else if (IsPrint)
-                {
-                    _printing.PrintLabel(printCode, 2, matched, meterModel);
-                    _speech.SpeakChineseTail(printCode);
-                    SetStatus(matched != null && matched.IsUrgent ? FormatResource("UrgentPrinted", printCode) : FormatResource("SavedAndPrinted", printCode), false);
+                    _printing.PrintLabel(printCode, PrintCopies, matched, meterModel, LabelPaperSize);
+                    if (scan.Oid.ShouldPrint)
+                    {
+                        SetStatus(FormatResource("OidReprinted", PrintCopies, printCode), false);
+                    }
+                    else
+                    {
+                        _speech.SpeakChineseTail(printCode);
+                        SetStatus(matched != null && matched.IsUrgent ? FormatResource("UrgentPrinted", PrintCopies, printCode) : FormatResource("SavedAndPrinted", PrintCopies, printCode), false);
+                    }
                 }
                 else
                 {
@@ -163,6 +274,14 @@ namespace Scanner.ViewModels
 
         private async Task RefreshWorkOrdersAsync(bool showResult)
         {
+            if (App.CurrentSession != null && App.CurrentSession.IsLocalMode)
+            {
+                WebStatus = Resource("WebLocalMode");
+                WebLastTime = "--";
+                SetStatus(Resource("LocalModeReady"), false);
+                RequestFocus();
+                return;
+            }
             if (App.CurrentSession == null || string.IsNullOrWhiteSpace(App.CurrentSession.Token))
             {
                 _dialogs.Warning(Resource("NoSessionMessage"), Resource("NotLoggedInTitle"));
@@ -205,9 +324,9 @@ namespace Scanner.ViewModels
             }
         }
 
-        private void ImportCsv()
+        private void ImportUrgentWorkOrders()
         {
-            string filePath = _dialogs.SelectCsvFile();
+            string filePath = _dialogs.SelectUrgentWorkOrderFile();
             if (string.IsNullOrWhiteSpace(filePath))
             {
                 RequestFocus();
@@ -215,15 +334,15 @@ namespace Scanner.ViewModels
             }
             try
             {
-                IReadOnlyList<WorkOrderRemark> imported = _csvImport.ImportUrgentWorkOrders(filePath);
-                _search.MergeImported(imported);
-                SetStatus(FormatResource("CsvImportSuccess", imported.Count), false);
-                _dialogs.Information(FormatResource("CsvImportDialog", imported.Count), Resource("ImportCompleteTitle"));
+                UrgentWorkOrderImportResult imported = _workOrderImport.Import(filePath);
+                _search.ReplaceImported(imported.Rules);
+                SetStatus(FormatResource("UrgentImportSuccess", imported.ImportedRowCount, imported.SnRuleCount, imported.OidRuleCount), false);
+                _dialogs.Information(FormatResource("UrgentImportDialog", imported.ImportedRowCount, imported.SnRuleCount, imported.OidRuleCount), Resource("ImportCompleteTitle"));
             }
             catch (Exception ex)
             {
-                SetStatus(FormatResource("CsvImportFailed", ex.Message), true);
-                _dialogs.Error(ex.Message, Resource("CsvImportFailedTitle"));
+                SetStatus(FormatResource("UrgentImportFailed", ex.Message), true);
+                _dialogs.Error(ex.Message, Resource("UrgentImportFailedTitle"));
             }
             finally
             {
@@ -303,6 +422,11 @@ namespace Scanner.ViewModels
         private void RequestFocus()
         {
             FocusRequested?.Invoke(this, EventArgs.Empty);
+        }
+
+        private static int NormalizePrintCopies(int copies)
+        {
+            return copies >= 0 && copies <= 2 ? copies : 2;
         }
     }
 }

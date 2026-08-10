@@ -7,7 +7,7 @@
         mc:Ignorable="d"
       Title="登录"
         Width="460"
-        Height="470"
+        Height="480"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded">
@@ -22,6 +22,7 @@
 
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
@@ -85,15 +86,27 @@
                         IsDefault="True"
                         Click="LoginButton_Click"/>
 
+                <Button x:Name="LocalModeButton"
+                        Grid.Row="7"
+                        Content="本地扫描模式"
+                        Height="44"
+                        Margin="0,12,0,0"
+                        FontSize="16"
+                        FontWeight="SemiBold"
+                        Foreground="#2457D6"
+                        Background="#EEF3FF"
+                        BorderBrush="#AFC2F5"
+                        Click="LocalModeButton_Click"/>
+
                 <TextBlock x:Name="StatusTextBlock"
-                           Grid.Row="7"
+                           Grid.Row="8"
                            Text=""
                            FontSize="14"
                            Foreground="DarkRed"
                            TextWrapping="Wrap"
                            TextAlignment="Center"
                            VerticalAlignment="Top"
-                           Margin="0,18,0,0"/>
+                           Margin="0,14,0,0"/>
 
             </Grid>
         </Border>

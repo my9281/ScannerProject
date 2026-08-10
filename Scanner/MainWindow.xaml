@@ -10,6 +10,7 @@
         Height="700"
         MinWidth="820"
         MinHeight="620"
+        ResizeMode="NoResize"
         Background="#F3F6FB"
         FontFamily="Microsoft YaHei UI"
         WindowStartupLocation="CenterScreen"
@@ -84,6 +85,44 @@
             <Setter Property="Margin" Value="0,4"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
+        <Style x:Key="OptionRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Height" Value="32"/>
+            <Setter Property="MinWidth" Value="62"/>
+            <Setter Property="Padding" Value="11,0"/>
+            <Setter Property="Margin" Value="2,0"/>
+            <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="OptionBorder"
+                                Padding="{TemplateBinding Padding}"
+                                Background="White"
+                                BorderBrush="Transparent"
+                                BorderThickness="1"
+                                CornerRadius="7">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="OptionBorder" Property="Background" Value="#F0F4FC"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="OptionBorder" Property="Background" Value="#E6EDFF"/>
+                                <Setter TargetName="OptionBorder" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="OptionBorder" Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid Margin="28">
         <Grid.RowDefinitions>
@@ -151,7 +190,23 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <CheckBox IsChecked="{Binding IsPrint, Mode=TwoWay}" Content="{DynamicResource AutoPrint}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="15" FontWeight="SemiBold" VerticalContentAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{DynamicResource AutoPrint}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,7,0" VerticalAlignment="Center"/>
+                        <Border Background="#F7F9FC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="9" Padding="2">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="{DynamicResource PrintNone}" Style="{StaticResource OptionRadioButtonStyle}" GroupName="PrintCopies" IsChecked="{Binding IsPrintDisabled, Mode=TwoWay}" IsEnabled="{Binding IsInputEnabled}"/>
+                                <RadioButton Content="{DynamicResource PrintOnce}" Style="{StaticResource OptionRadioButtonStyle}" GroupName="PrintCopies" IsChecked="{Binding IsPrintOnce, Mode=TwoWay}" IsEnabled="{Binding IsInputEnabled}"/>
+                                <RadioButton Content="{DynamicResource PrintTwice}" Style="{StaticResource OptionRadioButtonStyle}" GroupName="PrintCopies" IsChecked="{Binding IsPrintTwice, Mode=TwoWay}" IsEnabled="{Binding IsInputEnabled}"/>
+                            </StackPanel>
+                        </Border>
+                        <TextBlock Text="{DynamicResource LabelSizeSettingLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold" Margin="18,0,7,0" VerticalAlignment="Center"/>
+                        <Border Background="#F7F9FC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="9" Padding="2">
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton Content="4 × 6" Style="{StaticResource OptionRadioButtonStyle}" GroupName="LabelPaperSize" IsChecked="{Binding IsWideLabelPaper, Mode=TwoWay}" IsEnabled="{Binding IsInputEnabled}"/>
+                                <RadioButton Content="4 × 4" Style="{StaticResource OptionRadioButtonStyle}" GroupName="LabelPaperSize" IsChecked="{Binding IsSquareLabelPaper, Mode=TwoWay}" IsEnabled="{Binding IsInputEnabled}"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
                     <StackPanel Grid.Column="1" Orientation="Horizontal">
                         <Button x:Name="OpenLogButton" Content="{DynamicResource OpenScanLog}" Style="{StaticResource BaseButtonStyle}" Margin="0,0,10,0" Command="{Binding OpenLogCommand}"/>
                         <Button x:Name="PrintButton" Content="{DynamicResource PrintTwoCopies}" Style="{StaticResource PrimaryButtonStyle}" MinWidth="132" Command="{Binding ProcessScanCommand}"/>
@@ -167,8 +222,8 @@
             <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="22" Margin="0,0,9,0">
                 <StackPanel>
                     <TextBlock Text="{DynamicResource RuntimeInformation}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="17" FontWeight="Bold" Margin="0,0,0,12"/>
-                    <TextBlock Text="{DynamicResource LabelInformation}" Style="{StaticResource InfoLabelStyle}"/>
-                    <TextBlock Text="{DynamicResource CopiesInformation}" Style="{StaticResource InfoLabelStyle}"/>
+                    <TextBlock Text="{Binding LabelInformationText}" Style="{StaticResource InfoLabelStyle}"/>
+                    <TextBlock Text="{Binding CopiesInformationText}" Style="{StaticResource InfoLabelStyle}"/>
                     <TextBlock x:Name="PrinterTextBlock" Text="{Binding PrinterText}" Style="{StaticResource InfoLabelStyle}"/>
                     <TextBlock x:Name="LogFileTextBlock" Text="{Binding LogFileText}" Style="{StaticResource InfoLabelStyle}"/>
                     <Border Height="1" Background="#E9EDF4" Margin="0,10"/>
@@ -182,10 +237,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Text="{DynamicResource ProcessingStatusTitle}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold"/>
-                    <StackPanel Grid.Row="1" VerticalAlignment="Center">
-                        <Ellipse Width="11" Height="11" Fill="{Binding StatusBrush}" HorizontalAlignment="Left" Margin="0,0,0,12"/>
-                        <TextBlock x:Name="StatusTextBlock" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap"/>
-                    </StackPanel>
+                    <TextBlock Grid.Row="1" x:Name="StatusTextBlock" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}" FontSize="20" FontWeight="Bold" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,14,0,0"/>
                 </Grid>
             </Border>
         </Grid>
@@ -203,7 +255,7 @@
                     <TextBlock x:Name="WebLastTime" Text="{Binding WebLastTime}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button x:Name="ImportCsvButton" Content="{DynamicResource ImportUrgentCsv}" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportCsvCommand}"/>
+                    <Button x:Name="ImportUrgentWorkOrdersButton" Content="{DynamicResource ImportUrgentWorkOrders}" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportUrgentWorkOrdersCommand}"/>
                     <Button Content="{DynamicResource ManualRefresh}" Style="{StaticResource BaseButtonStyle}" Height="34" Command="{Binding RefreshCommand}"/>
                 </StackPanel>
             </Grid>

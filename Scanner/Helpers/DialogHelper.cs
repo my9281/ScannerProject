@@ -5,12 +5,12 @@ namespace Scanner.Helpers
 {
     public sealed class DialogHelper
     {
-        public string SelectCsvFile()
+        public string SelectUrgentWorkOrderFile()
         {
             var dialog = new OpenFileDialog
             {
-                Title = Resource("SelectCsvTitle"),
-                Filter = Resource("CsvFilter"),
+                Title = Resource("SelectUrgentWorkOrderTitle"),
+                Filter = Resource("UrgentWorkOrderFilter"),
                 Multiselect = false
             };
             return dialog.ShowDialog() == true ? dialog.FileName : null;
