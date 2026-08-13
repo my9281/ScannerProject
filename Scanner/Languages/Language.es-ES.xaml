@@ -93,4 +93,13 @@
     <system:String x:Key="SelectUrgentWorkOrderTitle">Seleccione un archivo Excel o CSV de órdenes urgentes</system:String>
     <system:String x:Key="UrgentWorkOrderFilter">Libros de Excel (*.xlsx)|*.xlsx|Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
     <system:String x:Key="Gs1AreaWarning">Advertencia: se detectó el código de zona GS1 AI 420. No se registró ni imprimió.</system:String>
+    <system:String x:Key="ModelSelectionTitle">Seleccionar modelo de impresión</system:String>
+    <system:String x:Key="ModelSelectionHeading">No se reconoció ningún modelo en el código</system:String>
+    <system:String x:Key="ModelSelectionHint">Seleccione un modelo y pulse Enter para imprimir, o escriba uno nuevo abajo y pulse Enter para guardarlo e imprimirlo.</system:String>
+    <system:String x:Key="AddModelLabel">Introducir un modelo nuevo</system:String>
+    <system:String x:Key="AddAndPrintModel">Añadir e imprimir</system:String>
+    <system:String x:Key="UseSelectedModel">Usar seleccionado</system:String>
+    <system:String x:Key="SelectModelRequired">Seleccione primero un modelo.</system:String>
+    <system:String x:Key="ModelSelectionCancelled">El escaneo se registró, pero no se seleccionó un modelo y no se imprimió: {0}</system:String>
+    <system:String x:Key="Cancel">Cancelar</system:String>
 </ResourceDictionary>

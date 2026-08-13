@@ -1,4 +1,5 @@
 using Microsoft.Win32;
+using Scanner.Services;
 using System.Windows;
 
 namespace Scanner.Helpers
@@ -29,6 +30,17 @@ namespace Scanner.Helpers
         public void Error(string message, string title)
         {
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        public string SelectMeterModel(MeterModelService meterModels)
+        {
+            var dialog = new MeterModelSelectionWindow(meterModels);
+            Window owner = Application.Current.MainWindow;
+            if (owner != null && owner.IsVisible)
+            {
+                dialog.Owner = owner;
+            }
+            return dialog.ShowDialog() == true ? dialog.SelectedModel : null;
         }
 
         private static string Resource(string key)

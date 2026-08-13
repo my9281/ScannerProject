@@ -229,7 +229,6 @@ namespace Scanner.ViewModels
                 SetStatus(FormatResource("Processing", code), false);
                 ScanResult scan = _scanning.Record(code);
                 code = scan.Code;
-                string meterModel = _meterModels.FindModel(code);
                 if (scan.WasRecorded)
                 {
                     RaisePropertyChanged(nameof(CountText));
@@ -237,12 +236,23 @@ namespace Scanner.ViewModels
                 WorkOrderMatch match = _search.Resolve(code, scan.Oid.IsOid);
                 WorkOrderRemark matched = match == null ? null : match.WorkOrder;
                 string printCode = match == null ? code : match.GetPrintCode(code);
+                string meterModel = _meterModels.FindModel(printCode);
                 if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
                 {
                     SetStatus(Resource("OidRecorded"), false);
                 }
                 else if (PrintCopies > 0)
                 {
+                    if (string.IsNullOrWhiteSpace(meterModel))
+                    {
+                        meterModel = _dialogs.SelectMeterModel(_meterModels);
+                        if (string.IsNullOrWhiteSpace(meterModel))
+                        {
+                            SetStatus(FormatResource("ModelSelectionCancelled", printCode), true);
+                            ScanCode = string.Empty;
+                            return;
+                        }
+                    }
                     _printing.PrintLabel(printCode, PrintCopies, matched, meterModel, LabelPaperSize);
                     if (scan.Oid.ShouldPrint)
                     {

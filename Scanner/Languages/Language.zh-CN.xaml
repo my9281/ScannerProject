@@ -85,4 +85,13 @@
     <system:String x:Key="SelectUrgentWorkOrderTitle">选择紧急工单 Excel 或 CSV 文件</system:String>
     <system:String x:Key="UrgentWorkOrderFilter">Excel 工作簿 (*.xlsx)|*.xlsx|CSV 文件 (*.csv)|*.csv|所有文件 (*.*)|*.*</system:String>
     <system:String x:Key="Gs1AreaWarning">警告：扫描到 GS1 AI 420 地区码，本次不记录、不打印。</system:String>
+    <system:String x:Key="ModelSelectionTitle">选择打印型号</system:String>
+    <system:String x:Key="ModelSelectionHeading">未能从编码中识别型号</system:String>
+    <system:String x:Key="ModelSelectionHint">选择一个型号后按 Enter 直接打印；也可以在下方输入新型号并按 Enter，系统会保存后打印。</system:String>
+    <system:String x:Key="AddModelLabel">输入新型号</system:String>
+    <system:String x:Key="AddAndPrintModel">添加并打印</system:String>
+    <system:String x:Key="UseSelectedModel">使用所选型号</system:String>
+    <system:String x:Key="SelectModelRequired">请先选择一个型号。</system:String>
+    <system:String x:Key="ModelSelectionCancelled">已记录扫描，但未选择型号，因此未打印：{0}</system:String>
+    <system:String x:Key="Cancel">取消</system:String>
 </ResourceDictionary>

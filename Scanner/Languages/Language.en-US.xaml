@@ -93,4 +93,13 @@
     <system:String x:Key="SelectUrgentWorkOrderTitle">Select an urgent work-order Excel or CSV file</system:String>
     <system:String x:Key="UrgentWorkOrderFilter">Excel workbooks (*.xlsx)|*.xlsx|CSV files (*.csv)|*.csv|All files (*.*)|*.*</system:String>
     <system:String x:Key="Gs1AreaWarning">Warning: GS1 AI 420 area code detected. Nothing was recorded or printed.</system:String>
+    <system:String x:Key="ModelSelectionTitle">Select print model</system:String>
+    <system:String x:Key="ModelSelectionHeading">No model was recognized in the code</system:String>
+    <system:String x:Key="ModelSelectionHint">Select a model and press Enter to print, or enter a new model below and press Enter to save and print it.</system:String>
+    <system:String x:Key="AddModelLabel">Enter a new model</system:String>
+    <system:String x:Key="AddAndPrintModel">Add and print</system:String>
+    <system:String x:Key="UseSelectedModel">Use selected</system:String>
+    <system:String x:Key="SelectModelRequired">Select a model first.</system:String>
+    <system:String x:Key="ModelSelectionCancelled">The scan was recorded, but no model was selected, so it was not printed: {0}</system:String>
+    <system:String x:Key="Cancel">Cancel</system:String>
 </ResourceDictionary>
