@@ -255,6 +255,7 @@
                     <TextBlock x:Name="WebLastTime" Text="{Binding WebLastTime}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Content="入库检测" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Click="OpenChecklistButton_Click"/>
                     <Button x:Name="ImportUrgentWorkOrdersButton" Content="{DynamicResource ImportUrgentWorkOrders}" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportUrgentWorkOrdersCommand}"/>
                     <Button Content="{DynamicResource ManualRefresh}" Style="{StaticResource BaseButtonStyle}" Height="34" Command="{Binding RefreshCommand}"/>
                 </StackPanel>

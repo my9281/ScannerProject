@@ -73,12 +73,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\WorkOrderRemarkResponse.cs" />
+    <Compile Include="Models\InboundChecklistRecord.cs" />
     <Compile Include="Services\WorkOrderRemarkService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\OidService.cs" />
     <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\SpeechService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
+    <Compile Include="Services\ChecklistDataCache.cs" />
+    <Compile Include="Services\ChecklistXlsxReader.cs" />
     <Compile Include="Helpers\UrgentWorkOrderImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
@@ -107,6 +110,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ChecklistWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,6 +127,9 @@
     </Compile>
     <Compile Include="MeterModelSelectionWindow.xaml.cs">
       <DependentUpon>MeterModelSelectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChecklistWindow.xaml.cs">
+      <DependentUpon>ChecklistWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
