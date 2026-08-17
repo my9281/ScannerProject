@@ -44,11 +44,5 @@ namespace Scanner
             SnTextBox.SelectAll();
         }
 
-        private void OpenChecklistButton_Click(object sender, RoutedEventArgs e)
-        {
-            ChecklistWindow window = new ChecklistWindow { Owner = this };
-            window.ShowDialog();
-            FocusScannerInput();
-        }
     }
 }
