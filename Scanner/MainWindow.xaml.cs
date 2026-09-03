@@ -44,5 +44,26 @@ namespace Scanner
             SnTextBox.SelectAll();
         }
 
+        private void OpenChecklistButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChecklistWindow window = new ChecklistWindow { Owner = this };
+            window.ShowDialog();
+            FocusScannerInput();
+        }
+
+        private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e)
+        {
+            OutboundInspectionWindow window = new OutboundInspectionWindow { Owner = this };
+            window.ShowDialog();
+            FocusScannerInput();
+        }
+
+        private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e)
+        {
+            LocationFeeComparisonWindow window = new LocationFeeComparisonWindow { Owner = this };
+            window.ShowDialog();
+            FocusScannerInput();
+        }
+
     }
 }

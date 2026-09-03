@@ -37,10 +37,17 @@ public sealed class OidService
     public OidScanResult Inspect(string code)
     {
         string value = code.Trim();
-        if (!LongNumeric.IsMatch(value) && !FedEx.IsMatch(value) && !Amazon.IsMatch(value)) return OidScanResult.NotOid;
+        if (!IsOid(value)) return OidScanResult.NotOid;
         _counts.TryGetValue(value, out int count);
         _counts[value] = ++count;
         return new OidScanResult(true, count);
+    }
+
+    public static bool IsOid(string code)
+    {
+        string value = ScanService.GetBarcodePayload(code);
+        if (value.StartsWith("420", StringComparison.Ordinal)) return value.Length > 20;
+        return LongNumeric.IsMatch(value) || FedEx.IsMatch(value) || Amazon.IsMatch(value);
     }
 }
 
@@ -58,9 +65,14 @@ public sealed class ScanService
     public string LogPath => _log.FilePath;
     public static bool IsGs1AreaCode(string input)
     {
-        string value = (input ?? string.Empty).Trim();
+        string value = GetBarcodePayload(input);
+        return value.StartsWith("420", StringComparison.Ordinal) && value.Length <= 20;
+    }
+    internal static string GetBarcodePayload(string input)
+    {
+        string value = new string((input ?? string.Empty).Where(c => !char.IsWhiteSpace(c) && c != '\uFEFF' && c != '\u200B').ToArray());
         if (value.StartsWith("]C1", StringComparison.OrdinalIgnoreCase)) value = value[3..];
-        return value.StartsWith("420", StringComparison.Ordinal);
+        return value;
     }
     public async Task<ScanResult> RecordAsync(string input)
     {

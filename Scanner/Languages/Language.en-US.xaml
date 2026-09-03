@@ -19,6 +19,13 @@
     <system:String x:Key="PrintTwoCopies">Print</system:String>
 
     <system:String x:Key="OpenScanLog">Open scan log</system:String>
+    <system:String x:Key="UploadScanLog">Upload scan log</system:String>
+    <system:String x:Key="UploadingScanLog">Uploading scan log…</system:String>
+    <system:String x:Key="UploadScanLogSuccess">Scan log uploaded: {0}</system:String>
+    <system:String x:Key="UploadScanLogFailed">Unable to upload scan log: {0}</system:String>
+    <system:String x:Key="UploadScanLogDialog">The scan log was uploaded.&#10;&#10;Server file name: {0}&#10;File size: {1}</system:String>
+    <system:String x:Key="UploadCompleteTitle">Upload complete</system:String>
+    <system:String x:Key="UploadFailedTitle">Upload failed</system:String>
 
     <system:String x:Key="RuntimeInformation">Runtime information</system:String>
 

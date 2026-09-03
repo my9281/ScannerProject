@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Net.Http" />
@@ -73,8 +74,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\WorkOrderRemarkResponse.cs" />
+    <Compile Include="Models\InboundChecklistRecord.cs" />
+    <Compile Include="Models\OutboundSkuSummary.cs" />
+    <Compile Include="Models\OutboundInspectionRecord.cs" />
     <Compile Include="Services\WorkOrderRemarkService.cs" />
     <Compile Include="Services\ScanService.cs" />
+    <Compile Include="Services\ScanUploadService.cs" />
+    <Compile Include="Services\ChecklistDataCache.cs" />
+    <Compile Include="Services\ChecklistXlsxReader.cs" />
+    <Compile Include="Services\OutboundInspectionService.cs" />
+    <Compile Include="Services\OutboundInspectionXlsxWriter.cs" />
+    <Compile Include="Services\LocationFeeComparisonService.cs" />
     <Compile Include="Services\OidService.cs" />
     <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\SpeechService.cs" />
@@ -107,6 +117,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="ChecklistWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OutboundInspectionWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LocationFeeComparisonWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,6 +142,15 @@
     </Compile>
     <Compile Include="MeterModelSelectionWindow.xaml.cs">
       <DependentUpon>MeterModelSelectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ChecklistWindow.xaml.cs">
+      <DependentUpon>ChecklistWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="OutboundInspectionWindow.xaml.cs">
+      <DependentUpon>OutboundInspectionWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LocationFeeComparisonWindow.xaml.cs">
+      <DependentUpon>LocationFeeComparisonWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -155,6 +186,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Resource Include="Resources\Bickham Script Pro Bold.ttf" />
+    <Resource Include="Resources\Bickham Script Pro Regular.ttf" />
+    <Resource Include="Resources\Bickham Script Pro Semibold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -162,5 +196,6 @@
   <ItemGroup>
     <Resource Include="logo.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

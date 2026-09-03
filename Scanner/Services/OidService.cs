@@ -36,7 +36,11 @@ namespace Scanner.Services
             {
                 return false;
             }
-            string normalized = code.Trim();
+            string normalized = ScanService.GetBarcodePayload(code);
+            if (normalized.StartsWith("420", StringComparison.Ordinal))
+            {
+                return normalized.Length > 20;
+            }
             return LongNumericOid.IsMatch(normalized) || FedExOid.IsMatch(normalized) || AmazonOid.IsMatch(normalized);
         }
 

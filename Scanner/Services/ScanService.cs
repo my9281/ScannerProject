@@ -25,12 +25,18 @@ namespace Scanner.Services
 
         public static bool IsGs1AreaCode(string input)
         {
+            string value = GetBarcodePayload(input);
+            return value.StartsWith("420", StringComparison.Ordinal) && value.Length <= 20;
+        }
+
+        internal static string GetBarcodePayload(string input)
+        {
             string value = WorkOrderSearchService.NormalizeCode(input);
             if (value.StartsWith("]C1", StringComparison.OrdinalIgnoreCase))
             {
                 value = value.Substring(3);
             }
-            return value.StartsWith("420", StringComparison.Ordinal);
+            return value;
         }
 
         public ScanResult Record(string input)

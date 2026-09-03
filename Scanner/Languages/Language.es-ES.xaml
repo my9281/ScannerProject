@@ -19,6 +19,13 @@
     <system:String x:Key="PrintTwoCopies">Imprimir</system:String>
 
     <system:String x:Key="OpenScanLog">Abrir registro</system:String>
+    <system:String x:Key="UploadScanLog">Subir registro</system:String>
+    <system:String x:Key="UploadingScanLog">Subiendo el registro…</system:String>
+    <system:String x:Key="UploadScanLogSuccess">Registro subido: {0}</system:String>
+    <system:String x:Key="UploadScanLogFailed">No se pudo subir el registro: {0}</system:String>
+    <system:String x:Key="UploadScanLogDialog">El registro fue subido.&#10;&#10;Archivo del servidor: {0}&#10;Tamaño: {1}</system:String>
+    <system:String x:Key="UploadCompleteTitle">Carga completada</system:String>
+    <system:String x:Key="UploadFailedTitle">Error de carga</system:String>
 
     <system:String x:Key="RuntimeInformation">Información de ejecución</system:String>
 

@@ -4,6 +4,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
@@ -63,6 +65,72 @@ namespace Scanner.Helpers
                 {
                     PrintBitmap(bitmap, normalizedPaperSize);
                 }
+            }
+        }
+
+        public void PrintOutboundInspection(string palletNumber, IList<OutboundSkuSummary> skuItems)
+        {
+            string pallet = (palletNumber ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(pallet)) throw new ArgumentException("托盘号不能为空。", nameof(palletNumber));
+            if (skuItems == null || skuItems.Count == 0) throw new ArgumentException("没有可打印的 SKU 统计数据。", nameof(skuItems));
+
+            const int itemsPerPage = 24;
+            int pageCount = (skuItems.Count + itemsPerPage - 1) / itemsPerPage;
+            int totalQuantity = skuItems.Sum(item => item.Quantity);
+            for (int pageIndex = 0; pageIndex < pageCount; pageIndex++)
+            {
+                IList<OutboundSkuSummary> pageItems = skuItems.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                Canvas label = CreateOutboundInspectionLabel(pallet, pageItems, totalQuantity, skuItems.Count, pageIndex + 1, pageCount);
+                BitmapSource source = RenderOutboundLabel(label);
+                using (Bitmap bitmap = ToBitmap(source)) PrintOutboundBitmap(bitmap);
+            }
+        }
+
+        private static Canvas CreateOutboundInspectionLabel(string palletNumber, IList<OutboundSkuSummary> items, int totalQuantity, int skuCount, int pageNumber, int pageCount)
+        {
+            var canvas = new Canvas { Width = SquareLabelWidth, Height = WideLabelWidth, Background = WpfBrushes.White };
+            AddText(canvas, Shorten(palletNumber, 32), 27, 18, 18, SquareLabelWidth - 36);
+            AddText(canvas, string.Format("总数量：{0}    SKU种类：{1}", totalQuantity, skuCount), 15, 18, 58, SquareLabelWidth - 36);
+            AddText(canvas, string.Format("第 {0}/{1} 页", pageNumber, pageCount), 12, 18, 82, SquareLabelWidth - 36);
+
+            for (int index = 0; index < items.Count; index++)
+            {
+                OutboundSkuSummary item = items[index];
+                string line = Shorten(item.Sku, 30) + "    × " + item.Quantity;
+                AddText(canvas, line, 14, 18, 108 + index * 18, SquareLabelWidth - 36);
+            }
+            AddText(canvas, "打印时间：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm"), 11, 18, 554, SquareLabelWidth - 36);
+            return canvas;
+        }
+
+        private static BitmapSource RenderOutboundLabel(Canvas canvas)
+        {
+            canvas.Measure(new System.Windows.Size(canvas.Width, canvas.Height));
+            canvas.Arrange(new Rect(0, 0, canvas.Width, canvas.Height));
+            canvas.UpdateLayout();
+            var bitmap = new RenderTargetBitmap(1200, 1800, 300, 300, PixelFormats.Pbgra32);
+            bitmap.Render(canvas);
+            bitmap.Freeze();
+            return bitmap;
+        }
+
+        private static void PrintOutboundBitmap(Bitmap bitmap)
+        {
+            using (var document = new PrintDocument())
+            {
+                document.PrintController = new StandardPrintController();
+                if (!document.PrinterSettings.IsValid) throw new InvalidOperationException("Windows 默认打印机无效或不可用。");
+                document.DefaultPageSettings.PaperSize = new PaperSize("4x6 Portrait", 400, 600);
+                document.DefaultPageSettings.Landscape = false;
+                document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+                document.OriginAtMargins = false;
+                document.PrintPage += (sender, args) =>
+                {
+                    if (args.Graphics == null) throw new InvalidOperationException("无法创建打印绘图环境。");
+                    args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
+                    args.HasMorePages = false;
+                };
+                document.Print();
             }
         }
 

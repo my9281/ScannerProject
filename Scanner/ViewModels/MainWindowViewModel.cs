@@ -14,6 +14,7 @@ namespace Scanner.ViewModels
         private readonly NetworkHelper _network;
         private readonly PrintingHelper _printing;
         private readonly ScanService _scanning;
+        private readonly ScanUploadService _upload;
         private readonly MeterModelService _meterModels;
         private readonly SpeechService _speech;
         private readonly WorkOrderSearchService _search;
@@ -28,15 +29,16 @@ namespace Scanner.ViewModels
         private string _labelPaperSize;
         private int _printCopies;
         private bool _isBusy;
-        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new MeterModelService(), new SpeechService(), new WorkOrderSearchService(), new UrgentWorkOrderImportHelper(), new DialogHelper())
+        public MainWindowViewModel() : this(new NetworkHelper(), new PrintingHelper(), new ScanService(), new ScanUploadService(), new MeterModelService(), new SpeechService(), new WorkOrderSearchService(), new UrgentWorkOrderImportHelper(), new DialogHelper())
         {
         }
 
-        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, UrgentWorkOrderImportHelper workOrderImport, DialogHelper dialogs)
+        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, ScanUploadService upload, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, UrgentWorkOrderImportHelper workOrderImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));
             _scanning = scanning ?? throw new ArgumentNullException(nameof(scanning));
+            _upload = upload ?? throw new ArgumentNullException(nameof(upload));
             _meterModels = meterModels ?? throw new ArgumentNullException(nameof(meterModels));
             _speech = speech ?? throw new ArgumentNullException(nameof(speech));
             _search = search ?? throw new ArgumentNullException(nameof(search));
@@ -46,6 +48,7 @@ namespace Scanner.ViewModels
             _printCopies = NormalizePrintCopies(Properties.Settings.Default.PrintCopies);
             ProcessScanCommand = new RelayCommand(ProcessScan, () => !IsBusy);
             OpenLogCommand = new RelayCommand(OpenLog, () => !IsBusy);
+            UploadLogCommand = new RelayCommand(async () => await UploadLogAsync(), () => !IsBusy);
             RefreshCommand = new RelayCommand(async () => await RefreshWorkOrdersAsync(true), () => !IsBusy);
             ImportUrgentWorkOrdersCommand = new RelayCommand(ImportUrgentWorkOrders, () => !IsBusy);
             ChangeLanguageCommand = new RelayCommand(parameter => ChangeLanguage(parameter as string));
@@ -55,6 +58,7 @@ namespace Scanner.ViewModels
         public event EventHandler FocusRequested;
         public ICommand ProcessScanCommand { get; }
         public ICommand OpenLogCommand { get; }
+        public ICommand UploadLogCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand ImportUrgentWorkOrdersCommand { get; }
         public ICommand ChangeLanguageCommand { get; }
@@ -376,6 +380,29 @@ namespace Scanner.ViewModels
             }
         }
 
+        private async Task UploadLogAsync()
+        {
+            IsBusy = true;
+            try
+            {
+                SetStatus(Resource("UploadingScanLog"), false);
+                ScanUploadResult result = await _upload.UploadAsync(_scanning.LogFilePath);
+                SetStatus(FormatResource("UploadScanLogSuccess", result.FileName), false);
+                _dialogs.Information(FormatResource("UploadScanLogDialog", result.FileName, FormatFileSize(result.Size)), Resource("UploadCompleteTitle"));
+            }
+            catch (Exception ex)
+            {
+                _scanning.WriteError(ex);
+                SetStatus(FormatResource("UploadScanLogFailed", ex.Message), true);
+                _dialogs.Error(ex.Message, Resource("UploadFailedTitle"));
+            }
+            finally
+            {
+                IsBusy = false;
+                RequestFocus();
+            }
+        }
+
         private void ChangeLanguage(string languageCode)
         {
             string path;
@@ -437,6 +464,13 @@ namespace Scanner.ViewModels
         private static int NormalizePrintCopies(int copies)
         {
             return copies >= 0 && copies <= 2 ? copies : 2;
+        }
+
+        private static string FormatFileSize(long bytes)
+        {
+            return bytes >= 1024 * 1024
+                ? (bytes / 1024d / 1024d).ToString("0.##") + " MB"
+                : (bytes / 1024d).ToString("0.##") + " KB";
         }
     }
 }
