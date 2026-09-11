@@ -1,6 +1,8 @@
 # 幽梦运单之星扫描系统
 
-YM-Star Scanner System 是一款扫码记录、工单匹配、标签打印、入库检测、出库核对和库位费比对工具。Windows 完整业务基准位于 `Scanner` WPF 项目；`MaUIScanner` 提供 Android 小屏界面及 Windows / Intel macOS 迁移实现，当前仍有功能差异。
+工程名称已于2026-09-12调整为 `Scanner.WPF` 和 `Scan.MaUI`。目录与命名空间归属见 [项目结构审计](docs/项目结构审计.md)；运行 `powershell -File tests/AuditProjectLayout.ps1` 可复查全部解决方案源码。
+
+YM-Star Scanner System 是一款扫码记录、工单匹配、标签打印、入库检测、出库核对和库位费比对工具。Windows 完整业务基准位于 `Scanner` WPF 项目；`Scan.MaUI` 提供 Android 小屏界面及 Windows / Intel macOS 迁移实现，当前仍有功能差异。
 
 ## 文档入口
 
@@ -22,14 +24,14 @@ MAUI已接入XLSX紧急工单导入，但CSV仍是旧列映射；自定义型号
 
 ## 开发与构建
 
-Windows WPF：使用Visual Studio / MSBuild及.NET Framework 4.7.2开发工具生成 `Scanner/Scanner.csproj`。
+Windows WPF：使用Visual Studio / MSBuild及.NET Framework 4.7.2开发工具生成 `Scanner.WPF/Scanner.WPF.csproj`。
 
 MAUI：安装.NET 10 SDK及目标平台工作负载，在仓库根目录执行：
 
 ```powershell
-dotnet restore MaUIScanner/MaUIScanner.csproj
-dotnet build MaUIScanner/MaUIScanner.csproj -f net10.0-android
-dotnet build MaUIScanner/MaUIScanner.csproj -f net10.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
+dotnet restore Scan.MaUI/Scan.MaUI.csproj
+dotnet build Scan.MaUI/Scan.MaUI.csproj -f net10.0-android
+dotnet build Scan.MaUI/Scan.MaUI.csproj -f net10.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
 dotnet run --project tests/BarcodeClassification.Tests/BarcodeClassification.Tests.csproj
 ```
 
@@ -46,15 +48,15 @@ Mac原生打包、签名与运行需要Mac及匹配的Xcode/工作负载环境�
 
 ## 启动程序
 
-开发环境中使用 Visual Studio 打开 `Scanner.slnx`，将 `Scanner` 设为启动项目后运行。
+开发环境中使用 Visual Studio 打开 `Scanner.slnx`，将 `Scanner.WPF` 设为启动项目后运行。
 
 命令行编译示例：
 
 ```powershell
-& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" Scanner\Scanner.csproj /t:Build /p:Configuration=Release /m
+& "C:\Program Files\Microsoft Visual Studio\18\Community\MSBuild\Current\Bin\MSBuild.exe" Scanner.WPF\Scanner.WPF.csproj /t:Build /p:Configuration=Release /m
 ```
 
-生成文件默认位于 `Scanner\bin\Release`。
+生成文件默认位于 `Scanner.WPF\bin\Release`。
 
 ## 登录
 
@@ -224,7 +226,7 @@ PS54 EB55 EB70 PINA AP300 SP100L PV350 PV200
 ## 项目结构
 
 ```text
-Scanner/
+Scanner.WPF/
   Helpers/       紧急工单导入、对话框、网络、打印和日志辅助类
   Languages/     中文、英文和西班牙语资源
   Models/        登录和工单数据模型
@@ -232,7 +234,7 @@ Scanner/
   ViewModels/    主窗口 MVVM 逻辑
   MainWindow.*   主扫描界面
   LoginWindow.*  登录界面
-MaUIScanner/     已接入业务的 .NET MAUI 项目（Android / Windows / Intel macOS，迁移中）
+Scan.MaUI/     已接入业务的 .NET MAUI 项目（Android / Windows / Intel macOS，迁移中）
 WmsUploadSite/   扫描日志上传配套站点
 docs/           项目功能说明
 outputs/doc-progress-20260908/  Excel项目进度表

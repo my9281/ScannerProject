@@ -1,5 +1,5 @@
 // Isolate classification tests from speech devices and the user's scan log.
-namespace Scanner.Services
+namespace Scanner.WPF.Services
 {
     public sealed class SpeechService : IDisposable
     {
@@ -8,7 +8,7 @@ namespace Scanner.Services
     }
 }
 
-namespace Scanner.Helpers
+namespace Scanner.WPF.Helpers
 {
     public sealed class ScanLogHelper
     {
@@ -19,7 +19,7 @@ namespace Scanner.Helpers
     }
 }
 
-namespace MaUIScanner.Services
+namespace Scan.MaUI.Services
 {
     public sealed class ScanLogService
     {

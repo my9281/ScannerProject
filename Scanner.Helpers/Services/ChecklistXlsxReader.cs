@@ -7,7 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Scanner.Services
+namespace Scanner.Helpers.Services
 {
     public static class ChecklistXlsxReader
     {

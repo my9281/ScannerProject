@@ -1,7 +1,7 @@
-using DesktopScan = Scanner.Services.ScanService;
-using DesktopOid = Scanner.Services.OidService;
-using MobileScan = MaUIScanner.Services.ScanService;
-using MobileOid = MaUIScanner.Services.OidService;
+using DesktopScan = Scanner.WPF.Services.ScanService;
+using DesktopOid = Scanner.WPF.Services.OidService;
+using MobileScan = Scan.MaUI.Services.ScanService;
+using MobileOid = Scan.MaUI.Services.OidService;
 
 var cases = new (string Name, string Code, bool AreaOnly, bool Oid)[]
 {
@@ -39,7 +39,7 @@ var desktopFirst = desktop.Record(longCode);
 var desktopSecond = desktop.Record(longCode);
 Assert(desktopFirst.Oid.IsOid && !desktopFirst.Oid.ShouldPrint && desktopFirst.WasRecorded, "Desktop first OID");
 Assert(desktopSecond.Oid.ShouldPrint && !desktopSecond.WasRecorded, "Desktop repeated OID");
-var mobile = new MobileScan(new MobileOid(), new MaUIScanner.Services.ScanLogService());
+var mobile = new MobileScan(new MobileOid(), new Scan.MaUI.Services.ScanLogService());
 var mobileFirst = await mobile.RecordAsync(longCode);
 var mobileSecond = await mobile.RecordAsync(longCode);
 Assert(mobileFirst.Oid.IsOid && !mobileFirst.Oid.ShouldPrint && mobileFirst.WasRecorded, "MAUI first OID");

@@ -1,7 +1,7 @@
 #nullable enable
 using System.Text.Json.Serialization;
 
-namespace MaUIScanner.Models;
+namespace Scanner.Models.MauiContracts;
 
 public sealed class WorkOrderRemarkResponse
 {

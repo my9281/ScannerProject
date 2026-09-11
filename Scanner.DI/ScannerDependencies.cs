@@ -1,6 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using Scanner.Services;
+using Scanner.Helpers.Services;
 
 namespace Scanner.DI
 {

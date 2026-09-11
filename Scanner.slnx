@@ -1,8 +1,8 @@
 <Solution>
-  <Project Path="MaUIScanner/MaUIScanner.csproj">
+  <Project Path="Scan.MaUI/Scan.MaUI.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="Scanner/Scanner.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
+  <Project Path="Scanner.WPF/Scanner.WPF.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
   <Project Path="WmsUploadSite/WmsUploadSite.csproj" />
   <Project Path="Scanner.Models/Scanner.Models.csproj" />
   <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />

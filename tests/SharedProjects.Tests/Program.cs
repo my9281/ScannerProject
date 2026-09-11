@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Extensions.DependencyInjection;
 using Scanner.DI;
 using Scanner.Models;
-using Scanner.Services;
+using Scanner.Helpers.Services;
 
 class Program
 {

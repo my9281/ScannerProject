@@ -1,5 +1,5 @@
 using Scanner.Models;
-using Scanner.Services;
+using Scanner.Helpers.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

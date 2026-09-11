@@ -6,13 +6,13 @@
     <Nullable>disable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="../../Scanner/Services/ScanService.cs" Link="Desktop/ScanService.cs" />
-    <Compile Include="../../Scanner/Services/OidService.cs" Link="Desktop/OidService.cs" />
-    <Compile Include="../../Scanner/Services/WorkOrderSearchService.cs" Link="Desktop/WorkOrderSearchService.cs" />
+    <Compile Include="../../Scanner.WPF/Services/ScanService.cs" Link="Desktop/ScanService.cs" />
+    <Compile Include="../../Scanner.WPF/Services/OidService.cs" Link="Desktop/OidService.cs" />
+    <Compile Include="../../Scanner.WPF/Services/WorkOrderSearchService.cs" Link="Desktop/WorkOrderSearchService.cs" />
     <ProjectReference Include="../../Scanner.Models/Scanner.Models.csproj" />
-    <Compile Include="../../MaUIScanner/Services/ScanServices.cs" Link="Maui/ScanServices.cs" />
+    <Compile Include="../../Scan.MaUI/Services/ScanServices.cs" Link="Maui/ScanServices.cs" />
     <Reference Include="Newtonsoft.Json">
-      <HintPath>../../Scanner/packages/Newtonsoft.Json.13.0.5-beta1/lib/net45/Newtonsoft.Json.dll</HintPath>
+      <HintPath>../../Scanner.WPF/packages/Newtonsoft.Json.13.0.5-beta1/lib/net45/Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

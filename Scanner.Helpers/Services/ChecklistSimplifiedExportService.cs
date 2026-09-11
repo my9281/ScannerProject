@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Scanner.Services
+namespace Scanner.Helpers.Services
 {
     public sealed class ChecklistSimplifiedExportResult
     {

@@ -1,5 +1,5 @@
 using System.ComponentModel;
-namespace Scanner.Presentation
+namespace Scanner.ViewModels
 {
     public interface IViewModelBase : INotifyPropertyChanged { }
 }

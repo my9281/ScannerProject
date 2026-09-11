@@ -1,0 +1,252 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="WindowTitle">Sistema de Escaneo YM-Star</system:String>
+
+    <system:String x:Key="MainTitle">Sistema de Escaneo YM-Star</system:String>
+
+    <system:String x:Key="ScanInputTitle">Escanee o ingrese un código</system:String>
+
+    <system:String x:Key="AutoPrint">Impresión automática</system:String>
+    <system:String x:Key="PrintNone">No imprimir</system:String>
+    <system:String x:Key="PrintOnce">1 copia</system:String>
+    <system:String x:Key="PrintTwice">2 copias</system:String>
+
+    <system:String x:Key="LabelSizeSettingLabel">Tamaño de papel</system:String>
+
+    <system:String x:Key="PrintTwoCopies">Imprimir</system:String>
+
+    <system:String x:Key="OpenScanLog">Abrir registro</system:String>
+    <system:String x:Key="UploadScanLog">Subir registro</system:String>
+    <system:String x:Key="UploadingScanLog">Subiendo el registro…</system:String>
+    <system:String x:Key="UploadScanLogSuccess">Registro subido: {0}</system:String>
+    <system:String x:Key="UploadScanLogFailed">No se pudo subir el registro: {0}</system:String>
+    <system:String x:Key="UploadScanLogDialog">El registro fue subido.&#10;&#10;Archivo del servidor: {0}&#10;Tamaño: {1}</system:String>
+    <system:String x:Key="UploadCompleteTitle">Carga completada</system:String>
+    <system:String x:Key="UploadFailedTitle">Error de carga</system:String>
+
+    <system:String x:Key="RuntimeInformation">Información de ejecución</system:String>
+
+    <system:String x:Key="LabelInformation">Etiqueta actual: {0} pulgadas, sin bordes</system:String>
+
+    <system:String x:Key="CopiesInformation">Impresión automática: {0}</system:String>
+
+    <system:String x:Key="ReadingPrinter">Impresora predeterminada: Leyendo</system:String>
+
+    <system:String x:Key="DefaultPrinter">Impresora predeterminada: {0}</system:String>
+
+    <system:String x:Key="PrinterNotFound">Impresora predeterminada: No encontrada</system:String>
+
+    <system:String x:Key="LogFile">Archivo de registro:</system:String>
+
+    <system:String x:Key="LogFileValue">Archivo de registro: {0}</system:String>
+
+    <system:String x:Key="ScanCountZero">Escaneados en esta sesión: 0</system:String>
+
+    <system:String x:Key="ScanCount">Escaneados en esta sesión: {0}</system:String>
+
+    <system:String x:Key="WaitingForScan">Esperando escaneo</system:String>
+
+    <system:String x:Key="ScannerHelp">Configure el escáner como teclado HID y envíe Enter después de cada escaneo.</system:String>
+
+    <system:String x:Key="Processing">Procesando: {0}</system:String>
+
+    <system:String x:Key="EmptyCode">El código no puede estar vacío. Escanee nuevamente.</system:String>
+
+    <system:String x:Key="BusyProcessing">El código anterior todavía se está procesando. Espere.</system:String>
+
+    <system:String x:Key="SavedAndPrinted">Guardado y enviado a imprimir {0} copia(s): {1}</system:String>
+
+    <system:String x:Key="SavedWithoutPrint">Escaneo guardado sin imprimir: {0}</system:String>
+
+    <system:String x:Key="ProcessFailed">Error de procesamiento: {0}</system:String>
+
+    <system:String x:Key="OpenLogFailed">No se pudo abrir el registro: {0}</system:String>
+
+    <system:String x:Key="SettingsSaveFailed">La configuración cambió, pero no se pudo guardar: {0}</system:String>
+
+    <system:String x:Key="ScanHint">Pulse Enter después de escanear para procesar automáticamente</system:String>
+    <system:String x:Key="ProcessingStatusTitle">Estado del proceso</system:String>
+    <system:String x:Key="ServiceStatusLabel">Estado del servicio</system:String>
+    <system:String x:Key="LastRefreshLabel">Última actualización</system:String>
+    <system:String x:Key="ImportUrgentWorkOrders">Importar órdenes urgentes</system:String>
+    <system:String x:Key="ManualRefresh">Actualizar ahora</system:String>
+    <system:String x:Key="OidRecorded">OID detectado y registrado. No se imprimió esta vez.</system:String>
+    <system:String x:Key="OidReprinted">OID escaneado de nuevo; se imprimieron {0} copia(s): {1}</system:String>
+    <system:String x:Key="UrgentPrinted">Se imprimieron {0} copia(s) urgentes: {1}</system:String>
+    <system:String x:Key="NoSessionMessage">No hay una sesión válida. Inicie sesión nuevamente.</system:String>
+    <system:String x:Key="NotLoggedInTitle">Sesión no iniciada</system:String>
+    <system:String x:Key="FetchingRemarks">Obteniendo observaciones de órdenes…</system:String>
+    <system:String x:Key="WebNormal">En línea</system:String>
+    <system:String x:Key="WebLocalMode">Modo local</system:String>
+    <system:String x:Key="LocalModeReady">El modo de escaneo local está listo. El servicio de órdenes en línea no está conectado.</system:String>
+    <system:String x:Key="FetchSuccess">Observaciones obtenidas: {0} devueltas, {1} urgentes.</system:String>
+    <system:String x:Key="FetchDialogMessage">Solicitud completada correctamente.&#10;&#10;Devueltas: {0}&#10;Urgentes: {1}&#10;Hay más disponibles: {2}</system:String>
+    <system:String x:Key="WorkOrderRemarksTitle">Observaciones de órdenes</system:String>
+    <system:String x:Key="Yes">Sí</system:String>
+    <system:String x:Key="No">No</system:String>
+    <system:String x:Key="WebSessionExpired">Sesión caducada</system:String>
+    <system:String x:Key="LoginExpiredTitle">Sesión caducada</system:String>
+    <system:String x:Key="WebError">Error</system:String>
+    <system:String x:Key="FetchFailed">No se pudieron obtener las observaciones: {0}</system:String>
+    <system:String x:Key="FetchFailedTitle">Error de consulta</system:String>
+    <system:String x:Key="UrgentImportSuccess">Importación urgente completada: {0} filas, {1} reglas SN y {2} reglas OID.</system:String>
+    <system:String x:Key="UrgentImportDialog">Se importaron {0} filas válidas.&#10;&#10;Reglas SN urgentes: {1}&#10;Reglas OID por contenido: {2}</system:String>
+    <system:String x:Key="ImportCompleteTitle">Importación completada</system:String>
+    <system:String x:Key="UrgentImportFailed">Error al importar órdenes urgentes: {0}</system:String>
+    <system:String x:Key="UrgentImportFailedTitle">Error de importación urgente</system:String>
+    <system:String x:Key="SelectUrgentWorkOrderTitle">Seleccione un archivo Excel o CSV de órdenes urgentes</system:String>
+    <system:String x:Key="UrgentWorkOrderFilter">Libros de Excel (*.xlsx)|*.xlsx|Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
+    <system:String x:Key="Gs1AreaWarning">Advertencia: se detectó el código de zona GS1 AI 420. No se registró ni imprimió.</system:String>
+    <system:String x:Key="ModelSelectionTitle">Seleccionar modelo de impresión</system:String>
+    <system:String x:Key="ModelSelectionHeading">No se reconoció ningún modelo en el código</system:String>
+    <system:String x:Key="ModelSelectionHint">Seleccione un modelo y pulse Enter para imprimir, o escriba uno nuevo abajo y pulse Enter para guardarlo e imprimirlo.</system:String>
+    <system:String x:Key="AddModelLabel">Introducir un modelo nuevo</system:String>
+    <system:String x:Key="AddAndPrintModel">Añadir e imprimir</system:String>
+    <system:String x:Key="UseSelectedModel">Usar seleccionado</system:String>
+    <system:String x:Key="SelectModelRequired">Seleccione primero un modelo.</system:String>
+    <system:String x:Key="ModelSelectionCancelled">El escaneo se registró, pero no se seleccionó un modelo y no se imprimió: {0}</system:String>
+    <system:String x:Key="Cancel">Cancelar</system:String>
+    <FontFamily x:Key="AppFontFamily">/Scanner.WPF;component/Resources/Fonts/GenJyuuGothic.ttf#Gen Jyuu Gothic</FontFamily>
+    <system:String x:Key="LoginTitle">Iniciar sesión</system:String>
+    <system:String x:Key="LoginHeading">Escáner de servicio</system:String>
+    <system:String x:Key="LoginTagline">SERVICIO  ·  ESCANEO  ·  VERIFICACIÓN</system:String>
+    <system:String x:Key="MainTagline">ESCANEAR  ·  VERIFICAR  ·  IMPRIMIR</system:String>
+    <system:String x:Key="Username">Usuario</system:String>
+    <system:String x:Key="Password">Contraseña</system:String>
+    <system:String x:Key="RememberPassword">Recordar contraseña</system:String>
+    <system:String x:Key="SignIn">Entrar</system:String>
+    <system:String x:Key="LocalScanningMode">Modo de escaneo local</system:String>
+    <system:String x:Key="UsernameRequired">Introduzca su usuario.</system:String>
+    <system:String x:Key="PasswordRequired">Introduzca su contraseña.</system:String>
+    <system:String x:Key="SigningIn">Iniciando sesión…</system:String>
+    <system:String x:Key="InboundTitle">Inspección de entrada</system:String>
+    <system:String x:Key="ChecklistTitle">Lista de entrada</system:String>
+    <system:String x:Key="ChecklistHint">Importe datos base y una lista SN para generar coincidencias.</system:String>
+    <system:String x:Key="LocalCacheBadge">CACHÉ LOCAL</system:String>
+    <system:String x:Key="ImportBaseStep">1  Datos base</system:String>
+    <system:String x:Key="ImportSnStep">2  Lista SN</system:String>
+    <system:String x:Key="ExportMatchStep">3  Coincidencias</system:String>
+    <system:String x:Key="ExportMonthPending">Pendientes CSV</system:String>
+    <system:String x:Key="ProcessingSummary">Estado por fecha de proceso</system:String>
+    <system:String x:Key="Category">Categoría</system:String>
+    <system:String x:Key="CurrentMonth">Mes actual</system:String>
+    <system:String x:Key="PreviousMonth">Mes anterior</system:String>
+    <system:String x:Key="TwoMonthsAgo">Hace 2 meses</system:String>
+    <system:String x:Key="Remaining">Otras fechas</system:String>
+    <system:String x:Key="Total">Total</system:String>
+    <system:String x:Key="StatisticsHint">Fechas: hora de Pekín menos 12 h. Los porcentajes usan el total de cada columna. Reparación: el tipo original contiene “维修”.</system:String>
+    <system:String x:Key="CacheStatus">Estado de caché</system:String>
+    <system:String x:Key="BaseNotImported">Datos base: sin importar</system:String>
+    <system:String x:Key="SnNotImported">Lista SN: sin importar</system:String>
+    <system:String x:Key="CacheHint">Los datos solo se guardan en memoria y se borran al cerrar la aplicación.</system:String>
+    <system:String x:Key="LocationFeeTitle">Comparación de tarifas</system:String>
+    <system:String x:Key="LocationFeeHint">Importe la plantilla de dos hojas y los datos InboundDetection. Se completan las fechas de A, se eliminan imágenes y se usan los SN de C para escribir tiempos y resultados en I y J.</system:String>
+    <system:String x:Key="LocationFeeTemplate">Plantilla de tarifas</system:String>
+    <system:String x:Key="NotSelected">Sin seleccionar</system:String>
+    <system:String x:Key="SelectTemplate">Elegir plantilla</system:String>
+    <system:String x:Key="BaseWorkbook">Libro base</system:String>
+    <system:String x:Key="SelectBase">Elegir base</system:String>
+    <system:String x:Key="SelectBothFiles">Seleccione la plantilla y los datos base.</system:String>
+    <system:String x:Key="GenerateComparison">Generar comparación</system:String>
+    <system:String x:Key="OutboundTitle">Inspección de salida</system:String>
+    <system:String x:Key="OutboundHint">Cruce SKU/SN del TXT con la base. Exporte detalles o imprima una etiqueta de palé con totales SKU.</system:String>
+    <system:String x:Key="TextNotSelected">Seleccione TXT de SKU/SN (línea SKU y luego SN)</system:String>
+    <system:String x:Key="BaseWorkbookNotSelected">Sin base InboundDetection seleccionada</system:String>
+    <system:String x:Key="SelectText">Elegir TXT</system:String>
+    <system:String x:Key="PalletNumber">Número de palé</system:String>
+    <system:String x:Key="PrintSkuSummary">Imprimir totales SKU · 4×6</system:String>
+    <system:String x:Key="ExportDetailXlsx">Exportar detalles XLSX</system:String>
+    <system:String x:Key="SelectTextAndBase">Seleccione TXT y base</system:String>
+    <system:String x:Key="RowNumber">N.º</system:String>
+    <system:String x:Key="SkuText">SKU (TXT)</system:String>
+    <system:String x:Key="TypeColumn">Tipo</system:String>
+    <system:String x:Key="ProcessingMethod">Método de proceso</system:String>
+    <system:String x:Key="ProcessingDate">Fecha de proceso</system:String>
+    <system:String x:Key="SelectBaseFileTitle">Elegir datos base</system:String>
+    <system:String x:Key="ExcelFileFilter">Libros de Excel (*.xlsx)|*.xlsx</system:String>
+    <system:String x:Key="TextFileFilter">Archivos de texto (*.txt)|*.txt</system:String>
+    <system:String x:Key="CsvFileFilter">Archivos CSV (*.csv)|*.csv</system:String>
+    <system:String x:Key="BaseImportFailedPrefix">Error al importar la base: </system:String>
+    <system:String x:Key="SnImportFailedPrefix">Error al importar SN: </system:String>
+    <system:String x:Key="SelectSnTitle">Elegir lista SN</system:String>
+    <system:String x:Key="SaveMatchTitle">Guardar coincidencias</system:String>
+    <system:String x:Key="ExportFailedPrefix">Error al exportar: </system:String>
+    <system:String x:Key="MatchExportDone">Exportación completa.&#10;Coincidencias: {0:N0}&#10;No encontrados: {1:N0}</system:String>
+    <system:String x:Key="NoPendingThisMonth">No hay inspecciones pendientes este mes.</system:String>
+    <system:String x:Key="ExportCsvTitle">Exportar CSV</system:String>
+    <system:String x:Key="ExportPendingTitle">Exportar pendientes del mes</system:String>
+    <system:String x:Key="PendingExportDone">CSV exportado.&#10;Reparación: {0:N0}&#10;Sin reparación: {1:N0}</system:String>
+    <system:String x:Key="PendingExportFailedPrefix">Error al exportar pendientes CSV: </system:String>
+    <system:String x:Key="BaseCacheSummary">Base: {0:N0} registros ({1:yyyy-MM-dd HH:mm:ss})</system:String>
+    <system:String x:Key="SnCacheSummary">Lista SN: {0:N0} registros ({1:yyyy-MM-dd HH:mm:ss})</system:String>
+    <system:String x:Key="PendingRepair">Pendiente · reparación</system:String>
+    <system:String x:Key="PendingNonRepair">Pendiente · sin reparación</system:String>
+    <system:String x:Key="Completed">Completado</system:String>
+    <system:String x:Key="PalletRequired">Introduzca el número de palé.</system:String>
+    <system:String x:Key="SkuPrintSent">Totales SKU enviados a la impresora predeterminada.</system:String>
+    <system:String x:Key="PrintComplete">Impresión enviada</system:String>
+    <system:String x:Key="PrintFailedPrefix">Error de impresión: </system:String>
+    <system:String x:Key="SelectSkuSnTitle">Elegir texto SKU/SN</system:String>
+    <system:String x:Key="SelectInboundBaseTitle">Elegir base InboundDetection</system:String>
+    <system:String x:Key="OutboundSummary">{0:N0} artículos, {1:N0} SKU · {2:N0} coinciden, {3:N0} no coinciden</system:String>
+    <system:String x:Key="ReadFailed">Error de lectura</system:String>
+    <system:String x:Key="OutboundFailedPrefix">Error al generar datos de salida: </system:String>
+    <system:String x:Key="ExportOutboundTitle">Exportar inspección de salida</system:String>
+    <system:String x:Key="ExportedPrefix">Exportado: </system:String>
+    <system:String x:Key="ExportComplete">Exportación completa</system:String>
+    <system:String x:Key="SelectFeeTemplateTitle">Elegir plantilla de tarifas</system:String>
+    <system:String x:Key="FilesReady">Archivos listos. Puede generar la comparación.</system:String>
+    <system:String x:Key="SaveFeeTitle">Guardar comparación de tarifas</system:String>
+    <system:String x:Key="ProcessingSheets">Procesando dos hojas…</system:String>
+    <system:String x:Key="FeeSummary">Completado: {0} hojas, {1:N0} SN; {2:N0} coinciden, {3:N0} no coinciden.</system:String>
+    <system:String x:Key="SavedFilePrefix">&#10;&#10;Guardado: </system:String>
+    <system:String x:Key="ProcessingFailed">Error de procesamiento.</system:String>
+    <system:String x:Key="FeeFailedPrefix">Error en comparación de tarifas: </system:String>
+    <system:String x:Key="MobileTitle">Escáner</system:String>
+    <system:String x:Key="MobileBrand">Escáner YM-Star</system:String>
+    <system:String x:Key="MobileTagline">ESCANEAR · VERIFICAR · SINCRONIZAR</system:String>
+    <system:String x:Key="Logout">Salir</system:String>
+    <system:String x:Key="MobileScan">Entrada de escaneo</system:String>
+    <system:String x:Key="MobileHint">Pulse Enter tras escanear</system:String>
+    <system:String x:Key="ScanPlaceholder">Escanee SN / número de envío</system:String>
+    <system:String x:Key="PrintCopiesLabel">Copias</system:String>
+    <system:String x:Key="ProcessScanLabel">Procesar escaneo</system:String>
+    <system:String x:Key="RefreshOrders">Actualizar órdenes</system:String>
+    <system:String x:Key="ImportUrgentCsv">Importar CSV urgente</system:String>
+    <system:String x:Key="OpenScanLogMobile">Abrir registro</system:String>
+    <system:String x:Key="MobilePlatformHint">Android vertical · Impresión automática solo en plataformas compatibles</system:String>
+    <system:String x:Key="UsernamePlaceholder">Introduzca usuario</system:String>
+    <system:String x:Key="PasswordPlaceholder">Introduzca contraseña</system:String>
+    <system:String x:Key="LastRefreshFormat">Última actualización: {0}</system:String>
+    <system:String x:Key="NeverRefreshed">Sin actualizar</system:String>
+    <system:String x:Key="LocalOperator">Operador local</system:String>
+    <system:String x:Key="LocalRole">Modo local</system:String>
+    <system:String x:Key="MobileCount">Escaneados: {0:N0}</system:String>
+    <system:String x:Key="MobileLog">Registro: {0}</system:String>
+    <system:String x:Key="MobileOnlineOrders">Órdenes en línea: {0:N0}</system:String>
+    <system:String x:Key="MobileOidFirst">OID registrado: {0}. Primer escaneo, sin imprimir.</system:String>
+    <system:String x:Key="MobilePrinted">Registrado e impreso: {0} copias de {1}</system:String>
+    <system:String x:Key="MobileRecorded">Registrado: {0}</system:String>
+    <system:String x:Key="MobileDuplicate">Ya registrado: {0}</system:String>
+    <system:String x:Key="MobileOrdersRefreshed">Se actualizaron {0:N0} órdenes.</system:String>
+    <system:String x:Key="RefreshFailedPrefix">Error al actualizar: </system:String>
+    <system:String x:Key="SelectUrgentCsv">Elegir CSV urgente</system:String>
+    <system:String x:Key="MobileImported">Se importaron {0:N0} reglas urgentes.</system:String>
+    <system:String x:Key="ImportFailedPrefix">Error al importar: </system:String>
+    <system:String x:Key="ModelRequired">Introduzca un modelo.</system:String>
+    <system:String x:Key="DailyReport">Informe diario</system:String>
+    <system:String x:Key="DailyReportCreateFailedPrefix">No se pudo crear el informe diario: </system:String>
+    <system:String x:Key="FooterLocationFee">Comparar tarifas</system:String>
+    <system:String x:Key="FooterOutbound">Salida</system:String>
+    <system:String x:Key="FooterInbound">Entrada</system:String>
+    <system:String x:Key="FooterImportUrgent">Importar urgentes</system:String>
+    <system:String x:Key="FooterRefresh">Actualizar</system:String>
+    <system:String x:Key="ExportSimplified">Versión simple</system:String>
+    <system:String x:Key="SaveSimplifiedTitle">Guardar inspección simplificada</system:String>
+    <system:String x:Key="SimplifiedExportDone">Exportación simplificada completa.&#10;Coincidencias: {0:N0}&#10;No encontrados: {1:N0}</system:String>
+    <system:String x:Key="GlobalBaseImport">Importar base global</system:String>
+    <system:String x:Key="GlobalBaseRequired">Importe primero la base global desde el inicio.</system:String>
+</ResourceDictionary>

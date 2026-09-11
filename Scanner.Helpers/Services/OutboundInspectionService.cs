@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Scanner.Services
+namespace Scanner.Helpers.Services
 {
     public static class OutboundInspectionService
     {

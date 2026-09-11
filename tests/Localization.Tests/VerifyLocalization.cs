@@ -1,6 +1,6 @@
-using Scanner;
-using Scanner.Helpers;
-using Scanner.Services;
+using Scanner.WPF;
+using Scanner.WPF.Helpers;
+using Scanner.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +38,7 @@ internal static class VerifyLocalization
         HashSet<string> expectedKeys = null;
         foreach (string language in new[] { "zh-CN", "en-US", "es-ES" })
         {
-            var entries = XDocument.Load(Path.Combine(root, "Scanner", "Languages", "Language." + language + ".xaml")).Root.Elements().ToList();
+            var entries = XDocument.Load(Path.Combine(root, "SharedAssets", "Languages", "Language." + language + ".xaml")).Root.Elements().ToList();
             var keys = new HashSet<string>(entries.Select(e => (string)e.Attribute(x + "Key")));
             Assert(keys.Count == entries.Count, "Duplicate resources: " + language);
             if (expectedKeys == null) expectedKeys = keys;
@@ -47,12 +47,15 @@ internal static class VerifyLocalization
             foreach (string key in keys) Assert(app.TryFindResource(key) != null, "Missing resource: " + key);
             Assert((string)app.Resources["Sentinel"] == "preserve", "Language switch removed unrelated resources");
 
-            var windows = new Window[] { new LoginWindow(), new MainWindow(), new ChecklistWindow(), new OutboundInspectionWindow(), new LocationFeeComparisonWindow(), new MeterModelSelectionWindow(new MeterModelService()) };
+            var assembly = typeof(MainWindow).Assembly;
+            var provider = (IServiceProvider)assembly.GetType("Scanner.WPF.Controllers.DesktopComposition").GetMethod("Build", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic).Invoke(null, null);
+            var windows = new Window[] { (Window)provider.GetService(typeof(LoginWindow)), (Window)provider.GetService(typeof(MainWindow)), (Window)provider.GetService(typeof(ChecklistWindow)), (Window)provider.GetService(typeof(OutboundInspectionWindow)), (Window)provider.GetService(typeof(LocationFeeComparisonWindow)), new MeterModelSelectionWindow(new MeterModelService()) };
             foreach (Window window in windows)
             {
                 Assert(window.FontFamily.Source == ((FontFamily)app.FindResource("AppFontFamily")).Source, "Window font mismatch: " + window.GetType().Name);
                 Render(window, Path.Combine(output, window.GetType().Name + "-" + language + ".png"));
             }
+            ((IDisposable)provider).Dispose();
         }
         UiText.ChangeLanguage("en-US");
         VerifyXaml(root, expectedKeys);
@@ -92,7 +95,7 @@ internal static class VerifyLocalization
     {
         var textProperties = new HashSet<string> { "Text", "Content", "Title", "Header", "ToolTip", "Placeholder", "AutomationProperties.Name" };
         var literals = new HashSet<string> { "S", "SN", "4 × 6", "4 × 4", "中文", "中", "EN", "ES", "English", "Español" };
-        foreach (string project in new[] { "Scanner", "MaUIScanner" })
+        foreach (string project in new[] { "Scanner.WPF", "Scan.MaUI" })
         foreach (string file in Directory.EnumerateFiles(Path.Combine(root, project), "*.xaml", SearchOption.AllDirectories))
         {
             string normalized = file.Replace('\\', '/');

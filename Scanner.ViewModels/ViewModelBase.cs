@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-namespace Scanner.Presentation
+namespace Scanner.ViewModels
 {
     public abstract class ViewModelBase : IViewModelBase
     {

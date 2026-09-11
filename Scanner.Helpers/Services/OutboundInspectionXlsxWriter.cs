@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
-namespace Scanner.Services
+namespace Scanner.Helpers.Services
 {
     public static class OutboundInspectionXlsxWriter
     {

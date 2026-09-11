@@ -1,4 +1,4 @@
-using Scanner.Services;
+using Scanner.WPF.Services;
 using System;
 using System.IO;
 using System.IO.Compression;

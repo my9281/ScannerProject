@@ -1,0 +1,125 @@
+<Window x:Class="Scanner.WPF.MeterModelSelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource ModelSelectionTitle}"
+        Width="580"
+        Height="560"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#F3F6FB"
+        FontFamily="{DynamicResource AppFontFamily}"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <SolidColorBrush x:Key="PrimaryBrush" Color="#2457D6"/>
+        <Style TargetType="ListBoxItem">
+            <Setter Property="MinWidth" Value="112"/>
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="{DynamicResource AppFontFamily}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#F6F8FC"/>
+            <Setter Property="BorderBrush" Value="#DDE4F0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="ItemBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#EDF2FF"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#E1E9FF"/>
+                                <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource PrimaryBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="22" Background="#F3F6FB">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="2,0,2,14">
+            <TextBlock Text="{DynamicResource ModelSelectionHeading}" FontSize="22" FontWeight="Bold" Foreground="#18243A"/>
+            <TextBlock Text="{DynamicResource ModelSelectionHint}" Margin="0,6,0,0" FontSize="13" Foreground="#647089" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <ListBox x:Name="ModelListBox"
+                 Grid.Row="1"
+                 Background="White"
+                 BorderBrush="#CBD5E6"
+                 BorderThickness="1"
+                 Padding="8"
+                 ItemsSource="{Binding Models}"
+                 SelectedItem="{Binding SelectedModel, Mode=TwoWay}"
+                 KeyDown="ModelListBox_KeyDown"
+                 MouseDoubleClick="ModelListBox_MouseDoubleClick"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel IsItemsHost="True"/>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+
+        <TextBlock Grid.Row="2" Text="{DynamicResource AddModelLabel}" Margin="2,16,2,6" FontSize="14" FontWeight="SemiBold" Foreground="#18243A"/>
+
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="NewModelTextBox"
+                     Height="44"
+                     Padding="12,0"
+                     VerticalContentAlignment="Center"
+                     FontFamily="{DynamicResource AppFontFamily}"
+                     FontSize="18"
+                     CharacterCasing="Upper"
+                     KeyDown="NewModelTextBox_KeyDown"/>
+            <Button Grid.Column="1"
+                    Content="{DynamicResource AddAndPrintModel}"
+                    Height="44"
+                    MinWidth="112"
+                    Margin="10,0,0,0"
+                    Padding="14,0"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Foreground="White"
+                    Background="{StaticResource PrimaryBrush}"
+                    BorderBrush="{StaticResource PrimaryBrush}"
+                    Click="AddAndPrintButton_Click"/>
+        </Grid>
+
+        <Grid Grid.Row="4" Margin="2,14,2,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="StatusTextBlock" Foreground="DarkRed" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" TextWrapping="Wrap"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{DynamicResource Cancel}" Width="84" Height="36" Margin="0,0,8,0" IsCancel="True"/>
+                <Button Content="{DynamicResource UseSelectedModel}" Width="112" Height="36" FontWeight="SemiBold" IsDefault="True" Click="UseSelectedButton_Click"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
