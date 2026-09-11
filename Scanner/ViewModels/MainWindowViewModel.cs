@@ -33,7 +33,7 @@ namespace Scanner.ViewModels
         {
         }
 
-        internal MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, ScanUploadService upload, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, UrgentWorkOrderImportHelper workOrderImport, DialogHelper dialogs)
+        public MainWindowViewModel(NetworkHelper network, PrintingHelper printing, ScanService scanning, ScanUploadService upload, MeterModelService meterModels, SpeechService speech, WorkOrderSearchService search, UrgentWorkOrderImportHelper workOrderImport, DialogHelper dialogs)
         {
             _network = network ?? throw new ArgumentNullException(nameof(network));
             _printing = printing ?? throw new ArgumentNullException(nameof(printing));

@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Scanner.DI;
 using MaUIScanner.Services;
 using MaUIScanner.ViewModels;
 
@@ -19,6 +20,9 @@ namespace MaUIScanner
                 fonts.AddFont("ZiHunShouJin.ttf", "ZiHunShouJinPrint");
             });
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://wms.ymforever.com/"), Timeout = TimeSpan.FromSeconds(30) });
+            builder.Services.AddScannerSharedServices();
+            builder.Services.AddTransient(typeof(Scanner.Controllers.IControllerFactory<,>), typeof(Controllers.MauiControllerFactory<,>));
+            builder.Services.AddSingleton<Windows.IWindow, Windows.MauiWindow>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<SessionStore>();
             builder.Services.AddSingleton<OidService>();

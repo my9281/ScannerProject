@@ -1,57 +1,32 @@
-using MaUIScanner.Models;
-using MaUIScanner.Services;
-
+using Scanner.Controllers;
+using MaUIScanner.Controllers;
+using MaUIScanner.Views;
 namespace MaUIScanner;
-
-public partial class LoginPage : ContentPage
+public partial class LoginPage : ContentPage, ILoginPageView
 {
-    private readonly AuthService _auth;
-    private readonly SessionStore _sessions;
-    private bool _loaded;
-    public LoginPage(AuthService auth, SessionStore sessions) { InitializeComponent(); _auth = auth; _sessions = sessions; }
-
+    private readonly LoginPageController _controller;
+    public LoginPage(IControllerFactory<ILoginPageView, LoginPageController> factory)
+    {
+        InitializeComponent();
+        _controller = factory.Create(this);
+    }
+    Entry ILoginPageView.UsernameEntry => UsernameEntry;
+    Entry ILoginPageView.PasswordEntry => PasswordEntry;
+    CheckBox ILoginPageView.RememberCheckBox => RememberCheckBox;
+    Button ILoginPageView.LoginButton => LoginButton;
+    Button ILoginPageView.LocalButton => LocalButton;
+    ActivityIndicator ILoginPageView.BusyIndicator => BusyIndicator;
+    Label ILoginPageView.StatusLabel => StatusLabel;
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-        if (_loaded) return;
-        _loaded = true;
-        AuthSession? session = await _sessions.RestoreAsync();
-        if (session != null) { ShowMain(); return; }
-        (string user, string password) = await _sessions.GetRememberedLoginAsync();
-        UsernameEntry.Text = user; PasswordEntry.Text = password; RememberCheckBox.IsChecked = !string.IsNullOrEmpty(password);
-        (string.IsNullOrEmpty(user) ? UsernameEntry : PasswordEntry).Focus();
+        try { await _controller.AppearingAsync(); }
+        catch (Exception ex) { await DisplayAlertAsync("加载失败", ex.Message, "确定"); }
     }
-
-    private void UsernameEntry_Completed(object? sender, EventArgs e) => PasswordEntry.Focus();
-    private void LanguageButton_Clicked(object? sender, EventArgs e)
-    {
-        LocalizationService.Current.Change((string)((Button)sender!).CommandParameter);
-        StatusLabel.Text = string.Empty;
-    }
-    private async void PasswordEntry_Completed(object? sender, EventArgs e) => await LoginAsync();
-    private async void LoginButton_Clicked(object? sender, EventArgs e) => await LoginAsync();
-    private async void LocalButton_Clicked(object? sender, EventArgs e)
-    {
-        if (BusyIndicator.IsRunning) return;
-        await _sessions.SaveSessionAsync(new AuthSession { Operator = "本地扫描", Role = "本地模式", IsLocalMode = true, ExpiresAt = DateTime.MaxValue });
-        ShowMain();
-    }
-
-    private async Task LoginAsync()
-    {
-        if (BusyIndicator.IsRunning) return;
-        SetBusy(true); StatusLabel.Text = LocalizationService.Current.Get("SigningIn");
-        try
-        {
-            AuthSession session = await _auth.LoginAsync(UsernameEntry.Text ?? string.Empty, PasswordEntry.Text ?? string.Empty);
-            await _sessions.SaveSessionAsync(session);
-            await _sessions.SaveRememberedLoginAsync(UsernameEntry.Text ?? string.Empty, PasswordEntry.Text ?? string.Empty, RememberCheckBox.IsChecked);
-            ShowMain();
-        }
-        catch (Exception ex) { StatusLabel.Text = ex.Message; }
-        finally { SetBusy(false); }
-    }
-
-    private void SetBusy(bool busy) { BusyIndicator.IsVisible = busy; BusyIndicator.IsRunning = busy; LoginButton.IsEnabled = !busy; LocalButton.IsEnabled = !busy; }
-    private static void ShowMain() => ((App)Application.Current!).ShowMainPage();
+    protected override void OnDisappearing() { _controller.Dispose(); base.OnDisappearing(); }
+    private void LanguageButton_Clicked(object? sender, EventArgs e) => _controller.LanguageButton_Clicked(sender, e);
+    private void UsernameEntry_Completed(object? sender, EventArgs e) => _controller.UsernameEntry_Completed(sender, e);
+    private void PasswordEntry_Completed(object? sender, EventArgs e) => _controller.PasswordEntry_Completed(sender, e);
+    private void LoginButton_Clicked(object? sender, EventArgs e) => _controller.LoginButton_Clicked(sender, e);
+    private void LocalButton_Clicked(object? sender, EventArgs e) => _controller.LocalButton_Clicked(sender, e);
 }

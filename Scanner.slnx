@@ -4,4 +4,9 @@
   </Project>
   <Project Path="Scanner/Scanner.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
   <Project Path="WmsUploadSite/WmsUploadSite.csproj" />
+  <Project Path="Scanner.Models/Scanner.Models.csproj" />
+  <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />
+  <Project Path="Scanner.DI/Scanner.DI.csproj" />
+  <Project Path="Scanner.Controllers/Scanner.Controllers.csproj" />
+  <Project Path="Scanner.ViewModels/Scanner.ViewModels.csproj" />
 </Solution>

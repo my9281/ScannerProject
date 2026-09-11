@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net472;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Scanner.Models/Scanner.Models.csproj" />
+    <Reference Include="Microsoft.VisualBasic" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.IO.Compression" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.IO.Compression.FileSystem" Condition="'$(TargetFramework)' == 'net472'" />
+  </ItemGroup>
+</Project>

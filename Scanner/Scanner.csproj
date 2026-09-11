@@ -73,25 +73,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\WorkOrderRemarkResponse.cs" />
-    <Compile Include="Models\InboundChecklistRecord.cs" />
-    <Compile Include="Models\OutboundSkuSummary.cs" />
-    <Compile Include="Models\OutboundInspectionRecord.cs" />
     <Compile Include="Services\WorkOrderRemarkService.cs" />
     <Compile Include="Services\ScanService.cs" />
     <Compile Include="Services\ScanUploadService.cs" />
-    <Compile Include="Services\ChecklistDataCache.cs" />
-    <Compile Include="Services\ChecklistXlsxReader.cs" />
-    <Compile Include="Services\ChecklistSimplifiedExportService.cs" />
-    <Compile Include="Services\OutboundInspectionService.cs" />
-    <Compile Include="Services\OutboundInspectionXlsxWriter.cs" />
-    <Compile Include="Services\LocationFeeComparisonService.cs" />
     <Compile Include="Services\DailyReportService.cs" />
     <Compile Include="Services\OidService.cs" />
     <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\SpeechService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
-    <Compile Include="Helpers\UrgentWorkOrderImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
     <Compile Include="Helpers\UiText.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
@@ -161,10 +150,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\ApiErrorResponse.cs" />
-    <Compile Include="Models\AuthSession.cs" />
-    <Compile Include="Models\LoginRequest.cs" />
-    <Compile Include="Models\LoginResponse.cs" />
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="Services\LocalAuthStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -206,4 +191,15 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\Scanner.Models\Scanner.Models.csproj"><Name>Scanner.Models</Name></ProjectReference>
+    <ProjectReference Include="..\Scanner.Helpers\Scanner.Helpers.csproj"><Name>Scanner.Helpers</Name></ProjectReference>
+    <ProjectReference Include="..\Scanner.DI\Scanner.DI.csproj"><Name>Scanner.DI</Name></ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Scanner.Controllers/Scanner.Controllers.csproj" />
+    <ProjectReference Include="../Scanner.ViewModels/Scanner.ViewModels.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
+    <Compile Include="Controllers\**\*.cs" />
+  </ItemGroup>
 </Project>

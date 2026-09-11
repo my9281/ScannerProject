@@ -19,13 +19,11 @@ public partial class App : Application
 
     public void ShowMainPage()
     {
-        MainPage page = _services.GetRequiredService<MainPage>();
-        Windows[0].Page = new NavigationPage(page);
+        _services.GetRequiredService<MaUIScanner.Windows.IWindow>().ShowMain();
     }
 
     public void ShowLoginPage()
     {
-        LoginPage page = _services.GetRequiredService<LoginPage>();
-        Windows[0].Page = new NavigationPage(page);
+        _services.GetRequiredService<MaUIScanner.Windows.IWindow>().ShowLogin();
     }
 }

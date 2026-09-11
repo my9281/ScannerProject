@@ -1,34 +1,23 @@
-using MaUIScanner.ViewModels;
-
+using Scanner.Controllers;
+using MaUIScanner.Controllers;
+using MaUIScanner.Views;
 namespace MaUIScanner;
-
-public partial class MainPage : ContentPage
+public partial class MainPage : ContentPage, IMainPageView
 {
-    private readonly MainViewModel _viewModel; private bool _initialized;
-    public MainPage(MainViewModel viewModel)
+    private readonly MainPageController _controller;
+    public MainPage(IControllerFactory<IMainPageView, MainPageController> factory)
     {
-        InitializeComponent(); BindingContext=_viewModel=viewModel;
-        _viewModel.FocusRequested+=(_,_)=>MainThread.BeginInvokeOnMainThread(()=>ScanEntry.Focus());
-        _viewModel.LogoutRequested+=(_,_)=>MainThread.BeginInvokeOnMainThread(()=>((App)Application.Current!).ShowLoginPage());
-        _viewModel.ModelSelectionRequested = SelectModelAsync;
+        InitializeComponent();
+        _controller = factory.Create(this);
     }
-
-    private async Task<string?> SelectModelAsync(IReadOnlyList<string> models)
+    Entry IMainPageView.ScanEntry => ScanEntry;
+    protected override async void OnAppearing()
     {
-        string? selected = await DisplayActionSheetAsync("选择电表型号", "取消", null, models.ToArray());
-        return selected == "取消" ? null : selected;
+        base.OnAppearing();
+        try { await _controller.AppearingAsync(); }
+        catch (Exception ex) { await DisplayAlertAsync("加载失败", ex.Message, "确定"); }
     }
-    protected override async void OnAppearing(){base.OnAppearing();if(!_initialized){_initialized=true;await _viewModel.InitializeAsync();}ScanEntry.Focus();}
-    private void LanguageButton_Clicked(object? sender, EventArgs e)
-    {
-        Services.LocalizationService.Current.Change((string)((Button)sender!).CommandParameter);
-        _viewModel.RefreshLocalizedText();
-        ScanEntry.Focus();
-    }
-
-    private async void OperationsButton_Clicked(object? sender, EventArgs e)
-    {
-        var page = Handler?.MauiContext?.Services.GetRequiredService<OperationsPage>();
-        if (page is not null) await Navigation.PushAsync(page);
-    }
+    protected override void OnDisappearing() { _controller.Dispose(); base.OnDisappearing(); }
+    private void LanguageButton_Clicked(object? sender, EventArgs e) => _controller.LanguageButton_Clicked(sender, e);
+    private void OperationsButton_Clicked(object? sender, EventArgs e) => _controller.OperationsButton_Clicked(sender, e);
 }

@@ -5,63 +5,25 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 
+using Scanner.Controllers;
+using Scanner.PlatformControllers;
 namespace Scanner
 {
-    public partial class LocationFeeComparisonWindow : Window
+    public partial class LocationFeeComparisonWindow : Window, ILocationFeeComparisonWindowView
     {
-        private string _templatePath;
-
-        public LocationFeeComparisonWindow()
+        private readonly LocationFeeComparisonWindowController _controller;
+        public LocationFeeComparisonWindow(IControllerFactory<ILocationFeeComparisonWindowView, LocationFeeComparisonWindowController> factory)
         {
             InitializeComponent();
-            BaseFileTextBlock.Text = ChecklistDataCache.BaseDataFile ?? UiText.Get("GlobalBaseRequired");
-            RefreshStatus();
+            _controller = factory.Create(this);
+            Closed += (s, e) => _controller.Dispose();
         }
-
-        private void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog { Title = UiText.Get("SelectFeeTemplateTitle"), Filter = UiText.Get("ExcelFileFilter"), CheckFileExists = true };
-            if (dialog.ShowDialog(this) != true) return;
-            _templatePath = dialog.FileName;
-            TemplateFileTextBlock.Text = _templatePath;
-            RefreshStatus();
-        }
-
-        private void RefreshStatus()
-        {
-            ExportButton.IsEnabled = !string.IsNullOrWhiteSpace(_templatePath) && ChecklistDataCache.Records.Count > 0;
-            StatusTextBlock.Text = ExportButton.IsEnabled ? UiText.Get("FilesReady") : UiText.Get("SelectBothFiles");
-        }
-
-        private void ExportButton_Click(object sender, RoutedEventArgs e)
-        {
-            SaveFileDialog dialog = new SaveFileDialog
-            {
-                Title = UiText.Get("SaveFeeTitle"),
-                Filter = UiText.Get("ExcelFileFilter"),
-                DefaultExt = ".xlsx",
-                AddExtension = true,
-                FileName = "库位付费比对结果_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
-            };
-            if (dialog.ShowDialog(this) != true) return;
-            try
-            {
-                ExportButton.IsEnabled = false;
-                StatusTextBlock.Text = UiText.Get("ProcessingSheets");
-                LocationFeeComparisonSummary summary = LocationFeeComparisonService.Build(_templatePath, ChecklistDataCache.Records, dialog.FileName);
-                StatusTextBlock.Text = string.Format(UiText.Get("FeeSummary"), summary.SheetCount, summary.RowCount, summary.MatchedCount, summary.UnmatchedCount);
-                MessageBox.Show(this, StatusTextBlock.Text + UiText.Get("SavedFilePrefix") + dialog.FileName, UiText.Get("LocationFeeTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
-                Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                StatusTextBlock.Text = UiText.Get("ProcessingFailed");
-                MessageBox.Show(this, UiText.Get("FeeFailedPrefix") + ex.Message, UiText.Get("LocationFeeTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            finally
-            {
-                ExportButton.IsEnabled = !string.IsNullOrWhiteSpace(_templatePath) && ChecklistDataCache.Records.Count > 0;
-            }
-        }
+        Window ILocationFeeComparisonWindowView.OwnerWindow => this;
+        System.Windows.Controls.TextBlock ILocationFeeComparisonWindowView.TemplateFileTextBlock => TemplateFileTextBlock;
+        System.Windows.Controls.TextBlock ILocationFeeComparisonWindowView.BaseFileTextBlock => BaseFileTextBlock;
+        System.Windows.Controls.TextBlock ILocationFeeComparisonWindowView.StatusTextBlock => StatusTextBlock;
+        System.Windows.Controls.Button ILocationFeeComparisonWindowView.ExportButton => ExportButton;
+        private void SelectTemplateButton_Click(object sender, RoutedEventArgs e) => _controller.SelectTemplateButton_Click(sender, e);
+        private void ExportButton_Click(object sender, RoutedEventArgs e) => _controller.ExportButton_Click(sender, e);
     }
 }

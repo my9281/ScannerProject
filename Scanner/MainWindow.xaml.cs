@@ -6,105 +6,39 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 
+using Scanner.Controllers;
+using Scanner.PlatformControllers;
 namespace Scanner
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IMainWindowView
     {
-        private readonly MainWindowViewModel _viewModel;
-        public MainWindow()
+        private readonly MainWindowController _controller;
+        public MainWindow(IControllerFactory<IMainWindowView, MainWindowController> factory)
         {
             InitializeComponent();
-            _viewModel = new MainWindowViewModel();
-            DataContext = _viewModel;
-            _viewModel.FocusRequested += ViewModel_FocusRequested;
-            Activated += MainWindow_Activated;
+            _controller = factory.Create(this);
+            Closed += (s, e) => _controller.Dispose();
         }
-
-        private async void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            await _viewModel.InitializeAsync();
-        }
-
-        private void MainWindow_Activated(object sender, EventArgs e)
-        {
-            FocusScannerInput();
-        }
-
-        private void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
-        {
-            InputMethod.SetPreferredImeState(SnTextBox, InputMethodState.Off);
-        }
-
-        private void ViewModel_FocusRequested(object sender, EventArgs e)
-        {
-            FocusScannerInput();
-        }
-
-        private void FocusScannerInput()
-        {
-            SnTextBox.Focus();
-            Keyboard.Focus(SnTextBox);
-            SnTextBox.SelectAll();
-        }
-
-        private void ImportGlobalBase_Click(object sender, RoutedEventArgs e)
-        {
-            var dialog = new Microsoft.Win32.OpenFileDialog { Title = UiText.Get("SelectBaseFileTitle"), Filter = UiText.Get("ExcelFileFilter"), CheckFileExists = true };
-            if (dialog.ShowDialog(this) != true) return;
-            try
-            {
-                ChecklistDataCache.ImportBase(dialog.FileName);
-                GlobalBaseButton.ToolTip = ChecklistDataCache.BaseDataFile;
-                MessageBox.Show(this, string.Format(UiText.Get("BaseCacheSummary"), ChecklistDataCache.Records.Count, ChecklistDataCache.BaseDataImportedAt), UiText.Get("GlobalBaseImport"));
-            }
-            catch (Exception ex) { MessageBox.Show(this, UiText.Get("BaseImportFailedPrefix") + ex.Message); }
-        }
-
-        private bool RequireGlobalBase()
-        {
-            if (ChecklistDataCache.Records.Count > 0) return true;
-            MessageBox.Show(this, UiText.Get("GlobalBaseRequired"));
-            return false;
-        }
-
-        private void OpenChecklistButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!RequireGlobalBase()) return;
-            ChecklistWindow window = new ChecklistWindow { Owner = this };
-            window.ShowDialog();
-            FocusScannerInput();
-        }
-
-        private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!RequireGlobalBase()) return;
-            OutboundInspectionWindow window = new OutboundInspectionWindow { Owner = this };
-            window.ShowDialog();
-            FocusScannerInput();
-        }
-
-        private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (!RequireGlobalBase()) return;
-            LocationFeeComparisonWindow window = new LocationFeeComparisonWindow { Owner = this };
-            window.ShowDialog();
-            FocusScannerInput();
-        }
-
-        private void CreateDailyReportButton_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string path = DailyReportService.Create(DateTime.Now);
-                Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, UiText.Get("DailyReportCreateFailedPrefix") + ex.Message,
-                    UiText.Get("DailyReport"), MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            FocusScannerInput();
-        }
-
+        Window IMainWindowView.OwnerWindow => this;
+        System.Windows.Controls.TextBlock IMainWindowView.OperatorTextBlock => OperatorTextBlock;
+        System.Windows.Controls.TextBox IMainWindowView.SnTextBox => SnTextBox;
+        System.Windows.Controls.Button IMainWindowView.OpenLogButton => OpenLogButton;
+        System.Windows.Controls.Button IMainWindowView.UploadLogButton => UploadLogButton;
+        System.Windows.Controls.Button IMainWindowView.PrintButton => PrintButton;
+        System.Windows.Controls.TextBlock IMainWindowView.PrinterTextBlock => PrinterTextBlock;
+        System.Windows.Controls.TextBlock IMainWindowView.LogFileTextBlock => LogFileTextBlock;
+        System.Windows.Controls.TextBlock IMainWindowView.CountTextBlock => CountTextBlock;
+        System.Windows.Controls.TextBlock IMainWindowView.StatusTextBlock => StatusTextBlock;
+        System.Windows.Controls.TextBlock IMainWindowView.WebStatus => WebStatus;
+        System.Windows.Controls.TextBlock IMainWindowView.WebLastTime => WebLastTime;
+        System.Windows.Controls.Button IMainWindowView.GlobalBaseButton => GlobalBaseButton;
+        System.Windows.Controls.Button IMainWindowView.ImportUrgentWorkOrdersButton => ImportUrgentWorkOrdersButton;
+        private void Window_Loaded(object sender, RoutedEventArgs e) => _controller.Window_Loaded(sender, e);
+        private void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) => _controller.ScanTextBox_GotKeyboardFocus(sender, e);
+        private void ImportGlobalBase_Click(object sender, RoutedEventArgs e) => _controller.ImportGlobalBase_Click(sender, e);
+        private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e) => _controller.OpenLocationFeeComparisonButton_Click(sender, e);
+        private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e) => _controller.OpenOutboundInspectionButton_Click(sender, e);
+        private void OpenChecklistButton_Click(object sender, RoutedEventArgs e) => _controller.OpenChecklistButton_Click(sender, e);
+        private void CreateDailyReportButton_Click(object sender, RoutedEventArgs e) => _controller.CreateDailyReportButton_Click(sender, e);
     }
 }

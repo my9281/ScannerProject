@@ -84,16 +84,16 @@
 
 	<!-- Keep the spreadsheet business rules shared with the production WPF app. -->
 	<ItemGroup>
-		<Compile Include="..\Scanner\Models\InboundChecklistRecord.cs" Link="Shared\Models\InboundChecklistRecord.cs" />
-		<Compile Include="..\Scanner\Models\OutboundInspectionRecord.cs" Link="Shared\Models\OutboundInspectionRecord.cs" />
-		<Compile Include="..\Scanner\Models\OutboundSkuSummary.cs" Link="Shared\Models\OutboundSkuSummary.cs" />
-		<Compile Include="..\Scanner\Models\WorkOrderRemarkResponse.cs" Link="Shared\Models\LegacyWorkOrderModels.cs" />
-		<Compile Include="..\Scanner\Services\ChecklistXlsxReader.cs" Link="Shared\Services\ChecklistXlsxReader.cs" />
-        <Compile Include="..\Scanner\Services\ChecklistDataCache.cs" Link="Shared\Services\ChecklistDataCache.cs" />
-		<Compile Include="..\Scanner\Services\OutboundInspectionService.cs" Link="Shared\Services\OutboundInspectionService.cs" />
-		<Compile Include="..\Scanner\Services\OutboundInspectionXlsxWriter.cs" Link="Shared\Services\OutboundInspectionXlsxWriter.cs" />
-		<Compile Include="..\Scanner\Services\LocationFeeComparisonService.cs" Link="Shared\Services\LocationFeeComparisonService.cs" />
-		<Compile Include="..\Scanner\Helpers\UrgentWorkOrderImportHelper.cs" Link="Shared\Services\UrgentWorkOrderImportHelper.cs" />
 	</ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../Scanner.Models/Scanner.Models.csproj" />
+    <ProjectReference Include="../Scanner.Helpers/Scanner.Helpers.csproj" />
+    <ProjectReference Include="../Scanner.DI/Scanner.DI.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Scanner.Controllers/Scanner.Controllers.csproj" />
+    <ProjectReference Include="../Scanner.ViewModels/Scanner.ViewModels.csproj" />
+
+  </ItemGroup>
 </Project>

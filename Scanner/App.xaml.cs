@@ -1,4 +1,5 @@
 using Scanner.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Scanner.Services;
 using System;
 using System.Windows;
@@ -7,6 +8,14 @@ namespace Scanner
 {
     public partial class App : Application
     {
+        private readonly ServiceProvider _services = PlatformControllers.DesktopComposition.Build();
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _services.Dispose();
+            base.OnExit(e);
+        }
+
         public static AuthSession CurrentSession { get; private set; }
 
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -32,7 +41,7 @@ namespace Scanner
 
         private void OpenLoginWindow()
         {
-            LoginWindow loginWindow = new LoginWindow();
+            LoginWindow loginWindow = ((App)Current)._services.GetRequiredService<LoginWindow>();
             bool? result = loginWindow.ShowDialog();
             if (result == true && loginWindow.Session != null)
             {
@@ -47,7 +56,7 @@ namespace Scanner
 
         private void OpenMainWindow()
         {
-            MainWindow mainWindow = new MainWindow();
+            MainWindow mainWindow = _services.GetRequiredService<MainWindow>();
             MainWindow = mainWindow;
             mainWindow.Show();
             ShutdownMode = ShutdownMode.OnMainWindowClose;
@@ -58,12 +67,12 @@ namespace Scanner
             LocalAuthStore.ClearSession();
             CurrentSession = null;
             Window currentMainWindow = Current.MainWindow;
-            LoginWindow loginWindow = new LoginWindow();
+            LoginWindow loginWindow = ((App)Current)._services.GetRequiredService<LoginWindow>();
             bool? result = loginWindow.ShowDialog();
             if (result == true && loginWindow.Session != null)
             {
                 CurrentSession = loginWindow.Session;
-                MainWindow newMainWindow = new MainWindow();
+                MainWindow newMainWindow = ((App)Current)._services.GetRequiredService<MainWindow>();
                 Current.MainWindow = newMainWindow;
                 newMainWindow.Show();
                 if (currentMainWindow != null)

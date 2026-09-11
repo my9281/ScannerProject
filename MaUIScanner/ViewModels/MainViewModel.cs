@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace MaUIScanner.ViewModels;
 
-public sealed class MainViewModel : ObservableObject
+public sealed class MainViewModel : ViewModelBase
 {
     private readonly ScanService _scan; private readonly MeterModelService _models; private readonly SpeechService _speech;
     private readonly ScanLogService _log; private readonly ILabelPrinter _printer; private readonly ScanUploadService _upload;

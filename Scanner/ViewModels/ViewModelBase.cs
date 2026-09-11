@@ -1,26 +1,13 @@
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
+using System;
 namespace Scanner.ViewModels
 {
-    public abstract class ViewModelBase : INotifyPropertyChanged
+    public abstract class ViewModelBase : Scanner.Presentation.ViewModelBase
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected bool SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+        protected override void DispatchNotification(Action notification)
         {
-            if (EqualityComparer<T>.Default.Equals(field, value))
-            {
-                return false;
-            }
-            field = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            return true;
-        }
-
-        protected void RaisePropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            var dispatcher = System.Windows.Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess()) notification();
+            else dispatcher.BeginInvoke(notification);
         }
     }
 }
