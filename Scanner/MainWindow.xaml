@@ -12,7 +12,7 @@
         MinHeight="620"
         ResizeMode="NoResize"
         Background="#F3F6FB"
-        FontFamily="Microsoft YaHei UI"
+        FontFamily="{DynamicResource AppFontFamily}"
         WindowStartupLocation="CenterScreen"
         Loaded="Window_Loaded">
     <Window.Resources>
@@ -143,10 +143,12 @@
                     <TextBlock x:Name="OperatorTextBlock" Text="{Binding OperatorText}" Foreground="#3A527C" FontSize="13" VerticalAlignment="Center"/>
                 </StackPanel>
             </Border>
-            <StackPanel Grid.Column="1" HorizontalAlignment="Center">
+            <Viewbox Grid.Column="1" Stretch="Uniform" StretchDirection="DownOnly" VerticalAlignment="Center">
+            <StackPanel HorizontalAlignment="Center">
                 <TextBlock Text="{DynamicResource MainTitle}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center"/>
-                <TextBlock Text="SCAN  ·  VERIFY  ·  PRINT" Foreground="#8B96AA" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,3,0,0"/>
+                <TextBlock Text="{DynamicResource MainTagline}" Foreground="#8B96AA" FontSize="10" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="0,3,0,0"/>
             </StackPanel>
+            </Viewbox>
             <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                 <Button Content="中" ToolTip="中文" Style="{StaticResource LanguageButtonStyle}" Command="{Binding ChangeLanguageCommand}" CommandParameter="zh-CN"/>
                 <Button Content="EN" ToolTip="English" Style="{StaticResource LanguageButtonStyle}" Command="{Binding ChangeLanguageCommand}" CommandParameter="en-US"/>
@@ -172,7 +174,7 @@
                              BorderThickness="0"
                              Foreground="{StaticResource TextPrimaryBrush}"
                              CaretBrush="{StaticResource PrimaryBrush}"
-                             FontFamily="Consolas"
+                             FontFamily="{DynamicResource AppFontFamily}"
                              FontSize="27"
                              FontWeight="SemiBold"
                              Text="{Binding ScanCode, UpdateSourceTrigger=PropertyChanged}"
@@ -185,12 +187,8 @@
                         </TextBox.InputBindings>
                     </TextBox>
                 </Border>
-                <Grid Grid.Row="2" Margin="2,16,2,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <WrapPanel Grid.Row="2" Margin="2,8,2,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,8,12,0">
                         <TextBlock Text="{DynamicResource AutoPrint}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" FontWeight="SemiBold" Margin="0,0,7,0" VerticalAlignment="Center"/>
                         <Border Background="#F7F9FC" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1" CornerRadius="9" Padding="2">
                             <StackPanel Orientation="Horizontal">
@@ -207,12 +205,12 @@
                             </StackPanel>
                         </Border>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
                         <Button x:Name="OpenLogButton" Content="{DynamicResource OpenScanLog}" Style="{StaticResource BaseButtonStyle}" Margin="0,0,10,0" Command="{Binding OpenLogCommand}"/>
                         <Button x:Name="UploadLogButton" Content="{DynamicResource UploadScanLog}" Style="{StaticResource BaseButtonStyle}" Margin="0,0,10,0" Command="{Binding UploadLogCommand}"/>
                         <Button x:Name="PrintButton" Content="{DynamicResource PrintTwoCopies}" Style="{StaticResource PrimaryButtonStyle}" MinWidth="132" Command="{Binding ProcessScanCommand}"/>
                     </StackPanel>
-                </Grid>
+                </WrapPanel>
             </Grid>
         </Border>
         <Grid Grid.Row="2" Margin="0,0,0,18">
@@ -221,15 +219,23 @@
                 <ColumnDefinition Width="0.8*"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="22" Margin="0,0,9,0">
-                <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
                     <TextBlock Text="{DynamicResource RuntimeInformation}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="17" FontWeight="Bold" Margin="0,0,0,12"/>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
                     <TextBlock Text="{Binding LabelInformationText}" Style="{StaticResource InfoLabelStyle}"/>
                     <TextBlock Text="{Binding CopiesInformationText}" Style="{StaticResource InfoLabelStyle}"/>
                     <TextBlock x:Name="PrinterTextBlock" Text="{Binding PrinterText}" Style="{StaticResource InfoLabelStyle}"/>
                     <TextBlock x:Name="LogFileTextBlock" Text="{Binding LogFileText}" Style="{StaticResource InfoLabelStyle}"/>
-                    <Border Height="1" Background="#E9EDF4" Margin="0,10"/>
-                    <TextBlock x:Name="CountTextBlock" Text="{Binding CountText}" Foreground="{StaticResource PrimaryBrush}" FontSize="17" FontWeight="Bold" Margin="0,3"/>
-                </StackPanel>
+                    </StackPanel>
+                    </ScrollViewer>
+                    <TextBlock Grid.Row="2" x:Name="CountTextBlock" Text="{Binding CountText}" Foreground="{StaticResource PrimaryBrush}" FontSize="17" FontWeight="Bold" Margin="0,8,0,0"/>
+                </Grid>
             </Border>
             <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="22" Margin="9,0,0,0" BorderBrush="{Binding StatusBrush}">
                 <Grid>
@@ -244,10 +250,10 @@
         </Grid>
         <Border Grid.Row="3" Background="#E9EEF7" CornerRadius="11" Padding="14,10">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Ellipse Width="8" Height="8" Fill="#35B879" Margin="0,0,8,0"/>
                     <TextBlock Text="{DynamicResource ServiceStatusLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
@@ -255,13 +261,15 @@
                     <TextBlock Text="{DynamicResource LastRefreshLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12" VerticalAlignment="Center"/>
                     <TextBlock x:Name="WebLastTime" Text="{Binding WebLastTime}" Foreground="{StaticResource TextPrimaryBrush}" FontSize="12" Margin="6,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <Button Content="库位付费比对" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Click="OpenLocationFeeComparisonButton_Click"/>
-                    <Button Content="出库检测" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Click="OpenOutboundInspectionButton_Click"/>
-                    <Button Content="入库检测" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Click="OpenChecklistButton_Click"/>
-                    <Button x:Name="ImportUrgentWorkOrdersButton" Content="{DynamicResource ImportUrgentWorkOrders}" Style="{StaticResource BaseButtonStyle}" Height="34" Margin="0,0,8,0" Command="{Binding ImportUrgentWorkOrdersCommand}"/>
-                    <Button Content="{DynamicResource ManualRefresh}" Style="{StaticResource BaseButtonStyle}" Height="34" Command="{Binding RefreshCommand}"/>
-                </StackPanel>
+                <UniformGrid Grid.Row="1" Columns="6" Margin="-4,8,-4,0">
+                    <Button x:Name="GlobalBaseButton" Content="{DynamicResource GlobalBaseImport}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Click="ImportGlobalBase_Click"/>
+                    <Button Content="{DynamicResource FooterLocationFee}" ToolTip="{DynamicResource LocationFeeTitle}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Click="OpenLocationFeeComparisonButton_Click"/>
+                    <Button Content="{DynamicResource FooterOutbound}" ToolTip="{DynamicResource OutboundTitle}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Click="OpenOutboundInspectionButton_Click"/>
+                    <Button Content="{DynamicResource FooterInbound}" ToolTip="{DynamicResource InboundTitle}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Click="OpenChecklistButton_Click"/>
+                    <Button x:Name="ImportUrgentWorkOrdersButton" Content="{DynamicResource FooterImportUrgent}" ToolTip="{DynamicResource ImportUrgentWorkOrders}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Command="{Binding ImportUrgentWorkOrdersCommand}"/>
+                    <Button Content="{DynamicResource FooterRefresh}" ToolTip="{DynamicResource ManualRefresh}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Command="{Binding RefreshCommand}"/>
+                    <Button Content="{DynamicResource DailyReport}" Style="{StaticResource BaseButtonStyle}" Height="36" Margin="4,0" Click="CreateDailyReportButton_Click"/>
+                </UniformGrid>
             </Grid>
         </Border>
     </Grid>

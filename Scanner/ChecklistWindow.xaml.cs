@@ -1,3 +1,4 @@
+using Scanner.Helpers;
 using Microsoft.Win32;
 using Scanner.Models;
 using Scanner.Services;
@@ -21,22 +22,9 @@ namespace Scanner
             RefreshStatus();
         }
 
-        private void ImportBaseDataButton_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog dialog = new OpenFileDialog { Title = "选择基础数据文件", Filter = "Excel 工作簿 (*.xlsx)|*.xlsx", CheckFileExists = true };
-            if (dialog.ShowDialog(this) != true) return;
-            try
-            {
-                IList<InboundChecklistRecord> records = ChecklistXlsxReader.Read(dialog.FileName);
-                ChecklistDataCache.ReplaceRecords(records, dialog.FileName);
-                RefreshStatus();
-            }
-            catch (Exception ex) { ShowError("导入基础数据失败：" + ex.Message); }
-        }
-
         private void ImportSnButton_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog { Title = "选择 SN 清单", Filter = "文本文件 (*.txt)|*.txt", CheckFileExists = true };
+            OpenFileDialog dialog = new OpenFileDialog { Title = UiText.Get("SelectSnTitle"), Filter = UiText.Get("TextFileFilter"), CheckFileExists = true };
             if (dialog.ShowDialog(this) != true) return;
             try
             {
@@ -46,14 +34,14 @@ namespace Scanner
                 ChecklistDataCache.ReplaceSerialNumbers(serialNumbers, dialog.FileName);
                 RefreshStatus();
             }
-            catch (Exception ex) { ShowError("导入 SN 清单失败：" + ex.Message); }
+            catch (Exception ex) { ShowError(UiText.Get("SnImportFailedPrefix") + ex.Message); }
         }
 
         private void ExportButton_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog dialog = new SaveFileDialog
             {
-                Title = "保存匹配结果", Filter = "文本文件 (*.txt)|*.txt", AddExtension = true, DefaultExt = ".txt",
+                Title = UiText.Get("SaveMatchTitle"), Filter = UiText.Get("TextFileFilter"), AddExtension = true, DefaultExt = ".txt",
                 FileName = "InboundDetectionResult_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt"
             };
             if (dialog.ShowDialog(this) != true) return;
@@ -76,10 +64,10 @@ namespace Scanner
                     else lines.Add(string.Join("\t", Clean(sn), string.Empty, "不存在", string.Empty));
                 }
                 File.WriteAllLines(dialog.FileName, lines, new UTF8Encoding(true));
-                MessageBox.Show(this, string.Format("导出完成。\n匹配：{0:N0} 条\n不存在：{1:N0} 条", matchedCount, ChecklistDataCache.SerialNumbers.Count - matchedCount), "入库检测", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(this, string.Format(UiText.Get("MatchExportDone"), matchedCount, ChecklistDataCache.SerialNumbers.Count - matchedCount), UiText.Get("InboundTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
                 Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
             }
-            catch (Exception ex) { ShowError("导出失败：" + ex.Message); }
+            catch (Exception ex) { ShowError(UiText.Get("ExportFailedPrefix") + ex.Message); }
         }
 
         private void ExportCurrentMonthButton_Click(object sender, RoutedEventArgs e)
@@ -95,14 +83,14 @@ namespace Scanner
 
             if (records.Count == 0)
             {
-                MessageBox.Show(this, "当前月没有待检测数据。", "导出 CSV", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(this, UiText.Get("NoPendingThisMonth"), UiText.Get("ExportCsvTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             SaveFileDialog dialog = new SaveFileDialog
             {
-                Title = "导出当前月待检测数据",
-                Filter = "CSV 文件 (*.csv)|*.csv",
+                Title = UiText.Get("ExportPendingTitle"),
+                Filter = UiText.Get("CsvFileFilter"),
                 AddExtension = true,
                 DefaultExt = ".csv",
                 FileName = "CurrentMonthPending_" + currentMonth.ToString("yyyyMM") + ".csv"
@@ -121,24 +109,47 @@ namespace Scanner
                 }));
                 File.WriteAllLines(dialog.FileName, lines, new UTF8Encoding(true));
                 int repairCount = records.Count(record => (record.Type ?? string.Empty).IndexOf("维修", StringComparison.OrdinalIgnoreCase) >= 0);
-                MessageBox.Show(this, string.Format("CSV 导出完成。\n维修：{0:N0} 条\n非维修：{1:N0} 条", repairCount, records.Count - repairCount), "导出 CSV", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(this, string.Format(UiText.Get("PendingExportDone"), repairCount, records.Count - repairCount), UiText.Get("ExportCsvTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
                 Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
             }
-            catch (Exception ex) { ShowError("导出当前月待检测 CSV 失败：" + ex.Message); }
+            catch (Exception ex) { ShowError(UiText.Get("PendingExportFailedPrefix") + ex.Message); }
+        }
+
+        private void ExportSimplifiedButton_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog dialog = new SaveFileDialog
+            {
+                Title = UiText.Get("SaveSimplifiedTitle"),
+                Filter = UiText.Get("TextFileFilter"),
+                AddExtension = true,
+                DefaultExt = ".txt",
+                FileName = "InboundDetectionSimplified_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt"
+            };
+            if (dialog.ShowDialog(this) != true) return;
+            try
+            {
+                ChecklistSimplifiedExportResult result = ChecklistSimplifiedExportService.Build(ChecklistDataCache.SerialNumbers, ChecklistDataCache.Records);
+                File.WriteAllLines(dialog.FileName, result.Lines, new UTF8Encoding(true));
+                MessageBox.Show(this, string.Format(UiText.Get("SimplifiedExportDone"), result.MatchedCount, result.MissingCount),
+                    UiText.Get("InboundTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+                Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
+            }
+            catch (Exception ex) { ShowError(UiText.Get("ExportFailedPrefix") + ex.Message); }
         }
 
         private void RefreshStatus()
         {
-            BaseStatusTextBlock.Text = ChecklistDataCache.Records.Count == 0 ? "基础数据：尚未导入" : string.Format("基础数据：已缓存 {0:N0} 条（{1:yyyy-MM-dd HH:mm:ss}）", ChecklistDataCache.Records.Count, ChecklistDataCache.BaseDataImportedAt);
+            BaseStatusTextBlock.Text = ChecklistDataCache.Records.Count == 0 ? UiText.Get("BaseNotImported") : string.Format(UiText.Get("BaseCacheSummary"), ChecklistDataCache.Records.Count, ChecklistDataCache.BaseDataImportedAt);
             BaseFileTextBlock.Text = ChecklistDataCache.BaseDataFile ?? string.Empty;
-            SnStatusTextBlock.Text = ChecklistDataCache.SerialNumbers.Count == 0 ? "SN 清单：尚未导入" : string.Format("SN 清单：已缓存 {0:N0} 个（{1:yyyy-MM-dd HH:mm:ss}）", ChecklistDataCache.SerialNumbers.Count, ChecklistDataCache.SnImportedAt);
+            SnStatusTextBlock.Text = ChecklistDataCache.SerialNumbers.Count == 0 ? UiText.Get("SnNotImported") : string.Format(UiText.Get("SnCacheSummary"), ChecklistDataCache.SerialNumbers.Count, ChecklistDataCache.SnImportedAt);
             SnFileTextBlock.Text = ChecklistDataCache.SnFile ?? string.Empty;
             ExportButton.IsEnabled = ChecklistDataCache.Records.Count > 0 && ChecklistDataCache.SerialNumbers.Count > 0;
+            ExportSimplifiedButton.IsEnabled = ChecklistDataCache.Records.Count > 0 && ChecklistDataCache.SerialNumbers.Count > 0;
             ExportCurrentMonthButton.IsEnabled = ChecklistDataCache.Records.Count > 0;
             DateTime currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-            CurrentMonthColumn.Header = "当前月 " + currentMonth.ToString("yyyy-MM");
-            PreviousMonthColumn.Header = "上一个月 " + currentMonth.AddMonths(-1).ToString("yyyy-MM");
-            TwoMonthsAgoColumn.Header = "上两个月 " + currentMonth.AddMonths(-2).ToString("yyyy-MM");
+            CurrentMonthColumn.Header = UiText.Get("CurrentMonth") + " " + currentMonth.ToString("yyyy-MM");
+            PreviousMonthColumn.Header = UiText.Get("PreviousMonth") + " " + currentMonth.AddMonths(-1).ToString("yyyy-MM");
+            TwoMonthsAgoColumn.Header = UiText.Get("TwoMonthsAgo") + " " + currentMonth.AddMonths(-2).ToString("yyyy-MM");
             StatusSummaryDataGrid.ItemsSource = BuildStatusSummaries(ChecklistDataCache.Records, currentMonth);
         }
 
@@ -148,9 +159,9 @@ namespace Scanner
             DateTime twoMonthsAgo = currentMonth.AddMonths(-2);
             var summaries = new List<ChecklistStatusSummary>
             {
-                new ChecklistStatusSummary("待检测 - 维修"),
-                new ChecklistStatusSummary("待检测 - 非维修"),
-                new ChecklistStatusSummary("完成")
+                new ChecklistStatusSummary(UiText.Get("PendingRepair")),
+                new ChecklistStatusSummary(UiText.Get("PendingNonRepair")),
+                new ChecklistStatusSummary(UiText.Get("Completed"))
             };
 
             foreach (InboundChecklistRecord record in records ?? Enumerable.Empty<InboundChecklistRecord>())
@@ -207,7 +218,7 @@ namespace Scanner
             return false;
         }
 
-        private void ShowError(string message) { MessageBox.Show(this, message, "入库检测", MessageBoxButton.OK, MessageBoxImage.Error); }
+        private void ShowError(string message) { MessageBox.Show(this, message, UiText.Get("InboundTitle"), MessageBoxButton.OK, MessageBoxImage.Error); }
         private static string Clean(string value) { return (value ?? string.Empty).Replace("\t", " ").Replace("\r", " ").Replace("\n", " "); }
         private static string Csv(string value) { return "\"" + (value ?? string.Empty).Replace("\"", "\"\"") + "\""; }
 

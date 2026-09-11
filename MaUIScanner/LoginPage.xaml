@@ -9,15 +9,20 @@
                     <Border WidthRequest="54" HeightRequest="54" BackgroundColor="#E8EEFC" StrokeThickness="0" StrokeShape="RoundRectangle 15" HorizontalOptions="Center">
                         <Label Text="S" TextColor="#2457D6" FontSize="26" FontAttributes="Bold" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
                     </Border>
-                    <Label Text="维修扫描系统" FontSize="26" FontAttributes="Bold" TextColor="#18243A" HorizontalTextAlignment="Center" Margin="0,14,0,0"/>
-                    <Label Text="SERVICE  ·  SCAN  ·  VERIFY" FontSize="10" TextColor="#8B96AA" HorizontalTextAlignment="Center" Margin="0,4,0,25"/>
-                    <Label Text="用户名" FontSize="13" FontAttributes="Bold" TextColor="#647089" Margin="0,0,0,7"/>
-                    <Entry x:Name="UsernameEntry" Placeholder="请输入用户名" HeightRequest="50" BackgroundColor="#F8FAFD" ReturnType="Next" Completed="UsernameEntry_Completed"/>
-                    <Label Text="密码" FontSize="13" FontAttributes="Bold" TextColor="#647089" Margin="0,16,0,7"/>
-                    <Entry x:Name="PasswordEntry" Placeholder="请输入密码" IsPassword="True" HeightRequest="50" BackgroundColor="#F8FAFD" ReturnType="Go" Completed="PasswordEntry_Completed"/>
-                    <HorizontalStackLayout Margin="0,12,0,18"><CheckBox x:Name="RememberCheckBox"/><Label Text="记住密码" TextColor="#647089" VerticalTextAlignment="Center"/></HorizontalStackLayout>
-                    <Button x:Name="LoginButton" Text="登录" HeightRequest="50" BackgroundColor="#2457D6" TextColor="White" FontAttributes="Bold" CornerRadius="10" Clicked="LoginButton_Clicked"/>
-                    <Button x:Name="LocalButton" Text="本地扫描模式" HeightRequest="48" BackgroundColor="#EEF3FF" TextColor="#2457D6" FontAttributes="Bold" CornerRadius="10" Margin="0,10,0,0" Clicked="LocalButton_Clicked"/>
+                    <Label Text="{DynamicResource LoginHeading}" FontSize="26" FontAttributes="Bold" TextColor="#18243A" HorizontalTextAlignment="Center" Margin="0,14,0,0"/>
+                    <Label Text="{DynamicResource LoginTagline}" FontSize="10" TextColor="#8B96AA" HorizontalTextAlignment="Center" Margin="0,4,0,25"/>
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="8" Margin="0,0,0,16">
+                        <Button Text="中文" CommandParameter="zh-CN" Clicked="LanguageButton_Clicked"/>
+                        <Button Text="EN" CommandParameter="en-US" Clicked="LanguageButton_Clicked"/>
+                        <Button Text="ES" CommandParameter="es-ES" Clicked="LanguageButton_Clicked"/>
+                    </HorizontalStackLayout>
+                    <Label Text="{DynamicResource Username}" FontSize="13" FontAttributes="Bold" TextColor="#647089" Margin="0,0,0,7"/>
+                    <Entry x:Name="UsernameEntry" Placeholder="{DynamicResource UsernamePlaceholder}" HeightRequest="50" BackgroundColor="#F8FAFD" ReturnType="Next" Completed="UsernameEntry_Completed"/>
+                    <Label Text="{DynamicResource Password}" FontSize="13" FontAttributes="Bold" TextColor="#647089" Margin="0,16,0,7"/>
+                    <Entry x:Name="PasswordEntry" Placeholder="{DynamicResource PasswordPlaceholder}" IsPassword="True" HeightRequest="50" BackgroundColor="#F8FAFD" ReturnType="Go" Completed="PasswordEntry_Completed"/>
+                    <HorizontalStackLayout Margin="0,12,0,18"><CheckBox x:Name="RememberCheckBox"/><Label Text="{DynamicResource RememberPassword}" TextColor="#647089" VerticalTextAlignment="Center"/></HorizontalStackLayout>
+                    <Button x:Name="LoginButton" Text="{DynamicResource SignIn}" HeightRequest="50" BackgroundColor="#2457D6" TextColor="White" FontAttributes="Bold" CornerRadius="10" Clicked="LoginButton_Clicked"/>
+                    <Button x:Name="LocalButton" Text="{DynamicResource LocalScanningMode}" HeightRequest="48" BackgroundColor="#EEF3FF" TextColor="#2457D6" FontAttributes="Bold" CornerRadius="10" Margin="0,10,0,0" Clicked="LocalButton_Clicked"/>
                     <ActivityIndicator x:Name="BusyIndicator" Color="#2457D6" IsVisible="False" IsRunning="False" Margin="0,14,0,0"/>
                     <Label x:Name="StatusLabel" TextColor="#C43D4B" FontSize="13" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
                 </VerticalStackLayout>

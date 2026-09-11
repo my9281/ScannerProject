@@ -10,12 +10,17 @@ namespace Scanner.Services
     {
         public static IList<OutboundInspectionRecord> Build(string textPath, string baseWorkbookPath)
         {
+            return Build(textPath, ChecklistXlsxReader.Read(baseWorkbookPath));
+        }
+
+        public static IList<OutboundInspectionRecord> Build(string textPath, IEnumerable<InboundChecklistRecord> baseRecords)
+        {
             List<string> lines = File.ReadAllLines(textPath)
                 .Select(line => (line ?? string.Empty).Trim().TrimStart('\uFEFF'))
                 .Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
             if (lines.Count == 0) throw new InvalidDataException("TXT 文件中没有有效数据。");
             if (lines.Count % 2 != 0) throw new InvalidDataException(string.Format("TXT 有 {0} 个非空行，必须严格按两行一条：第一行 SKU，第二行 SN。", lines.Count));
-            IDictionary<string, InboundChecklistRecord> baseBySn = ChecklistXlsxReader.Read(baseWorkbookPath)
+            IDictionary<string, InboundChecklistRecord> baseBySn = baseRecords
                 .Where(item => !string.IsNullOrWhiteSpace(item.Sn))
                 .GroupBy(item => item.Sn.Trim(), StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);

@@ -1,6 +1,39 @@
 # 幽梦运单之星扫描系统
 
-YM-Star Scanner System 是一款 Windows 扫码、工单匹配、标签打印和语音提示工具。当前可用程序位于 `Scanner` WPF 项目。
+YM-Star Scanner System 是一款扫码记录、工单匹配、标签打印、入库检测、出库核对和库位费比对工具。Windows 完整业务基准位于 `Scanner` WPF 项目；`MaUIScanner` 提供 Android 小屏界面及 Windows / Intel macOS 迁移实现，当前仍有功能差异。
+
+## 文档入口
+
+- [项目功能说明](docs/项目功能说明.md)：各项功能、使用流程、平台差异和待办。
+- [Excel 项目进度表](outputs/doc-progress-20260908/项目进度表.xlsx)：功能加入日期、Git依据、本次迁移登记与当前状态。
+- [原始需求文档](request.md)：历史需求基准，部分平台描述尚未更新，应结合功能说明阅读。
+- [上传站点说明](WmsUploadSite/README.md)：配套Web服务的运行说明。
+
+## 平台状态（2026-09-08）
+
+| 平台 | 当前能力 | 主要限制 |
+|---|---|---|
+| Windows WPF | 扫码、打印、工单、入库/出库/库位费模块 | Windows专用，依赖.NET Framework 4.7.2 |
+| Android MAUI | 单列扫码、日志、工单及新增文件处理入口 | 自动打印禁用，新增页需小屏实测 |
+| Intel macOS MAUI | x64代码编译、文件处理、PDF标签及系统打印面板 | 原生打包与打印未实测，迁移未全部对齐 |
+| Windows MAUI | 跨平台业务和Windows打印实现 | 不等同于WPF完整功能 |
+
+MAUI已接入XLSX紧急工单导入，但CSV仍是旧列映射；自定义型号保存、入库完整统计、出库托盘打印、新页面多语言尚待补齐。4×4标签目前为缩放布局。编译通过不等于可安装Mac版本已经交付。
+
+## 开发与构建
+
+Windows WPF：使用Visual Studio / MSBuild及.NET Framework 4.7.2开发工具生成 `Scanner/Scanner.csproj`。
+
+MAUI：安装.NET 10 SDK及目标平台工作负载，在仓库根目录执行：
+
+```powershell
+dotnet restore MaUIScanner/MaUIScanner.csproj
+dotnet build MaUIScanner/MaUIScanner.csproj -f net10.0-android
+dotnet build MaUIScanner/MaUIScanner.csproj -f net10.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
+dotnet run --project tests/BarcodeClassification.Tests/BarcodeClassification.Tests.csproj
+```
+
+Mac原生打包、签名与运行需要Mac及匹配的Xcode/工作负载环境。前述对话已有编译和17项条码/OID测试记录，本次文档整理未重新运行构建。下方原有使用说明主要适用于Windows WPF；MAUI差异以项目功能说明为准。
 
 ## 使用前准备
 
@@ -125,7 +158,15 @@ PS54 EB55 EB70 PINA AP300 SP100L PV350 PV200
 - `EN`：英语。
 - `ES`：西班牙语。
 
-主界面支持即时切换。当前登录窗口仍以中文显示。
+登录和主界面均支持切换语言；入库检测、出库检测、库位付费比对和型号选择窗口也使用同一套中、英、西班牙语资源。MAUI 登录和主页面同步支持三种语言。
+
+英文界面使用项目内嵌的 **Bickham Script Pro Semibold**，无需另行安装字体。中文、西班牙语保持原有字体，扫描编号和型号保留等宽字体便于辨认；导入原始数据、导出字段及打印标签格式不随界面语言变化。部分底层或系统异常仍显示原始消息。
+
+运行 `powershell -NoProfile -ExecutionPolicy Bypass -File tests/Localization.Tests/Run.ps1` 可验证三种语言资源、嵌入字体并生成六个 WPF 窗口的预览（位于测试目录的 `bin/previews`）。
+
+## 日报
+
+主界面底部的功能按钮固定为单独一行并保持等宽。点击“日报”后，程序在可执行文件同目录的 `tempexcel` 文件夹生成并打开 Excel。工作表包含“时间、日期、内容、备注”四列，其中“时间”为从当天往前三个月起至本月 15 日止的每日日期，“日期”为对应星期；内容和备注预留给后续填写与功能扩展。
 
 ## 日志位置
 
@@ -178,6 +219,7 @@ PS54 EB55 EB70 PINA AP300 SP100L PV350 PV200
 - 基础数据中的处理日期按北京时间读取，统计和“当月待检测 CSV”导出前统一减去 12 小时，作为新泽西时间使用。
 - 跨月临界数据按换算后的日期归入当前月、上一个月、上两个月或其余月份。
 - 状态统计表最右侧“总量”列显示每个分类在所有月份中的合计数量。
+- “导出简化版”按已导入的 SN 清单生成 UTF-8 TXT。匹配记录每行输出 `SN ✔`，类型包含“维修”时输出 `SN ○`；基础表中不存在的 SN 输出 `SN 不存在`。
 
 ## 项目结构
 
@@ -190,7 +232,10 @@ Scanner/
   ViewModels/    主窗口 MVVM 逻辑
   MainWindow.*   主扫描界面
   LoginWindow.*  登录界面
-MaUIScanner/     尚未接入业务的 .NET MAUI 模板项目
+MaUIScanner/     已接入业务的 .NET MAUI 项目（Android / Windows / Intel macOS，迁移中）
+WmsUploadSite/   扫描日志上传配套站点
+docs/           项目功能说明
+outputs/doc-progress-20260908/  Excel项目进度表
 ```
 
 完整业务要求参见 [request.md](request.md)。

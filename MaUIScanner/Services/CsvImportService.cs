@@ -9,6 +9,19 @@ public sealed class CsvImportService
     private const int SnColumn = 24;
     private const int TrackingColumn = 29;
     private const int RemarkColumn = 43;
+    public async Task<IReadOnlyList<WorkOrderRemark>> ImportAsync(FileResult file)
+    {
+        string extension = Path.GetExtension(file.FileName);
+        if (extension.Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            string path = Path.Combine(FileSystem.CacheDirectory, $"urgent_{Guid.NewGuid():N}.xlsx");
+            await using (Stream input = await file.OpenReadAsync()) await using (FileStream output = File.Create(path)) await input.CopyToAsync(output);
+            Scanner.Helpers.UrgentWorkOrderImportResult imported = new Scanner.Helpers.UrgentWorkOrderImportHelper().Import(path);
+            return imported.Rules.Select(x => new WorkOrderRemark { Id=x.Id, Sn=x.Sn, TrackingNumber=x.TrackingNumber, Remark=x.Remark, RemarkTimestamp=x.RemarkTimestamp, IsUrgent=x.IsUrgent, IsRepair=x.IsRepair, IsOidRule=x.IsOidRule }).ToList();
+        }
+        await using Stream stream = await file.OpenReadAsync();
+        return await ImportAsync(stream);
+    }
     public async Task<IReadOnlyList<WorkOrderRemark>> ImportAsync(Stream stream)
     {
         using StreamReader reader = new(stream, Encoding.UTF8, true, leaveOpen: true);
@@ -23,7 +36,7 @@ public sealed class CsvImportService
             string sn = fields[SnColumn].Trim();
             string tracking = fields[TrackingColumn].Trim();
             if (string.IsNullOrWhiteSpace(sn) && string.IsNullOrWhiteSpace(tracking)) throw new InvalidOperationException($"CSV 第 {rowNumber} 行的 SN 和运单号不能同时为空。");
-            result.Add(new WorkOrderRemark { Id = $"CSV-{rowNumber}-{Guid.NewGuid():N}", Sn = EmptyToNull(sn), TrackingNumber = EmptyToNull(tracking), Remark = fields[RemarkColumn].Trim(), IsUrgent = true, RemarkTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() });
+            result.Add(new WorkOrderRemark { Id = $"CSV-{rowNumber}-{Guid.NewGuid():N}", Sn = EmptyToNull(sn), TrackingNumber = EmptyToNull(tracking), Remark = fields[RemarkColumn].Trim(), IsUrgent = true, IsRepair = true, IsOidRule = string.IsNullOrWhiteSpace(sn) && !string.IsNullOrWhiteSpace(tracking), RemarkTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds() });
         }
         return result;
     }

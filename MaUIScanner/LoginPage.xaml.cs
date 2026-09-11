@@ -23,6 +23,11 @@ public partial class LoginPage : ContentPage
     }
 
     private void UsernameEntry_Completed(object? sender, EventArgs e) => PasswordEntry.Focus();
+    private void LanguageButton_Clicked(object? sender, EventArgs e)
+    {
+        LocalizationService.Current.Change((string)((Button)sender!).CommandParameter);
+        StatusLabel.Text = string.Empty;
+    }
     private async void PasswordEntry_Completed(object? sender, EventArgs e) => await LoginAsync();
     private async void LoginButton_Clicked(object? sender, EventArgs e) => await LoginAsync();
     private async void LocalButton_Clicked(object? sender, EventArgs e)
@@ -35,7 +40,7 @@ public partial class LoginPage : ContentPage
     private async Task LoginAsync()
     {
         if (BusyIndicator.IsRunning) return;
-        SetBusy(true); StatusLabel.Text = "正在登录……";
+        SetBusy(true); StatusLabel.Text = LocalizationService.Current.Get("SigningIn");
         try
         {
             AuthSession session = await _auth.LoginAsync(UsernameEntry.Text ?? string.Empty, PasswordEntry.Text ?? string.Empty);

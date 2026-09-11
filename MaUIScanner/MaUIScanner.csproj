@@ -47,6 +47,7 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<RuntimeIdentifier Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">maccatalyst-x64</RuntimeIdentifier>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -62,16 +63,37 @@
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
+		<MauiFont Include="..\Scanner\Resources\Bickham Script Pro Semibold.ttf" Link="Resources\Fonts\Bickham Script Pro Semibold.ttf" />
+		<EmbeddedResource Include="Resources\Fonts\IMing.ttf" LogicalName="MaUIScanner.PrintFonts.IMing.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
+		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" LogicalName="MaUIScanner.PrintFonts.OpenSans-Regular.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
+		<EmbeddedResource Include="Resources\Fonts\ZiHunShouJin.ttf" LogicalName="MaUIScanner.PrintFonts.ZiHunShouJin.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
+		<EmbeddedResource Include="..\Scanner\Languages\Language.*.xaml" LogicalName="%(Filename)%(Extension)" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+        <MauiAsset Include="Resources\Fonts\OpenSans-OFL.txt" LogicalName="OpenSans-OFL.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
 		<PackageReference Include="ZXing.Net" Version="0.16.11" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Drawing.Common" Version="10.0.0" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
+	</ItemGroup>
+
+	<!-- Keep the spreadsheet business rules shared with the production WPF app. -->
+	<ItemGroup>
+		<Compile Include="..\Scanner\Models\InboundChecklistRecord.cs" Link="Shared\Models\InboundChecklistRecord.cs" />
+		<Compile Include="..\Scanner\Models\OutboundInspectionRecord.cs" Link="Shared\Models\OutboundInspectionRecord.cs" />
+		<Compile Include="..\Scanner\Models\OutboundSkuSummary.cs" Link="Shared\Models\OutboundSkuSummary.cs" />
+		<Compile Include="..\Scanner\Models\WorkOrderRemarkResponse.cs" Link="Shared\Models\LegacyWorkOrderModels.cs" />
+		<Compile Include="..\Scanner\Services\ChecklistXlsxReader.cs" Link="Shared\Services\ChecklistXlsxReader.cs" />
+        <Compile Include="..\Scanner\Services\ChecklistDataCache.cs" Link="Shared\Services\ChecklistDataCache.cs" />
+		<Compile Include="..\Scanner\Services\OutboundInspectionService.cs" Link="Shared\Services\OutboundInspectionService.cs" />
+		<Compile Include="..\Scanner\Services\OutboundInspectionXlsxWriter.cs" Link="Shared\Services\OutboundInspectionXlsxWriter.cs" />
+		<Compile Include="..\Scanner\Services\LocationFeeComparisonService.cs" Link="Shared\Services\LocationFeeComparisonService.cs" />
+		<Compile Include="..\Scanner\Helpers\UrgentWorkOrderImportHelper.cs" Link="Shared\Services\UrgentWorkOrderImportHelper.cs" />
 	</ItemGroup>
 
 </Project>

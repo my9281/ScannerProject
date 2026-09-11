@@ -62,7 +62,53 @@ namespace Scanner.Services
                 sheetData,
                 new XElement(MainNs + "pageMargins", new XAttribute("left", "0.25"), new XAttribute("right", "0.25"), new XAttribute("top", "0.35"), new XAttribute("bottom", "0.35"), new XAttribute("header", "0"), new XAttribute("footer", "0")),
                 new XElement(MainNs + "pageSetup", new XAttribute("orientation", "landscape"), new XAttribute("fitToWidth", "1"), new XAttribute("fitToHeight", "0")));
+            foreach (XElement row in sheetData.Elements(MainNs + "row"))
+            {
+                int rowIndex = (int)row.Attribute("r");
+                foreach (XElement cell in row.Elements(MainNs + "c"))
+                {
+                    string reference = (string)cell.Attribute("r");
+                    if (reference.StartsWith("D") || reference.StartsWith("E"))
+                        cell.SetAttributeValue("s", rowIndex >= footer ? 5 : 4);
+                }
+            }
+            FitContent(worksheet, sheetData);
             return new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), worksheet);
+        }
+
+        // Excel stores calculated dimensions; bestFit alone does not resize on open.
+        private static void FitContent(XElement worksheet, XElement sheetData)
+        {
+            double[] widths = new double[6];
+            foreach (XElement cell in sheetData.Descendants(MainNs + "c"))
+            {
+                int column = ((string)cell.Attribute("r"))[0] - 'A';
+                string value = DisplayText(cell);
+                double length = value.Split('\n').Max(line => line.Sum(c => c > 255 ? 2.0 : 1.0));
+                widths[column] = Math.Max(widths[column], Math.Min(60, Math.Max(10, length * 1.4 + 3)));
+            }
+            worksheet.Element(MainNs + "cols").ReplaceNodes(widths.Select((width, index) => Column(index + 1, width)));
+            foreach (XElement row in sheetData.Elements(MainNs + "row"))
+            {
+                int lines = 1;
+                foreach (XElement cell in row.Elements(MainNs + "c"))
+                {
+                    int column = ((string)cell.Attribute("r"))[0] - 'A';
+                    int count = DisplayText(cell).Split('\n').Sum(line =>
+                        Math.Max(1, (int)Math.Ceiling(line.Sum(c => c > 255 ? 2.0 : 1.0) * 1.4 / Math.Max(1, widths[column] - 3))));
+                    lines = Math.Max(lines, count);
+                }
+                row.SetAttributeValue("ht", Math.Min(409, 24 * lines + 4));
+                row.SetAttributeValue("customHeight", "1");
+            }
+        }
+
+        private static string DisplayText(XElement cell)
+        {
+            if ((string)cell.Attribute("s") == "3") return "12月31日";
+            return cell.Element(MainNs + "is") != null
+                ? string.Concat(cell.Descendants(MainNs + "t").Select(t => t.Value))
+                : (string)cell.Element(MainNs + "v") ?? string.Empty;
         }
 
         private static XElement Row(int rowNumber, int style, params string[] values)
@@ -114,6 +160,33 @@ namespace Scanner.Services
                     new XElement(MainNs + "xf", new XAttribute("numFmtId", "0"), new XAttribute("fontId", "1"), new XAttribute("fillId", "0"), new XAttribute("borderId", "1"), new XAttribute("xfId", "0"), new XAttribute("applyAlignment", "1"), new XElement(MainNs + "alignment", new XAttribute("vertical", "center"))),
                     new XElement(MainNs + "xf", new XAttribute("numFmtId", "164"), new XAttribute("fontId", "1"), new XAttribute("fillId", "0"), new XAttribute("borderId", "1"), new XAttribute("xfId", "0"), new XAttribute("applyNumberFormat", "1"), new XAttribute("applyAlignment", "1"), new XElement(MainNs + "alignment", new XAttribute("horizontal", "center"), new XAttribute("vertical", "center")))),
                 new XElement(MainNs + "cellStyles", new XAttribute("count", "1"), new XElement(MainNs + "cellStyle", new XAttribute("name", "Normal"), new XAttribute("xfId", "0"), new XAttribute("builtinId", "0"))));
+            XElement fonts = styles.Element(MainNs + "fonts");
+            foreach (XElement font in fonts.Elements())
+            {
+                font.Element(MainNs + "sz").SetAttributeValue("val", "14");
+                font.Element(MainNs + "name").SetAttributeValue("val", "I.Ming");
+                if (font.Element(MainNs + "b") == null) font.AddFirst(new XElement(MainNs + "b"));
+            }
+            fonts.Add(new XElement(MainNs + "font", new XElement(MainNs + "b"),
+                new XElement(MainNs + "sz", new XAttribute("val", "14")),
+                new XElement(MainNs + "name", new XAttribute("val", "字魂瘦金体"))));
+            fonts.SetAttributeValue("count", "3");
+            XElement xfs = styles.Element(MainNs + "cellXfs");
+            XElement shoujin = new XElement(xfs.Elements().ElementAt(2));
+            shoujin.SetAttributeValue("fontId", "2");
+            xfs.Add(shoujin);
+            XElement footerStyle = new XElement(shoujin);
+            footerStyle.SetAttributeValue("borderId", "0");
+            xfs.Add(footerStyle);
+            xfs.SetAttributeValue("count", "6");
+            foreach (XElement xf in xfs.Elements())
+            {
+                XElement alignment = xf.Element(MainNs + "alignment");
+                if (alignment == null) { alignment = new XElement(MainNs + "alignment"); xf.Add(alignment); }
+                alignment.SetAttributeValue("wrapText", "1");
+                alignment.SetAttributeValue("vertical", "center");
+                xf.SetAttributeValue("applyAlignment", "1");
+            }
             return new XDocument(new XDeclaration("1.0", "UTF-8", "yes"), styles);
         }
 

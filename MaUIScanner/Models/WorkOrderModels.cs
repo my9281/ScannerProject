@@ -30,5 +30,8 @@ public sealed class WorkOrderRemark
     public long RemarkTimestamp { get; set; }
     [JsonPropertyName("is_urgent")]
     public bool IsUrgent { get; set; }
+    [JsonIgnore]
+    public bool IsRepair { get; set; }
+    [JsonIgnore]
+    public bool IsOidRule { get; set; }
 }
-

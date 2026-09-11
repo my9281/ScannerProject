@@ -27,12 +27,16 @@ namespace Scanner.Services
 
         public static LocationFeeComparisonSummary Build(string templatePath, string baseWorkbookPath, string outputPath)
         {
+            return Build(templatePath, ChecklistXlsxReader.Read(baseWorkbookPath), outputPath);
+        }
+
+        public static LocationFeeComparisonSummary Build(string templatePath, IEnumerable<InboundChecklistRecord> baseRecords, string outputPath)
+        {
             if (string.IsNullOrWhiteSpace(templatePath) || !File.Exists(templatePath)) throw new FileNotFoundException("找不到库位付费模板。", templatePath);
-            if (string.IsNullOrWhiteSpace(baseWorkbookPath) || !File.Exists(baseWorkbookPath)) throw new FileNotFoundException("找不到基础表。", baseWorkbookPath);
             if (string.IsNullOrWhiteSpace(outputPath)) throw new ArgumentException("输出路径不能为空。", nameof(outputPath));
             if (string.Equals(Path.GetFullPath(templatePath), Path.GetFullPath(outputPath), StringComparison.OrdinalIgnoreCase)) throw new InvalidOperationException("输出文件不能覆盖原模板，请选择其他文件名。");
 
-            IDictionary<string, InboundChecklistRecord> baseBySn = ChecklistXlsxReader.Read(baseWorkbookPath)
+            IDictionary<string, InboundChecklistRecord> baseBySn = baseRecords
                 .Where(item => item != null && !string.IsNullOrWhiteSpace(item.Sn))
                 .GroupBy(item => NormalizeSn(item.Sn), StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);

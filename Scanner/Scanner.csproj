@@ -82,15 +82,18 @@
     <Compile Include="Services\ScanUploadService.cs" />
     <Compile Include="Services\ChecklistDataCache.cs" />
     <Compile Include="Services\ChecklistXlsxReader.cs" />
+    <Compile Include="Services\ChecklistSimplifiedExportService.cs" />
     <Compile Include="Services\OutboundInspectionService.cs" />
     <Compile Include="Services\OutboundInspectionXlsxWriter.cs" />
     <Compile Include="Services\LocationFeeComparisonService.cs" />
+    <Compile Include="Services\DailyReportService.cs" />
     <Compile Include="Services\OidService.cs" />
     <Compile Include="Services\MeterModelService.cs" />
     <Compile Include="Services\SpeechService.cs" />
     <Compile Include="Services\WorkOrderSearchService.cs" />
     <Compile Include="Helpers\UrgentWorkOrderImportHelper.cs" />
     <Compile Include="Helpers\DialogHelper.cs" />
+    <Compile Include="Helpers\UiText.cs" />
     <Compile Include="Helpers\NetworkHelper.cs" />
     <Compile Include="Helpers\PrintingHelper.cs" />
     <Compile Include="Helpers\ScanLogHelper.cs" />
@@ -189,6 +192,11 @@
     <Resource Include="Resources\Bickham Script Pro Bold.ttf" />
     <Resource Include="Resources\Bickham Script Pro Regular.ttf" />
     <Resource Include="Resources\Bickham Script Pro Semibold.ttf" />
+    <Resource Include="Resources\Fonts\IMing.ttf" />
+    <Resource Include="Resources\Fonts\OpenSans-Regular.ttf" />
+    <Content Include="Resources\Fonts\OpenSans-OFL.txt"><CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory></Content>
+    <Resource Include="Resources\Fonts\GenJyuuGothic.ttf" />
+    <Resource Include="Resources\Fonts\ZiHunShouJin.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

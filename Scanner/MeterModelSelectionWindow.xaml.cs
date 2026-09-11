@@ -81,6 +81,12 @@ namespace Scanner
 
         private void AddAndUseModel()
         {
+            if (string.IsNullOrWhiteSpace(NewModelTextBox.Text))
+            {
+                ShowError(Resource("ModelRequired"));
+                NewModelTextBox.Focus();
+                return;
+            }
             try
             {
                 string model = _meterModels.AddCustomModel(NewModelTextBox.Text);

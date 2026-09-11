@@ -173,7 +173,7 @@ namespace Scanner.ViewModels
         }
 
         public bool IsInputEnabled => !IsBusy;
-        public string OperatorText => App.CurrentSession == null ? string.Empty : App.CurrentSession.Operator + " / " + App.CurrentSession.Role;
+        public string OperatorText => App.CurrentSession == null ? string.Empty : App.CurrentSession.IsLocalMode ? Resource("LocalScanningMode") : App.CurrentSession.Operator + " / " + App.CurrentSession.Role;
         public string LogFileText => FormatResource("LogFileValue", _scanning.LogFilePath);
         public string CountText => FormatResource("ScanCount", _scanning.ScanCount);
         public string LabelInformationText => FormatResource("LabelInformation", LabelPaperSize == PrintingHelper.SquarePaperSize ? "4 × 4" : "4 × 6");
@@ -202,6 +202,7 @@ namespace Scanner.ViewModels
                 PrinterText = Resource("PrinterNotFound");
             }
             RaisePropertyChanged(nameof(LogFileText));
+            RaisePropertyChanged(nameof(OperatorText));
             RaisePropertyChanged(nameof(CountText));
             RaisePropertyChanged(nameof(LabelInformationText));
             RaisePropertyChanged(nameof(CopiesInformationText));
@@ -405,25 +406,7 @@ namespace Scanner.ViewModels
 
         private void ChangeLanguage(string languageCode)
         {
-            string path;
-            switch (languageCode)
-            {
-                case "en-US":
-                    path = "Languages/Language.en-US.xaml";
-                    break;
-                case "es-ES":
-                    path = "Languages/Language.es-ES.xaml";
-                    break;
-                default:
-                    path = "Languages/Language.zh-CN.xaml";
-                    break;
-            }
-            var dictionary = new ResourceDictionary
-            {
-                Source = new Uri(path, UriKind.Relative)
-            };
-            Application.Current.Resources.MergedDictionaries.Clear();
-            Application.Current.Resources.MergedDictionaries.Add(dictionary);
+            UiText.ChangeLanguage(languageCode);
             RefreshLocalizedText();
             RequestFocus();
         }

@@ -17,6 +17,13 @@ namespace Scanner.Services
         public static DateTime? BaseDataImportedAt { get; private set; }
         public static DateTime? SnImportedAt { get; private set; }
 
+        public static void ImportBase(string path)
+        {
+            var records = ChecklistXlsxReader.Read(path);
+            if (records.Count == 0) throw new System.IO.InvalidDataException("基础表没有有效数据。");
+            ReplaceRecords(records, path);
+        }
+
         public static void ReplaceRecords(IList<InboundChecklistRecord> records, string sourceFile)
         {
             _records = new ReadOnlyCollection<InboundChecklistRecord>(new List<InboundChecklistRecord>(records));

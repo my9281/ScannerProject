@@ -11,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Documents;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
@@ -23,6 +24,8 @@ namespace Scanner.Helpers
 {
     public sealed class PrintingHelper
     {
+        private static readonly WpfFontFamily PrintLatinAndNumberFont = new WpfFontFamily("/Scanner;component/Resources/Fonts/OpenSans-Regular.ttf#Open Sans");
+        private static readonly WpfFontFamily PrintChineseFont = new WpfFontFamily("/Scanner;component/Resources/Fonts/IMing.ttf#I.Ming");
         public const string DefaultPaperSize = "4x6";
         public const string SquarePaperSize = "4x4";
         private const double WideLabelWidth = 576.0;
@@ -232,16 +235,8 @@ namespace Scanner.Helpers
 
         private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize)
         {
-            var markerText = new TextBlock
-            {
-                Text = text,
-                FontSize = fontSize,
-                FontWeight = FontWeights.Bold,
-                FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
-                Foreground = WpfBrushes.Black,
-                TextAlignment = TextAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
-            };
+            TextBlock markerText = CreateText(text, fontSize, width);
+            markerText.VerticalAlignment = VerticalAlignment.Center;
             var border = new Border
             {
                 Width = width,
@@ -266,17 +261,48 @@ namespace Scanner.Helpers
 
         private static TextBlock CreateText(string text, double fontSize, double width)
         {
-            return new TextBlock
+            var block = new TextBlock
             {
-                Text = text,
                 Width = width,
                 FontSize = fontSize,
                 FontWeight = FontWeights.Bold,
-                FontFamily = new WpfFontFamily("Microsoft YaHei UI"),
+                FontFamily = PrintLatinAndNumberFont,
                 Foreground = WpfBrushes.Black,
                 TextAlignment = TextAlignment.Center,
                 TextWrapping = TextWrapping.NoWrap
             };
+            AddFontRuns(block, text ?? string.Empty);
+            return block;
+        }
+
+        private static void AddFontRuns(TextBlock block, string text)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            int start = 0;
+            bool currentIsChinese = IsChineseCharacter(text[0]);
+            for (int index = 1; index <= text.Length; index++)
+            {
+                bool boundary = index == text.Length || IsChineseCharacter(text[index]) != currentIsChinese;
+                if (!boundary) continue;
+                block.Inlines.Add(new Run(text.Substring(start, index - start))
+                {
+                    FontFamily = currentIsChinese ? PrintChineseFont : PrintLatinAndNumberFont
+                });
+                if (index < text.Length)
+                {
+                    start = index;
+                    currentIsChinese = IsChineseCharacter(text[index]);
+                }
+            }
+        }
+
+        private static bool IsChineseCharacter(char character)
+        {
+            return char.IsDigit(character) || (character >= '\u3000' && character <= '\u303F') ||
+                   (character >= '\u3400' && character <= '\u4DBF') ||
+                   (character >= '\u4E00' && character <= '\u9FFF') ||
+                   (character >= '\uF900' && character <= '\uFAFF') ||
+                   (character >= '\uFF00' && character <= '\uFFEF');
         }
 
         private static void AddImage(Canvas canvas, BitmapSource source, double left, double top, double width, double height, Stretch stretch)

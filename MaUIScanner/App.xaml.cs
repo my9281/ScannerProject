@@ -9,6 +9,7 @@ public partial class App : Application
     {
         InitializeComponent();
         _services = services;
+        Services.LocalizationService.Current.Change("zh-CN");
     }
     protected override Window CreateWindow(IActivationState? activationState)
     {

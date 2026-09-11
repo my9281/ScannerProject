@@ -1,3 +1,4 @@
+using Scanner.Helpers;
 using Scanner.Models;
 using Scanner.Services;
 using System;
@@ -22,6 +23,12 @@ namespace Scanner
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadRememberedLogin();
+        }
+
+        private void LanguageButton_Click(object sender, RoutedEventArgs e)
+        {
+            UiText.ChangeLanguage((string)((System.Windows.Controls.Button)sender).Tag);
+            StatusTextBlock.Text = string.Empty;
         }
 
         private void LoadRememberedLogin()
@@ -85,20 +92,20 @@ namespace Scanner
             string password = PasswordInput.Password;
             if (string.IsNullOrWhiteSpace(username))
             {
-                ShowError("请输入用户名。");
+                ShowError(UiText.Get("UsernameRequired"));
                 UsernameTextBox.Focus();
                 return;
             }
             if (string.IsNullOrWhiteSpace(password))
             {
-                ShowError("请输入密码。");
+                ShowError(UiText.Get("PasswordRequired"));
                 PasswordInput.Focus();
                 return;
             }
             _isLoggingIn = true;
             SetControlsEnabled(false);
             StatusTextBlock.Foreground = System.Windows.Media.Brushes.DarkBlue;
-            StatusTextBlock.Text = "正在登录……";
+            StatusTextBlock.Text = UiText.Get("SigningIn");
             try
             {
                 AuthSession session = await _authService.LoginAsync(username, password);
