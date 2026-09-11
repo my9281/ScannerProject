@@ -22,8 +22,8 @@ foreach ($project in $solution.Solution.Project) {
         $folder = Split-Path $relative -Parent
         $expected = $projectName
         if ($folder) { $expected += '.' + $folder.Replace('\','.') }
-        if ($projectName -eq 'Scan.MaUI' -and $relative -like 'Platforms\*') {
-            $expected = if ($relative -like 'Platforms\Windows\*') { 'Scan.MaUI.WinUI' } else { 'Scan.MaUI' }
+        if ($projectName -eq 'Scanner.MaUI' -and $relative -like 'Platforms\*') {
+            $expected = if ($relative -like 'Platforms\Windows\*') { 'Scanner.MaUI.WinUI' } else { 'Scanner.MaUI' }
         }
         $text = Get-Content $file.FullName -Raw
         $namespaces = [regex]::Matches($text,'(?m)^\s*namespace\s+([\w.]+)')

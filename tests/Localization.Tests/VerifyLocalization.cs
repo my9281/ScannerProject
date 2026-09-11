@@ -95,7 +95,7 @@ internal static class VerifyLocalization
     {
         var textProperties = new HashSet<string> { "Text", "Content", "Title", "Header", "ToolTip", "Placeholder", "AutomationProperties.Name" };
         var literals = new HashSet<string> { "S", "SN", "4 × 6", "4 × 4", "中文", "中", "EN", "ES", "English", "Español" };
-        foreach (string project in new[] { "Scanner.WPF", "Scan.MaUI" })
+        foreach (string project in new[] { "Scanner.WPF", "Scanner.MaUI" })
         foreach (string file in Directory.EnumerateFiles(Path.Combine(root, project), "*.xaml", SearchOption.AllDirectories))
         {
             string normalized = file.Replace('\\', '/');

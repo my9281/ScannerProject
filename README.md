@@ -1,15 +1,15 @@
 # 幽梦运单之星扫描系统
 
-工程名称已于2026-09-12调整为 `Scanner.WPF` 和 `Scan.MaUI`。目录与命名空间归属见 [项目结构审计](docs/项目结构审计.md)；运行 `powershell -File tests/AuditProjectLayout.ps1` 可复查全部解决方案源码。
+工程名称已于2026-09-12调整为 `Scanner.WPF` 和 `Scanner.MaUI`。目录与命名空间归属见 [项目结构审计](docs/项目结构审计.md)；运行 `powershell -File tests/AuditProjectLayout.ps1` 可复查全部解决方案源码。
 
-YM-Star Scanner System 是一款扫码记录、工单匹配、标签打印、入库检测、出库核对和库位费比对工具。Windows 完整业务基准位于 `Scanner` WPF 项目；`Scan.MaUI` 提供 Android 小屏界面及 Windows / Intel macOS 迁移实现，当前仍有功能差异。
+YM-Star Scanner System 是一款扫码记录、工单匹配、标签打印、入库检测、出库核对和库位费比对工具。Windows 完整业务基准位于 `Scanner` WPF 项目；`Scanner.MaUI` 提供 Android 小屏界面及 Windows / Intel macOS 迁移实现，当前仍有功能差异。
 
 ## 文档入口
 
 - [项目功能说明](docs/项目功能说明.md)：各项功能、使用流程、平台差异和待办。
 - [Excel 项目进度表](outputs/doc-progress-20260908/项目进度表.xlsx)：功能加入日期、Git依据、本次迁移登记与当前状态。
 - [原始需求文档](request.md)：历史需求基准，部分平台描述尚未更新，应结合功能说明阅读。
-- [上传站点说明](WmsUploadSite/README.md)：配套Web服务的运行说明。
+- [上传站点说明](Scanner.Web/README.md)：配套Web服务的运行说明。
 
 ## 平台状态（2026-09-08）
 
@@ -29,9 +29,9 @@ Windows WPF：使用Visual Studio / MSBuild及.NET Framework 4.7.2开发工具�
 MAUI：安装.NET 10 SDK及目标平台工作负载，在仓库根目录执行：
 
 ```powershell
-dotnet restore Scan.MaUI/Scan.MaUI.csproj
-dotnet build Scan.MaUI/Scan.MaUI.csproj -f net10.0-android
-dotnet build Scan.MaUI/Scan.MaUI.csproj -f net10.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
+dotnet restore Scanner.MaUI/Scanner.MaUI.csproj
+dotnet build Scanner.MaUI/Scanner.MaUI.csproj -f net10.0-android
+dotnet build Scanner.MaUI/Scanner.MaUI.csproj -f net10.0-maccatalyst -p:RuntimeIdentifier=maccatalyst-x64
 dotnet run --project tests/BarcodeClassification.Tests/BarcodeClassification.Tests.csproj
 ```
 
@@ -234,8 +234,8 @@ Scanner.WPF/
   ViewModels/    主窗口 MVVM 逻辑
   MainWindow.*   主扫描界面
   LoginWindow.*  登录界面
-Scan.MaUI/     已接入业务的 .NET MAUI 项目（Android / Windows / Intel macOS，迁移中）
-WmsUploadSite/   扫描日志上传配套站点
+Scanner.MaUI/     已接入业务的 .NET MAUI 项目（Android / Windows / Intel macOS，迁移中）
+Scanner.Web/   扫描日志上传配套站点
 docs/           项目功能说明
 outputs/doc-progress-20260908/  Excel项目进度表
 ```

@@ -10,7 +10,7 @@
     <Compile Include="../../Scanner.WPF/Services/OidService.cs" Link="Desktop/OidService.cs" />
     <Compile Include="../../Scanner.WPF/Services/WorkOrderSearchService.cs" Link="Desktop/WorkOrderSearchService.cs" />
     <ProjectReference Include="../../Scanner.Models/Scanner.Models.csproj" />
-    <Compile Include="../../Scan.MaUI/Services/ScanServices.cs" Link="Maui/ScanServices.cs" />
+    <Compile Include="../../Scanner.MaUI/Services/ScanServices.cs" Link="Maui/ScanServices.cs" />
     <Reference Include="Newtonsoft.Json">
       <HintPath>../../Scanner.WPF/packages/Newtonsoft.Json.13.0.5-beta1/lib/net45/Newtonsoft.Json.dll</HintPath>
     </Reference>

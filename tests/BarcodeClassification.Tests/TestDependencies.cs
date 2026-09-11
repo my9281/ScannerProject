@@ -19,7 +19,7 @@ namespace Scanner.WPF.Helpers
     }
 }
 
-namespace Scan.MaUI.Services
+namespace Scanner.MaUI.Services
 {
     public sealed class ScanLogService
     {
