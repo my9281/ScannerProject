@@ -6,7 +6,7 @@
         Height="560"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
-        Background="#F3F6FB"
+        Background="#EAF3F7"
         FontFamily="{DynamicResource AppFontFamily}"
         Loaded="Window_Loaded">
     <Window.Resources>
@@ -49,7 +49,7 @@
             </Setter>
         </Style>
     </Window.Resources>
-    <Grid Margin="22" Background="#F3F6FB">
+    <Grid Margin="22" Background="#EAF3F7">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -59,8 +59,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="2,0,2,14">
-            <TextBlock Text="{DynamicResource ModelSelectionHeading}" FontSize="22" FontWeight="Bold" Foreground="#18243A"/>
-            <TextBlock Text="{DynamicResource ModelSelectionHint}" Margin="0,6,0,0" FontSize="13" Foreground="#647089" TextWrapping="Wrap"/>
+            <TextBlock Text="{DynamicResource ModelSelectionHeading}" FontSize="27" FontWeight="Bold" Foreground="#082F4D"/>
+            <TextBlock Text="{DynamicResource ModelSelectionHint}" Margin="0,6,0,0" FontSize="18" Foreground="#315D7A" TextWrapping="Wrap"/>
         </StackPanel>
 
         <ListBox x:Name="ModelListBox"
@@ -81,7 +81,7 @@
             </ListBox.ItemsPanel>
         </ListBox>
 
-        <TextBlock Grid.Row="2" Text="{DynamicResource AddModelLabel}" Margin="2,16,2,6" FontSize="14" FontWeight="SemiBold" Foreground="#18243A"/>
+        <TextBlock Grid.Row="2" Text="{DynamicResource AddModelLabel}" Margin="2,16,2,6" FontSize="18" FontWeight="Bold" Foreground="#082F4D"/>
 
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
@@ -93,7 +93,7 @@
                      Padding="12,0"
                      VerticalContentAlignment="Center"
                      FontFamily="{DynamicResource AppFontFamily}"
-                     FontSize="18"
+                     FontSize="21"
                      CharacterCasing="Upper"
                      KeyDown="NewModelTextBox_KeyDown"/>
             <Button Grid.Column="1"
@@ -102,8 +102,8 @@
                     MinWidth="112"
                     Margin="10,0,0,0"
                     Padding="14,0"
-                    FontSize="14"
-                    FontWeight="SemiBold"
+                    FontSize="18"
+                    FontWeight="Bold"
                     Foreground="White"
                     Background="{StaticResource PrimaryBrush}"
                     BorderBrush="{StaticResource PrimaryBrush}"
@@ -115,10 +115,10 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock x:Name="StatusTextBlock" Foreground="DarkRed" FontSize="12" Margin="0,0,12,0" VerticalAlignment="Center" TextWrapping="Wrap"/>
+            <TextBlock x:Name="StatusTextBlock" Foreground="DarkRed" FontSize="15" Margin="0,0,12,0" VerticalAlignment="Center" TextWrapping="Wrap"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="{DynamicResource Cancel}" Width="84" Height="36" Margin="0,0,8,0" IsCancel="True"/>
-                <Button Content="{DynamicResource UseSelectedModel}" Width="112" Height="36" FontWeight="SemiBold" IsDefault="True" Click="UseSelectedButton_Click"/>
+                <Button Content="{DynamicResource UseSelectedModel}" Width="112" Height="36" FontWeight="Bold" IsDefault="True" Click="UseSelectedButton_Click"/>
             </StackPanel>
         </Grid>
     </Grid>

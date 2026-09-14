@@ -22,6 +22,7 @@ namespace Scanner.WPF.Services
 
         public int ScanCount => _scanCount;
         public string LogFilePath => _log.FilePath;
+        public string WorkbookFilePath => _log.WorkbookPath;
 
         public static bool IsGs1AreaCode(string input)
         {
@@ -58,6 +59,19 @@ namespace Scanner.WPF.Services
         public void OpenLog()
         {
             _log.Open();
+        }
+
+        public void OpenWorkbook()
+        {
+            _log.OpenWorkbook();
+        }
+
+        public void CreateNewRecordFiles()
+        {
+            _log.CreateNewFiles();
+            _recordedCodes.Clear();
+            _scanCount = 0;
+            _oid.Reset();
         }
 
         public void WriteError(Exception exception)

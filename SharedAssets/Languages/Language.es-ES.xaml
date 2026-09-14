@@ -19,7 +19,12 @@
     <system:String x:Key="PrintTwoCopies">Imprimir</system:String>
 
     <system:String x:Key="OpenScanLog">Abrir registro</system:String>
+    <system:String x:Key="OpenScanWorkbook">Abrir Excel</system:String>
+    <system:String x:Key="OpenWorkbookFailed">No se pudo abrir Excel: {0}</system:String>
     <system:String x:Key="UploadScanLog">Subir registro</system:String>
+    <system:String x:Key="NewRecordFiles">Archivos nuevos</system:String>
+    <system:String x:Key="NewRecordFilesCreated">Archivos de registro creados: {0}</system:String>
+    <system:String x:Key="NewRecordFilesFailed">No se pudieron crear los archivos: {0}</system:String>
     <system:String x:Key="UploadingScanLog">Subiendo el registro…</system:String>
     <system:String x:Key="UploadScanLogSuccess">Registro subido: {0}</system:String>
     <system:String x:Key="UploadScanLogFailed">No se pudo subir el registro: {0}</system:String>

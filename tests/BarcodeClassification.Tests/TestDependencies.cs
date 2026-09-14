@@ -13,8 +13,11 @@ namespace Scanner.WPF.Helpers
     public sealed class ScanLogHelper
     {
         public string FilePath => "in-memory";
+        public string WorkbookPath => "in-memory.xlsx";
         public void Append(string code) { }
+        public void CreateNewFiles() { }
         public void Open() { }
+        public void OpenWorkbook() { }
         public void WriteError(Exception exception) { }
     }
 }

@@ -53,6 +53,11 @@ namespace Scanner.WPF.Services
         {
             _speech.SpeakOid();
         }
+
+        public void Reset()
+        {
+            _scanCounts.Clear();
+        }
     }
 
     public sealed class OidScanResult

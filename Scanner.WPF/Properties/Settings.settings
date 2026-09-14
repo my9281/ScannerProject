@@ -10,5 +10,8 @@
     <Setting Name="PrintCopies" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="CurrentScanLogFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">scanned_codes.txt</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

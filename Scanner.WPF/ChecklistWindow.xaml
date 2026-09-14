@@ -3,11 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Icon="{DynamicResource Logo}" Title="{DynamicResource ChecklistTitle}"
         Width="920" Height="690" MinWidth="860" MinHeight="640" ResizeMode="NoResize"
-        WindowStartupLocation="CenterOwner" Background="#F3F6FB" FontFamily="{DynamicResource AppFontFamily}">
+        WindowStartupLocation="CenterOwner" Background="#EAF3F7" FontFamily="{DynamicResource AppFontFamily}">
     <Window.Resources>
         <SolidColorBrush x:Key="PrimaryBrush" Color="#2457D6"/>
-        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#18243A"/>
-        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#647089"/>
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#082F4D"/>
+        <SolidColorBrush x:Key="TextSecondaryBrush" Color="#315D7A"/>
         <SolidColorBrush x:Key="BorderBrush" Color="#DDE4F0"/>
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/><Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
@@ -35,11 +35,11 @@
         <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
         <Grid Margin="4,0,4,24">
             <StackPanel>
-                <TextBlock Text="{DynamicResource ChecklistTitle}" FontSize="27" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
-                <TextBlock Text="{DynamicResource ChecklistHint}" Margin="0,5,0,0" FontSize="13" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <TextBlock Text="{DynamicResource ChecklistTitle}" FontSize="30" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="{DynamicResource ChecklistHint}" Margin="0,5,0,0" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}"/>
             </StackPanel>
-            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="#E8EEFC" CornerRadius="16" Padding="12,6">
-                <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="#35B879" Margin="0,0,8,0"/><TextBlock Text="{DynamicResource LocalCacheBadge}" Foreground="#3A527C" FontSize="12"/></StackPanel>
+            <Border HorizontalAlignment="Right" VerticalAlignment="Center" Background="#D8EAF2" CornerRadius="16" Padding="12,6">
+                <StackPanel Orientation="Horizontal"><Ellipse Width="8" Height="8" Fill="#35B879" Margin="0,0,8,0"/><TextBlock Text="{DynamicResource LocalCacheBadge}" Foreground="#174D72" FontSize="15"/></StackPanel>
             </Border>
         </Grid>
         <Grid Grid.Row="1" Margin="0,0,0,20">
@@ -51,10 +51,10 @@
         </Grid>
         <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="20" Margin="0,0,0,20">
             <StackPanel>
-                <TextBlock Text="{DynamicResource ProcessingSummary}" FontSize="17" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,14"/>
+                <TextBlock Text="{DynamicResource ProcessingSummary}" FontSize="21" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}" Margin="0,0,0,14"/>
                 <DataGrid x:Name="StatusSummaryDataGrid" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
                           HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderThickness="0" RowHeaderWidth="0"
-                          FontSize="13" RowHeight="36" ColumnHeaderHeight="38" Background="White" AlternatingRowBackground="#F8FAFD">
+                          FontSize="18" RowHeight="36" ColumnHeaderHeight="38" Background="White" AlternatingRowBackground="#FFFFFF">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="{DynamicResource Category}" Binding="{Binding Category}" Width="180"/>
                         <DataGridTextColumn x:Name="CurrentMonthColumn" Header="{DynamicResource CurrentMonth}" Binding="{Binding CurrentMonthDisplay}" Width="135"/>
@@ -65,24 +65,24 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <TextBlock Text="{DynamicResource StatisticsHint}"
-                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" Margin="0,10,0,0"/>
+                           Foreground="{StaticResource TextSecondaryBrush}" FontSize="15" Margin="0,10,0,0"/>
             </StackPanel>
         </Border>
         <Border Grid.Row="3" Style="{StaticResource CardStyle}" Padding="24">
             <Grid>
                 <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="1"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                <TextBlock Text="{DynamicResource CacheStatus}" FontSize="17" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                <TextBlock Text="{DynamicResource CacheStatus}" FontSize="21" FontWeight="Bold" Foreground="{StaticResource TextPrimaryBrush}"/>
                 <StackPanel Grid.Row="1" Margin="0,17,0,16">
-                    <TextBlock x:Name="BaseStatusTextBlock" Text="{DynamicResource BaseNotImported}" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}"/>
-                    <TextBlock x:Name="BaseFileTextBlock" Margin="0,7,0,0" FontSize="12" Foreground="#8B96AA" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="BaseStatusTextBlock" Text="{DynamicResource BaseNotImported}" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock x:Name="BaseFileTextBlock" Margin="0,7,0,0" FontSize="15" Foreground="#315D7A" TextWrapping="Wrap"/>
                 </StackPanel>
-                <Border Grid.Row="2" Background="#E9EDF4"/>
+                <Border Grid.Row="2" Background="#DCEBF2"/>
                 <StackPanel Grid.Row="3" Margin="0,16,0,0">
-                    <TextBlock x:Name="SnStatusTextBlock" Text="{DynamicResource SnNotImported}" FontSize="14" Foreground="{StaticResource TextSecondaryBrush}"/>
-                    <TextBlock x:Name="SnFileTextBlock" Margin="0,7,0,0" FontSize="12" Foreground="#8B96AA" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="SnStatusTextBlock" Text="{DynamicResource SnNotImported}" FontSize="18" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock x:Name="SnFileTextBlock" Margin="0,7,0,0" FontSize="15" Foreground="#315D7A" TextWrapping="Wrap"/>
                 </StackPanel>
-                <Border Grid.Row="4" Margin="0,20,0,0" Background="#E9EEF7" CornerRadius="9" Padding="13,9">
-                    <TextBlock Text="{DynamicResource CacheHint}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
+                <Border Grid.Row="4" Margin="0,20,0,0" Background="#D7E8F0" CornerRadius="9" Padding="13,9">
+                    <TextBlock Text="{DynamicResource CacheHint}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="15"/>
                 </Border>
             </Grid>
         </Border>

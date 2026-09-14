@@ -19,7 +19,12 @@
     <system:String x:Key="PrintTwoCopies">打印</system:String>
 
     <system:String x:Key="OpenScanLog">打开扫描记录</system:String>
+    <system:String x:Key="OpenScanWorkbook">打开 Excel</system:String>
+    <system:String x:Key="OpenWorkbookFailed">打开 Excel 失败：{0}</system:String>
     <system:String x:Key="UploadScanLog">上传扫描记录</system:String>
+    <system:String x:Key="NewRecordFiles">新文件</system:String>
+    <system:String x:Key="NewRecordFilesCreated">已新建记录文件：{0}</system:String>
+    <system:String x:Key="NewRecordFilesFailed">新建记录文件失败：{0}</system:String>
     <system:String x:Key="UploadingScanLog">正在上传扫描记录……</system:String>
     <system:String x:Key="UploadScanLogSuccess">扫描记录上传成功：{0}</system:String>
     <system:String x:Key="UploadScanLogFailed">扫描记录上传失败：{0}</system:String>

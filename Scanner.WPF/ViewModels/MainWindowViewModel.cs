@@ -49,6 +49,8 @@ namespace Scanner.WPF.ViewModels
             _printCopies = NormalizePrintCopies(Properties.Settings.Default.PrintCopies);
             ProcessScanCommand = new RelayCommand(ProcessScan, () => !IsBusy);
             OpenLogCommand = new RelayCommand(OpenLog, () => !IsBusy);
+            OpenWorkbookCommand = new RelayCommand(OpenWorkbook, () => !IsBusy);
+            NewRecordFilesCommand = new RelayCommand(CreateNewRecordFiles, () => !IsBusy);
             UploadLogCommand = new RelayCommand(async () => await UploadLogAsync(), () => !IsBusy);
             RefreshCommand = new RelayCommand(async () => await RefreshWorkOrdersAsync(true), () => !IsBusy);
             ImportUrgentWorkOrdersCommand = new RelayCommand(ImportUrgentWorkOrders, () => !IsBusy);
@@ -59,6 +61,8 @@ namespace Scanner.WPF.ViewModels
         public event EventHandler FocusRequested;
         public ICommand ProcessScanCommand { get; }
         public ICommand OpenLogCommand { get; }
+        public ICommand OpenWorkbookCommand { get; }
+        public ICommand NewRecordFilesCommand { get; }
         public ICommand UploadLogCommand { get; }
         public ICommand RefreshCommand { get; }
         public ICommand ImportUrgentWorkOrdersCommand { get; }
@@ -375,6 +379,43 @@ namespace Scanner.WPF.ViewModels
             catch (Exception ex)
             {
                 SetStatus(FormatResource("OpenLogFailed", ex.Message), true);
+            }
+            finally
+            {
+                RequestFocus();
+            }
+        }
+
+        private void CreateNewRecordFiles()
+        {
+            try
+            {
+                _scanning.CreateNewRecordFiles();
+                RaisePropertyChanged(nameof(LogFileText));
+                RaisePropertyChanged(nameof(CountText));
+                SetStatus(FormatResource("NewRecordFilesCreated", System.IO.Path.GetFileName(_scanning.LogFilePath)), false);
+            }
+            catch (Exception ex)
+            {
+                _scanning.WriteError(ex);
+                SetStatus(FormatResource("NewRecordFilesFailed", ex.Message), true);
+            }
+            finally
+            {
+                RequestFocus();
+            }
+        }
+
+        private void OpenWorkbook()
+        {
+            try
+            {
+                _scanning.OpenWorkbook();
+            }
+            catch (Exception ex)
+            {
+                _scanning.WriteError(ex);
+                SetStatus(FormatResource("OpenWorkbookFailed", ex.Message), true);
             }
             finally
             {
