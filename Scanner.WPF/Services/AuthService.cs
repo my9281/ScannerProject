@@ -15,7 +15,6 @@ namespace Scanner.WPF.Services
         private static readonly HttpClient HttpClient = CreateHttpClient();
         private static HttpClient CreateHttpClient()
         {
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri(BaseUrl);
             client.Timeout = TimeSpan.FromSeconds(20);

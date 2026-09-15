@@ -335,7 +335,7 @@ namespace Scanner.WPF.Helpers
                 Margin = 2,
                 PureBarcode = true
             };
-            var writer = new BarcodeWriter
+            var writer = new ZXing.Windows.Compatibility.BarcodeWriter
             {
                 Format = format,
                 Options = options
