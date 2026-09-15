@@ -30,6 +30,11 @@ namespace Scanner.WPF.Services
             return value.StartsWith("420", StringComparison.Ordinal) && value.Length <= 20;
         }
 
+        public static ScanService CreateReplacementService()
+        {
+            return new ScanService(new ScanLogHelper(true), new OidService());
+        }
+
         internal static string GetBarcodePayload(string input)
         {
             string value = WorkOrderSearchService.NormalizeCode(input);
@@ -54,6 +59,17 @@ namespace Scanner.WPF.Services
                 _scanCount++;
             }
             return new ScanResult(code, wasRecorded, _oid.Inspect(code));
+        }
+
+        public ScanResult InspectWithoutRecording(string input)
+        {
+            string code = WorkOrderSearchService.NormalizeCode(input);
+            if (string.IsNullOrWhiteSpace(code))
+            {
+                throw new ArgumentException("扫描内容不能为空。", nameof(input));
+            }
+            bool isOid = OidService.IsOid(code);
+            return new ScanResult(code, false, isOid ? new OidScanResult(true, 0) : OidScanResult.NotOid);
         }
 
         public void OpenLog()

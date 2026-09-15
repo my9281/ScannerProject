@@ -16,6 +16,7 @@ namespace Scanner.WPF.Controllers
 
         private readonly MainWindowViewModel _viewModel;
         private readonly ChecklistDataCache _baseData;
+        private bool _scanInitialized;
         public MainWindowController(IMainWindowView view, ChecklistDataCache baseData, MainWindowViewModel viewModel, IDesktopWindows windows)
         {
             _view = view;
@@ -31,12 +32,22 @@ namespace Scanner.WPF.Controllers
 
         public async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            await _viewModel.InitializeAsync();
+            await System.Threading.Tasks.Task.CompletedTask;
+        }
+
+        public async void ActivateScanner()
+        {
+            if (!_scanInitialized)
+            {
+                _scanInitialized = true;
+                await _viewModel.InitializeAsync();
+            }
+            FocusScannerInput();
         }
 
         private void MainWindow_Activated(object sender, EventArgs e)
         {
-            FocusScannerInput();
+            if (_view.IsScanViewActive) FocusScannerInput();
         }
 
         public void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
@@ -51,6 +62,7 @@ namespace Scanner.WPF.Controllers
 
         private void FocusScannerInput()
         {
+            if (!_view.IsScanViewActive) return;
             _view.SnTextBox.Focus();
             Keyboard.Focus(_view.SnTextBox);
             _view.SnTextBox.SelectAll();

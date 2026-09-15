@@ -25,6 +25,7 @@ namespace Scanner.WPF.Helpers
     {
         private static readonly WpfFontFamily PrintLatinAndNumberFont = new WpfFontFamily("/Scanner.WPF;component/Resources/Fonts/OpenSans-Regular.ttf#Open Sans");
         private static readonly WpfFontFamily PrintChineseFont = new WpfFontFamily("/Scanner.WPF;component/Resources/Fonts/IMing.ttf#I.Ming");
+        private static readonly WpfFontFamily InspectionOkFont = new WpfFontFamily("字魂蝶影隶书,妙笔隶书梦影体,/Scanner.WPF;component/Resources/Fonts/ZiHunShouJin.ttf#字魂瘦金体");
         public const string DefaultPaperSize = "4x6";
         public const string SquarePaperSize = "4x4";
         private const double WideLabelWidth = 576.0;
@@ -50,6 +51,21 @@ namespace Scanner.WPF.Helpers
 
         public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize)
         {
+            PrintLabel(serialNumber, copies, workOrder, meterModel, paperSize, false);
+        }
+
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, bool inspectionOk)
+        {
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk ? "检测OK" : string.Empty, false);
+        }
+
+        public void PrintReplacementLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string description)
+        {
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, description, true);
+        }
+
+        private void PrintLabelCore(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel)
+        {
             if (string.IsNullOrWhiteSpace(serialNumber))
             {
                 throw new ArgumentException("打印序列号不能为空。", nameof(serialNumber));
@@ -59,7 +75,7 @@ namespace Scanner.WPF.Helpers
                 throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
             }
             string normalizedPaperSize = NormalizePaperSize(paperSize);
-            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize);
+            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize, footerDescription, replacementLabel);
             BitmapSource source = Render(label, normalizedPaperSize);
             using (Bitmap bitmap = ToBitmap(source))
             {
@@ -141,12 +157,12 @@ namespace Scanner.WPF.Helpers
             return string.Equals(paperSize, SquarePaperSize, StringComparison.OrdinalIgnoreCase) ? SquarePaperSize : DefaultPaperSize;
         }
 
-        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize)
+        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel)
         {
-            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel) : CreateWideLabel(serialNumber, workOrder, meterModel);
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel) : CreateWideLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel);
         }
 
-        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
+        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
@@ -185,11 +201,12 @@ namespace Scanner.WPF.Helpers
                 Canvas.SetTop(remarkText, 267);
                 canvas.Children.Add(remarkText);
             }
-            AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, WideLabelWidth - 70);
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, WideLabelWidth - 70);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 260, replacementLabel ? 278 : 280, 300, 102, replacementLabel ? 42 : 81);
             return canvas;
         }
 
-        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel)
+        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
@@ -228,8 +245,42 @@ namespace Scanner.WPF.Helpers
                 Canvas.SetTop(remarkText, 238);
                 canvas.Children.Add(remarkText);
             }
-            AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 17 : 21, 15, urgent ? 352 : 320, SquareLabelWidth - 30);
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 17 : 21, 15, urgent ? 352 : 320, SquareLabelWidth - 30);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 15, replacementLabel ? 278 : 280, 354, 102, replacementLabel ? 38 : 81);
             return canvas;
+        }
+
+        private static void AddFooterDescription(Canvas canvas, string description, bool includeReplacementDate, double left, double top, double width, double height, double fontSize)
+        {
+            var text = new TextBlock
+            {
+                Text = includeReplacementDate ? description + Environment.NewLine + "替标日期 " + NewJerseyNow().ToString("MMM d", System.Globalization.CultureInfo.GetCultureInfo("en-US")) + OrdinalSuffix(NewJerseyNow().Day) : description,
+                Width = width,
+                Height = height,
+                FontFamily = InspectionOkFont,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Normal,
+                FontStyle = FontStyles.Italic,
+                Foreground = WpfBrushes.Black,
+                TextAlignment = TextAlignment.Right,
+                TextWrapping = TextWrapping.Wrap,
+                LineHeight = fontSize * 0.9
+            };
+            Canvas.SetLeft(text, left);
+            Canvas.SetTop(text, top);
+            canvas.Children.Add(text);
+        }
+
+        private static DateTime NewJerseyNow()
+        {
+            string id = Environment.OSVersion.Platform == PlatformID.Win32NT ? "Eastern Standard Time" : "America/New_York";
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(id));
+        }
+
+        private static string OrdinalSuffix(int day)
+        {
+            if (day % 100 >= 11 && day % 100 <= 13) return "th";
+            return day % 10 == 1 ? "st" : day % 10 == 2 ? "nd" : day % 10 == 3 ? "rd" : "th";
         }
 
         private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize)

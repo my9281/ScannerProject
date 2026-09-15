@@ -48,6 +48,7 @@ namespace Scanner.WPF.ViewModels
             _labelPaperSize = PrintingHelper.NormalizePaperSize(Properties.Settings.Default.LabelPaperSize);
             _printCopies = NormalizePrintCopies(Properties.Settings.Default.PrintCopies);
             ProcessScanCommand = new RelayCommand(ProcessScan, () => !IsBusy);
+            InspectionOkPrintCommand = new RelayCommand(() => ProcessScan(true), () => !IsBusy);
             OpenLogCommand = new RelayCommand(OpenLog, () => !IsBusy);
             OpenWorkbookCommand = new RelayCommand(OpenWorkbook, () => !IsBusy);
             NewRecordFilesCommand = new RelayCommand(CreateNewRecordFiles, () => !IsBusy);
@@ -60,6 +61,7 @@ namespace Scanner.WPF.ViewModels
 
         public event EventHandler FocusRequested;
         public ICommand ProcessScanCommand { get; }
+        public ICommand InspectionOkPrintCommand { get; }
         public ICommand OpenLogCommand { get; }
         public ICommand OpenWorkbookCommand { get; }
         public ICommand NewRecordFilesCommand { get; }
@@ -216,6 +218,11 @@ namespace Scanner.WPF.ViewModels
 
         private void ProcessScan()
         {
+            ProcessScan(false);
+        }
+
+        private void ProcessScan(bool inspectionOk)
+        {
             string code = (ScanCode ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(code))
             {
@@ -237,7 +244,7 @@ namespace Scanner.WPF.ViewModels
             {
                 TryCopy(code);
                 SetStatus(FormatResource("Processing", code), false);
-                ScanResult scan = _scanning.Record(code);
+                ScanResult scan = inspectionOk ? _scanning.InspectWithoutRecording(code) : _scanning.Record(code);
                 code = scan.Code;
                 if (scan.WasRecorded)
                 {
@@ -251,12 +258,13 @@ namespace Scanner.WPF.ViewModels
                 {
                     _scanning.RecordWorkbook(scan, string.Empty);
                 }
-                if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
+                if (scan.Oid.IsOid && !scan.Oid.ShouldPrint && !inspectionOk)
                 {
                     SetStatus(Resource("OidRecorded"), false);
                 }
-                else if (PrintCopies > 0)
+                else if (inspectionOk || PrintCopies > 0)
                 {
+                    int copiesToPrint = inspectionOk ? 1 : PrintCopies;
                     if (string.IsNullOrWhiteSpace(meterModel))
                     {
                         meterModel = _dialogs.SelectMeterModel(_meterModels);
@@ -269,15 +277,15 @@ namespace Scanner.WPF.ViewModels
                         }
                     }
                     _scanning.RecordWorkbook(scan, meterModel);
-                    _printing.PrintLabel(printCode, PrintCopies, matched, meterModel, LabelPaperSize);
+                    _printing.PrintLabel(printCode, copiesToPrint, matched, meterModel, LabelPaperSize, inspectionOk);
                     if (scan.Oid.ShouldPrint)
                     {
-                        SetStatus(FormatResource("OidReprinted", PrintCopies, printCode), false);
+                        SetStatus(FormatResource("OidReprinted", copiesToPrint, printCode), false);
                     }
                     else
                     {
                         _speech.SpeakChineseTail(printCode);
-                        SetStatus(matched != null && matched.IsUrgent ? FormatResource("UrgentPrinted", PrintCopies, printCode) : FormatResource("SavedAndPrinted", PrintCopies, printCode), false);
+                        SetStatus(matched != null && matched.IsUrgent ? FormatResource("UrgentPrinted", copiesToPrint, printCode) : FormatResource("SavedAndPrinted", copiesToPrint, printCode), false);
                     }
                 }
                 else

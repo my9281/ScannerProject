@@ -5,6 +5,7 @@ namespace Scanner.WPF.Controllers
     public interface IMainWindowView
     {
         Window OwnerWindow { get; }
+        bool IsScanViewActive { get; }
         TextBlock OperatorTextBlock { get; }
         TextBox SnTextBox { get; }
         Button OpenLogButton { get; }
