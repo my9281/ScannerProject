@@ -17,7 +17,7 @@ public sealed class CsvImportService
             string path = Path.Combine(FileSystem.CacheDirectory, $"urgent_{Guid.NewGuid():N}.xlsx");
             await using (Stream input = await file.OpenReadAsync()) await using (FileStream output = File.Create(path)) await input.CopyToAsync(output);
             Scanner.Helpers.UrgentWorkOrderImportResult imported = new Scanner.Helpers.UrgentWorkOrderImportHelper().Import(path);
-            return imported.Rules.Select(x => new WorkOrderRemark { Id=x.Id, Sn=x.Sn, TrackingNumber=x.TrackingNumber, Remark=x.Remark, RemarkTimestamp=x.RemarkTimestamp, IsUrgent=x.IsUrgent, IsRepair=x.IsRepair, IsOidRule=x.IsOidRule }).ToList();
+            return imported.Rules.Select(x => new WorkOrderRemark { Id = x.Id, Sn = x.Sn, TrackingNumber = x.TrackingNumber, Remark = x.Remark, RemarkTimestamp = x.RemarkTimestamp, IsUrgent = x.IsUrgent, IsRepair = x.IsRepair, IsOidRule = x.IsOidRule }).ToList();
         }
         await using Stream stream = await file.OpenReadAsync();
         return await ImportAsync(stream);

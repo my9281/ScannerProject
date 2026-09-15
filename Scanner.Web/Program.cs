@@ -1,10 +1,10 @@
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.HttpOverrides;
 using Scanner.Server.BLL;
 using Scanner.Server.DAL;
 using Scanner.Server.Model;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);

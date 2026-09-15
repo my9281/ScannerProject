@@ -1,9 +1,9 @@
-using Scanner.Models.MauiContracts;
-using Scanner.MaUI.Services;
-
 using Scanner.Controllers;
+using Scanner.MaUI.Services;
 using Scanner.MaUI.Views;
+using Scanner.Models.MauiContracts;
 namespace Scanner.MaUI.Controllers;
+
 public sealed class LoginPageController : ControllerBase
 {
     private readonly ILoginPageView _view;
@@ -12,7 +12,7 @@ public sealed class LoginPageController : ControllerBase
     private readonly AuthService _auth;
     private readonly SessionStore _sessions;
     private bool _loaded;
-    public LoginPageController(ILoginPageView view, Scanner.MaUI.Windows.IWindow window, AuthService auth, SessionStore sessions) { _view = view; _window = window;   _auth = auth; _sessions = sessions;  }
+    public LoginPageController(ILoginPageView view, Scanner.MaUI.Windows.IWindow window, AuthService auth, SessionStore sessions) { _view = view; _window = window; _auth = auth; _sessions = sessions; }
 
     public async Task AppearingAsync()
     {

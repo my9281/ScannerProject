@@ -1,5 +1,3 @@
-using Microsoft.UI.Xaml;
-
 namespace Scanner.MaUI.WinUI
 {
     public partial class App : MauiWinUIApplication

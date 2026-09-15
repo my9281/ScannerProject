@@ -1,4 +1,3 @@
-using Scanner.Helpers.Services;
 using System.Windows;
 using System.Windows.Controls;
 namespace Scanner.WPF.Controllers

@@ -1,8 +1,8 @@
+using Scanner.WPF.Services;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using Scanner.WPF.Services;
 
 namespace Scanner.WPF.Helpers
 {
@@ -26,9 +26,13 @@ namespace Scanner.WPF.Helpers
             EnsureExists();
             string line = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + "\t" + code + Environment.NewLine;
             File.AppendAllText(FilePath, line, new UTF8Encoding(true));
-            bool isOid = OidService.IsOid(code);
-            string model = isOid ? string.Empty : new MeterModelService().FindModel(code);
-            ScanWorkbookHelper.Append(WorkbookPath, model, isOid ? string.Empty : code, isOid ? code : string.Empty);
+        }
+
+        public void AppendWorkbook(string code, bool isOid, string selectedModel)
+        {
+            EnsureExists();
+            ScanWorkbookHelper.Append(WorkbookPath, isOid ? string.Empty : selectedModel,
+                isOid ? string.Empty : code, isOid ? code : string.Empty);
         }
 
         public void CreateNewFiles()

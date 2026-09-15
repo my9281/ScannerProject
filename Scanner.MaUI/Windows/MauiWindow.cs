@@ -1,4 +1,5 @@
 namespace Scanner.MaUI.Windows;
+
 public sealed class MauiWindow : IWindow
 {
     private readonly IServiceProvider _services;

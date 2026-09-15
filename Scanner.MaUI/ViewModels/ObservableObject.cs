@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 namespace Scanner.MaUI.ViewModels;
+
 public abstract class ViewModelBase : Scanner.ViewModels.ViewModelBase
 {
     protected override void DispatchNotification(Action notification)

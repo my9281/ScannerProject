@@ -1,5 +1,5 @@
-using Scanner.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Scanner.Models;
 using Scanner.WPF.Services;
 using System;
 using System.Windows;

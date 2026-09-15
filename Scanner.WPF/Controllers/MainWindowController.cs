@@ -1,3 +1,4 @@
+using Scanner.Controllers;
 using Scanner.Helpers.Services;
 using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
@@ -6,8 +7,6 @@ using System;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-
-using Scanner.Controllers;
 namespace Scanner.WPF.Controllers
 {
     public sealed class MainWindowController : ControllerBase
@@ -27,7 +26,7 @@ namespace Scanner.WPF.Controllers
             _view.OwnerWindow.DataContext = _viewModel;
             _viewModel.FocusRequested += ViewModel_FocusRequested;
             _view.OwnerWindow.Activated += MainWindow_Activated;
-        
+
         }
 
         public async void Window_Loaded(object sender, RoutedEventArgs e)
@@ -113,7 +112,7 @@ namespace Scanner.WPF.Controllers
             FocusScannerInput();
         }
 
-    
+
         public override void Dispose() { _viewModel.FocusRequested -= ViewModel_FocusRequested; _view.OwnerWindow.Activated -= MainWindow_Activated; }
 
     }

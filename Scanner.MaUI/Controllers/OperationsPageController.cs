@@ -1,10 +1,10 @@
-using Scanner.Models;
-using Scanner.Helpers.Services;
-using System.Text;
-
 using Scanner.Controllers;
+using Scanner.Helpers.Services;
 using Scanner.MaUI.Views;
+using Scanner.Models;
+using System.Text;
 namespace Scanner.MaUI.Controllers;
+
 public sealed class OperationsPageController : ControllerBase
 {
     private readonly IOperationsPageView _view;
@@ -17,7 +17,7 @@ public sealed class OperationsPageController : ControllerBase
     private IList<OutboundInspectionRecord> _outboundRecords = new List<OutboundInspectionRecord>();
 
     private readonly ChecklistDataCache _baseData;
-    public OperationsPageController(IOperationsPageView view, Scanner.MaUI.Windows.IWindow window, ChecklistDataCache baseData) { _view = view; _window = window;  _baseData = baseData;  RefreshBase();  }
+    public OperationsPageController(IOperationsPageView view, Scanner.MaUI.Windows.IWindow window, ChecklistDataCache baseData) { _view = view; _window = window; _baseData = baseData; RefreshBase(); }
     private void RefreshBase()
     {
         _view.GlobalBaseLabel.Text = _baseData.BaseDataFile is null ? "尚未导入基础表（本次运行全局共用）" : $"{_baseData.BaseDataFile}\n{_baseData.Records.Count} 条";

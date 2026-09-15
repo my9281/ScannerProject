@@ -1,7 +1,6 @@
-using Scanner.Helpers.Services;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using Microsoft.Extensions.DependencyInjection;
 namespace Scanner.WPF.Controllers
 {
     public interface IDesktopWindows

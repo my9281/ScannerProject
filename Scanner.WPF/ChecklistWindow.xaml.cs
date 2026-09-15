@@ -1,18 +1,6 @@
-using Scanner.Helpers.Services;
-using Scanner.WPF.Helpers;
-using Microsoft.Win32;
-using Scanner.Models;
-using Scanner.WPF.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Windows;
-
 using Scanner.Controllers;
 using Scanner.WPF.Controllers;
+using System.Windows;
 namespace Scanner.WPF
 {
     public partial class ChecklistWindow : Window, IChecklistWindowView

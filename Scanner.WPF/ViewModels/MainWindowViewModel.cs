@@ -1,6 +1,6 @@
 using Scanner.Helpers;
-using Scanner.WPF.Helpers;
 using Scanner.Models;
+using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
 using System;
 using System.Threading.Tasks;
@@ -247,6 +247,10 @@ namespace Scanner.WPF.ViewModels
                 WorkOrderRemark matched = match == null ? null : match.WorkOrder;
                 string printCode = match == null ? code : match.GetPrintCode(code);
                 string meterModel = _meterModels.FindModel(printCode);
+                if (scan.Oid.IsOid)
+                {
+                    _scanning.RecordWorkbook(scan, string.Empty);
+                }
                 if (scan.Oid.IsOid && !scan.Oid.ShouldPrint)
                 {
                     SetStatus(Resource("OidRecorded"), false);
@@ -258,11 +262,13 @@ namespace Scanner.WPF.ViewModels
                         meterModel = _dialogs.SelectMeterModel(_meterModels);
                         if (string.IsNullOrWhiteSpace(meterModel))
                         {
+                            _scanning.RecordWorkbook(scan, string.Empty);
                             SetStatus(FormatResource("ModelSelectionCancelled", printCode), true);
                             ScanCode = string.Empty;
                             return;
                         }
                     }
+                    _scanning.RecordWorkbook(scan, meterModel);
                     _printing.PrintLabel(printCode, PrintCopies, matched, meterModel, LabelPaperSize);
                     if (scan.Oid.ShouldPrint)
                     {
@@ -276,6 +282,7 @@ namespace Scanner.WPF.ViewModels
                 }
                 else
                 {
+                    _scanning.RecordWorkbook(scan, meterModel);
                     SetStatus(FormatResource("SavedWithoutPrint", code), false);
                 }
                 ScanCode = string.Empty;

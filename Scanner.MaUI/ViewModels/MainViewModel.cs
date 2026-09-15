@@ -1,5 +1,5 @@
-using Scanner.Models.MauiContracts;
 using Scanner.MaUI.Services;
+using Scanner.Models.MauiContracts;
 using System.Windows.Input;
 
 namespace Scanner.MaUI.ViewModels;

@@ -1,15 +1,15 @@
-using Scanner.MaUI.ViewModels;
-
 using Scanner.Controllers;
+using Scanner.MaUI.ViewModels;
 using Scanner.MaUI.Views;
 namespace Scanner.MaUI.Controllers;
+
 public sealed class MainPageController : ControllerBase
 {
     private readonly IMainPageView _view;
     private readonly Scanner.MaUI.Windows.IWindow _window;
 
     private readonly MainViewModel _viewModel; private bool _initialized;
-    public MainPageController(IMainPageView view, Scanner.MaUI.Windows.IWindow window, MainViewModel viewModel) { _view = view; _window = window;  _viewModel = viewModel; _view.BindingContext = viewModel; }
+    public MainPageController(IMainPageView view, Scanner.MaUI.Windows.IWindow window, MainViewModel viewModel) { _view = view; _window = window; _viewModel = viewModel; _view.BindingContext = viewModel; }
 
     private async Task<string?> SelectModelAsync(IReadOnlyList<string> models)
     {

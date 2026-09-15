@@ -1,14 +1,7 @@
-using Scanner.Helpers.Services;
-using Scanner.WPF.Helpers;
-using Scanner.WPF.Services;
-using Scanner.WPF.ViewModels;
-using System;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Input;
-
 using Scanner.Controllers;
 using Scanner.WPF.Controllers;
+using System.Windows;
+using System.Windows.Input;
 namespace Scanner.WPF
 {
     public partial class MainWindow : Window, IMainWindowView

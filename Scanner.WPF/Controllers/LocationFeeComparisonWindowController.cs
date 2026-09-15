@@ -1,12 +1,10 @@
+using Microsoft.Win32;
+using Scanner.Controllers;
 using Scanner.Helpers.Services;
 using Scanner.WPF.Helpers;
-using Microsoft.Win32;
-using Scanner.WPF.Services;
 using System;
 using System.Diagnostics;
 using System.Windows;
-
-using Scanner.Controllers;
 namespace Scanner.WPF.Controllers
 {
     public sealed class LocationFeeComparisonWindowController : ControllerBase
@@ -23,7 +21,7 @@ namespace Scanner.WPF.Controllers
             _baseData = baseData ?? throw new ArgumentNullException(nameof(baseData));
             _view.BaseFileTextBlock.Text = _baseData.BaseDataFile ?? UiText.Get("GlobalBaseRequired");
             RefreshStatus();
-        
+
         }
 
         public void SelectTemplateButton_Click(object sender, RoutedEventArgs e)
@@ -71,6 +69,6 @@ namespace Scanner.WPF.Controllers
                 _view.ExportButton.IsEnabled = !string.IsNullOrWhiteSpace(_templatePath) && _baseData.Records.Count > 0;
             }
         }
-    
+
     }
 }

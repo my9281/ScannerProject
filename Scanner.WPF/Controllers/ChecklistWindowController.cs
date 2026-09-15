@@ -1,8 +1,8 @@
-using Scanner.Helpers.Services;
-using Scanner.WPF.Helpers;
 using Microsoft.Win32;
+using Scanner.Controllers;
+using Scanner.Helpers.Services;
 using Scanner.Models;
-using Scanner.WPF.Services;
+using Scanner.WPF.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,8 +10,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
-
-using Scanner.Controllers;
 namespace Scanner.WPF.Controllers
 {
     public sealed class ChecklistWindowController : ControllerBase
@@ -27,7 +25,7 @@ namespace Scanner.WPF.Controllers
 
             _baseData = baseData ?? throw new ArgumentNullException(nameof(baseData));
             RefreshStatus();
-        
+
         }
 
         public void ImportSnButton_Click(object sender, RoutedEventArgs e)
@@ -49,7 +47,10 @@ namespace Scanner.WPF.Controllers
         {
             SaveFileDialog dialog = new SaveFileDialog
             {
-                Title = UiText.Get("SaveMatchTitle"), Filter = UiText.Get("TextFileFilter"), AddExtension = true, DefaultExt = ".txt",
+                Title = UiText.Get("SaveMatchTitle"),
+                Filter = UiText.Get("TextFileFilter"),
+                AddExtension = true,
+                DefaultExt = ".txt",
                 FileName = "InboundDetectionResult_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".txt"
             };
             if (dialog.ShowDialog(_view.OwnerWindow) != true) return;
@@ -307,6 +308,6 @@ namespace Scanner.WPF.Controllers
                 return string.Format("{0:N0}（{1:0.0}%）", count, percentage);
             }
         }
-    
+
     }
 }

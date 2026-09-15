@@ -1,12 +1,8 @@
-using Scanner.WPF.Helpers;
+using Scanner.Controllers;
 using Scanner.Models;
-using Scanner.WPF.Services;
-using System;
+using Scanner.WPF.Controllers;
 using System.Windows;
 using System.Windows.Input;
-
-using Scanner.Controllers;
-using Scanner.WPF.Controllers;
 namespace Scanner.WPF
 {
     public partial class LoginWindow : Window, ILoginWindowView

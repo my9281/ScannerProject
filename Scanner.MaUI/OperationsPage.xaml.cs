@@ -2,6 +2,7 @@ using Scanner.Controllers;
 using Scanner.MaUI.Controllers;
 using Scanner.MaUI.Views;
 namespace Scanner.MaUI;
+
 public partial class OperationsPage : ContentPage, IOperationsPageView
 {
     private readonly OperationsPageController _controller;

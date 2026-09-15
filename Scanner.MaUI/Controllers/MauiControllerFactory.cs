@@ -1,5 +1,6 @@
 using Scanner.Controllers;
 namespace Scanner.MaUI.Controllers;
+
 public sealed class MauiControllerFactory<TView, TController> : IControllerFactory<TView, TController> where TController : class, IController
 {
     private readonly IServiceProvider _services;

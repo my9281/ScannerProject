@@ -1,5 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
-
 namespace Scanner.MaUI;
 
 public partial class App : Application

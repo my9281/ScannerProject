@@ -1,14 +1,12 @@
-using Scanner.Helpers.Services;
 using Microsoft.Win32;
-using Scanner.WPF.Helpers;
+using Scanner.Controllers;
+using Scanner.Helpers.Services;
 using Scanner.Models;
-using Scanner.WPF.Services;
+using Scanner.WPF.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-
-using Scanner.Controllers;
 namespace Scanner.WPF.Controllers
 {
     public sealed class OutboundInspectionWindowController : ControllerBase
@@ -28,7 +26,7 @@ namespace Scanner.WPF.Controllers
             _baseData = baseData ?? throw new ArgumentNullException(nameof(baseData));
             _view.BaseFileTextBlock.Text = _baseData.BaseDataFile ?? UiText.Get("GlobalBaseRequired");
             _view.OwnerWindow.Loaded += (sender, args) => _view.PalletNumberTextBox.Focus();
-        
+
             _printing = printing;
         }
 
@@ -100,6 +98,6 @@ namespace Scanner.WPF.Controllers
                 MessageBox.Show(_view.OwnerWindow, UiText.Get("ExportFailedPrefix") + ex.Message, UiText.Get("OutboundTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-    
+
     }
 }

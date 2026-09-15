@@ -66,6 +66,12 @@ namespace Scanner.WPF.Services
             _log.OpenWorkbook();
         }
 
+        public void RecordWorkbook(ScanResult scan, string selectedModel)
+        {
+            if (scan == null || !scan.WasRecorded) return;
+            _log.AppendWorkbook(scan.Code, scan.Oid.IsOid, selectedModel ?? string.Empty);
+        }
+
         public void CreateNewRecordFiles()
         {
             _log.CreateNewFiles();

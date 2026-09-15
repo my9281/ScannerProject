@@ -1,11 +1,10 @@
-using Scanner.WPF.Helpers;
+using Scanner.Controllers;
 using Scanner.Models;
+using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
 using System;
 using System.Windows;
 using System.Windows.Input;
-
-using Scanner.Controllers;
 namespace Scanner.WPF.Controllers
 {
     public sealed class LoginWindowController : ControllerBase
@@ -22,7 +21,7 @@ namespace Scanner.WPF.Controllers
 
             _authService = authService;
             _isLoggingIn = false;
-        
+
         }
 
         public void Window_Loaded(object sender, RoutedEventArgs e)
@@ -147,6 +146,6 @@ namespace Scanner.WPF.Controllers
             _view.StatusTextBlock.Foreground = System.Windows.Media.Brushes.DarkRed;
             _view.StatusTextBlock.Text = message;
         }
-    
+
     }
 }

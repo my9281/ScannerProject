@@ -1,4 +1,5 @@
 namespace Scanner.MaUI.Views;
+
 public interface ILoginPageView
 {
     Entry UsernameEntry { get; }

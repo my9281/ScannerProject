@@ -15,6 +15,7 @@ namespace Scanner.WPF.Helpers
         public string FilePath => "in-memory";
         public string WorkbookPath => "in-memory.xlsx";
         public void Append(string code) { }
+        public void AppendWorkbook(string code, bool isOid, string selectedModel) { }
         public void CreateNewFiles() { }
         public void Open() { }
         public void OpenWorkbook() { }

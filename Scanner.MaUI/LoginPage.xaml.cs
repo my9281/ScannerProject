@@ -2,6 +2,7 @@ using Scanner.Controllers;
 using Scanner.MaUI.Controllers;
 using Scanner.MaUI.Views;
 namespace Scanner.MaUI;
+
 public partial class LoginPage : ContentPage, ILoginPageView
 {
     private readonly LoginPageController _controller;

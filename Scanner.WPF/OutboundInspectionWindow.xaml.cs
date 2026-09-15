@@ -1,14 +1,6 @@
-using Microsoft.Win32;
-using Scanner.WPF.Helpers;
-using Scanner.Models;
-using Scanner.WPF.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-
 using Scanner.Controllers;
 using Scanner.WPF.Controllers;
+using System.Windows;
 namespace Scanner.WPF
 {
     public partial class OutboundInspectionWindow : Window, IOutboundInspectionWindowView

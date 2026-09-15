@@ -1,4 +1,5 @@
 namespace Scanner.MaUI.Views;
+
 public interface IOperationsPageView
 {
     bool IsBusy { get; set; }

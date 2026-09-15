@@ -1,24 +1,23 @@
 using Scanner.Models;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Printing;
 using System.IO;
-using System.Collections.Generic;
 using System.Linq;
 using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Documents;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
-using DrawingImage = System.Drawing.Image;
-using WpfImage = System.Windows.Controls.Image;
 using WpfBrushes = System.Windows.Media.Brushes;
 using WpfFontFamily = System.Windows.Media.FontFamily;
+using WpfImage = System.Windows.Controls.Image;
 
 namespace Scanner.WPF.Helpers
 {

@@ -1,12 +1,6 @@
-using Scanner.WPF.Helpers;
-using Microsoft.Win32;
-using Scanner.WPF.Services;
-using System;
-using System.Diagnostics;
-using System.Windows;
-
 using Scanner.Controllers;
 using Scanner.WPF.Controllers;
+using System.Windows;
 namespace Scanner.WPF
 {
     public partial class LocationFeeComparisonWindow : Window, ILocationFeeComparisonWindowView

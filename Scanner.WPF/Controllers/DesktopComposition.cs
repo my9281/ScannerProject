@@ -1,8 +1,7 @@
-using Scanner.Helpers;
-using Scanner.Helpers.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Scanner.Controllers;
 using Scanner.DI;
+using Scanner.Helpers;
 using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
 using Scanner.WPF.ViewModels;
