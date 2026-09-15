@@ -43,11 +43,12 @@
             </Border>
         </Grid>
         <Grid Grid.Row="1" Margin="0,0,0,20">
-            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
             <Button Grid.Column="0" Content="{DynamicResource ImportSnStep}" Style="{StaticResource ActionButton}" Margin="0,0,12,0" Click="ImportSnButton_Click"/>
             <Button x:Name="ExportButton" Grid.Column="1" Content="{DynamicResource ExportMatchStep}" Style="{StaticResource ActionButton}" Margin="0,0,12,0" Click="ExportButton_Click" IsEnabled="False"/>
             <Button x:Name="ExportSimplifiedButton" Grid.Column="2" Content="{DynamicResource ExportSimplified}" Style="{StaticResource ActionButton}" Margin="0,0,12,0" Click="ExportSimplifiedButton_Click" IsEnabled="False"/>
-            <Button x:Name="ExportCurrentMonthButton" Grid.Column="3" Content="{DynamicResource ExportMonthPending}" Style="{StaticResource ActionButton}" Click="ExportCurrentMonthButton_Click" IsEnabled="False"/>
+            <Button x:Name="ExportCurrentMonthButton" Grid.Column="3" Content="{DynamicResource ExportMonthPending}" Style="{StaticResource ActionButton}" Margin="0,0,12,0" Click="ExportCurrentMonthButton_Click" IsEnabled="False"/>
+            <Button x:Name="TemporaryFeature1Button" Grid.Column="4" Content="临时功能1" ToolTip="导出待检测的重复 SN" Style="{StaticResource ActionButton}" Click="TemporaryFeature1Button_Click" IsEnabled="False"/>
         </Grid>
         <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="20" Margin="0,0,0,20">
             <StackPanel>

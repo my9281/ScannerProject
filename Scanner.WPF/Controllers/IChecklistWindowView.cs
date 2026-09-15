@@ -9,6 +9,7 @@ namespace Scanner.WPF.Controllers
         Button ExportButton { get; }
         Button ExportSimplifiedButton { get; }
         Button ExportCurrentMonthButton { get; }
+        Button TemporaryFeature1Button { get; }
         DataGrid StatusSummaryDataGrid { get; }
         DataGridTextColumn CurrentMonthColumn { get; }
         DataGridTextColumn PreviousMonthColumn { get; }

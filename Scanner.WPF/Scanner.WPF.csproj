@@ -88,6 +88,7 @@
     <Compile Include="Helpers\PrintingHelper.cs" />
     <Compile Include="Helpers\ScanLogHelper.cs" />
     <Compile Include="Helpers\ScanWorkbookHelper.cs" />
+    <Compile Include="Helpers\DuplicatePendingXlsxWriter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />

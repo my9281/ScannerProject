@@ -2,9 +2,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.HttpOverrides;
+using Scanner.Server.BLL;
+using Scanner.Server.DAL;
+using Scanner.Server.Model;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options => options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+DatabaseOptions databaseOptions = builder.Configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new();
+builder.Services.AddSingleton(databaseOptions);
+builder.Services.AddSingleton<IMySqlConnectionFactory, MySqlConnectionFactory>();
+builder.Services.AddScoped<IDatabaseHealthRepository, DatabaseHealthRepository>();
+builder.Services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
 WebApplication app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
@@ -17,6 +25,12 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.MapGet("/health", () => Results.Ok(new { status = "ok", utc = DateTimeOffset.UtcNow }));
+
+app.MapGet("/health/database", async (IDatabaseHealthService databaseHealthService, CancellationToken cancellationToken) =>
+{
+    DatabaseHealthStatus status = await databaseHealthService.CheckAsync(cancellationToken);
+    return status.IsHealthy ? Results.Ok(status) : Results.Json(status, statusCode: StatusCodes.Status503ServiceUnavailable);
+});
 
 app.MapPost("/api/uploads/scans", async (HttpRequest request, IConfiguration configuration, IWebHostEnvironment environment, CancellationToken cancellationToken) =>
 {

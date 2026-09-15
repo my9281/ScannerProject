@@ -145,6 +145,45 @@ namespace Scanner.WPF.Controllers
             catch (Exception ex) { ShowError(UiText.Get("ExportFailedPrefix") + ex.Message); }
         }
 
+        public void TemporaryFeature1Button_Click(object sender, RoutedEventArgs e)
+        {
+            Dictionary<string, int> counts = _baseData.Records
+                .Where(record => !string.IsNullOrWhiteSpace(record.Sn))
+                .GroupBy(record => record.Sn.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToDictionary(group => group.Key, group => group.Count(), StringComparer.OrdinalIgnoreCase);
+            List<InboundChecklistRecord> duplicatedPendingRecords = _baseData.Records
+                .Where(record => !string.IsNullOrWhiteSpace(record.Sn) && counts[record.Sn.Trim()] >= 2
+                    && string.Equals((record.DetectionStatus ?? string.Empty).Trim(), "待检测", StringComparison.OrdinalIgnoreCase))
+                .OrderBy(record => record.Sn.Trim(), StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            if (duplicatedPendingRecords.Count == 0)
+            {
+                MessageBox.Show(_view.OwnerWindow, "基础表中没有同时满足“SN 总计出现至少 2 次”且“当前记录为待检测”的数据。", "临时功能1", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            SaveFileDialog dialog = new SaveFileDialog
+            {
+                Title = "导出重复待检测 SN",
+                Filter = "Excel 工作簿 (*.xlsx)|*.xlsx",
+                AddExtension = true,
+                DefaultExt = ".xlsx",
+                FileName = "DuplicatePendingSN_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+            };
+            if (dialog.ShowDialog(_view.OwnerWindow) != true) return;
+
+            try
+            {
+                DuplicatePendingXlsxWriter.Write(dialog.FileName, duplicatedPendingRecords, counts);
+                MessageBox.Show(_view.OwnerWindow,
+                    string.Format("已导出 {0} 个重复 SN，共 {1} 条待检测记录。", duplicatedPendingRecords.Select(record => record.Sn.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).Count(), duplicatedPendingRecords.Count),
+                    "临时功能1", MessageBoxButton.OK, MessageBoxImage.Information);
+                Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
+            }
+            catch (Exception ex) { ShowError(UiText.Get("ExportFailedPrefix") + ex.Message); }
+        }
+
         private void RefreshStatus()
         {
             _view.BaseStatusTextBlock.Text = _baseData.Records.Count == 0 ? UiText.Get("BaseNotImported") : string.Format(UiText.Get("BaseCacheSummary"), _baseData.Records.Count, _baseData.BaseDataImportedAt);
@@ -154,6 +193,7 @@ namespace Scanner.WPF.Controllers
             _view.ExportButton.IsEnabled = _baseData.Records.Count > 0 && _baseData.SerialNumbers.Count > 0;
             _view.ExportSimplifiedButton.IsEnabled = _baseData.Records.Count > 0 && _baseData.SerialNumbers.Count > 0;
             _view.ExportCurrentMonthButton.IsEnabled = _baseData.Records.Count > 0;
+            _view.TemporaryFeature1Button.IsEnabled = _baseData.Records.Count > 0;
             DateTime currentMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             _view.CurrentMonthColumn.Header = UiText.Get("CurrentMonth") + " " + currentMonth.ToString("yyyy-MM");
             _view.PreviousMonthColumn.Header = UiText.Get("PreviousMonth") + " " + currentMonth.AddMonths(-1).ToString("yyyy-MM");

@@ -4,6 +4,9 @@
   </Project>
   <Project Path="Scanner.WPF/Scanner.WPF.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
   <Project Path="Scanner.Web/Scanner.Web.csproj" />
+  <Project Path="Scanner.Server.BLL/Scanner.Server.BLL.csproj" />
+  <Project Path="Scanner.Server.DAL/Scanner.Server.DAL.csproj" />
+  <Project Path="Scanner.Server.Model/Scanner.Server.Model.csproj" />
   <Project Path="Scanner.Models/Scanner.Models.csproj" />
   <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />
   <Project Path="Scanner.DI/Scanner.DI.csproj" />
