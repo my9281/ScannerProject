@@ -10,12 +10,11 @@ namespace Scanner.Helpers
 {
     public sealed class UrgentWorkOrderImportHelper
     {
-        private const int SnColumn = 7;
+        private const int SnColumn = 13;
         private const int RemarkColumn = 10;
         private const int ServiceTypeColumn = 11;
-        private const int TrackingColumn = 14;
-        private const int WorkOrderStatusColumn = 18;
-        private const int RequiredColumnCount = 19;
+        private const int OidSuffixColumn = 14;
+        private const int RequiredColumnCount = 15;
         private static readonly Regex Whitespace = new Regex(@"\s+", RegexOptions.Compiled);
 
         public UrgentWorkOrderImportResult Import(string filePath)
@@ -54,7 +53,7 @@ namespace Scanner.Helpers
             int headerIndex = FindHeaderIndex(rows);
             if (headerIndex < 0)
             {
-                throw new InvalidOperationException("未找到表头，请确认 H、K、L、O、S 列分别为 SN码、故障描述、售后处理类型、退货运单号、工单状态。");
+                throw new InvalidOperationException("未找到表头，请确认 K、N、O 列分别为输出内容、SN、OID尾号。");
             }
             var snRules = new List<WorkOrderRemark>();
             var oidRules = new Dictionary<string, OidRuleBuilder>(StringComparer.OrdinalIgnoreCase);
@@ -67,13 +66,9 @@ namespace Scanner.Helpers
                 {
                     continue;
                 }
-                string tracking = NormalizeIdentifier(GetField(row, TrackingColumn));
-                string workOrderStatus = NormalizeText(GetField(row, WorkOrderStatusColumn));
-                if (tracking.Length <= 4 || !string.Equals(workOrderStatus, "待收件", StringComparison.Ordinal))
-                {
-                    continue;
-                }
+                string oidSuffix = NormalizeIdentifier(GetField(row, OidSuffixColumn));
                 string sn = NormalizeIdentifier(GetField(row, SnColumn));
+                if (string.IsNullOrEmpty(sn) && oidSuffix.Length <= 8) continue;
                 importedRows++;
                 int rowNumber = index + 1;
                 string remark = NormalizeText(GetField(row, RemarkColumn));
@@ -91,13 +86,13 @@ namespace Scanner.Helpers
                         RemarkTimestamp = timestamp
                     });
                 }
-                if (!string.IsNullOrEmpty(tracking))
+                if (oidSuffix.Length > 8)
                 {
                     OidRuleBuilder builder;
-                    if (!oidRules.TryGetValue(tracking, out builder))
+                    if (!oidRules.TryGetValue(oidSuffix, out builder))
                     {
-                        builder = new OidRuleBuilder(tracking, sourceName, rowNumber, timestamp);
-                        oidRules.Add(tracking, builder);
+                        builder = new OidRuleBuilder(oidSuffix, sourceName, rowNumber, timestamp);
+                        oidRules.Add(oidSuffix, builder);
                     }
                     builder.Add(remark, isRepair);
                 }
@@ -118,7 +113,10 @@ namespace Scanner.Helpers
                 {
                     continue;
                 }
-                if (GetField(row, SnColumn).IndexOf("SN", StringComparison.OrdinalIgnoreCase) >= 0 && GetField(row, RemarkColumn).Contains("故障描述") && GetField(row, ServiceTypeColumn).Contains("售后处理类型") && GetField(row, TrackingColumn).Contains("运单号") && GetField(row, WorkOrderStatusColumn).Contains("工单状态"))
+                string snHeader = GetField(row, SnColumn);
+                string outputHeader = GetField(row, RemarkColumn);
+                string oidHeader = GetField(row, OidSuffixColumn);
+                if (snHeader.IndexOf("SN", StringComparison.OrdinalIgnoreCase) >= 0 && !string.IsNullOrWhiteSpace(outputHeader) && (oidHeader.IndexOf("OID", StringComparison.OrdinalIgnoreCase) >= 0 || oidHeader.Contains("运单号") || oidHeader.Contains("尾号")))
                 {
                     return index;
                 }

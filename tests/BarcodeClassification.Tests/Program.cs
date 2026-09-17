@@ -2,6 +2,8 @@ using DesktopScan = Scanner.WPF.Services.ScanService;
 using DesktopOid = Scanner.WPF.Services.OidService;
 using MobileScan = Scanner.MaUI.Services.ScanService;
 using MobileOid = Scanner.MaUI.Services.OidService;
+using Scanner.Models;
+using Scanner.WPF.Services;
 
 var cases = new (string Name, string Code, bool AreaOnly, bool Oid)[]
 {
@@ -45,7 +47,21 @@ var mobileSecond = await mobile.RecordAsync(longCode);
 Assert(mobileFirst.Oid.IsOid && !mobileFirst.Oid.ShouldPrint && mobileFirst.WasRecorded, "MAUI first OID");
 Assert(mobileSecond.Oid.ShouldPrint && !mobileSecond.WasRecorded, "MAUI repeated OID");
 
-Console.WriteLine($"PASS: {cases.Length} classification cases on desktop and MAUI; first/repeated OID scans.");
+var snSearch = new WorkOrderSearchService();
+snSearch.ReplaceImported(new[] { new WorkOrderRemark { Sn = "SN-001", Remark = "K列内容", IsUrgent = true } });
+Assert(snSearch.Resolve(" SN-001 ", false)?.WorkOrder.Remark == "K列内容", "Urgent work order N-column SN exact match returns K-column content");
+
+var oidSearch = new WorkOrderSearchService();
+oidSearch.ReplaceImported(new[] { new WorkOrderRemark { TrackingNumber = "123456789", Remark = "OID对应K列", IsUrgent = true, IsOidRule = true } });
+Assert(oidSearch.Resolve("420999123456789", true)?.WorkOrder.Remark == "OID对应K列", "Urgent work order OID suffix match returns K-column content");
+var middleSearch = new WorkOrderSearchService();
+middleSearch.ReplaceImported(new[] { new WorkOrderRemark { TrackingNumber = "123456789", Remark = "不应匹配", IsUrgent = true, IsOidRule = true } });
+Assert(middleSearch.Resolve("420123456789999", true) == null, "OID rule must match at the tail");
+var shortSearch = new WorkOrderSearchService();
+shortSearch.ReplaceImported(new[] { new WorkOrderRemark { TrackingNumber = "12345678", Remark = "不应匹配", IsUrgent = true, IsOidRule = true } });
+Assert(shortSearch.Resolve("42099912345678", true) == null, "O-column suffix must be longer than eight characters");
+
+Console.WriteLine($"PASS: {cases.Length} classification cases; OID occurrence and urgent work-order matching rules.");
 
 static void Assert(bool condition, string message)
 {

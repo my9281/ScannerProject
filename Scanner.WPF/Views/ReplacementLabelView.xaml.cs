@@ -31,18 +31,26 @@ namespace Scanner.WPF.Views
         private void Print()
         {
             string code = (ScanInput.Text ?? string.Empty).Trim();
-            string description = string.Join(" / ", FindVisualChildren<CheckBox>(this).Where(x => x.IsChecked == true).Select(x => x.Tag as string).Where(x => !string.IsNullOrWhiteSpace(x)));
+            string description = string.Join(" / ", FindVisualChildren<CheckBox>(this).Where(x => x.IsChecked == true && x != RepairOption).Select(x => x.Tag as string).Where(x => !string.IsNullOrWhiteSpace(x)));
             if (string.IsNullOrWhiteSpace(code)) { Error("请扫描或输入编号。"); return; }
             if (string.IsNullOrWhiteSpace(description)) { Error("请至少选择一个标签内容。"); return; }
             try
             {
                 if (ScanService.IsGs1AreaCode(code)) { Error("检测到单独的 GS1 地区码，未处理。"); return; }
                 ScanResult result = _scan.Record(code);
+                if (result.Oid.IsOid && !result.Oid.ShouldPrint)
+                {
+                    _scan.RecordWorkbook(result, string.Empty);
+                    StatusText.Foreground = Brushes.DarkBlue;
+                    StatusText.Text = "OID 已记录，请继续扫描 SN。";
+                    ScanInput.Clear(); RefreshInfo(); ScanInput.Focus();
+                    return;
+                }
                 string model = result.Oid.IsOid ? string.Empty : _models.FindModel(result.Code);
                 if (string.IsNullOrWhiteSpace(model)) model = _dialogs.SelectMeterModel(_models);
-                if (string.IsNullOrWhiteSpace(model)) { Error("已取消型号选择。"); return; }
+                if (string.IsNullOrWhiteSpace(model)) { _scan.RecordWorkbook(result, string.Empty); Error("已取消型号选择。"); return; }
                 _scan.RecordWorkbook(result, model);
-                _printing.PrintReplacementLabel(result.Code, 1, null, model, WidePaper.IsChecked == true ? PrintingHelper.DefaultPaperSize : PrintingHelper.SquarePaperSize, description);
+                _printing.PrintReplacementLabel(result.Code, 1, null, model, WidePaper.IsChecked == true ? PrintingHelper.DefaultPaperSize : PrintingHelper.SquarePaperSize, description, RepairOption.IsChecked == true);
                 StatusText.Foreground = Brushes.DarkBlue;
                 StatusText.Text = "已打印替换标签：" + description;
                 ScanInput.Clear(); RefreshInfo(); ScanInput.Focus();

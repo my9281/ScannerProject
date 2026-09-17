@@ -25,6 +25,10 @@ namespace Scanner.WPF.Helpers
             FilePath = Path.Combine(folder, fileName);
             WorkbookPath = Path.ChangeExtension(FilePath, ".xlsx");
             EnsureExists();
+            if (replacementMode && !File.Exists(ConfigFilePath))
+            {
+                File.WriteAllText(ConfigFilePath, fileName, new UTF8Encoding(false));
+            }
         }
 
         public string FilePath { get; private set; }

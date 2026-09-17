@@ -13,6 +13,8 @@ builder.Services.AddSingleton(databaseOptions);
 builder.Services.AddSingleton<IMySqlConnectionFactory, MySqlConnectionFactory>();
 builder.Services.AddScoped<IDatabaseHealthRepository, DatabaseHealthRepository>();
 builder.Services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 WebApplication app = builder.Build();
 
 app.UseForwardedHeaders(new ForwardedHeadersOptions { ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto });
@@ -30,6 +32,56 @@ app.MapGet("/health/database", async (IDatabaseHealthService databaseHealthServi
 {
     DatabaseHealthStatus status = await databaseHealthService.CheckAsync(cancellationToken);
     return status.IsHealthy ? Results.Ok(status) : Results.Json(status, statusCode: StatusCodes.Status503ServiceUnavailable);
+});
+
+app.MapGet("/api/orders/{id:int}", async (int id, HttpRequest request, IConfiguration configuration, IOrderService orders, CancellationToken cancellationToken) =>
+{
+    IResult? authenticationError = Authenticate(request, configuration);
+    if (authenticationError is not null) return authenticationError;
+    try
+    {
+        Order? order = await orders.GetByIdAsync(id, cancellationToken);
+        return order is null ? Results.NotFound(new { message = $"没有找到 ID 为 {id} 的订单。" }) : Results.Ok(order);
+    }
+    catch (ArgumentException exception) { return Results.BadRequest(new { message = exception.Message }); }
+});
+
+app.MapPost("/api/orders", async (SaveOrderRequest body, HttpRequest request, IConfiguration configuration, IOrderService orders, CancellationToken cancellationToken) =>
+{
+    IResult? authenticationError = Authenticate(request, configuration);
+    if (authenticationError is not null) return authenticationError;
+    try
+    {
+        Order created = await orders.CreateAsync(body, cancellationToken);
+        return Results.Created($"/api/orders/{created.Id}", created);
+    }
+    catch (ArgumentException exception) { return Results.BadRequest(new { message = exception.Message }); }
+});
+
+app.MapPut("/api/orders/{id:int}", async (int id, SaveOrderRequest body, HttpRequest request, IConfiguration configuration, IOrderService orders, CancellationToken cancellationToken) =>
+{
+    IResult? authenticationError = Authenticate(request, configuration);
+    if (authenticationError is not null) return authenticationError;
+    try
+    {
+        return await orders.UpdateAsync(id, body, cancellationToken)
+            ? Results.Ok(new { id, message = "修改成功。" })
+            : Results.NotFound(new { message = $"没有找到 ID 为 {id} 的订单。" });
+    }
+    catch (ArgumentException exception) { return Results.BadRequest(new { message = exception.Message }); }
+});
+
+app.MapDelete("/api/orders/{id:int}", async (int id, HttpRequest request, IConfiguration configuration, IOrderService orders, CancellationToken cancellationToken) =>
+{
+    IResult? authenticationError = Authenticate(request, configuration);
+    if (authenticationError is not null) return authenticationError;
+    try
+    {
+        return await orders.DeleteAsync(id, cancellationToken)
+            ? Results.Ok(new { id, message = "删除成功。" })
+            : Results.NotFound(new { message = $"没有找到 ID 为 {id} 的订单。" });
+    }
+    catch (ArgumentException exception) { return Results.BadRequest(new { message = exception.Message }); }
 });
 
 app.MapPost("/api/uploads/scans", async (HttpRequest request, IConfiguration configuration, IWebHostEnvironment environment, CancellationToken cancellationToken) =>

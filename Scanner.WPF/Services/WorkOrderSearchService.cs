@@ -33,7 +33,7 @@ namespace Scanner.WPF.Services
             string normalized = NormalizeCode(code);
             if (isOid)
             {
-                _activeOidRule = _importedRules.Where(item => item.IsOidRule && ContainsCode(normalized, item.TrackingNumber)).OrderByDescending(item => NormalizeCode(item.TrackingNumber).Length).FirstOrDefault();
+                _activeOidRule = _importedRules.Where(item => item.IsOidRule && EndsWithOidSuffix(normalized, item.TrackingNumber)).OrderByDescending(item => NormalizeCode(item.TrackingNumber).Length).FirstOrDefault();
                 if (_activeOidRule != null)
                 {
                     return new WorkOrderMatch(_activeOidRule, false);
@@ -67,10 +67,10 @@ namespace Scanner.WPF.Services
             return _onlineWorkOrders.FirstOrDefault(item => EqualsCode(item.Sn, normalizedCode) || EqualsCode(item.TrackingNumber, normalizedCode));
         }
 
-        private static bool ContainsCode(string oid, string trackingNumber)
+        private static bool EndsWithOidSuffix(string oid, string configuredSuffix)
         {
-            string tracking = NormalizeCode(trackingNumber);
-            return !string.IsNullOrEmpty(oid) && !string.IsNullOrEmpty(tracking) && oid.IndexOf(tracking, StringComparison.OrdinalIgnoreCase) >= 0;
+            string suffix = NormalizeCode(configuredSuffix);
+            return !string.IsNullOrEmpty(oid) && suffix.Length > 8 && oid.EndsWith(suffix, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool EqualsCode(string left, string normalizedRight)

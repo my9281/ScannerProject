@@ -56,15 +56,15 @@ namespace Scanner.WPF.Helpers
 
         public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, bool inspectionOk)
         {
-            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk ? "检测OK" : string.Empty, false);
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk ? "检测OK" : string.Empty, false, false);
         }
 
-        public void PrintReplacementLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string description)
+        public void PrintReplacementLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string description, bool repair)
         {
-            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, description, true);
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, description, true, repair);
         }
 
-        private void PrintLabelCore(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel)
+        private void PrintLabelCore(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel, bool replacementRepair)
         {
             if (string.IsNullOrWhiteSpace(serialNumber))
             {
@@ -75,7 +75,7 @@ namespace Scanner.WPF.Helpers
                 throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
             }
             string normalizedPaperSize = NormalizePaperSize(paperSize);
-            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize, footerDescription, replacementLabel);
+            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize, footerDescription, replacementLabel, replacementRepair);
             BitmapSource source = Render(label, normalizedPaperSize);
             using (Bitmap bitmap = ToBitmap(source))
             {
@@ -157,12 +157,12 @@ namespace Scanner.WPF.Helpers
             return string.Equals(paperSize, SquarePaperSize, StringComparison.OrdinalIgnoreCase) ? SquarePaperSize : DefaultPaperSize;
         }
 
-        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel)
+        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel, bool replacementRepair)
         {
-            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel) : CreateWideLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel);
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel, replacementRepair) : CreateWideLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel, replacementRepair);
         }
 
-        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel)
+        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel, bool replacementRepair)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
@@ -202,11 +202,12 @@ namespace Scanner.WPF.Helpers
                 canvas.Children.Add(remarkText);
             }
             if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, WideLabelWidth - 70);
-            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 260, replacementLabel ? 278 : 280, 300, 102, replacementLabel ? 42 : 81);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, replacementLabel ? 20 : 260, replacementLabel ? 278 : 280, replacementLabel ? 400 : 300, 102, replacementLabel ? 42 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
+            if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 425, 306, 130, 62, 48);
             return canvas;
         }
 
-        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel)
+        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel, bool replacementRepair)
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
@@ -246,15 +247,17 @@ namespace Scanner.WPF.Helpers
                 canvas.Children.Add(remarkText);
             }
             if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 17 : 21, 15, urgent ? 352 : 320, SquareLabelWidth - 30);
-            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 15, replacementLabel ? 278 : 280, 354, 102, replacementLabel ? 38 : 81);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 15, replacementLabel ? 278 : 280, replacementLabel ? 270 : 354, 102, replacementLabel ? 38 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
+            if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 284, 310, 85, 56, 40);
             return canvas;
         }
 
-        private static void AddFooterDescription(Canvas canvas, string description, bool includeReplacementDate, double left, double top, double width, double height, double fontSize)
+        private static void AddFooterDescription(Canvas canvas, string description, bool includeReplacementDate, double left, double top, double width, double height, double fontSize, TextAlignment alignment)
         {
+            DateTime replacementDate = includeReplacementDate ? NewJerseyNow() : default;
             var text = new TextBlock
             {
-                Text = includeReplacementDate ? description + Environment.NewLine + "替标日期 " + NewJerseyNow().ToString("MMM d", System.Globalization.CultureInfo.GetCultureInfo("en-US")) + OrdinalSuffix(NewJerseyNow().Day) : description,
+                Text = includeReplacementDate ? description + Environment.NewLine + "替标日期 " + replacementDate.ToString("MMM d", System.Globalization.CultureInfo.GetCultureInfo("en-US")) + OrdinalSuffix(replacementDate.Day) : description,
                 Width = width,
                 Height = height,
                 FontFamily = InspectionOkFont,
@@ -262,9 +265,28 @@ namespace Scanner.WPF.Helpers
                 FontWeight = FontWeights.Normal,
                 FontStyle = FontStyles.Italic,
                 Foreground = WpfBrushes.Black,
-                TextAlignment = TextAlignment.Right,
+                TextAlignment = alignment,
                 TextWrapping = TextWrapping.Wrap,
                 LineHeight = fontSize * 0.9
+            };
+            Canvas.SetLeft(text, left);
+            Canvas.SetTop(text, top);
+            canvas.Children.Add(text);
+        }
+
+        private static void AddRepairFooter(Canvas canvas, double left, double top, double width, double height, double fontSize)
+        {
+            var text = new TextBlock
+            {
+                Text = "维修",
+                Width = width,
+                Height = height,
+                FontFamily = InspectionOkFont,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Bold,
+                FontStyle = FontStyles.Italic,
+                Foreground = WpfBrushes.Black,
+                TextAlignment = TextAlignment.Right
             };
             Canvas.SetLeft(text, left);
             Canvas.SetTop(text, top);
