@@ -1,0 +1,156 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "Scanner.Web/1.0.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "13.0.5-beta1",
+          "Scanner.Server.BLL": "1.0.0",
+          "Scanner.Server.DAL": "1.0.0",
+          "Scanner.Server.Model": "1.0.0",
+          "System.Drawing.Common": "11.0.0-rc.1.26425.128"
+        },
+        "runtime": {
+          "Scanner.Web.dll": {}
+        }
+      },
+      "Microsoft.Win32.SystemEvents/11.0.0-rc.1.26425.128": {
+        "runtime": {
+          "lib/net10.0/Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/net10.0/Microsoft.Win32.SystemEvents.dll": {
+            "rid": "win",
+            "assetType": "runtime",
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628"
+          }
+        }
+      },
+      "MySqlConnector/2.6.2": {
+        "runtime": {
+          "lib/net10.0/MySqlConnector.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.6.2.0"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.5-beta1": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.5.31230"
+          }
+        }
+      },
+      "System.Drawing.Common/11.0.0-rc.1.26425.128": {
+        "dependencies": {
+          "Microsoft.Win32.SystemEvents": "11.0.0-rc.1.26425.128"
+        },
+        "runtime": {
+          "lib/net10.0/System.Drawing.Common.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628"
+          },
+          "lib/net10.0/System.Private.Windows.Core.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628"
+          },
+          "lib/net10.0/System.Private.Windows.GdiPlus.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.26.42628"
+          }
+        }
+      },
+      "Scanner.Server.BLL/1.0.0": {
+        "dependencies": {
+          "Scanner.Server.DAL": "1.0.0",
+          "Scanner.Server.Model": "1.0.0"
+        },
+        "runtime": {
+          "Scanner.Server.BLL.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Scanner.Server.DAL/1.0.0": {
+        "dependencies": {
+          "MySqlConnector": "2.6.2",
+          "Scanner.Server.Model": "1.0.0"
+        },
+        "runtime": {
+          "Scanner.Server.DAL.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Scanner.Server.Model/1.0.0": {
+        "runtime": {
+          "Scanner.Server.Model.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Scanner.Web/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Microsoft.Win32.SystemEvents/11.0.0-rc.1.26425.128": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-SXo/acIvpyPqyA3wy3aJf1gHJyoI6Au61SfYKqDLOfa47WFuwiTw8hpnkewL5VzNqwhadYL877PDXoDuuxx7nA==",
+      "path": "microsoft.win32.systemevents/11.0.0-rc.1.26425.128",
+      "hashPath": "microsoft.win32.systemevents.11.0.0-rc.1.26425.128.nupkg.sha512"
+    },
+    "MySqlConnector/2.6.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dlTc/tsBa42szdvpj4nrHvQVUb0gsMwR9HT6J0Zz2OSqfP0CdYlGw+qQPqCpbnO97idfvclSjKYtM6y5QaBQaQ==",
+      "path": "mysqlconnector/2.6.2",
+      "hashPath": "mysqlconnector.2.6.2.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.5-beta1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-cGxikAY78u8CPfIT7mkICvI2ZNL7oDsC+DzgVWxtU5DmNhF2qDcU3YheDitdO9TKIra6Y5rHRD2T7oEexbAbLA==",
+      "path": "newtonsoft.json/13.0.5-beta1",
+      "hashPath": "newtonsoft.json.13.0.5-beta1.nupkg.sha512"
+    },
+    "System.Drawing.Common/11.0.0-rc.1.26425.128": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zDyd5h5Zz6adPXo83U3QuizRA63qidEYhIr6soyQ3zIxWKnLaGg6N66yxKpfPP7fuSCJCwqbLWaeVY/R9mgDww==",
+      "path": "system.drawing.common/11.0.0-rc.1.26425.128",
+      "hashPath": "system.drawing.common.11.0.0-rc.1.26425.128.nupkg.sha512"
+    },
+    "Scanner.Server.BLL/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Scanner.Server.DAL/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Scanner.Server.Model/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
