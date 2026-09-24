@@ -164,6 +164,9 @@
     <system:String x:Key="PalletNumber">Número de palé</system:String>
     <system:String x:Key="PrintSkuSummary">Imprimir totales SKU · 4×6</system:String>
     <system:String x:Key="ExportDetailXlsx">Exportar detalles XLSX</system:String>
+    <system:String x:Key="UploadShelvedPallet">Subir datos almacenados</system:String>
+    <system:String x:Key="UploadShelvedPalletSuccess">Se subieron {0} registros. Palé: {1}; hora: {2:yyyy-MM-dd HH:mm:ss}</system:String>
+    <system:String x:Key="UploadShelvedPalletFailed">No se pudieron subir los datos: </system:String>
     <system:String x:Key="SelectTextAndBase">Seleccione TXT y base</system:String>
     <system:String x:Key="RowNumber">N.º</system:String>
     <system:String x:Key="SkuText">SKU (TXT)</system:String>

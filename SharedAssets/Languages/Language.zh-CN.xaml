@@ -156,6 +156,9 @@
     <system:String x:Key="PalletNumber">托盘号</system:String>
     <system:String x:Key="PrintSkuSummary">汇总 SKU 并打印 4×6</system:String>
     <system:String x:Key="ExportDetailXlsx">导出明细 XLSX</system:String>
+    <system:String x:Key="UploadShelvedPallet">上传上架数据</system:String>
+    <system:String x:Key="UploadShelvedPalletSuccess">成功上传 {0} 条数据。托盘号：{1}；上架时间：{2:yyyy-MM-dd HH:mm:ss}</system:String>
+    <system:String x:Key="UploadShelvedPalletFailed">上架数据上传失败：</system:String>
     <system:String x:Key="SelectTextAndBase">请选择 TXT，系统将使用全局基础表</system:String>
     <system:String x:Key="RowNumber">编号</system:String>
     <system:String x:Key="SkuText">SKU（TXT）</system:String>

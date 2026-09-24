@@ -18,10 +18,12 @@ namespace Scanner.WPF
         System.Windows.Controls.TextBox IOutboundInspectionWindowView.PalletNumberTextBox => PalletNumberTextBox;
         System.Windows.Controls.Button IOutboundInspectionWindowView.PrintButton => PrintButton;
         System.Windows.Controls.Button IOutboundInspectionWindowView.ExportButton => ExportButton;
+        System.Windows.Controls.Button IOutboundInspectionWindowView.UploadButton => UploadButton;
         System.Windows.Controls.TextBlock IOutboundInspectionWindowView.SummaryTextBlock => SummaryTextBlock;
         System.Windows.Controls.DataGrid IOutboundInspectionWindowView.ResultDataGrid => ResultDataGrid;
         private void SelectTextButton_Click(object sender, RoutedEventArgs e) => _controller.SelectTextButton_Click(sender, e);
         private void PrintButton_Click(object sender, RoutedEventArgs e) => _controller.PrintButton_Click(sender, e);
         private void ExportButton_Click(object sender, RoutedEventArgs e) => _controller.ExportButton_Click(sender, e);
+        private void UploadButton_Click(object sender, RoutedEventArgs e) => _controller.UploadButton_Click(sender, e);
     }
 }

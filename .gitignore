@@ -186,6 +186,8 @@ publish/
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
 *.pubxml
+!Scanner.Web/Properties/PublishProfiles/FolderProfile.pubxml
+!Scanner.Web/Properties/PublishProfiles/IIS-SelfContained.pubxml
 *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
@@ -362,3 +364,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Scanner.Web/appsettings.json

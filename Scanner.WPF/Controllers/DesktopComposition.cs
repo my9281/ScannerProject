@@ -26,6 +26,7 @@ namespace Scanner.WPF.Controllers
             services.AddTransient<PrintingHelper>();
             services.AddTransient<ScanService>();
             services.AddTransient<ScanUploadService>();
+            services.AddTransient<ShelvedPalletUploadService>();
             services.AddTransient<MeterModelService>();
             services.AddTransient<SpeechService>();
             services.AddTransient<WorkOrderSearchService>();

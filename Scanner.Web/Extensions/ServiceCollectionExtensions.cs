@@ -17,6 +17,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ApiKeyAuthorizationFilter>();
         services.AddScoped<ApiExceptionFilter>();
         services.AddScoped<IUploadService, UploadService>();
+        services.AddSingleton<IAccountService, InMemoryAccountService>();
         services.AddScannerDataAccess(configuration);
         services.AddScannerBusinessLogic();
         return services;
@@ -29,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IMySqlConnectionFactory, MySqlConnectionFactory>();
         services.AddScoped<IDatabaseHealthRepository, DatabaseHealthRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IShelvedPalletRepository, ShelvedPalletRepository>();
         return services;
     }
 
@@ -36,6 +38,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IShelvedPalletService, ShelvedPalletService>();
         return services;
     }
 }

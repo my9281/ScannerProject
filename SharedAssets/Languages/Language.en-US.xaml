@@ -164,6 +164,9 @@
     <system:String x:Key="PalletNumber">Pallet number</system:String>
     <system:String x:Key="PrintSkuSummary">Print SKU totals · 4×6</system:String>
     <system:String x:Key="ExportDetailXlsx">Export details XLSX</system:String>
+    <system:String x:Key="UploadShelvedPallet">Upload shelved data</system:String>
+    <system:String x:Key="UploadShelvedPalletSuccess">Uploaded {0} records. Pallet: {1}; shelved at: {2:yyyy-MM-dd HH:mm:ss}</system:String>
+    <system:String x:Key="UploadShelvedPalletFailed">Unable to upload shelved data: </system:String>
     <system:String x:Key="SelectTextAndBase">Select TXT and a base file</system:String>
     <system:String x:Key="RowNumber">No.</system:String>
     <system:String x:Key="SkuText">SKU (TXT)</system:String>

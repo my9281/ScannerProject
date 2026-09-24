@@ -4,6 +4,9 @@
 
 ## API
 
+- `GET /api/account/domains`：获取可选择的域列表。
+- `POST /api/account/register`：注册内存账户，请求字段为 `username`、`password`、`confirmPassword` 和 `domainId`。
+- `POST /api/account/login`：登录内存账户，请求字段为 `username` 和 `password`。
 - `POST /api/uploads/scans`：上传文件，表单字段为 `file` 和可选的 `deviceName`。
 - `GET /api/uploads`：列出已上传文件。
 - `GET /api/uploads/{id}/content`：读取文件内容，供网页预览。
@@ -11,6 +14,13 @@
 - `GET /health`：健康检查。
 
 除健康检查外，所有 API 在配置了密钥时都需要请求头 `X-Upload-Key`。上传仅接受有效的 `.txt` 或 `.json` 文件，默认最大 10 MB；在线预览默认最大 1 MB。
+
+账户接口暂不连接数据库，注册数据仅保存在当前进程内，应用重启后会清空。登录成功后返回的随机令牌目前仅作为接口返回值，尚未接入其他接口的授权验证。
+
+## 账户页面
+
+- `/account/login`：登录页面。
+- `/account/register`：注册页面。
 
 ## 配置
 
@@ -32,4 +42,35 @@ dotnet run --project Scanner.Web.csproj
 dotnet publish Scanner.Web.csproj -p:PublishProfile=IIS-SelfContained
 ```
 
-发布到 IIS 时，将发布目录的全部文件部署到站点物理目录，并安装匹配版本的 ASP.NET Core Hosting Bundle。应用程序池使用“无托管代码”。
+`IIS-SelfContained` 和 Visual Studio 使用的 `FolderProfile` 均按 Windows x64 自包含方式发布。发布到 IIS 时，必须将发布目录的全部文件（不只是项目 DLL）部署到站点物理目录。服务器仍需安装 ASP.NET Core Hosting Bundle 以提供 IIS 的 AspNetCoreModuleV2，但不要求安装与项目匹配的 .NET 10 运行时。应用程序池使用“无托管代码”。
+## 上架托盘接口
+
+接口使用与上传接口相同的 `X-Upload-Key` 请求头。
+
+批量录入：`POST /api/shelved-pallets`
+
+```json
+{
+  "palletNumber": "TP20260924001",
+  "items": [
+    {
+      "number": 1,
+      "sn": "SN000001",
+      "sku": "SKU000001",
+      "type": "调拨入库",
+      "processingMethod": "检测通过",
+      "processingTime": "2026-09-24 10:30:00"
+    }
+  ]
+}
+```
+
+上架日期、上架时间和 UUID 由 Web 服务生成；整个批次使用数据库事务写入。
+
+查询：`GET /api/shelved-pallets?from=2026-09-24T00:00:00&to=2026-09-24T23:59:59&palletNumber=TP20260924001&limit=500`
+
+`from`、`to` 和 `palletNumber` 都可以省略，`limit` 范围为 1–1000。
+
+按整天和托盘号查询时可使用简写：`GET /api/shelved-pallets?date=2026-09-24&p=1`。其中 `date` 表示该日期全天，`p` 是 `palletNumber` 的简写。
+
+简洁展示页面：`/pallet-data.html?t=2026-09-24&p=1`。页面顶部显示上架日期和托盘号，明细仅显示 SKU、SN；API 也接受 `t` 作为 `date` 的简写。

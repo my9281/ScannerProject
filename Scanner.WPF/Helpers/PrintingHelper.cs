@@ -64,6 +64,70 @@ namespace Scanner.WPF.Helpers
             PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, description, true, repair);
         }
 
+        public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark)
+        {
+            string normalizedSku = (sku ?? string.Empty).Trim();
+            string normalizedSerialNumber = (serialNumber ?? string.Empty).Trim();
+            string normalizedRemark = (remark ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(normalizedSku)) throw new ArgumentException("SKU 不能为空。", nameof(sku));
+            if (string.IsNullOrWhiteSpace(normalizedSerialNumber)) throw new ArgumentException("SN 不能为空。", nameof(serialNumber));
+            if (string.IsNullOrWhiteSpace(normalizedRemark)) throw new ArgumentException("备注不能为空。", nameof(remark));
+
+            Canvas label = CreateSkuSerialNumberLabel(normalizedSku, normalizedSerialNumber, normalizedRemark);
+            BitmapSource source = Render(label, DefaultPaperSize);
+            using (Bitmap bitmap = ToBitmap(source)) PrintBitmap(bitmap, DefaultPaperSize);
+        }
+
+        private static Canvas CreateSkuSerialNumberLabel(string sku, string serialNumber, string remark)
+        {
+            const double border = 3;
+            const double middle = WideLabelWidth / 2;
+            const double headerBottom = 58;
+            const double remarkTop = 315;
+            var canvas = new Canvas { Width = WideLabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
+
+            AddLine(canvas, border, border, WideLabelWidth - border, border, 3);
+            AddLine(canvas, border, LabelHeight - border, WideLabelWidth - border, LabelHeight - border, 3);
+            AddLine(canvas, border, border, border, LabelHeight - border, 3);
+            AddLine(canvas, WideLabelWidth - border, border, WideLabelWidth - border, LabelHeight - border, 3);
+            AddLine(canvas, middle, border, middle, remarkTop, 3);
+            AddLine(canvas, border, headerBottom, WideLabelWidth - border, headerBottom, 3);
+            AddLine(canvas, border, remarkTop, WideLabelWidth - border, remarkTop, 3);
+
+            AddText(canvas, "SKU", 21, border, 17, middle - border);
+            AddText(canvas, "SN/MESSN", 21, middle, 17, middle - border);
+            AddImage(canvas, CreateCode(sku, BarcodeFormat.QR_CODE, 220, 220), 73, 66, 142, 142, Stretch.Uniform);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 220, 220), middle + 73, 66, 142, 142, Stretch.Uniform);
+            AddText(canvas, Shorten(sku, 34), 15, 15, 218, middle - 30);
+            AddText(canvas, Shorten(serialNumber, 34), 15, middle + 15, 218, middle - 30);
+
+            var remarkLabel = CreateText("备注", 19, 92);
+            Canvas.SetLeft(remarkLabel, 18);
+            Canvas.SetTop(remarkLabel, 338);
+            canvas.Children.Add(remarkLabel);
+            var remarkText = CreateText(Shorten(remark, 70), 18, WideLabelWidth - 128);
+            remarkText.TextAlignment = TextAlignment.Left;
+            remarkText.TextWrapping = TextWrapping.Wrap;
+            remarkText.Height = 55;
+            Canvas.SetLeft(remarkText, 108);
+            Canvas.SetTop(remarkText, 333);
+            canvas.Children.Add(remarkText);
+            return canvas;
+        }
+
+        private static void AddLine(Canvas canvas, double x1, double y1, double x2, double y2, double thickness)
+        {
+            canvas.Children.Add(new System.Windows.Shapes.Line
+            {
+                X1 = x1,
+                Y1 = y1,
+                X2 = x2,
+                Y2 = y2,
+                Stroke = WpfBrushes.Black,
+                StrokeThickness = thickness
+            });
+        }
+
         private void PrintLabelCore(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel, bool replacementRepair)
         {
             if (string.IsNullOrWhiteSpace(serialNumber))

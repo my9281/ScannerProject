@@ -3,6 +3,7 @@ using Scanner.Controllers;
 using Scanner.Helpers.Services;
 using Scanner.Models;
 using Scanner.WPF.Helpers;
+using Scanner.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,13 @@ namespace Scanner.WPF.Controllers
         private readonly IOutboundInspectionWindowView _view;
 
         private readonly PrintingHelper _printing;
+        private readonly ShelvedPalletUploadService _upload;
         private IList<OutboundSkuSummary> _skuItems = new List<OutboundSkuSummary>();
         private string _textPath;
         private IList<OutboundInspectionRecord> _records = new List<OutboundInspectionRecord>();
 
         private readonly ChecklistDataCache _baseData;
-        public OutboundInspectionWindowController(IOutboundInspectionWindowView view, ChecklistDataCache baseData, PrintingHelper printing)
+        public OutboundInspectionWindowController(IOutboundInspectionWindowView view, ChecklistDataCache baseData, PrintingHelper printing, ShelvedPalletUploadService upload)
         {
             _view = view;
 
@@ -28,6 +30,7 @@ namespace Scanner.WPF.Controllers
             _view.OwnerWindow.Loaded += (sender, args) => _view.PalletNumberTextBox.Focus();
 
             _printing = printing;
+            _upload = upload ?? throw new ArgumentNullException(nameof(upload));
         }
 
         public void PrintButton_Click(object sender, RoutedEventArgs e)
@@ -71,6 +74,7 @@ namespace Scanner.WPF.Controllers
                 _view.SummaryTextBlock.Text = string.Format(UiText.Get("OutboundSummary"), _records.Count, _skuItems.Count, matched, _records.Count - matched);
                 _view.ExportButton.IsEnabled = _records.Count > 0;
                 _view.PrintButton.IsEnabled = _skuItems.Count > 0;
+                _view.UploadButton.IsEnabled = _records.Count > 0;
             }
             catch (Exception ex)
             {
@@ -78,9 +82,39 @@ namespace Scanner.WPF.Controllers
                 _view.ResultDataGrid.ItemsSource = null;
                 _view.ExportButton.IsEnabled = false;
                 _view.PrintButton.IsEnabled = false;
+                _view.UploadButton.IsEnabled = false;
                 _skuItems = new List<OutboundSkuSummary>();
                 _view.SummaryTextBlock.Text = UiText.Get("ReadFailed");
                 MessageBox.Show(_view.OwnerWindow, UiText.Get("OutboundFailedPrefix") + ex.Message, UiText.Get("OutboundTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public async void UploadButton_Click(object sender, RoutedEventArgs e)
+        {
+            string palletNumber = (_view.PalletNumberTextBox.Text ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(palletNumber))
+            {
+                MessageBox.Show(_view.OwnerWindow, UiText.Get("PalletRequired"), UiText.Get("OutboundTitle"), MessageBoxButton.OK, MessageBoxImage.Warning);
+                _view.PalletNumberTextBox.Focus();
+                return;
+            }
+
+            _view.UploadButton.IsEnabled = false;
+            try
+            {
+                ShelvedPalletUploadResult result = await _upload.UploadAsync(palletNumber, _records);
+                MessageBox.Show(_view.OwnerWindow,
+                    string.Format(UiText.Get("UploadShelvedPalletSuccess"), result.InsertedCount, result.PalletNumber, result.ShelvedAt),
+                    UiText.Get("UploadCompleteTitle"), MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(_view.OwnerWindow, UiText.Get("UploadShelvedPalletFailed") + ex.Message,
+                    UiText.Get("UploadFailedTitle"), MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                _view.UploadButton.IsEnabled = _records.Count > 0;
             }
         }
 

@@ -47,12 +47,21 @@ namespace Scanner.WPF
         {
             DirectoryPanel.Visibility = Visibility.Collapsed;
             ScanPanel.Visibility = Visibility.Collapsed;
+            SkuSerialLabelPanel.Visibility = Visibility.Collapsed;
             ReplacementPanel.Visibility = Visibility.Visible;
+        }
+        private void OpenSkuSerialLabelView_Click(object sender, RoutedEventArgs e)
+        {
+            DirectoryPanel.Visibility = Visibility.Collapsed;
+            ScanPanel.Visibility = Visibility.Collapsed;
+            ReplacementPanel.Visibility = Visibility.Collapsed;
+            SkuSerialLabelPanel.Visibility = Visibility.Visible;
         }
         private void BackToDirectory_Click(object sender, RoutedEventArgs e)
         {
             ScanPanel.Visibility = Visibility.Collapsed;
             ReplacementPanel.Visibility = Visibility.Collapsed;
+            SkuSerialLabelPanel.Visibility = Visibility.Collapsed;
             DirectoryPanel.Visibility = Visibility.Visible;
         }
     }

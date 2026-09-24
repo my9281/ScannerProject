@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>注册 - Ymforever WMS</title>
+    <link rel="stylesheet" href="/account.css">
+</head>
+<body>
+    <main class="account-shell">
+        <header class="brand">
+            <div class="brand-mark" aria-hidden="true">W</div>
+            <h1>Ymforever WMS</h1>
+            <p>幽梦之星管理平台</p>
+        </header>
+        <section class="account-card">
+            <h2>创建账户</h2>
+            <p class="intro">账户暂存于服务器内存，服务重启后将清空。</p>
+            <form id="registerForm" class="form">
+                <label class="field">
+                    用户名
+                    <input id="username" name="username" autocomplete="username" required autofocus>
+                </label>
+                <label class="field">
+                    域
+                    <select id="domainId" name="domainId" required disabled>
+                        <option value="">正在加载域列表…</option>
+                    </select>
+                </label>
+                <label class="field">
+                    密码
+                    <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required>
+                </label>
+                <label class="field">
+                    确认密码
+                    <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
+                </label>
+                <p id="message" class="message" role="alert"></p>
+                <button id="submit" type="submit">注册</button>
+            </form>
+            <p class="switch">已有账户？ <a href="/account/login">返回登录</a></p>
+        </section>
+        <div class="back"><a href="/">返回管理中心</a></div>
+    </main>
+    <script>
+            const form=document.querySelector('#registerForm'),button=document.querySelector('#submit'),message=document.querySelector('#message'),domainSelect=document.querySelector('#domainId');
+            function show(text,type){message.textContent=text;message.className=`message show ${type}`}
+            async function readError(response){const body=await response.json().catch(()=>({}));if(body.message)return body.message;if(body.errors)return Object.values(body.errors).flat().join(' ');return `请求失败（${response.status}）`}
+            async function loadDomains(){try{const response=await fetch('/api/account/domains');if(!response.ok)throw new Error(await readError(response));const domains=await response.json();domainSelect.innerHTML='<option value="">请选择域</option>'+domains.map(domain=>`<option value="${domain.id}">${domain.domainName}</option>`).join('');domainSelect.disabled=false}catch(error){domainSelect.innerHTML='<option value="">域列表加载失败</option>';show(error.message,'error')}}
+            form.addEventListener('submit',async event=>{event.preventDefault();const username=document.querySelector('#username').value.trim(),password=document.querySelector('#password').value,confirmPassword=document.querySelector('#confirmPassword').value;if(password!==confirmPassword){show('两次输入的密码不一致。','error');return}button.disabled=true;message.className='message';try{const response=await fetch('/api/account/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,confirmPassword,domainId:Number(domainSelect.value)})});if(!response.ok)throw new Error(await readError(response));show('注册成功，正在前往登录页…','success');setTimeout(()=>location.href=`/account/login?username=${encodeURIComponent(username)}`,700)}catch(error){show(error.message,'error')}finally{button.disabled=false}});loadDomains();
+    </script>
+</body>
+</html>

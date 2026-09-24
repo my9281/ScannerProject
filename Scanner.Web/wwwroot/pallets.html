@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>上架托盘查询</title>
+  <style>
+    :root{font-family:"Microsoft YaHei UI",system-ui,sans-serif;color:#172033;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}.shell{width:min(1280px,calc(100% - 32px));margin:36px auto}header{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}h1{margin:0}.back{color:#2457d6;text-decoration:none}.card{background:#fff;border:1px solid #dfe6f0;border-radius:14px;box-shadow:0 10px 32px #1720330d}.filters{padding:20px;display:grid;grid-template-columns:repeat(4,1fr) auto;gap:12px;align-items:end}.field{display:grid;gap:6px;color:#4c586e;font-size:14px}input,button{font:inherit;padding:10px 12px;border-radius:8px;border:1px solid #ccd5e3}button{border:0;background:#2457d6;color:white;font-weight:700;cursor:pointer}.message{min-height:24px;margin:12px 3px;color:#18714b}.error{color:#b02b2b}.table-wrap{overflow:auto;max-height:65vh}table{width:100%;border-collapse:collapse}th,td{padding:12px 14px;border-bottom:1px solid #edf0f5;text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#f8fafc;color:#596579;font-size:13px}.empty{text-align:center;color:#7a8496;padding:42px}@media(max-width:900px){.filters{grid-template-columns:1fr 1fr}.filters button{grid-column:1/-1}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header><div><h1>上架托盘查询</h1><p>可按上架时间范围、托盘号组合查询</p></div><a class="back" href="/">返回管理中心</a></header>
+    <section class="card filters">
+      <label class="field">访问密钥<input id="apiKey" type="password" autocomplete="current-password" placeholder="未配置时留空"></label>
+      <label class="field">开始时间<input id="from" type="datetime-local" step="1"></label>
+      <label class="field">结束时间<input id="to" type="datetime-local" step="1"></label>
+      <label class="field">托盘号<input id="palletNumber" maxlength="100" placeholder="支持精确查询"></label>
+      <button id="query" type="button">查询</button>
+    </section>
+    <p id="message" class="message"></p>
+    <section class="card table-wrap">
+      <table><thead><tr><th>上架时间</th><th>托盘号</th><th>编号</th><th>SN</th><th>SKU</th><th>类型</th><th>处理方式</th><th>处理时间</th><th>UUID</th></tr></thead><tbody id="rows"><tr><td colspan="9" class="empty">请输入条件后查询</td></tr></tbody></table>
+    </section>
+  </main>
+  <script>
+    const $=s=>document.querySelector(s),key=$('#apiKey'),rows=$('#rows'),message=$('#message');
+    key.value=sessionStorage.getItem('uploadApiKey')||'';
+    key.addEventListener('change',()=>sessionStorage.setItem('uploadApiKey',key.value));
+    const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+    const formatDateTime=(date,time)=>date&&time?`${date} ${String(time).slice(0,8)}`:'';
+    $('#query').addEventListener('click',async()=>{
+      const params=new URLSearchParams({limit:'1000'});['from','to','palletNumber'].forEach(id=>{const value=$(`#${id}`).value.trim();if(value)params.set(id,value)});
+      rows.innerHTML='<tr><td colspan="9" class="empty">正在查询…</td></tr>';message.textContent='';
+      try{
+        const response=await fetch(`/api/shelved-pallets?${params}`,{headers:{'X-Upload-Key':key.value}}),body=await response.json().catch(()=>({}));
+        if(!response.ok)throw new Error(body.message||`查询失败（${response.status}）`);
+        rows.innerHTML=body.length?body.map(x=>`<tr><td>${formatDateTime(x.shelvingDate,x.shelvingTime)}</td><td>${escapeHtml(x.palletNumber)}</td><td>${x.number}</td><td>${escapeHtml(x.sn)}</td><td>${escapeHtml(x.sku)}</td><td>${escapeHtml(x.type)}</td><td>${escapeHtml(x.processingMethod)}</td><td>${escapeHtml(x.processingTime?new Date(x.processingTime).toLocaleString():'')}</td><td>${escapeHtml(x.uuid)}</td></tr>`).join(''):'<tr><td colspan="9" class="empty">没有符合条件的数据</td></tr>';
+        message.textContent=`共查询到 ${body.length} 条数据${body.length===1000?'（已达到单次查询上限）':''}`;
+      }catch(error){rows.innerHTML='<tr><td colspan="9" class="empty error">查询失败</td></tr>';message.textContent=error.message;message.className='message error'}
+    });
+  </script>
+</body>
+</html>
+

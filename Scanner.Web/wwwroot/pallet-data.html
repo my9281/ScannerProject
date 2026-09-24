@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>上架托盘数据</title>
+  <style>
+    :root{font-family:"Microsoft YaHei UI",system-ui,sans-serif;color:#172033;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}.shell{width:min(920px,calc(100% - 28px));margin:32px auto}.summary{background:linear-gradient(135deg,#173a70,#2457d6);color:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 12px 34px #18345c26}.summary h1{margin:0 0 20px;font-size:27px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.label{font-size:13px;opacity:.75;margin-bottom:5px}.value{font-size:22px;font-weight:700;word-break:break-all}.message{min-height:25px;margin:13px 3px;color:#18714b}.error{color:#b02b2b}.card{background:#fff;border:1px solid #dfe6f0;border-radius:14px;box-shadow:0 10px 32px #1720330d;overflow:hidden}table{width:100%;border-collapse:collapse}th,td{padding:14px 20px;border-bottom:1px solid #edf0f5;text-align:left}th{background:#f7f9fc;color:#596579;font-size:14px}tbody tr:last-child td{border-bottom:0}tbody tr:hover td{background:#f8fbff}.empty{text-align:center;padding:48px;color:#7a8496}.number{width:76px;color:#7a8496}@media(max-width:600px){.shell{margin:18px auto}.summary{padding:20px}.facts{grid-template-columns:1fr}.value{font-size:19px}th,td{padding:12px}}
+  </style>
+</head>
+<body><main class="shell">
+  <section class="summary"><h1>上架托盘数据</h1><div class="facts">
+    <div><div class="label">上架日期</div><div id="date" class="value">—</div></div>
+    <div><div class="label">托盘号</div><div id="pallet" class="value">—</div></div>
+  </div></section>
+  <p id="message" class="message"></p>
+  <section class="card"><table><thead><tr><th class="number">序号</th><th>SKU</th><th>SN</th></tr></thead><tbody id="rows"><tr><td colspan="3" class="empty">正在加载……</td></tr></tbody></table></section>
+</main><script>
+  const params=new URLSearchParams(location.search),date=params.get('t')?.trim()||'',pallet=params.get('p')?.trim()||'';
+  const rows=document.querySelector('#rows'),message=document.querySelector('#message');
+  document.querySelector('#date').textContent=date||'未指定';document.querySelector('#pallet').textContent=pallet||'未指定';
+  const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  async function load(){
+    if(!date||!pallet){rows.innerHTML='<tr><td colspan="3" class="empty error">地址必须包含 t 和 p 参数</td></tr>';message.textContent='示例：?t=2026-09-24&p=1';message.className='message error';return}
+    try{
+      const key=sessionStorage.getItem('uploadApiKey')||'';
+      const response=await fetch('/api/shelved-pallets/all',{headers:{'X-Upload-Key':key}}),result=await response.json().catch(()=>({}));
+      if(!response.ok)throw new Error(result.message||`请求失败（HTTP ${response.status}）`);
+      const value=(row,...names)=>{for(const name of names){if(row[name]!==undefined)return row[name]}return null};
+      const dateText=value=>String(value??'').slice(0,10);
+      const data=(result.rows||[]).filter(item=>dateText(value(item,'shelving_date','shelvingDate'))===date&&String(value(item,'pallet_number','palletNumber')??'')===pallet);
+      rows.innerHTML=data.length?data.map((item,index)=>`<tr><td class="number">${index+1}</td><td>${escapeHtml(value(item,'sku','SKU'))}</td><td>${escapeHtml(value(item,'sn','SN'))}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">没有符合条件的数据</td></tr>';
+      message.textContent=`共 ${data.length} 条数据。`;
+    }catch(error){rows.innerHTML='<tr><td colspan="3" class="empty error">读取失败</td></tr>';message.textContent=error.message;message.className='message error'}
+  }load();
+</script></body></html>

@@ -10,6 +10,7 @@ namespace Scanner.WPF.Controllers
         TextBox PalletNumberTextBox { get; }
         Button PrintButton { get; }
         Button ExportButton { get; }
+        Button UploadButton { get; }
         TextBlock SummaryTextBlock { get; }
         DataGrid ResultDataGrid { get; }
     }
