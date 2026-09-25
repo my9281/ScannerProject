@@ -21,14 +21,13 @@
   async function load(){
     if(!date||!pallet){rows.innerHTML='<tr><td colspan="3" class="empty error">地址必须包含 t 和 p 参数</td></tr>';message.textContent='示例：?t=2026-09-24&p=1';message.className='message error';return}
     try{
-      const key=sessionStorage.getItem('uploadApiKey')||'';
-      const response=await fetch('/api/shelved-pallets/all',{headers:{'X-Upload-Key':key}}),result=await response.json().catch(()=>({}));
+      const key=sessionStorage.getItem('uploadApiKey')||'',query=new URLSearchParams({t:date,p:pallet});
+      const response=await fetch(`/api/shelved-pallets/view?${query}`,{headers:{'X-Upload-Key':key}}),result=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(result.message||`请求失败（HTTP ${response.status}）`);
-      const value=(row,...names)=>{for(const name of names){if(row[name]!==undefined)return row[name]}return null};
-      const dateText=value=>String(value??'').slice(0,10);
-      const data=(result.rows||[]).filter(item=>dateText(value(item,'shelving_date','shelvingDate'))===date&&String(value(item,'pallet_number','palletNumber')??'')===pallet);
-      rows.innerHTML=data.length?data.map((item,index)=>`<tr><td class="number">${index+1}</td><td>${escapeHtml(value(item,'sku','SKU'))}</td><td>${escapeHtml(value(item,'sn','SN'))}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">没有符合条件的数据</td></tr>';
+      const data=result.items||[];
+      rows.innerHTML=data.length?data.map((item,index)=>`<tr><td class="number">${index+1}</td><td>${escapeHtml(item.sku)}</td><td>${escapeHtml(item.sn)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">没有符合条件的数据</td></tr>';
       message.textContent=`共 ${data.length} 条数据。`;
     }catch(error){rows.innerHTML='<tr><td colspan="3" class="empty error">读取失败</td></tr>';message.textContent=error.message;message.className='message error'}
-  }load();
+  }
+  load();
 </script></body></html>

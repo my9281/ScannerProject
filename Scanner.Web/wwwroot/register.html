@@ -1,53 +1,5 @@
-<!doctype html>
-<html lang="zh-CN">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>注册 - Ymforever WMS</title>
-    <link rel="stylesheet" href="/account.css">
-</head>
-<body>
-    <main class="account-shell">
-        <header class="brand">
-            <div class="brand-mark" aria-hidden="true">W</div>
-            <h1>Ymforever WMS</h1>
-            <p>幽梦之星管理平台</p>
-        </header>
-        <section class="account-card">
-            <h2>创建账户</h2>
-            <p class="intro">账户暂存于服务器内存，服务重启后将清空。</p>
-            <form id="registerForm" class="form">
-                <label class="field">
-                    用户名
-                    <input id="username" name="username" autocomplete="username" required autofocus>
-                </label>
-                <label class="field">
-                    域
-                    <select id="domainId" name="domainId" required disabled>
-                        <option value="">正在加载域列表…</option>
-                    </select>
-                </label>
-                <label class="field">
-                    密码
-                    <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required>
-                </label>
-                <label class="field">
-                    确认密码
-                    <input id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" minlength="6" required>
-                </label>
-                <p id="message" class="message" role="alert"></p>
-                <button id="submit" type="submit">注册</button>
-            </form>
-            <p class="switch">已有账户？ <a href="/account/login">返回登录</a></p>
-        </section>
-        <div class="back"><a href="/">返回管理中心</a></div>
-    </main>
-    <script>
-            const form=document.querySelector('#registerForm'),button=document.querySelector('#submit'),message=document.querySelector('#message'),domainSelect=document.querySelector('#domainId');
-            function show(text,type){message.textContent=text;message.className=`message show ${type}`}
-            async function readError(response){const body=await response.json().catch(()=>({}));if(body.message)return body.message;if(body.errors)return Object.values(body.errors).flat().join(' ');return `请求失败（${response.status}）`}
-            async function loadDomains(){try{const response=await fetch('/api/account/domains');if(!response.ok)throw new Error(await readError(response));const domains=await response.json();domainSelect.innerHTML='<option value="">请选择域</option>'+domains.map(domain=>`<option value="${domain.id}">${domain.domainName}</option>`).join('');domainSelect.disabled=false}catch(error){domainSelect.innerHTML='<option value="">域列表加载失败</option>';show(error.message,'error')}}
-            form.addEventListener('submit',async event=>{event.preventDefault();const username=document.querySelector('#username').value.trim(),password=document.querySelector('#password').value,confirmPassword=document.querySelector('#confirmPassword').value;if(password!==confirmPassword){show('两次输入的密码不一致。','error');return}button.disabled=true;message.className='message';try{const response=await fetch('/api/account/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,password,confirmPassword,domainId:Number(domainSelect.value)})});if(!response.ok)throw new Error(await readError(response));show('注册成功，正在前往登录页…','success');setTimeout(()=>location.href=`/account/login?username=${encodeURIComponent(username)}`,700)}catch(error){show(error.message,'error')}finally{button.disabled=false}});loadDomains();
-    </script>
-</body>
-</html>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>用户注册</title><link rel="stylesheet" href="/account.css"></head><body><main class="card"><h1>创建账户</h1><p class="sub">注册 Web 用户</p><form id="form"><label class="field">用户名<input id="username" minlength="3" maxlength="100" autocomplete="username" required></label><label class="field">所属域<select id="domain" required><option value="">正在加载……</option></select></label><label class="field">密码<input id="password" type="password" minlength="6" autocomplete="new-password" required></label><label class="field">确认密码<input id="confirm" type="password" minlength="6" autocomplete="new-password" required></label><button id="submit" type="submit">注册</button></form><p id="message" class="message"></p><div class="links">已有账户？<a href="/login.html">登录</a></div></main><script>
+const form=document.querySelector('#form'),message=document.querySelector('#message'),submit=document.querySelector('#submit'),domain=document.querySelector('#domain');
+async function domains(){try{const response=await fetch('/api/account/domains'),data=await response.json().catch(()=>({}));if(!response.ok)throw new Error(data.message||'无法读取用户域');domain.innerHTML=data.map(x=>`<option value="${x.id}">${String(x.domainName).replace(/[&<>"']/g,'')}</option>`).join('')}catch(error){domain.innerHTML='<option value="">加载失败</option>';message.textContent=error.message;message.className='message error'}}domains();
+form.addEventListener('submit',async event=>{event.preventDefault();const password=document.querySelector('#password').value,confirmPassword=document.querySelector('#confirm').value;if(password!==confirmPassword){message.textContent='两次输入的密码不一致。';message.className='message error';return}submit.disabled=true;message.textContent='正在注册……';message.className='message';try{const response=await fetch('/api/account/register',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:document.querySelector('#username').value.trim(),password,confirmPassword,domainId:Number(domain.value)})}),result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.message||`注册失败（HTTP ${response.status}）`);sessionStorage.setItem('accountToken',result.token);location.href='/account.html'}catch(error){message.textContent=error.message;message.className='message error'}finally{submit.disabled=false}});
+</script></body></html>

@@ -14,10 +14,12 @@ public static class ServiceCollectionExtensions
         services.AddControllers(options => options.Filters.Add<ApiExceptionFilter>())
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
         services.Configure<UploadOptions>(configuration.GetSection(UploadOptions.SectionName));
+        services.Configure<FeishuRobotOptions>(configuration.GetSection(FeishuRobotOptions.SectionName));
+        services.AddHttpClient<IFeishuRobotService, FeishuRobotService>();
         services.AddScoped<ApiKeyAuthorizationFilter>();
         services.AddScoped<ApiExceptionFilter>();
         services.AddScoped<IUploadService, UploadService>();
-        services.AddSingleton<IAccountService, InMemoryAccountService>();
+        services.AddScoped<IAccountService, MySqlAccountService>();
         services.AddScannerDataAccess(configuration);
         services.AddScannerBusinessLogic();
         return services;

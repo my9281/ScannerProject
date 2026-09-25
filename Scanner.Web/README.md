@@ -74,3 +74,30 @@ dotnet publish Scanner.Web.csproj -p:PublishProfile=IIS-SelfContained
 按整天和托盘号查询时可使用简写：`GET /api/shelved-pallets?date=2026-09-24&p=1`。其中 `date` 表示该日期全天，`p` 是 `palletNumber` 的简写。
 
 简洁展示页面：`/pallet-data.html?t=2026-09-24&p=1`。页面顶部显示上架日期和托盘号，明细仅显示 SKU、SN；API 也接受 `t` 作为 `date` 的简写。
+
+## 飞书机器人推送
+
+在 Web 配置中填写 `FeishuRobot`。上架托盘批量录入成功后，后台会推送托盘号、上架日期、数量和 `/pallet-data.html?t=日期&p=托盘号` 查看地址。推送失败只写服务器日志，不会回滚或误报已经成功的数据库录入。
+
+```json
+"FeishuRobot": {
+  "Enabled": true,
+  "WebhookUrl": "https://open.feishu.cn/open-apis/bot/v2/hook/你的机器人标识",
+  "Secret": "开启签名校验时填写；未开启则留空",
+  "PublicBaseUrl": "https://wms.ymforever.com"
+}
+```
+
+测试接口：`POST /api/feishu/test`，请求体示例：`{"message":"测试推送","url":"https://wms.ymforever.com"}`。接口继续使用 `X-Upload-Key` 请求头。
+
+托盘页面提供“推送飞书”按钮，对应接口为 `POST /api/feishu/pallet?t=2026-09-24&p=1`。后台会核对该日期和托盘的数据、计算数量，再推送当前展示页地址。
+
+## 精简发布包
+
+服务器已安装 ASP.NET Core 10 Hosting Bundle 时，使用 `LeanUpload` 配置生成精简、单文件、无 PDB 的 Windows x64 发布包：
+
+```powershell
+dotnet publish Scanner.Web -c Release -p:PublishProfile=LeanUpload
+```
+
+输出目录为 `Scanner.Web/bin/Release/net10.0/publish/secure-lean-win-x64`。此配置不启用 Trim，避免 ASP.NET Core 控制器和 JSON 反射被错误裁剪；它通过复用服务器运行时和单文件打包减少体积及上传文件数量。

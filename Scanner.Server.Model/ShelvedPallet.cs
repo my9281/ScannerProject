@@ -34,3 +34,21 @@ public sealed record ShelvedPalletTableResult(
     IReadOnlyList<string> Columns,
     IReadOnlyList<IReadOnlyDictionary<string, object?>> Rows,
     int Count);
+
+public sealed record PalletDisplayItem(string Sku, string Sn);
+
+public sealed record PalletDisplayResult(
+    DateOnly ShelvingDate,
+    string PalletNumber,
+    IReadOnlyList<PalletDisplayItem> Items);
+
+public sealed record PalletDirectoryItem(
+    DateOnly ShelvingDate,
+    string PalletNumber,
+    int ItemCount,
+    int SkuCount);
+
+public sealed record PalletDirectoryResult(
+    DateOnly StartDate,
+    DateOnly EndDate,
+    IReadOnlyList<PalletDirectoryItem> Pallets);
