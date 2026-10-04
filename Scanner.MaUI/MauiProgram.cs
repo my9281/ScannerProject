@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using Scanner.DI;
 using Scanner.MaUI.Services;
 using Scanner.MaUI.ViewModels;
+using Scanner.Helpers.Services;
 
 namespace Scanner.MaUI
 {
@@ -19,7 +20,7 @@ namespace Scanner.MaUI
                 fonts.AddFont("IMing.ttf", "IMingPrint");
                 fonts.AddFont("ZiHunShouJin.ttf", "ZiHunShouJinPrint");
             });
-            builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://wms.ymforever.com/"), Timeout = TimeSpan.FromSeconds(30) });
+            builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://wms.ymforever.com/"), Timeout = TimeSpan.FromSeconds(60) });
             builder.Services.AddScannerSharedServices();
             builder.Services.AddTransient(typeof(Scanner.Controllers.IControllerFactory<,>), typeof(Controllers.MauiControllerFactory<,>));
             builder.Services.AddSingleton<Windows.IWindow, Windows.MauiWindow>();
@@ -31,6 +32,7 @@ namespace Scanner.MaUI
             builder.Services.AddSingleton<MeterModelService>();
             builder.Services.AddSingleton<SpeechService>();
             builder.Services.AddSingleton<ScanUploadService>();
+            builder.Services.AddSingleton<ShelvedPalletApiService>();
             builder.Services.AddSingleton<WorkOrderSearchService>();
             builder.Services.AddSingleton<WorkOrderRemarkApiService>();
             builder.Services.AddSingleton<CsvImportService>();

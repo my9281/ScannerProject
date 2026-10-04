@@ -3,7 +3,6 @@ using Scanner.Controllers;
 using Scanner.Helpers.Services;
 using Scanner.Models;
 using Scanner.WPF.Helpers;
-using Scanner.WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +14,13 @@ namespace Scanner.WPF.Controllers
         private readonly IOutboundInspectionWindowView _view;
 
         private readonly PrintingHelper _printing;
-        private readonly ShelvedPalletUploadService _upload;
+        private readonly ShelvedPalletApiService _upload;
         private IList<OutboundSkuSummary> _skuItems = new List<OutboundSkuSummary>();
         private string _textPath;
         private IList<OutboundInspectionRecord> _records = new List<OutboundInspectionRecord>();
 
         private readonly ChecklistDataCache _baseData;
-        public OutboundInspectionWindowController(IOutboundInspectionWindowView view, ChecklistDataCache baseData, PrintingHelper printing, ShelvedPalletUploadService upload)
+        public OutboundInspectionWindowController(IOutboundInspectionWindowView view, ChecklistDataCache baseData, PrintingHelper printing, ShelvedPalletApiService upload)
         {
             _view = view;
 
@@ -102,7 +101,7 @@ namespace Scanner.WPF.Controllers
             _view.UploadButton.IsEnabled = false;
             try
             {
-                ShelvedPalletUploadResult result = await _upload.UploadAsync(palletNumber, _records);
+                ShelvedPalletUploadResult result = await _upload.UploadAsync(palletNumber, _records, System.Configuration.ConfigurationManager.AppSettings["UploadApiKey"]);
                 MessageBox.Show(_view.OwnerWindow,
                     string.Format(UiText.Get("UploadShelvedPalletSuccess"), result.InsertedCount, result.PalletNumber, result.ShelvedAt),
                     UiText.Get("UploadCompleteTitle"), MessageBoxButton.OK, MessageBoxImage.Information);

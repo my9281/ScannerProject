@@ -1,0 +1,48 @@
+@page "/detection-scan"
+@implements IAsyncDisposable
+@inject Scanner.AndroidTester.Services.ScanSession Session
+@inject IJSRuntime JS
+<section class="scan-page">
+    <h1>检测扫描</h1>
+    <p>预扫描列表共 @Session.PreScans.Count 条。连续重复播放短提示音，列表命中播放报警音。</p>
+    <form @onsubmit="Scan" @onsubmit:preventDefault>
+        <label for="detection-input">扫描内容</label>
+        <input id="detection-input" class="form-control scan-input" @ref="_input" @bind="_value" @bind:event="oninput" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" />
+        <button class="btn btn-primary" type="submit">检测</button>
+    </form>
+    <p>上一次扫描：<strong class="scan-value">@(Session.LastScan ?? "暂无")</strong></p>
+    <div role="status" class="scan-result @(_alert ? "scan-alert" : "")">@_message</div>
+    @if (!string.IsNullOrEmpty(_audioError)) { <p role="alert">@_audioError</p> }
+    <footer class="scan-footer"><a class="btn btn-primary" href="/">完成</a></footer>
+</section>
+@code {
+    private string _value = "";
+    private string _message = "等待扫描。";
+    private string _audioError = "";
+    private bool _alert;
+    private ElementReference _input;
+    private IJSObjectReference? _audio;
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _input.FocusAsync(); }
+    private async Task Scan()
+    {
+        // Compare and update before awaiting, keeping rapid scans in order.
+        var result = Session.Detect(_value);
+        _value = "";
+        _alert = result is not null && (result.SameAsLast || result.InPreScanList);
+        _message = result is null ? "请先扫描或输入内容。" : !_alert ? "扫描完成，未发现重复或列表匹配。" :
+            (result.SameAsLast ? "相同：与上一次扫描一致。 " : "") + (result.InPreScanList ? "报警：命中预扫描列表。" : "");
+        await _input.FocusAsync();
+        if (result is null || !(result.SameAsLast || result.InPreScanList)) return;
+        try
+        {
+            _audio ??= await JS.InvokeAsync<IJSObjectReference>("import", "./scan-audio.js");
+            await _audio.InvokeVoidAsync("play", result.SameAsLast, result.InPreScanList);
+            _audioError = "";
+        }
+        catch (JSException) { _audioError = "提示音播放失败，请检查设备媒体音量；检测结果已显示。"; }
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (_audio is not null) { try { await _audio.DisposeAsync(); } catch (JSDisconnectedException) { } }
+    }
+}

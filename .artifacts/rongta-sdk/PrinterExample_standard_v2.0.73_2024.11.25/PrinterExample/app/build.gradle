@@ -1,0 +1,55 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 31
+    defaultConfig {
+        applicationId "com.printer.example"
+        minSdkVersion 19
+        targetSdkVersion 31
+        versionCode 1
+        versionName "2.0.73"
+        //73:增加固件升级
+        //72:ESC去掉FontC，fontD
+        //71:小票添加钱箱状态查询
+        //70:ESC指令增加NV图片定义，打印
+        //69:安卓13 USB权限适配
+        //68:编译版本更改为33,增加安卓12蓝牙权限适配
+        //67:增加图片的宽、设置
+        //66:com口国际化
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+//            minifyEnabled false // 是否混淆
+//            shrinkResources true // 是否去除无效的资源文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //采用动态替换字符串的方式生成不同的release.apk
+            android.applicationVariants.all { variant ->
+                variant.outputs.all {
+                    def timeStamp = new Date().format('yyyy.MM.dd_HHmm');
+                    outputFileName = "PrinterExample_standard_v${defaultConfig.versionName}_${timeStamp}.apk"
+                }
+            }
+        }
+    }
+
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['assets', 'src/main/assets', 'src/main/assets/']
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation files('libs\\printer_library.jar')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    implementation 'com.android.support:appcompat-v7:+'
+    testImplementation 'junit:junit:4.12'
+}

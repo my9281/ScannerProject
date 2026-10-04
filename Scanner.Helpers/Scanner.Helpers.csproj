@@ -9,5 +9,6 @@
     <Reference Include="Microsoft.VisualBasic" Condition="'$(TargetFramework)' == 'net472'" />
     <Reference Include="System.IO.Compression" Condition="'$(TargetFramework)' == 'net472'" />
     <Reference Include="System.IO.Compression.FileSystem" Condition="'$(TargetFramework)' == 'net472'" />
+    <Reference Include="System.Net.Http" Condition="'$(TargetFramework)' == 'net472'" />
   </ItemGroup>
 </Project>

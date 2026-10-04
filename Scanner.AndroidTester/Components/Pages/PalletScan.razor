@@ -1,0 +1,58 @@
+@page "/pallet-scan"
+@inject Scanner.AndroidTester.Services.PalletScanSession Session
+@inject Scanner.AndroidTester.Services.PalletScanApiService Api
+
+<section class="scan-page">
+    <h1>托盘扫描</h1>
+    <label for="pallet-number">托盘号（1–10）</label>
+    <div class="pallet-stepper">
+        <input id="pallet-number" type="number" min="1" max="10" step="1" @bind="Session.PalletNumber" aria-label="托盘号" />
+        <div>
+            <button type="button" aria-label="增加托盘号" disabled="@(Session.PalletNumber >= 10)" @onclick="Increase">▲</button>
+            <button type="button" aria-label="减少托盘号" disabled="@(Session.PalletNumber <= 1)" @onclick="Decrease">▼</button>
+        </div>
+    </div>
+    <form @onsubmit="Scan" @onsubmit:preventDefault>
+        <label for="pallet-sn">扫描 SN（回车记录）</label>
+        <input id="pallet-sn" class="form-control scan-input" @ref="_input" @bind="_sn" @bind:event="oninput" autocomplete="off" autocapitalize="off" spellcheck="false" />
+        <button type="submit" class="btn btn-primary">记录</button>
+    </form>
+    <details><summary>上传设置</summary>
+        <label for="upload-key">上传密钥（服务器启用时填写）</label>
+        <input id="upload-key" class="form-control" type="password" @bind="Session.ApiKey" autocomplete="off" />
+        <p>服务器：https://wms.ymforever.com</p>
+    </details>
+    <p role="status">@_message</p>
+    <p>待上传 @Session.Pending.Count 条。上传成功后移出列表；退出应用将清空未上传数据。</p>
+    <div class="scan-list">
+        <ol>@foreach (var item in Session.Pending.Reverse()) {
+            <li @key="item.ScanId"><strong>@item.Sn</strong><br />托盘 @item.PalletNumber · @item.ScannedAt.ToString("yyyy-MM-dd HH:mm:ss")</li>
+        }</ol>
+    </div>
+    <footer class="scan-footer">
+        <button class="btn btn-primary" disabled="@(Session.IsUploading || Session.Pending.Count == 0)" @onclick="Upload">@(Session.IsUploading ? "上传中…" : "上传")</button>
+        <a href="/" class="btn btn-link">返回主界面</a>
+    </footer>
+</section>
+@code {
+    private string _sn = "";
+    private string _message = "请选择托盘号并开始扫描。";
+    private ElementReference _input;
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _input.FocusAsync(); }
+    private async Task Increase() { Session.PalletNumber = Math.Clamp(Session.PalletNumber + 1, 1, 10); await _input.FocusAsync(); }
+    private async Task Decrease() { Session.PalletNumber = Math.Clamp(Session.PalletNumber - 1, 1, 10); await _input.FocusAsync(); }
+    private async Task Scan()
+    {
+        try { Session.Add(_sn, DateTimeOffset.Now); _sn = ""; _message = "已记录。"; }
+        catch (ArgumentException ex) { _message = ex.Message; }
+        await _input.FocusAsync();
+    }
+    private async Task Upload()
+    {
+        _message = "正在上传…";
+        try { int count = await Session.UploadAsync(Api); _message = $"成功上传 {count} 条。"; }
+        catch (TaskCanceledException) { _message = "上传超时，未确认的记录已保留，请重试。"; }
+        catch (HttpRequestException) { _message = "无法连接服务器，未确认的记录已保留，请检查网络。"; }
+        catch (Exception ex) { _message = "上传失败：" + ex.Message; }
+    }
+}

@@ -2,9 +2,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Scanner.Controllers;
 using Scanner.DI;
 using Scanner.Helpers;
+using Scanner.Helpers.Services;
 using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
 using Scanner.WPF.ViewModels;
+using System;
+using System.Configuration;
+using System.Net.Http;
 namespace Scanner.WPF.Controllers
 {
     internal static class DesktopComposition
@@ -26,7 +30,12 @@ namespace Scanner.WPF.Controllers
             services.AddTransient<PrintingHelper>();
             services.AddTransient<ScanService>();
             services.AddTransient<ScanUploadService>();
-            services.AddTransient<ShelvedPalletUploadService>();
+            services.AddSingleton(provider =>
+            {
+                string baseUrl = ConfigurationManager.AppSettings["UploadBaseUrl"] ?? "https://wms.ymforever.com/";
+                if (!baseUrl.EndsWith("/", StringComparison.Ordinal)) baseUrl += "/";
+                return new ShelvedPalletApiService(new HttpClient { BaseAddress = new Uri(baseUrl), Timeout = TimeSpan.FromSeconds(60) });
+            });
             services.AddTransient<MeterModelService>();
             services.AddTransient<SpeechService>();
             services.AddTransient<WorkOrderSearchService>();

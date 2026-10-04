@@ -1,0 +1,11 @@
+﻿@page "/"
+
+@inject Scanner.AndroidTester.Services.ScanSession Session
+<section class="scan-page">
+    <h1>扫描检测</h1>
+    <p>先预扫描保存条码，再进入检测扫描。</p>
+    <a class="scan-card" href="pre-scan"><strong>1. 预扫描</strong><span>扫描并存入列表 · 已记录 @Session.PreScans.Count 条</span></a>
+    <a class="scan-card" href="detection-scan"><strong>2. 检测扫描</strong><span>检查连续重复和预扫描列表匹配</span></a>
+    <a class="scan-card" href="pallet-scan"><strong>3. 托盘扫描</strong><span>选择托盘号，记录 SN 并上传</span></a>
+    <p>数据仅保存在本次应用运行的内存中。</p>
+</section>

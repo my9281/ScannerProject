@@ -66,6 +66,9 @@ public sealed class ShelvedPalletRepository(IMySqlConnectionFactory connectionFa
                 command.Parameters.Add("@palletNumber", MySqlDbType.VarChar, 100).Value = palletNumber;
                 command.Parameters.Add("@shelvingTime", MySqlDbType.Time).Value = shelvedAt.TimeOfDay;
                 await command.ExecuteNonQueryAsync(cancellationToken);
+                // Use the same connection and transaction: shelving and removal must commit together.
+                command.CommandText = "DELETE FROM `tester_pallet_scans` WHERE `sn` = @sn;";
+                await command.ExecuteNonQueryAsync(cancellationToken);
                 created.Add(new ShelvedPalletRecord(uuid, item.Number, item.Sn, item.Sku, item.Type, item.ProcessingMethod,
                     processingTime, DateOnly.FromDateTime(shelvedAt), palletNumber, TimeOnly.FromDateTime(shelvedAt)));
             }

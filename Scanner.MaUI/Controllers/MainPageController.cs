@@ -1,6 +1,7 @@
 using Scanner.Controllers;
 using Scanner.MaUI.ViewModels;
 using Scanner.MaUI.Views;
+using Scanner.MaUI.Services;
 namespace Scanner.MaUI.Controllers;
 
 public sealed class MainPageController : ControllerBase
@@ -13,8 +14,9 @@ public sealed class MainPageController : ControllerBase
 
     private async Task<string?> SelectModelAsync(IReadOnlyList<string> models)
     {
-        string? selected = await _window.SelectActionAsync("选择电表型号", "取消", models.ToArray());
-        return selected == "取消" ? null : selected;
+        string cancel = LocalizationService.Current.Get("Cancel");
+        string? selected = await _window.SelectActionAsync(LocalizationService.Current.Get("ModelSelectionTitle"), cancel, models.ToArray());
+        return selected == cancel ? null : selected;
     }
     public async Task AppearingAsync()
     {
@@ -32,7 +34,7 @@ public sealed class MainPageController : ControllerBase
     public async void OperationsButton_Clicked(object? sender, EventArgs e)
     {
         try { await _window.OpenOperationsAsync(); }
-        catch (Exception ex) { await _window.ShowAlertAsync("打开失败", ex.Message, "确定"); }
+        catch (Exception ex) { await _window.ShowAlertAsync(LocalizationService.Current.Get("OpenFailed"), ex.Message, LocalizationService.Current.Get("Confirm")); }
     }
 
     private bool _attached;

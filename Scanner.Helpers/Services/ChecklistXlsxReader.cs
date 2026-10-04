@@ -14,6 +14,11 @@ namespace Scanner.Helpers.Services
         public static IList<InboundChecklistRecord> Read(string path)
         {
             using (FileStream sourceStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                return Read(sourceStream);
+        }
+
+        internal static IList<InboundChecklistRecord> Read(Stream sourceStream)
+        {
             using (ZipArchive archive = new ZipArchive(sourceStream, ZipArchiveMode.Read, false))
             {
                 IList<string> sharedStrings = ReadSharedStrings(archive);

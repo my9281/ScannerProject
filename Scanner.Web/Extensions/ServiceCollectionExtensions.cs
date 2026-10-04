@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDatabaseHealthRepository, DatabaseHealthRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IShelvedPalletRepository, ShelvedPalletRepository>();
+        services.AddScoped<IPalletScanRepository, PalletScanRepository>();
         return services;
     }
 
@@ -41,6 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IShelvedPalletService, ShelvedPalletService>();
+        services.AddScoped<IPalletScanService, PalletScanService>();
         return services;
     }
 }

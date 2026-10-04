@@ -115,6 +115,16 @@
                     </GroupBox >
                     <GroupBox Header="出入库管理">
                         <WrapPanel  Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenMonthlyReport_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE9D2;" Style="{StaticResource FeatureIcon}"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="月报导出" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="按处理年月导出完整明细及分类表" Style="{StaticResource FeatureDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
                             <Button x:Name="GlobalBaseButton" Style="{StaticResource FeatureCard}" Click="ImportGlobalBase_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
@@ -157,6 +167,16 @@
                         </WrapPanel>
                     </GroupBox>
 
+                    <GroupBox Header="数据整理">
+                        <WrapPanel Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenRegistrationRepair_Click">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="登记表修复" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="修复收件日期，规范亚马逊与 eBay 登记数据并导出" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>
                     <GroupBox Header="其他功能">
                         <WrapPanel  Orientation="Horizontal" ItemWidth="350">
                             <Button Style="{StaticResource FeatureCard}" Click="CreateDailyReportButton_Click">

@@ -8,6 +8,8 @@ public interface IOperationsPageView
     Label InboundStatusLabel { get; }
     Label OutboundTextLabel { get; }
     Label OutboundStatusLabel { get; }
+    Entry PalletNumberEntry { get; }
+    Button UploadPalletButton { get; }
     Label FeeTemplateLabel { get; }
     Label FeeStatusLabel { get; }
 }

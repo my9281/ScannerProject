@@ -1,0 +1,1780 @@
+public class com.rt.printerlibrary.cmd.ZplCmd extends com.rt.printerlibrary.cmd.Cmd {
+  private static final byte[] a;
+
+  private static final byte[] b;
+
+  private static final byte[] c;
+
+  private static final byte[] d;
+
+  private static final byte[] e;
+
+  private java.util.ArrayList<java.lang.Byte> f;
+
+  private java.util.ArrayList<java.lang.Byte> g;
+
+  private java.util.ArrayList<java.lang.Byte> h;
+
+  private java.lang.StringBuffer i;
+
+  public com.rt.printerlibrary.cmd.ZplCmd();
+    Code:
+       0: aload_0
+       1: invokespecial #99                 // Method com/rt/printerlibrary/cmd/Cmd."<init>":()V
+       4: aload_0
+       5: new           #75                 // class java/util/ArrayList
+       8: dup
+       9: invokespecial #164                // Method java/util/ArrayList."<init>":()V
+      12: putfield      #83                 // Field f:Ljava/util/ArrayList;
+      15: aload_0
+      16: new           #75                 // class java/util/ArrayList
+      19: dup
+      20: invokespecial #164                // Method java/util/ArrayList."<init>":()V
+      23: putfield      #84                 // Field g:Ljava/util/ArrayList;
+      26: aload_0
+      27: new           #75                 // class java/util/ArrayList
+      30: dup
+      31: invokespecial #164                // Method java/util/ArrayList."<init>":()V
+      34: putfield      #85                 // Field h:Ljava/util/ArrayList;
+      37: aload_0
+      38: new           #73                 // class java/lang/StringBuffer
+      41: dup
+      42: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+      45: putfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      48: return
+
+  public byte[] getSelfTestCmd();
+    Code:
+       0: getstatic     #78                 // Field a:[B
+       3: areturn
+
+  public byte[] getHeaderCmd();
+    Code:
+       0: aload_0
+       1: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+       4: iconst_0
+       5: aload_0
+       6: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+       9: invokevirtual #158                // Method java/lang/StringBuffer.length:()I
+      12: invokevirtual #157                // Method java/lang/StringBuffer.delete:(II)Ljava/lang/StringBuffer;
+      15: pop
+      16: aload_0
+      17: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      20: ldc           #46                 // String ^XA\n
+      22: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      25: pop
+      26: getstatic     #79                 // Field b:[B
+      29: areturn
+
+  public byte[] getCpclHeaderCmd(int, int, int, int);
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  public byte[] getPrintCopies(int);
+    Code:
+       0: iload_1
+       1: iconst_1
+       2: if_icmpge     7
+       5: iconst_1
+       6: istore_1
+       7: aload_0
+       8: new           #74                 // class java/lang/StringBuilder
+      11: dup
+      12: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      15: iload_1
+      16: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      19: ldc           #2                  // String
+      21: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      24: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      27: invokespecial #103                // Method a:(Ljava/lang/String;)[B
+      30: areturn
+
+  public byte[] getEndCmd();
+    Code:
+       0: ldc           #47                 // String ^XZ\r\n
+       2: astore_1
+       3: aload_1
+       4: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+       7: astore_2
+       8: aload_0
+       9: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      12: aload_1
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload_2
+      18: areturn
+
+  public byte[] getLFCmd();
+    Code:
+       0: getstatic     #80                 // Field c:[B
+       3: areturn
+
+  public byte[] getCRCmd();
+    Code:
+       0: getstatic     #81                 // Field d:[B
+       3: areturn
+
+  public byte[] getLFCRCmd();
+    Code:
+       0: getstatic     #82                 // Field e:[B
+       3: areturn
+
+  public byte[] getCommonSettingCmd(com.rt.printerlibrary.setting.CommonSetting);
+    Code:
+       0: aload_0
+       1: getfield      #84                 // Field g:Ljava/util/ArrayList;
+       4: invokevirtual #165                // Method java/util/ArrayList.clear:()V
+       7: aload_1
+       8: invokevirtual #133                // Method com/rt/printerlibrary/setting/CommonSetting.getLableSizeBean:()Lcom/rt/printerlibrary/bean/LableSizeBean;
+      11: astore_2
+      12: aload_2
+      13: ifnull        71
+      16: aload_0
+      17: new           #74                 // class java/lang/StringBuilder
+      20: dup
+      21: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      24: aload_2
+      25: invokevirtual #98                 // Method com/rt/printerlibrary/bean/LableSizeBean.getLabelWidthInMM:()I
+      28: bipush        8
+      30: imul
+      31: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      34: ldc           #2                  // String
+      36: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      39: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      42: new           #74                 // class java/lang/StringBuilder
+      45: dup
+      46: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      49: aload_2
+      50: invokevirtual #97                 // Method com/rt/printerlibrary/bean/LableSizeBean.getLabelHeightInMM:()I
+      53: bipush        8
+      55: imul
+      56: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      59: ldc           #2                  // String
+      61: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      64: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      67: invokespecial #104                // Method a:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      70: pop
+      71: aload_1
+      72: invokevirtual #134                // Method com/rt/printerlibrary/setting/CommonSetting.getPrintDirection:()Lcom/rt/printerlibrary/enumerate/PrintDirection;
+      75: astore_3
+      76: aload_3
+      77: ifnull        86
+      80: aload_0
+      81: aload_3
+      82: invokespecial #101                // Method a:(Lcom/rt/printerlibrary/enumerate/PrintDirection;)Ljava/lang/String;
+      85: pop
+      86: aload_0
+      87: aload_0
+      88: getfield      #84                 // Field g:Ljava/util/ArrayList;
+      91: invokevirtual #117                // Method listToArray:(Ljava/util/ArrayList;)[B
+      94: areturn
+
+  public byte[] getTextCmd(com.rt.printerlibrary.setting.TextSetting, java.lang.String, java.lang.String) throws java.io.UnsupportedEncodingException;
+    Code:
+       0: aload_0
+       1: getfield      #83                 // Field f:Ljava/util/ArrayList;
+       4: invokevirtual #165                // Method java/util/ArrayList.clear:()V
+       7: aload_0
+       8: aload_1
+       9: aload_2
+      10: aload_3
+      11: invokespecial #102                // Method a:(Lcom/rt/printerlibrary/setting/TextSetting;Ljava/lang/String;Ljava/lang/String;)[B
+      14: astore        4
+      16: aload         4
+      18: areturn
+
+  public byte[] getTextCmd(com.rt.printerlibrary.setting.TextSetting, java.lang.String) throws java.io.UnsupportedEncodingException;
+    Code:
+       0: aload_0
+       1: aload_1
+       2: aload_2
+       3: aload_0
+       4: invokevirtual #115                // Method getChartsetName:()Ljava/lang/String;
+       7: invokespecial #102                // Method a:(Lcom/rt/printerlibrary/setting/TextSetting;Ljava/lang/String;Ljava/lang/String;)[B
+      10: astore_3
+      11: aload_3
+      12: areturn
+
+  public byte[] getBitmapCmd(com.rt.printerlibrary.setting.BitmapSetting, android.graphics.Bitmap);
+    Code:
+       0: aload_1
+       1: invokevirtual #132                // Method com/rt/printerlibrary/setting/BitmapSetting.getPrintPostion:()Lcom/rt/printerlibrary/bean/Position;
+       4: astore_3
+       5: aload_3
+       6: getfield      #76                 // Field com/rt/printerlibrary/bean/Position.x:I
+       9: istore        4
+      11: aload_3
+      12: getfield      #77                 // Field com/rt/printerlibrary/bean/Position.y:I
+      15: istore        5
+      17: aload_1
+      18: invokevirtual #130                // Method com/rt/printerlibrary/setting/BitmapSetting.getBimtapLimitWidth:()I
+      21: istore        6
+      23: aload_1
+      24: invokevirtual #131                // Method com/rt/printerlibrary/setting/BitmapSetting.getBmpDpi:()I
+      27: bipush        12
+      29: if_icmpne     45
+      32: aload_2
+      33: ldc           #1                  // float 1.5f
+      35: ldc           #1                  // float 1.5f
+      37: invokestatic  #142                // Method com/rt/printerlibrary/utils/BitmapConvertUtil.scale:(Landroid/graphics/Bitmap;FF)Landroid/graphics/Bitmap;
+      40: astore        7
+      42: goto          68
+      45: aload_2
+      46: invokevirtual #95                 // Method android/graphics/Bitmap.getWidth:()I
+      49: iload         6
+      51: if_icmpgt     60
+      54: aload_2
+      55: astore        7
+      57: goto          68
+      60: aload_2
+      61: iload         6
+      63: invokestatic  #141                // Method com/rt/printerlibrary/utils/BitmapConvertUtil.resizeBitmap:(Landroid/graphics/Bitmap;I)Landroid/graphics/Bitmap;
+      66: astore        7
+      68: aload_0
+      69: iload         4
+      71: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+      74: iload         5
+      76: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+      79: aload         7
+      81: invokespecial #105                // Method a:(Ljava/lang/String;Ljava/lang/String;Landroid/graphics/Bitmap;)Ljava/lang/String;
+      84: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+      87: astore        8
+      89: aload         8
+      91: areturn
+
+  public byte[] getBarcodeCmd(com.rt.printerlibrary.enumerate.BarcodeType, com.rt.printerlibrary.setting.BarcodeSetting, java.lang.String) throws com.rt.printerlibrary.exception.SdkException;
+    Code:
+       0: aload_0
+       1: getfield      #85                 // Field h:Ljava/util/ArrayList;
+       4: invokevirtual #165                // Method java/util/ArrayList.clear:()V
+       7: aload_2
+       8: invokevirtual #126                // Method com/rt/printerlibrary/setting/BarcodeSetting.getPosition:()Lcom/rt/printerlibrary/bean/Position;
+      11: getfield      #76                 // Field com/rt/printerlibrary/bean/Position.x:I
+      14: istore        4
+      16: aload_2
+      17: invokevirtual #126                // Method com/rt/printerlibrary/setting/BarcodeSetting.getPosition:()Lcom/rt/printerlibrary/bean/Position;
+      20: getfield      #77                 // Field com/rt/printerlibrary/bean/Position.y:I
+      23: istore        5
+      25: aload_2
+      26: invokevirtual #125                // Method com/rt/printerlibrary/setting/BarcodeSetting.getHeightInDot:()I
+      29: istore        6
+      31: aload_0
+      32: aload_3
+      33: aload_1
+      34: invokevirtual #116                // Method getVerifiedStr:(Ljava/lang/String;Lcom/rt/printerlibrary/enumerate/BarcodeType;)Ljava/lang/String;
+      37: astore_3
+      38: ldc           #23                 // String TAG
+      40: aload_3
+      41: invokestatic  #96                 // Method android/util/Log.e:(Ljava/lang/String;Ljava/lang/String;)I
+      44: pop
+      45: ldc           #24                 // String Y
+      47: astore        7
+      49: aload_2
+      50: invokevirtual #124                // Method com/rt/printerlibrary/setting/BarcodeSetting.getBarcodeStringPosition:()Lcom/rt/printerlibrary/enumerate/BarcodeStringPosition;
+      53: astore        8
+      55: getstatic     #87                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.a:[I
+      58: aload         8
+      60: invokevirtual #118                // Method com/rt/printerlibrary/enumerate/BarcodeStringPosition.ordinal:()I
+      63: iaload
+      64: lookupswitch  { // 1
+                     1: 84
+               default: 91
+          }
+      84: ldc           #20                 // String N
+      86: astore        7
+      88: goto          95
+      91: ldc           #24                 // String Y
+      93: astore        7
+      95: getstatic     #88                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.b:[I
+      98: aload_2
+      99: invokevirtual #127                // Method com/rt/printerlibrary/setting/BarcodeSetting.getPrintRotation:()Lcom/rt/printerlibrary/enumerate/PrintRotation;
+     102: invokevirtual #121                // Method com/rt/printerlibrary/enumerate/PrintRotation.ordinal:()I
+     105: iaload
+     106: tableswitch   { // 1 to 4
+                     1: 136
+                     2: 143
+                     3: 150
+                     4: 157
+               default: 164
+          }
+     136: ldc           #20                 // String N
+     138: astore        9
+     140: goto          168
+     143: ldc           #22                 // String R
+     145: astore        9
+     147: goto          168
+     150: ldc           #17                 // String I
+     152: astore        9
+     154: goto          168
+     157: ldc           #15                 // String B
+     159: astore        9
+     161: goto          168
+     164: ldc           #20                 // String N
+     166: astore        9
+     168: aload_1
+     169: getstatic     #92                 // Field com/rt/printerlibrary/enumerate/BarcodeType.QR_CODE:Lcom/rt/printerlibrary/enumerate/BarcodeType;
+     172: if_acmpne     324
+     175: ldc           #21                 // String Q
+     177: astore        10
+     179: getstatic     #89                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.c:[I
+     182: aload_2
+     183: invokevirtual #129                // Method com/rt/printerlibrary/setting/BarcodeSetting.getQrcodeEccLevel:()Lcom/rt/printerlibrary/enumerate/QrcodeEccLevel;
+     186: invokevirtual #122                // Method com/rt/printerlibrary/enumerate/QrcodeEccLevel.ordinal:()I
+     189: iaload
+     190: tableswitch   { // 1 to 4
+                     1: 220
+                     2: 227
+                     3: 234
+                     4: 241
+               default: 248
+          }
+     220: ldc           #18                 // String L
+     222: astore        10
+     224: goto          252
+     227: ldc           #19                 // String M
+     229: astore        10
+     231: goto          252
+     234: ldc           #21                 // String Q
+     236: astore        10
+     238: goto          252
+     241: ldc           #16                 // String H
+     243: astore        10
+     245: goto          252
+     248: ldc           #21                 // String Q
+     250: astore        10
+     252: aload_2
+     253: invokevirtual #128                // Method com/rt/printerlibrary/setting/BarcodeSetting.getQrcodeDotSize:()I
+     256: istore        11
+     258: iload         11
+     260: iflt          270
+     263: iload         11
+     265: bipush        10
+     267: if_icmple     274
+     270: bipush        7
+     272: istore        11
+     274: aload_0
+     275: iload         4
+     277: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     280: iload         5
+     282: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     285: iload         11
+     287: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     290: aload_3
+     291: aload         10
+     293: invokespecial #106                // Method a:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     296: astore        12
+     298: aload_0
+     299: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+     302: aload         12
+     304: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     307: pop
+     308: aload_0
+     309: aload         12
+     311: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+     314: aload_0
+     315: getfield      #85                 // Field h:Ljava/util/ArrayList;
+     318: invokevirtual #109                // Method arrayAddToList:([BLjava/util/ArrayList;)V
+     321: goto          615
+     324: ldc           #2                  // String
+     326: astore        10
+     328: getstatic     #90                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.d:[I
+     331: aload_1
+     332: invokevirtual #119                // Method com/rt/printerlibrary/enumerate/BarcodeType.ordinal:()I
+     335: iaload
+     336: tableswitch   { // 1 to 7
+                     1: 380
+                     2: 409
+                     3: 438
+                     4: 467
+                     5: 496
+                     6: 525
+                     7: 566
+               default: 592
+          }
+     380: aload_0
+     381: iload         4
+     383: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     386: iload         5
+     388: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     391: aload_3
+     392: aload         9
+     394: iload         6
+     396: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     399: aload         7
+     401: invokespecial #113                // Method e:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     404: astore        10
+     406: goto          592
+     409: aload_0
+     410: iload         4
+     412: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     415: iload         5
+     417: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     420: aload_3
+     421: aload         9
+     423: iload         6
+     425: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     428: aload         7
+     430: invokespecial #114                // Method f:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     433: astore        10
+     435: goto          592
+     438: aload_0
+     439: iload         4
+     441: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     444: iload         5
+     446: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     449: aload_3
+     450: aload         9
+     452: iload         6
+     454: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     457: aload         7
+     459: invokespecial #112                // Method d:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     462: astore        10
+     464: goto          592
+     467: aload_0
+     468: iload         4
+     470: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     473: iload         5
+     475: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     478: aload_3
+     479: aload         9
+     481: iload         6
+     483: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     486: aload         7
+     488: invokespecial #111                // Method c:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     491: astore        10
+     493: goto          592
+     496: aload_0
+     497: iload         4
+     499: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     502: iload         5
+     504: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     507: aload_3
+     508: aload         9
+     510: iload         6
+     512: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     515: aload         7
+     517: invokespecial #110                // Method b:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     520: astore        10
+     522: goto          592
+     525: ldc           #14                 // String A
+     527: astore        11
+     529: ldc           #14                 // String A
+     531: astore        12
+     533: aload_0
+     534: iload         4
+     536: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     539: iload         5
+     541: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     544: aload_3
+     545: aload         9
+     547: aload         11
+     549: aload         12
+     551: iload         6
+     553: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     556: aload         7
+     558: invokespecial #108                // Method a:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     561: astore        10
+     563: goto          592
+     566: aload_0
+     567: iload         4
+     569: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     572: iload         5
+     574: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     577: aload_3
+     578: aload         9
+     580: iload         6
+     582: invokestatic  #152                // Method java/lang/String.valueOf:(I)Ljava/lang/String;
+     585: aload         7
+     587: invokespecial #107                // Method a:(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+     590: astore        10
+     592: aload_0
+     593: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+     596: aload         10
+     598: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     601: pop
+     602: aload_0
+     603: aload         10
+     605: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+     608: aload_0
+     609: getfield      #85                 // Field h:Ljava/util/ArrayList;
+     612: invokevirtual #109                // Method arrayAddToList:([BLjava/util/ArrayList;)V
+     615: aload_0
+     616: aload_0
+     617: getfield      #85                 // Field h:Ljava/util/ArrayList;
+     620: invokevirtual #117                // Method listToArray:(Ljava/util/ArrayList;)[B
+     623: areturn
+
+  public byte[] getBeepCmd();
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  public byte[] getAllCutCmd();
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  public byte[] getHalfCutCmd();
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  public byte[] getDrawLine(int, int, int, int, int);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: ldc           #2                  // String
+       6: invokespecial #154                // Method java/lang/StringBuffer."<init>":(Ljava/lang/String;)V
+       9: astore        6
+      11: aload         6
+      13: new           #74                 // class java/lang/StringBuilder
+      16: dup
+      17: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      20: ldc           #34                 // String ^FO
+      22: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: iload_1
+      26: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      29: ldc           #11                 // String ,
+      31: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: iload_2
+      35: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      38: ldc           #3                  // String \n
+      40: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      46: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      49: pop
+      50: iload_1
+      51: iload_3
+      52: isub
+      53: invokestatic  #148                // Method java/lang/Math.abs:(I)I
+      56: istore        7
+      58: iload_2
+      59: iload         4
+      61: isub
+      62: invokestatic  #148                // Method java/lang/Math.abs:(I)I
+      65: istore        8
+      67: iload_1
+      68: iload_3
+      69: if_icmpne     76
+      72: iload         5
+      74: istore        7
+      76: iload_2
+      77: iload         4
+      79: if_icmpne     86
+      82: iload         5
+      84: istore        8
+      86: aload         6
+      88: aload_0
+      89: iload         7
+      91: iload         8
+      93: iload         5
+      95: invokespecial #100                // Method a:(III)Ljava/lang/String;
+      98: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     101: pop
+     102: aload         6
+     104: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     107: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+     110: areturn
+
+  public byte[] getDrawBox(int, int, int, int, int);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: ldc           #2                  // String
+       6: invokespecial #154                // Method java/lang/StringBuffer."<init>":(Ljava/lang/String;)V
+       9: astore        6
+      11: aload         6
+      13: new           #74                 // class java/lang/StringBuilder
+      16: dup
+      17: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      20: ldc           #34                 // String ^FO
+      22: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: iload_1
+      26: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      29: ldc           #11                 // String ,
+      31: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: iload_2
+      35: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      38: ldc           #3                  // String \n
+      40: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      43: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      46: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      49: pop
+      50: iload_1
+      51: iload_3
+      52: isub
+      53: invokestatic  #148                // Method java/lang/Math.abs:(I)I
+      56: istore        7
+      58: iload_2
+      59: iload         4
+      61: isub
+      62: invokestatic  #148                // Method java/lang/Math.abs:(I)I
+      65: istore        8
+      67: aload         6
+      69: aload_0
+      70: iload         7
+      72: iload         8
+      74: iload         5
+      76: invokespecial #100                // Method a:(III)Ljava/lang/String;
+      79: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      82: pop
+      83: aload         6
+      85: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+      88: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+      91: areturn
+
+  public byte[] getOpenMoneyBoxCmd();
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  private byte[] a(com.rt.printerlibrary.setting.TextSetting, java.lang.String, java.lang.String) throws java.io.UnsupportedEncodingException;
+    Code:
+       0: aload_1
+       1: ifnonnull     12
+       4: new           #65                 // class com/rt/printerlibrary/setting/TextSetting
+       7: dup
+       8: invokespecial #135                // Method com/rt/printerlibrary/setting/TextSetting."<init>":()V
+      11: astore_1
+      12: new           #74                 // class java/lang/StringBuilder
+      15: dup
+      16: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      19: aload_1
+      20: invokevirtual #137                // Method com/rt/printerlibrary/setting/TextSetting.getTxtPrintPosition:()Lcom/rt/printerlibrary/bean/Position;
+      23: getfield      #76                 // Field com/rt/printerlibrary/bean/Position.x:I
+      26: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      29: ldc           #2                  // String
+      31: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      37: astore        4
+      39: new           #74                 // class java/lang/StringBuilder
+      42: dup
+      43: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      46: aload_1
+      47: invokevirtual #137                // Method com/rt/printerlibrary/setting/TextSetting.getTxtPrintPosition:()Lcom/rt/printerlibrary/bean/Position;
+      50: getfield      #77                 // Field com/rt/printerlibrary/bean/Position.y:I
+      53: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      56: ldc           #2                  // String
+      58: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: astore        5
+      66: aload_1
+      67: invokevirtual #138                // Method com/rt/printerlibrary/setting/TextSetting.getZplFontTypeEnum:()Lcom/rt/printerlibrary/enumerate/ZplFontTypeEnum;
+      70: invokevirtual #123                // Method com/rt/printerlibrary/enumerate/ZplFontTypeEnum.getValue:()Ljava/lang/String;
+      73: astore        6
+      75: ldc           #20                 // String N
+      77: astore        7
+      79: getstatic     #88                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.b:[I
+      82: aload_1
+      83: invokevirtual #136                // Method com/rt/printerlibrary/setting/TextSetting.getPrintRotation:()Lcom/rt/printerlibrary/enumerate/PrintRotation;
+      86: invokevirtual #121                // Method com/rt/printerlibrary/enumerate/PrintRotation.ordinal:()I
+      89: iaload
+      90: tableswitch   { // 1 to 4
+                     1: 120
+                     2: 127
+                     3: 134
+                     4: 141
+               default: 145
+          }
+     120: ldc           #20                 // String N
+     122: astore        7
+     124: goto          145
+     127: ldc           #22                 // String R
+     129: astore        7
+     131: goto          145
+     134: ldc           #17                 // String I
+     136: astore        7
+     138: goto          145
+     141: ldc           #15                 // String B
+     143: astore        7
+     145: aload_1
+     146: invokevirtual #139                // Method com/rt/printerlibrary/setting/TextSetting.getZplHeightFactor:()I
+     149: istore        8
+     151: aload_1
+     152: invokevirtual #140                // Method com/rt/printerlibrary/setting/TextSetting.getZplWidthFactor:()I
+     155: istore        9
+     157: aload_1
+     158: invokevirtual #138                // Method com/rt/printerlibrary/setting/TextSetting.getZplFontTypeEnum:()Lcom/rt/printerlibrary/enumerate/ZplFontTypeEnum;
+     161: getstatic     #93                 // Field com/rt/printerlibrary/enumerate/ZplFontTypeEnum.FONT_DOWNLOAD_FONT:Lcom/rt/printerlibrary/enumerate/ZplFontTypeEnum;
+     164: if_acmpne     192
+     167: iload         8
+     169: bipush        10
+     171: if_icmpge     178
+     174: bipush        10
+     176: istore        8
+     178: iload         9
+     180: bipush        10
+     182: if_icmpge     224
+     185: bipush        10
+     187: istore        9
+     189: goto          224
+     192: iload         8
+     194: iconst_1
+     195: if_icmplt     205
+     198: iload         8
+     200: bipush        10
+     202: if_icmple     208
+     205: iconst_1
+     206: istore        8
+     208: iload         9
+     210: iconst_1
+     211: if_icmplt     221
+     214: iload         8
+     216: bipush        10
+     218: if_icmple     224
+     221: iconst_1
+     222: istore        9
+     224: new           #74                 // class java/lang/StringBuilder
+     227: dup
+     228: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+     231: ldc           #34                 // String ^FO
+     233: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     236: aload         4
+     238: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     241: ldc           #11                 // String ,
+     243: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     246: aload         5
+     248: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     251: ldc           #6                  // String \n\r^A
+     253: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     256: aload         6
+     258: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     261: aload         7
+     263: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     266: ldc           #11                 // String ,
+     268: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     271: iload         8
+     273: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     276: ldc           #11                 // String ,
+     278: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     281: iload         9
+     283: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     286: ldc           #7                  // String \n\r^FD
+     288: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     291: aload_2
+     292: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     295: ldc           #37                 // String ^FS\n\r
+     297: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     300: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     303: astore        10
+     305: aload         10
+     307: aload_3
+     308: invokevirtual #150                // Method java/lang/String.getBytes:(Ljava/lang/String;)[B
+     311: astore        11
+     313: aload_0
+     314: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+     317: aload         10
+     319: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     322: pop
+     323: aload_0
+     324: aload         11
+     326: aload_0
+     327: getfield      #83                 // Field f:Ljava/util/ArrayList;
+     330: invokevirtual #109                // Method arrayAddToList:([BLjava/util/ArrayList;)V
+     333: aload         11
+     335: areturn
+
+  private java.lang.String a(java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        4
+       9: ldc           #10                 // String
+      11: astore        5
+      13: new           #74                 // class java/lang/StringBuilder
+      16: dup
+      17: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      20: aload         5
+      22: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: ldc           #43                 // String ^PW
+      27: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: aload_1
+      31: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: ldc           #4                  // String \n\r
+      36: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      39: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      42: astore        5
+      44: new           #74                 // class java/lang/StringBuilder
+      47: dup
+      48: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      51: aload         5
+      53: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: ldc           #40                 // String ^LL
+      58: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      61: aload_2
+      62: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      65: ldc           #4                  // String \n\r
+      67: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      70: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      73: astore        5
+      75: aload         4
+      77: aload         5
+      79: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      82: pop
+      83: aload         4
+      85: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+      88: astore_3
+      89: aload_0
+      90: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      93: aload_3
+      94: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      97: pop
+      98: aload_0
+      99: aload_3
+     100: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+     103: aload_0
+     104: getfield      #84                 // Field g:Ljava/util/ArrayList;
+     107: invokevirtual #109                // Method arrayAddToList:([BLjava/util/ArrayList;)V
+     110: aload_3
+     111: areturn
+
+  private java.lang.String a(com.rt.printerlibrary.enumerate.PrintDirection);
+    Code:
+       0: ldc           #20                 // String N
+       2: astore_2
+       3: getstatic     #91                 // Field com/rt/printerlibrary/cmd/ZplCmd$1.e:[I
+       6: aload_1
+       7: invokevirtual #120                // Method com/rt/printerlibrary/enumerate/PrintDirection.ordinal:()I
+      10: iaload
+      11: lookupswitch  { // 2
+                     1: 36
+                     2: 42
+               default: 48
+          }
+      36: ldc           #20                 // String N
+      38: astore_2
+      39: goto          51
+      42: ldc           #17                 // String I
+      44: astore_2
+      45: goto          51
+      48: ldc           #20                 // String N
+      50: astore_2
+      51: new           #74                 // class java/lang/StringBuilder
+      54: dup
+      55: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      58: ldc           #41                 // String ^PO
+      60: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: aload_2
+      64: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      67: ldc           #4                  // String \n\r
+      69: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      72: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      75: astore_3
+      76: aload_0
+      77: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      80: aload_3
+      81: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      84: pop
+      85: aload_0
+      86: aload_3
+      87: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+      90: aload_0
+      91: getfield      #84                 // Field g:Ljava/util/ArrayList;
+      94: invokevirtual #109                // Method arrayAddToList:([BLjava/util/ArrayList;)V
+      97: aload_3
+      98: areturn
+
+  private byte[] a(java.lang.String);
+    Code:
+       0: new           #74                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+       7: ldc           #44                 // String ^RTPQ
+       9: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      12: aload_1
+      13: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: ldc           #42                 // String ^PQ
+      18: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      21: aload_1
+      22: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: ldc           #5                  // String \n\r\n\r
+      27: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      33: astore_2
+      34: aload_0
+      35: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+      38: aload_2
+      39: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      42: pop
+      43: aload_2
+      44: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+      47: areturn
+
+  private java.lang.String a(java.lang.String, java.lang.String, android.graphics.Bitmap);
+    Code:
+       0: new           #67                 // class com/rt/printerlibrary/utils/BitmapUtil
+       3: dup
+       4: invokespecial #144                // Method com/rt/printerlibrary/utils/BitmapUtil."<init>":()V
+       7: aload_3
+       8: invokevirtual #145                // Method com/rt/printerlibrary/utils/BitmapUtil.GetZplBitmapPrintCmd:(Landroid/graphics/Bitmap;)[B
+      11: astore        4
+      13: aload         4
+      15: invokestatic  #143                // Method com/rt/printerlibrary/utils/BitmapConvertUtil.zlibCompress:([B)Ljava/lang/String;
+      18: astore        5
+      20: new           #73                 // class java/lang/StringBuffer
+      23: dup
+      24: ldc           #2                  // String
+      26: invokespecial #154                // Method java/lang/StringBuffer."<init>":(Ljava/lang/String;)V
+      29: astore        6
+      31: aload         6
+      33: new           #74                 // class java/lang/StringBuilder
+      36: dup
+      37: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      40: ldc           #34                 // String ^FO
+      42: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      45: aload_1
+      46: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: ldc           #11                 // String ,
+      51: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: aload_2
+      55: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      58: ldc           #3                  // String \n
+      60: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      63: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      66: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      69: pop
+      70: aload_3
+      71: invokevirtual #95                 // Method android/graphics/Bitmap.getWidth:()I
+      74: bipush        7
+      76: iadd
+      77: bipush        8
+      79: idiv
+      80: istore        7
+      82: aload_3
+      83: invokevirtual #94                 // Method android/graphics/Bitmap.getHeight:()I
+      86: istore        8
+      88: iload         7
+      90: iload         8
+      92: imul
+      93: istore        9
+      95: iload         9
+      97: istore        10
+      99: iload         7
+     101: istore        11
+     103: aload         6
+     105: new           #74                 // class java/lang/StringBuilder
+     108: dup
+     109: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+     112: ldc           #39                 // String ^GFA,
+     114: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     117: iload         9
+     119: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     122: ldc           #11                 // String ,
+     124: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     127: iload         10
+     129: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     132: ldc           #11                 // String ,
+     134: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     137: iload         11
+     139: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+     142: ldc           #12                 // String ,:Z64:
+     144: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     147: aload         5
+     149: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     152: ldc           #13                 // String :
+     154: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     157: aload         5
+     159: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+     162: invokestatic  #146                // Method com/rt/printerlibrary/utils/CRCUtil.getCRCByteValue:([B)[B
+     165: invokestatic  #147                // Method com/rt/printerlibrary/utils/FuncUtils.ByteArrToHex:([B)Ljava/lang/String;
+     168: ldc           #10                 // String
+     170: ldc           #2                  // String
+     172: invokevirtual #151                // Method java/lang/String.replace:(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;
+     175: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     178: ldc           #3                  // String \n
+     180: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+     183: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+     186: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     189: pop
+     190: aload_0
+     191: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+     194: aload         6
+     196: invokevirtual #156                // Method java/lang/StringBuffer.append:(Ljava/lang/StringBuffer;)Ljava/lang/StringBuffer;
+     199: pop
+     200: aload         6
+     202: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     205: areturn
+
+  private java.lang.String a(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #74                 // class java/lang/StringBuilder
+       3: dup
+       4: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+       7: ldc           #34                 // String ^FO
+       9: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      12: aload_1
+      13: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      16: ldc           #11                 // String ,
+      18: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      21: aload_2
+      22: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      25: ldc           #8                  // String \n^BQN,2,
+      27: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      30: aload_3
+      31: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      34: ldc           #11                 // String ,
+      36: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      39: aload         5
+      41: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      44: ldc           #9                  // String \n^FDMM,
+      46: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      49: aload         4
+      51: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      54: ldc           #36                 // String ^FS\n
+      56: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      59: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      62: astore        6
+      64: aload         6
+      66: areturn
+
+  private java.lang.String a(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #34                 // String ^FO
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload         7
+      19: aload_1
+      20: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      23: pop
+      24: aload         7
+      26: ldc           #11                 // String ,
+      28: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      31: pop
+      32: aload         7
+      34: aload_2
+      35: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      38: pop
+      39: aload         7
+      41: ldc           #3                  // String \n
+      43: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      46: pop
+      47: aload         7
+      49: ldc           #32                 // String ^BY2
+      51: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      54: pop
+      55: aload         7
+      57: ldc           #28                 // String ^BC
+      59: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      62: pop
+      63: aload         7
+      65: aload         4
+      67: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      70: pop
+      71: aload         7
+      73: ldc           #11                 // String ,
+      75: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      78: pop
+      79: aload         7
+      81: aload         5
+      83: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      86: pop
+      87: aload         7
+      89: ldc           #11                 // String ,
+      91: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      94: pop
+      95: aload         7
+      97: aload         6
+      99: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     102: pop
+     103: aload         7
+     105: ldc           #11                 // String ,
+     107: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     110: pop
+     111: aload         7
+     113: ldc           #20                 // String N
+     115: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     118: pop
+     119: aload         7
+     121: ldc           #11                 // String ,
+     123: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     126: pop
+     127: aload         7
+     129: ldc           #20                 // String N
+     131: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     134: pop
+     135: aload         7
+     137: ldc           #3                  // String \n
+     139: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     142: pop
+     143: aload         7
+     145: ldc           #33                 // String ^FD
+     147: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     150: pop
+     151: aload         7
+     153: aload_3
+     154: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     157: pop
+     158: aload         7
+     160: ldc           #35                 // String ^FS
+     162: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     165: pop
+     166: aload         7
+     168: ldc           #3                  // String \n
+     170: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     173: pop
+     174: aload         7
+     176: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     179: areturn
+
+  private java.lang.String a(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: ldc           #20                 // String N
+       2: astore        9
+       4: new           #73                 // class java/lang/StringBuffer
+       7: dup
+       8: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+      11: astore        10
+      13: aload         10
+      15: ldc           #34                 // String ^FO
+      17: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      20: pop
+      21: aload         10
+      23: aload_1
+      24: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      27: pop
+      28: aload         10
+      30: ldc           #11                 // String ,
+      32: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      35: pop
+      36: aload         10
+      38: aload_2
+      39: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      42: pop
+      43: aload         10
+      45: ldc           #3                  // String \n
+      47: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      50: pop
+      51: aload         10
+      53: ldc           #32                 // String ^BY2
+      55: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      58: pop
+      59: aload         10
+      61: ldc           #30                 // String ^BK
+      63: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      66: pop
+      67: aload         10
+      69: aload         4
+      71: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      74: pop
+      75: aload         10
+      77: ldc           #11                 // String ,
+      79: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      82: pop
+      83: aload         10
+      85: aload         9
+      87: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      90: pop
+      91: aload         10
+      93: ldc           #11                 // String ,
+      95: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      98: pop
+      99: aload         10
+     101: aload         7
+     103: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     106: pop
+     107: aload         10
+     109: ldc           #11                 // String ,
+     111: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     114: pop
+     115: aload         10
+     117: aload         8
+     119: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     122: pop
+     123: aload         10
+     125: ldc           #11                 // String ,
+     127: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     130: pop
+     131: aload         10
+     133: ldc           #20                 // String N
+     135: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     138: pop
+     139: aload         10
+     141: ldc           #11                 // String ,
+     143: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     146: pop
+     147: aload         10
+     149: aload         5
+     151: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     154: pop
+     155: aload         10
+     157: ldc           #11                 // String ,
+     159: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     162: pop
+     163: aload         10
+     165: aload         6
+     167: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     170: pop
+     171: aload         10
+     173: ldc           #3                  // String \n
+     175: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     178: pop
+     179: aload         10
+     181: ldc           #33                 // String ^FD
+     183: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     186: pop
+     187: aload         10
+     189: aload_3
+     190: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     193: pop
+     194: aload         10
+     196: ldc           #35                 // String ^FS
+     198: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     201: pop
+     202: aload         10
+     204: ldc           #3                  // String \n
+     206: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     209: pop
+     210: aload         10
+     212: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     215: areturn
+
+  private java.lang.String b(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: ldc           #20                 // String N
+       2: astore        7
+       4: new           #73                 // class java/lang/StringBuffer
+       7: dup
+       8: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+      11: astore        8
+      13: aload         8
+      15: ldc           #34                 // String ^FO
+      17: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      20: pop
+      21: aload         8
+      23: aload_1
+      24: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      27: pop
+      28: aload         8
+      30: ldc           #11                 // String ,
+      32: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      35: pop
+      36: aload         8
+      38: aload_2
+      39: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      42: pop
+      43: aload         8
+      45: ldc           #3                  // String \n
+      47: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      50: pop
+      51: aload         8
+      53: ldc           #32                 // String ^BY2
+      55: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      58: pop
+      59: aload         8
+      61: ldc           #25                 // String ^B3
+      63: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      66: pop
+      67: aload         8
+      69: aload         4
+      71: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      74: pop
+      75: aload         8
+      77: ldc           #11                 // String ,
+      79: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      82: pop
+      83: aload         8
+      85: aload         7
+      87: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      90: pop
+      91: aload         8
+      93: ldc           #11                 // String ,
+      95: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      98: pop
+      99: aload         8
+     101: aload         5
+     103: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     106: pop
+     107: aload         8
+     109: ldc           #11                 // String ,
+     111: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     114: pop
+     115: aload         8
+     117: aload         6
+     119: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     122: pop
+     123: aload         8
+     125: ldc           #11                 // String ,
+     127: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     130: pop
+     131: aload         8
+     133: ldc           #20                 // String N
+     135: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     138: pop
+     139: aload         8
+     141: ldc           #3                  // String \n
+     143: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     146: pop
+     147: aload         8
+     149: ldc           #33                 // String ^FD
+     151: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     154: pop
+     155: aload         8
+     157: aload_3
+     158: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     161: pop
+     162: aload         8
+     164: ldc           #35                 // String ^FS
+     166: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     169: pop
+     170: aload         8
+     172: ldc           #3                  // String \n
+     174: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     177: pop
+     178: aload         8
+     180: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     183: areturn
+
+  private java.lang.String c(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #34                 // String ^FO
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload         7
+      19: aload_1
+      20: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      23: pop
+      24: aload         7
+      26: ldc           #11                 // String ,
+      28: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      31: pop
+      32: aload         7
+      34: aload_2
+      35: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      38: pop
+      39: aload         7
+      41: ldc           #3                  // String \n
+      43: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      46: pop
+      47: aload         7
+      49: ldc           #32                 // String ^BY2
+      51: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      54: pop
+      55: aload         7
+      57: ldc           #26                 // String ^B8
+      59: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      62: pop
+      63: aload         7
+      65: aload         4
+      67: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      70: pop
+      71: aload         7
+      73: ldc           #11                 // String ,
+      75: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      78: pop
+      79: aload         7
+      81: aload         5
+      83: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      86: pop
+      87: aload         7
+      89: ldc           #11                 // String ,
+      91: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      94: pop
+      95: aload         7
+      97: aload         6
+      99: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     102: pop
+     103: aload         7
+     105: ldc           #11                 // String ,
+     107: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     110: pop
+     111: aload         7
+     113: ldc           #20                 // String N
+     115: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     118: pop
+     119: aload         7
+     121: ldc           #3                  // String \n
+     123: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     126: pop
+     127: aload         7
+     129: ldc           #33                 // String ^FD
+     131: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     134: pop
+     135: aload         7
+     137: aload_3
+     138: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     141: pop
+     142: aload         7
+     144: ldc           #35                 // String ^FS
+     146: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     149: pop
+     150: aload         7
+     152: ldc           #3                  // String \n
+     154: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     157: pop
+     158: aload         7
+     160: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     163: areturn
+
+  private java.lang.String d(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #34                 // String ^FO
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload         7
+      19: aload_1
+      20: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      23: pop
+      24: aload         7
+      26: ldc           #11                 // String ,
+      28: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      31: pop
+      32: aload         7
+      34: aload_2
+      35: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      38: pop
+      39: aload         7
+      41: ldc           #3                  // String \n
+      43: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      46: pop
+      47: aload         7
+      49: ldc           #32                 // String ^BY2
+      51: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      54: pop
+      55: aload         7
+      57: ldc           #29                 // String ^BE
+      59: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      62: pop
+      63: aload         7
+      65: aload         4
+      67: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      70: pop
+      71: aload         7
+      73: ldc           #11                 // String ,
+      75: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      78: pop
+      79: aload         7
+      81: aload         5
+      83: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      86: pop
+      87: aload         7
+      89: ldc           #11                 // String ,
+      91: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      94: pop
+      95: aload         7
+      97: aload         6
+      99: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     102: pop
+     103: aload         7
+     105: ldc           #11                 // String ,
+     107: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     110: pop
+     111: aload         7
+     113: ldc           #20                 // String N
+     115: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     118: pop
+     119: aload         7
+     121: ldc           #3                  // String \n
+     123: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     126: pop
+     127: aload         7
+     129: ldc           #33                 // String ^FD
+     131: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     134: pop
+     135: aload         7
+     137: aload_3
+     138: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     141: pop
+     142: aload         7
+     144: ldc           #35                 // String ^FS
+     146: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     149: pop
+     150: aload         7
+     152: ldc           #3                  // String \n
+     154: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     157: pop
+     158: aload         7
+     160: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     163: areturn
+
+  private java.lang.String e(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #34                 // String ^FO
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload         7
+      19: aload_1
+      20: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      23: pop
+      24: aload         7
+      26: ldc           #11                 // String ,
+      28: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      31: pop
+      32: aload         7
+      34: aload_2
+      35: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      38: pop
+      39: aload         7
+      41: ldc           #3                  // String \n
+      43: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      46: pop
+      47: aload         7
+      49: ldc           #32                 // String ^BY2
+      51: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      54: pop
+      55: aload         7
+      57: ldc           #31                 // String ^BU
+      59: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      62: pop
+      63: aload         7
+      65: aload         4
+      67: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      70: pop
+      71: aload         7
+      73: ldc           #11                 // String ,
+      75: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      78: pop
+      79: aload         7
+      81: aload         5
+      83: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      86: pop
+      87: aload         7
+      89: ldc           #11                 // String ,
+      91: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      94: pop
+      95: aload         7
+      97: aload         6
+      99: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     102: pop
+     103: aload         7
+     105: ldc           #11                 // String ,
+     107: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     110: pop
+     111: aload         7
+     113: ldc           #20                 // String N
+     115: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     118: pop
+     119: aload         7
+     121: ldc           #3                  // String \n
+     123: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     126: pop
+     127: aload         7
+     129: ldc           #33                 // String ^FD
+     131: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     134: pop
+     135: aload         7
+     137: aload_3
+     138: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     141: pop
+     142: aload         7
+     144: ldc           #35                 // String ^FS
+     146: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     149: pop
+     150: aload         7
+     152: ldc           #3                  // String \n
+     154: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     157: pop
+     158: aload         7
+     160: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     163: areturn
+
+  private java.lang.String f(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String);
+    Code:
+       0: new           #73                 // class java/lang/StringBuffer
+       3: dup
+       4: invokespecial #153                // Method java/lang/StringBuffer."<init>":()V
+       7: astore        7
+       9: aload         7
+      11: ldc           #34                 // String ^FO
+      13: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      16: pop
+      17: aload         7
+      19: aload_1
+      20: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      23: pop
+      24: aload         7
+      26: ldc           #11                 // String ,
+      28: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      31: pop
+      32: aload         7
+      34: aload_2
+      35: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      38: pop
+      39: aload         7
+      41: ldc           #3                  // String \n
+      43: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      46: pop
+      47: aload         7
+      49: ldc           #32                 // String ^BY2
+      51: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      54: pop
+      55: aload         7
+      57: ldc           #27                 // String ^B9
+      59: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      62: pop
+      63: aload         7
+      65: aload         4
+      67: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      70: pop
+      71: aload         7
+      73: ldc           #11                 // String ,
+      75: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      78: pop
+      79: aload         7
+      81: aload         5
+      83: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      86: pop
+      87: aload         7
+      89: ldc           #11                 // String ,
+      91: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+      94: pop
+      95: aload         7
+      97: aload         6
+      99: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     102: pop
+     103: aload         7
+     105: ldc           #11                 // String ,
+     107: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     110: pop
+     111: aload         7
+     113: ldc           #20                 // String N
+     115: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     118: pop
+     119: aload         7
+     121: ldc           #11                 // String ,
+     123: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     126: pop
+     127: aload         7
+     129: ldc           #20                 // String N
+     131: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     134: pop
+     135: aload         7
+     137: ldc           #3                  // String \n
+     139: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     142: pop
+     143: aload         7
+     145: ldc           #33                 // String ^FD
+     147: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     150: pop
+     151: aload         7
+     153: aload_3
+     154: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     157: pop
+     158: aload         7
+     160: ldc           #35                 // String ^FS
+     162: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     165: pop
+     166: aload         7
+     168: ldc           #3                  // String \n
+     170: invokevirtual #155                // Method java/lang/StringBuffer.append:(Ljava/lang/String;)Ljava/lang/StringBuffer;
+     173: pop
+     174: aload         7
+     176: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+     179: areturn
+
+  private java.lang.String a(int, int, int);
+    Code:
+       0: ldc           #15                 // String B
+       2: astore        4
+       4: iconst_0
+       5: istore        5
+       7: new           #74                 // class java/lang/StringBuilder
+      10: dup
+      11: invokespecial #160                // Method java/lang/StringBuilder."<init>":()V
+      14: ldc           #38                 // String ^GB
+      16: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      19: iload_1
+      20: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      23: ldc           #11                 // String ,
+      25: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      28: iload_2
+      29: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      32: ldc           #11                 // String ,
+      34: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      37: iload_3
+      38: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      41: ldc           #11                 // String ,
+      43: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      46: aload         4
+      48: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      51: ldc           #11                 // String ,
+      53: invokevirtual #162                // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      56: iload         5
+      58: invokevirtual #161                // Method java/lang/StringBuilder.append:(I)Ljava/lang/StringBuilder;
+      61: invokevirtual #163                // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      64: astore        6
+      66: aload         6
+      68: areturn
+
+  public java.lang.String getZplSumCmds();
+    Code:
+       0: aload_0
+       1: getfield      #86                 // Field i:Ljava/lang/StringBuffer;
+       4: invokevirtual #159                // Method java/lang/StringBuffer.toString:()Ljava/lang/String;
+       7: areturn
+
+  public byte[] getReverse(int, int, int, int);
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: areturn
+
+  static {};
+    Code:
+       0: iconst_2
+       1: newarray       byte
+       3: dup
+       4: iconst_0
+       5: bipush        18
+       7: bastore
+       8: dup
+       9: iconst_1
+      10: bipush        84
+      12: bastore
+      13: putstatic     #78                 // Field a:[B
+      16: ldc           #45                 // String ^XA
+      18: invokevirtual #149                // Method java/lang/String.getBytes:()[B
+      21: putstatic     #79                 // Field b:[B
+      24: iconst_1
+      25: newarray       byte
+      27: dup
+      28: iconst_0
+      29: bipush        10
+      31: bastore
+      32: putstatic     #80                 // Field c:[B
+      35: iconst_1
+      36: newarray       byte
+      38: dup
+      39: iconst_0
+      40: bipush        13
+      42: bastore
+      43: putstatic     #81                 // Field d:[B
+      46: iconst_2
+      47: newarray       byte
+      49: dup
+      50: iconst_0
+      51: bipush        10
+      53: bastore
+      54: dup
+      55: iconst_1
+      56: bipush        13
+      58: bastore
+      59: putstatic     #82                 // Field e:[B
+      62: return
+}

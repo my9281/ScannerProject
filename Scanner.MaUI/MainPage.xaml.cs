@@ -1,5 +1,6 @@
 using Scanner.Controllers;
 using Scanner.MaUI.Controllers;
+using Scanner.MaUI.Services;
 using Scanner.MaUI.Views;
 namespace Scanner.MaUI;
 
@@ -16,7 +17,7 @@ public partial class MainPage : ContentPage, IMainPageView
     {
         base.OnAppearing();
         try { await _controller.AppearingAsync(); }
-        catch (Exception ex) { await DisplayAlertAsync("加载失败", ex.Message, "确定"); }
+        catch (Exception ex) { await DisplayAlertAsync(LocalizationService.Current.Get("LoadFailed"), ex.Message, LocalizationService.Current.Get("Confirm")); }
     }
     protected override void OnDisappearing() { _controller.Dispose(); base.OnDisappearing(); }
     private void LanguageButton_Clicked(object? sender, EventArgs e) => _controller.LanguageButton_Clicked(sender, e);

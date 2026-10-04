@@ -77,7 +77,7 @@ public sealed class MainViewModel : ViewModelBase
                 if (string.IsNullOrWhiteSpace(model) && ModelSelectionRequested is not null) model = await ModelSelectionRequested(_models.GetModels()) ?? string.Empty;
                 if (string.IsNullOrWhiteSpace(model))
                 {
-                    SetStatus($"未选择型号：{printCode}", true); return;
+                    SetStatus(L.Format("ModelSelectionCancelled", printCode), true); return;
                 }
                 await _printer.PrintAsync(printCode, copies, workOrder, model, PaperSize);
                 await _speech.SpeakTailAsync(printCode);

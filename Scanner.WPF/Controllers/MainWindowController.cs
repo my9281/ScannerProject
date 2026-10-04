@@ -88,6 +88,21 @@ namespace Scanner.WPF.Controllers
             return false;
         }
 
+        public void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e)
+        {
+            new RegistrationRepairWindow(_baseData) { Owner = _view.OwnerWindow }.ShowDialog();
+        }
+
+        public void OpenMonthlyReport_Click(object sender, RoutedEventArgs e)
+        {
+            if (_baseData.MonthlySource == null)
+            {
+                MessageBox.Show(_view.OwnerWindow, "请先导入完整基础表。", "月报导出");
+                return;
+            }
+            new MonthlyReportWindow(_baseData.MonthlySource) { Owner = _view.OwnerWindow }.ShowDialog();
+        }
+
         public void OpenChecklistButton_Click(object sender, RoutedEventArgs e)
         {
             if (!RequireGlobalBase()) return;

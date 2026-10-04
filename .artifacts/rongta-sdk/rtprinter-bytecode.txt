@@ -1,0 +1,150 @@
+public abstract class com.rt.printerlibrary.printer.RTPrinter<T> {
+  public com.rt.printerlibrary.connect.PrinterInterface printerInterface;
+
+  public java.lang.String piName;
+
+  public com.rt.printerlibrary.printer.RTPrinter();
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method java/lang/Object."<init>":()V
+       4: return
+
+  public abstract void disConnect();
+
+  public abstract void connect(T) throws java.lang.Exception;
+
+  public abstract com.rt.printerlibrary.enumerate.ConnectStateEnum getConnectState();
+
+  public abstract void writeMsg(byte[]);
+
+  public abstract void writeMsgAsync(byte[]);
+
+  public abstract byte[] readMsg();
+
+  public com.rt.printerlibrary.connect.PrinterInterface getPrinterInterface();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: areturn
+
+  public void setPrinterInterface(com.rt.printerlibrary.connect.PrinterInterface);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       5: return
+
+  public java.lang.String getPiName();
+    Code:
+       0: aload_0
+       1: getfield      #5                  // Field piName:Ljava/lang/String;
+       4: areturn
+
+  public void setPiName(java.lang.String);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #5                  // Field piName:Ljava/lang/String;
+       5: return
+
+  public boolean getIsPrinting();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: invokevirtual #7                  // Method com/rt/printerlibrary/connect/PrinterInterface.getIsPrinting:()Z
+       7: ireturn
+
+  public void setPrintListener(com.rt.printerlibrary.utils.PrintListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: aload_1
+       5: invokevirtual #12                 // Method com/rt/printerlibrary/connect/PrinterInterface.setPrintListener:(Lcom/rt/printerlibrary/utils/PrintListener;)V
+       8: return
+
+  public void setConnectListener(com.rt.printerlibrary.utils.ConnectListener);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: aload_1
+       5: invokevirtual #11                 // Method com/rt/printerlibrary/connect/PrinterInterface.setConnectListener:(Lcom/rt/printerlibrary/utils/ConnectListener;)V
+       8: return
+
+  public byte[] getprinterStausMsg(byte[]);
+    Code:
+       0: iconst_0
+       1: newarray       byte
+       3: astore_2
+       4: aload_0
+       5: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       8: ifnull        64
+      11: aload_0
+      12: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+      15: invokevirtual #9                  // Method com/rt/printerlibrary/connect/PrinterInterface.getisAlwaysReadInputStream:()Z
+      18: istore_3
+      19: iload_3
+      20: ifeq          28
+      23: aload_0
+      24: iconst_0
+      25: invokevirtual #15                 // Method setAlwaysReadInputStream:(Z)V
+      28: aload_0
+      29: aload_1
+      30: invokevirtual #16                 // Method writeMsg:([B)V
+      33: aload_0
+      34: invokevirtual #14                 // Method readMsg:()[B
+      37: astore_2
+      38: iload_3
+      39: ifeq          64
+      42: aload_0
+      43: iconst_1
+      44: invokevirtual #15                 // Method setAlwaysReadInputStream:(Z)V
+      47: goto          64
+      50: astore        4
+      52: iload_3
+      53: ifeq          61
+      56: aload_0
+      57: iconst_1
+      58: invokevirtual #15                 // Method setAlwaysReadInputStream:(Z)V
+      61: aload         4
+      63: athrow
+      64: aload_2
+      65: areturn
+    Exception table:
+       from    to  target type
+          28    38    50   any
+          50    52    50   any
+
+  public void setAlwaysReadInputStream(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+      11: iload_1
+      12: invokevirtual #10                 // Method com/rt/printerlibrary/connect/PrinterInterface.setAlwaysReadInputStream:(Z)V
+      15: return
+
+  public void setSendintervalMs(int);
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+      11: iload_1
+      12: invokevirtual #13                 // Method com/rt/printerlibrary/connect/PrinterInterface.setSendintervalMs:(I)V
+      15: return
+
+  public int getSendintervalMs();
+    Code:
+       0: aload_0
+       1: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #6                  // Field printerInterface:Lcom/rt/printerlibrary/connect/PrinterInterface;
+      11: invokevirtual #8                  // Method com/rt/printerlibrary/connect/PrinterInterface.getSendintervalMs:()I
+      14: pop
+      15: iconst_0
+      16: ireturn
+}

@@ -1,0 +1,603 @@
+public class com.rt.printerlibrary.driver.bluetooth.EdrDriver extends com.rt.printerlibrary.driver.BaseDriver {
+  private final java.util.UUID b;
+
+  private com.rt.printerlibrary.bean.BluetoothEdrConfigBean c;
+
+  private android.bluetooth.BluetoothSocket d;
+
+  private java.io.InputStream e;
+
+  private com.rt.printerlibrary.connect.BluetoothInterface f;
+
+  private java.io.OutputStream g;
+
+  private int h;
+
+  public int getSendintervalMs();
+    Code:
+       0: aload_0
+       1: getfield      #48                 // Field h:I
+       4: ireturn
+
+  public void setSendintervalMs(int);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: putfield      #48                 // Field h:I
+       5: return
+
+  public com.rt.printerlibrary.driver.bluetooth.EdrDriver(com.rt.printerlibrary.bean.BluetoothEdrConfigBean);
+    Code:
+       0: aload_0
+       1: invokespecial #66                 // Method com/rt/printerlibrary/driver/BaseDriver."<init>":()V
+       4: aload_0
+       5: ldc           #1                  // String 00001101-0000-1000-8000-00805F9B34FB
+       7: invokestatic  #104                // Method java/util/UUID.fromString:(Ljava/lang/String;)Ljava/util/UUID;
+      10: putfield      #42                 // Field b:Ljava/util/UUID;
+      13: aload_0
+      14: iconst_0
+      15: putfield      #48                 // Field h:I
+      18: aload_0
+      19: aload_1
+      20: putfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+      23: return
+
+  private void a(com.rt.printerlibrary.bean.BluetoothEdrConfigBean);
+    Code:
+       0: invokestatic  #54                 // Method android/bluetooth/BluetoothAdapter.getDefaultAdapter:()Landroid/bluetooth/BluetoothAdapter;
+       3: invokevirtual #53                 // Method android/bluetooth/BluetoothAdapter.cancelDiscovery:()Z
+       6: pop
+       7: aload_0
+       8: aload_1
+       9: getfield      #38                 // Field com/rt/printerlibrary/bean/BluetoothEdrConfigBean.mBluetoothDevice:Landroid/bluetooth/BluetoothDevice;
+      12: aload_0
+      13: getfield      #42                 // Field b:Ljava/util/UUID;
+      16: invokevirtual #55                 // Method android/bluetooth/BluetoothDevice.createRfcommSocketToServiceRecord:(Ljava/util/UUID;)Landroid/bluetooth/BluetoothSocket;
+      19: putfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      22: aload_0
+      23: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      26: invokevirtual #57                 // Method android/bluetooth/BluetoothSocket.connect:()V
+      29: aload_0
+      30: aload_0
+      31: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      34: invokevirtual #58                 // Method android/bluetooth/BluetoothSocket.getInputStream:()Ljava/io/InputStream;
+      37: putfield      #45                 // Field e:Ljava/io/InputStream;
+      40: aload_0
+      41: aload_0
+      42: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      45: invokevirtual #59                 // Method android/bluetooth/BluetoothSocket.getOutputStream:()Ljava/io/OutputStream;
+      48: putfield      #47                 // Field g:Ljava/io/OutputStream;
+      51: aload_0
+      52: invokespecial #71                 // Method b:()V
+      55: goto          67
+      58: astore_2
+      59: aload_2
+      60: invokevirtual #87                 // Method java/io/IOException.printStackTrace:()V
+      63: aload_0
+      64: invokevirtual #73                 // Method close:()V
+      67: return
+    Exception table:
+       from    to  target type
+           7    55    58   Class java/io/IOException
+
+  public void run();
+    Code:
+       0: aload_0
+       1: invokespecial #67                 // Method com/rt/printerlibrary/driver/BaseDriver.run:()V
+       4: aload_0
+       5: aload_0
+       6: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+       9: invokespecial #69                 // Method a:(Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;)V
+      12: aload_0
+      13: invokespecial #68                 // Method a:()V
+      16: return
+
+  private void a(byte[]);
+    Code:
+       0: aload_0
+       1: getfield      #49                 // Field printListener:Lcom/rt/printerlibrary/utils/PrintListener;
+       4: ifnull        47
+       7: aload_1
+       8: invokestatic  #86                 // Method com/rt/printerlibrary/utils/PrinterStatusPareseUtils.parsePrinterStatusResult:([B)Lcom/rt/printerlibrary/bean/PrinterStatusBean;
+      11: astore_2
+      12: aload_2
+      13: getfield      #39                 // Field com/rt/printerlibrary/bean/PrinterStatusBean.printStatusCmd:Lcom/rt/printerlibrary/utils/PrintStatusCmd;
+      16: getstatic     #52                 // Field com/rt/printerlibrary/utils/PrintStatusCmd.cmd_UnKnow:Lcom/rt/printerlibrary/utils/PrintStatusCmd;
+      19: if_acmpeq     47
+      22: new           #15                 // class com/rt/printerlibrary/driver/bluetooth/EdrDriver$1
+      25: dup
+      26: aload_0
+      27: aload_2
+      28: invokespecial #79                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver$1."<init>":(Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;Lcom/rt/printerlibrary/bean/PrinterStatusBean;)V
+      31: astore_3
+      32: new           #7                  // class android/os/Handler
+      35: dup
+      36: invokestatic  #63                 // Method android/os/Looper.getMainLooper:()Landroid/os/Looper;
+      39: invokespecial #61                 // Method android/os/Handler."<init>":(Landroid/os/Looper;)V
+      42: aload_3
+      43: invokevirtual #62                 // Method android/os/Handler.post:(Ljava/lang/Runnable;)Z
+      46: pop
+      47: return
+
+  private void a();
+    Code:
+       0: aload_0
+       1: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+       4: ifnull        228
+       7: aload_0
+       8: invokevirtual #77                 // Method isAlive:()Z
+      11: ifeq          228
+      14: aload_0
+      15: invokevirtual #75                 // Method getisAlwaysReadInputStream:()Z
+      18: ifne          49
+      21: aload_0
+      22: invokevirtual #74                 // Method getIsPrinting:()Z
+      25: ifeq          49
+      28: invokestatic  #100                // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      31: pop
+      32: ldc2_w        #36                 // long 200l
+      35: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+      38: goto          0
+      41: astore_1
+      42: aload_1
+      43: invokevirtual #95                 // Method java/lang/InterruptedException.printStackTrace:()V
+      46: goto          0
+      49: sipush        1024
+      52: newarray       byte
+      54: astore_1
+      55: iconst_m1
+      56: istore_2
+      57: aload_0
+      58: getfield      #45                 // Field e:Ljava/io/InputStream;
+      61: invokevirtual #88                 // Method java/io/InputStream.available:()I
+      64: istore_3
+      65: iload_3
+      66: ifne          82
+      69: invokestatic  #100                // Method java/lang/Thread.currentThread:()Ljava/lang/Thread;
+      72: pop
+      73: ldc2_w        #36                 // long 200l
+      76: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+      79: goto          0
+      82: aload_0
+      83: getfield      #45                 // Field e:Ljava/io/InputStream;
+      86: aload_1
+      87: invokevirtual #90                 // Method java/io/InputStream.read:([B)I
+      90: istore_2
+      91: iload_2
+      92: iconst_m1
+      93: if_icmpeq     180
+      96: aload_1
+      97: iconst_0
+      98: iload_2
+      99: invokestatic  #84                 // Method com/rt/printerlibrary/utils/FuncUtils.ByteArrToHex:([BII)Ljava/lang/String;
+     102: invokestatic  #85                 // Method com/rt/printerlibrary/utils/FuncUtils.HexToByteArr:(Ljava/lang/String;)[B
+     105: astore        4
+     107: invokestatic  #81                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getInstance:()Lcom/rt/printerlibrary/observer/PrinterObserverManager;
+     110: invokevirtual #82                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getObservers:()Ljava/util/ArrayList;
+     113: invokevirtual #103                // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+     116: astore        5
+     118: aload         5
+     120: invokeinterface #110,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     125: ifeq          174
+     128: aload         5
+     130: invokeinterface #111,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     135: checkcast     #18                 // class com/rt/printerlibrary/observer/PrinterObserver
+     138: astore        6
+     140: aload_0
+     141: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     144: ifnull        158
+     147: aload_0
+     148: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     151: aload_0
+     152: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+     155: invokevirtual #65                 // Method com/rt/printerlibrary/connect/BluetoothInterface.setConfigObject:(Ljava/lang/Object;)V
+     158: aload         6
+     160: aload_0
+     161: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     164: aload         4
+     166: invokeinterface #106,  3          // InterfaceMethod com/rt/printerlibrary/observer/PrinterObserver.printerReadMsgCallback:(Lcom/rt/printerlibrary/connect/PrinterInterface;[B)V
+     171: goto          118
+     174: aload_0
+     175: aload         4
+     177: invokespecial #70                 // Method a:([B)V
+     180: ldc2_w        #36                 // long 200l
+     183: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+     186: goto          225
+     189: astore_2
+     190: aload_2
+     191: invokevirtual #87                 // Method java/io/IOException.printStackTrace:()V
+     194: aload_0
+     195: invokevirtual #73                 // Method close:()V
+     198: goto          228
+     201: astore_2
+     202: aload_2
+     203: invokevirtual #95                 // Method java/lang/InterruptedException.printStackTrace:()V
+     206: aload_0
+     207: invokevirtual #73                 // Method close:()V
+     210: goto          228
+     213: astore_2
+     214: aload_2
+     215: invokevirtual #94                 // Method java/lang/Exception.printStackTrace:()V
+     218: aload_0
+     219: invokevirtual #73                 // Method close:()V
+     222: goto          228
+     225: goto          0
+     228: return
+    Exception table:
+       from    to  target type
+          28    38    41   Class java/lang/InterruptedException
+          55    79   189   Class java/io/IOException
+          82   186   189   Class java/io/IOException
+          55    79   201   Class java/lang/InterruptedException
+          82   186   201   Class java/lang/InterruptedException
+          55    79   213   Class java/lang/Exception
+          82   186   213   Class java/lang/Exception
+
+  public byte[] readMsg();
+    Code:
+       0: iconst_0
+       1: istore_1
+       2: iconst_0
+       3: istore_2
+       4: bipush        10
+       6: istore_3
+       7: aload_0
+       8: getfield      #45                 // Field e:Ljava/io/InputStream;
+      11: invokevirtual #88                 // Method java/io/InputStream.available:()I
+      14: dup
+      15: istore_1
+      16: ifne          36
+      19: iload_2
+      20: iload_3
+      21: if_icmpge     36
+      24: iinc          2, 1
+      27: ldc2_w        #34                 // long 100l
+      30: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+      33: goto          7
+      36: aload_0
+      37: getfield      #45                 // Field e:Ljava/io/InputStream;
+      40: invokevirtual #88                 // Method java/io/InputStream.available:()I
+      43: ifne          48
+      46: aconst_null
+      47: areturn
+      48: aload_0
+      49: getfield      #45                 // Field e:Ljava/io/InputStream;
+      52: ifnull        96
+      55: aload_0
+      56: getfield      #45                 // Field e:Ljava/io/InputStream;
+      59: invokestatic  #76                 // Method input2byte:(Ljava/io/InputStream;)[B
+      62: astore        4
+      64: ldc           #3                  // String rrr
+      66: new           #29                 // class java/lang/StringBuilder
+      69: dup
+      70: invokespecial #96                 // Method java/lang/StringBuilder."<init>":()V
+      73: ldc           #2                  // String e-rev data:
+      75: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      78: aload         4
+      80: invokestatic  #83                 // Method com/rt/printerlibrary/utils/FuncUtils.ByteArrToHex:([B)Ljava/lang/String;
+      83: invokevirtual #97                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      86: invokevirtual #98                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      89: invokestatic  #64                 // Method android/util/Log.e:(Ljava/lang/String;Ljava/lang/String;)I
+      92: pop
+      93: aload         4
+      95: areturn
+      96: goto          110
+      99: astore_1
+     100: aload_1
+     101: invokevirtual #94                 // Method java/lang/Exception.printStackTrace:()V
+     104: aload_0
+     105: invokevirtual #73                 // Method close:()V
+     108: aconst_null
+     109: areturn
+     110: aconst_null
+     111: areturn
+    Exception table:
+       from    to  target type
+           0    47    99   Class java/lang/Exception
+          48    95    99   Class java/lang/Exception
+
+  public synchronized void write(byte[]);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #78                 // Method seIsPrinting:(Z)V
+       5: aload_0
+       6: getfield      #47                 // Field g:Ljava/io/OutputStream;
+       9: ifnull        222
+      12: aload_1
+      13: arraylength
+      14: istore_2
+      15: aload_0
+      16: getfield      #41                 // Field a:I
+      19: istore_3
+      20: iload_2
+      21: iload_3
+      22: idiv
+      23: istore        4
+      25: iload_2
+      26: iload_3
+      27: irem
+      28: istore        5
+      30: iconst_0
+      31: istore        7
+      33: iload         7
+      35: iload         4
+      37: if_icmpge     111
+      40: iload_3
+      41: newarray       byte
+      43: astore        6
+      45: iconst_0
+      46: istore        8
+      48: iload         8
+      50: iload_3
+      51: if_icmpge     74
+      54: aload         6
+      56: iload         8
+      58: aload_1
+      59: iload         7
+      61: iload_3
+      62: imul
+      63: iload         8
+      65: iadd
+      66: baload
+      67: bastore
+      68: iinc          8, 1
+      71: goto          48
+      74: aload_0
+      75: getfield      #47                 // Field g:Ljava/io/OutputStream;
+      78: aload         6
+      80: invokevirtual #93                 // Method java/io/OutputStream.write:([B)V
+      83: aload_0
+      84: getfield      #47                 // Field g:Ljava/io/OutputStream;
+      87: invokevirtual #92                 // Method java/io/OutputStream.flush:()V
+      90: aload_0
+      91: getfield      #48                 // Field h:I
+      94: ifle          105
+      97: aload_0
+      98: getfield      #48                 // Field h:I
+     101: i2l
+     102: invokestatic  #101                // Method java/lang/Thread.sleep:(J)V
+     105: iinc          7, 1
+     108: goto          33
+     111: iload         5
+     113: newarray       byte
+     115: astore        7
+     117: iconst_0
+     118: istore        8
+     120: iload         8
+     122: aload         7
+     124: arraylength
+     125: if_icmpge     148
+     128: aload         7
+     130: iload         8
+     132: aload_1
+     133: iload         4
+     135: iload_3
+     136: imul
+     137: iload         8
+     139: iadd
+     140: baload
+     141: bastore
+     142: iinc          8, 1
+     145: goto          120
+     148: aload_0
+     149: getfield      #47                 // Field g:Ljava/io/OutputStream;
+     152: aload         7
+     154: invokevirtual #93                 // Method java/io/OutputStream.write:([B)V
+     157: aload_0
+     158: getfield      #47                 // Field g:Ljava/io/OutputStream;
+     161: invokevirtual #92                 // Method java/io/OutputStream.flush:()V
+     164: aload_0
+     165: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     168: ifnull        197
+     171: aload_0
+     172: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     175: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+     178: ifnull        197
+     181: aload_0
+     182: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+     185: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+     188: aload_0
+     189: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+     192: invokeinterface #109,  2          // InterfaceMethod com/rt/printerlibrary/utils/ConnectListener.onPrinterWritecompletion:(Ljava/lang/Object;)V
+     197: goto          222
+     200: astore_2
+     201: aload_2
+     202: invokevirtual #87                 // Method java/io/IOException.printStackTrace:()V
+     205: aload_0
+     206: invokevirtual #73                 // Method close:()V
+     209: aload_0
+     210: iconst_0
+     211: invokevirtual #78                 // Method seIsPrinting:(Z)V
+     214: goto          222
+     217: astore_2
+     218: aload_2
+     219: invokevirtual #95                 // Method java/lang/InterruptedException.printStackTrace:()V
+     222: aload_0
+     223: iconst_0
+     224: invokevirtual #78                 // Method seIsPrinting:(Z)V
+     227: return
+    Exception table:
+       from    to  target type
+          12   197   200   Class java/io/IOException
+          12   197   217   Class java/lang/InterruptedException
+
+  public void writeASync(byte[]);
+    Code:
+       0: aload_0
+       1: iconst_1
+       2: invokevirtual #78                 // Method seIsPrinting:(Z)V
+       5: new           #30                 // class java/lang/Thread
+       8: dup
+       9: new           #16                 // class com/rt/printerlibrary/driver/bluetooth/EdrDriver$2
+      12: dup
+      13: aload_0
+      14: aload_1
+      15: invokespecial #80                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver$2."<init>":(Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;[B)V
+      18: invokespecial #99                 // Method java/lang/Thread."<init>":(Ljava/lang/Runnable;)V
+      21: invokevirtual #102                // Method java/lang/Thread.start:()V
+      24: return
+
+  public void close();
+    Code:
+       0: aload_0
+       1: getfield      #45                 // Field e:Ljava/io/InputStream;
+       4: ifnull        19
+       7: aload_0
+       8: getfield      #45                 // Field e:Ljava/io/InputStream;
+      11: invokevirtual #89                 // Method java/io/InputStream.close:()V
+      14: aload_0
+      15: aconst_null
+      16: putfield      #45                 // Field e:Ljava/io/InputStream;
+      19: goto          27
+      22: astore_1
+      23: aload_1
+      24: invokevirtual #94                 // Method java/lang/Exception.printStackTrace:()V
+      27: aload_0
+      28: getfield      #47                 // Field g:Ljava/io/OutputStream;
+      31: ifnull        46
+      34: aload_0
+      35: getfield      #47                 // Field g:Ljava/io/OutputStream;
+      38: invokevirtual #91                 // Method java/io/OutputStream.close:()V
+      41: aload_0
+      42: aconst_null
+      43: putfield      #47                 // Field g:Ljava/io/OutputStream;
+      46: goto          54
+      49: astore_1
+      50: aload_1
+      51: invokevirtual #94                 // Method java/lang/Exception.printStackTrace:()V
+      54: aload_0
+      55: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      58: ifnull        73
+      61: aload_0
+      62: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      65: invokevirtual #56                 // Method android/bluetooth/BluetoothSocket.close:()V
+      68: aload_0
+      69: aconst_null
+      70: putfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      73: goto          81
+      76: astore_1
+      77: aload_1
+      78: invokevirtual #94                 // Method java/lang/Exception.printStackTrace:()V
+      81: aload_0
+      82: invokespecial #72                 // Method c:()V
+      85: return
+    Exception table:
+       from    to  target type
+           0    19    22   Class java/lang/Exception
+          27    46    49   Class java/lang/Exception
+          54    73    76   Class java/lang/Exception
+
+  private void b();
+    Code:
+       0: invokestatic  #81                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getInstance:()Lcom/rt/printerlibrary/observer/PrinterObserverManager;
+       3: invokevirtual #82                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getObservers:()Ljava/util/ArrayList;
+       6: invokevirtual #103                // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #110,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          61
+      19: aload_1
+      20: invokeinterface #111,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #18                 // class com/rt/printerlibrary/observer/PrinterObserver
+      28: astore_2
+      29: aload_0
+      30: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      33: ifnull        47
+      36: aload_0
+      37: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      40: aload_0
+      41: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+      44: invokevirtual #65                 // Method com/rt/printerlibrary/connect/BluetoothInterface.setConfigObject:(Ljava/lang/Object;)V
+      47: aload_2
+      48: aload_0
+      49: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      52: iconst_1
+      53: invokeinterface #105,  3          // InterfaceMethod com/rt/printerlibrary/observer/PrinterObserver.printerObserverCallback:(Lcom/rt/printerlibrary/connect/PrinterInterface;I)V
+      58: goto          10
+      61: aload_0
+      62: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      65: ifnull        94
+      68: aload_0
+      69: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      72: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+      75: ifnull        94
+      78: aload_0
+      79: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      82: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+      85: aload_0
+      86: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+      89: invokeinterface #107,  2          // InterfaceMethod com/rt/printerlibrary/utils/ConnectListener.onPrinterConnected:(Ljava/lang/Object;)V
+      94: return
+
+  private void c();
+    Code:
+       0: invokestatic  #81                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getInstance:()Lcom/rt/printerlibrary/observer/PrinterObserverManager;
+       3: invokevirtual #82                 // Method com/rt/printerlibrary/observer/PrinterObserverManager.getObservers:()Ljava/util/ArrayList;
+       6: invokevirtual #103                // Method java/util/ArrayList.iterator:()Ljava/util/Iterator;
+       9: astore_1
+      10: aload_1
+      11: invokeinterface #110,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+      16: ifeq          61
+      19: aload_1
+      20: invokeinterface #111,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+      25: checkcast     #18                 // class com/rt/printerlibrary/observer/PrinterObserver
+      28: astore_2
+      29: aload_0
+      30: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      33: ifnull        47
+      36: aload_0
+      37: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      40: aload_0
+      41: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+      44: invokevirtual #65                 // Method com/rt/printerlibrary/connect/BluetoothInterface.setConfigObject:(Ljava/lang/Object;)V
+      47: aload_2
+      48: aload_0
+      49: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      52: iconst_0
+      53: invokeinterface #105,  3          // InterfaceMethod com/rt/printerlibrary/observer/PrinterObserver.printerObserverCallback:(Lcom/rt/printerlibrary/connect/PrinterInterface;I)V
+      58: goto          10
+      61: aload_0
+      62: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      65: ifnull        94
+      68: aload_0
+      69: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      72: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+      75: ifnull        94
+      78: aload_0
+      79: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+      82: getfield      #40                 // Field com/rt/printerlibrary/connect/BluetoothInterface.connectListener:Lcom/rt/printerlibrary/utils/ConnectListener;
+      85: aload_0
+      86: getfield      #43                 // Field c:Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;
+      89: invokeinterface #108,  2          // InterfaceMethod com/rt/printerlibrary/utils/ConnectListener.onPrinterDisconnect:(Ljava/lang/Object;)V
+      94: return
+
+  public com.rt.printerlibrary.enumerate.ConnectStateEnum getConnectState();
+    Code:
+       0: aload_0
+       1: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+       4: ifnonnull     11
+       7: getstatic     #51                 // Field com/rt/printerlibrary/enumerate/ConnectStateEnum.NoConnect:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      10: areturn
+      11: aload_0
+      12: getfield      #44                 // Field d:Landroid/bluetooth/BluetoothSocket;
+      15: invokevirtual #60                 // Method android/bluetooth/BluetoothSocket.isConnected:()Z
+      18: ifeq          25
+      21: getstatic     #50                 // Field com/rt/printerlibrary/enumerate/ConnectStateEnum.Connected:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      24: areturn
+      25: getstatic     #51                 // Field com/rt/printerlibrary/enumerate/ConnectStateEnum.NoConnect:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      28: areturn
+
+  public void setPrinterInterface(com.rt.printerlibrary.connect.BluetoothInterface);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: putfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+       5: return
+
+  public com.rt.printerlibrary.connect.BluetoothInterface getPrinterInterface();
+    Code:
+       0: aload_0
+       1: getfield      #46                 // Field f:Lcom/rt/printerlibrary/connect/BluetoothInterface;
+       4: areturn
+}

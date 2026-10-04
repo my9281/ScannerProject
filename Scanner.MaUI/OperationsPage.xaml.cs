@@ -16,6 +16,8 @@ public partial class OperationsPage : ContentPage, IOperationsPageView
     Label IOperationsPageView.InboundStatusLabel => InboundStatusLabel;
     Label IOperationsPageView.OutboundTextLabel => OutboundTextLabel;
     Label IOperationsPageView.OutboundStatusLabel => OutboundStatusLabel;
+    Entry IOperationsPageView.PalletNumberEntry => PalletNumberEntry;
+    Button IOperationsPageView.UploadPalletButton => UploadPalletButton;
     Label IOperationsPageView.FeeTemplateLabel => FeeTemplateLabel;
     Label IOperationsPageView.FeeStatusLabel => FeeStatusLabel;
     private void PickInboundBase_Clicked(object? sender, EventArgs e) => _controller.PickInboundBase_Clicked(sender, e);
@@ -24,6 +26,7 @@ public partial class OperationsPage : ContentPage, IOperationsPageView
     private void ExportCurrentMonth_Clicked(object? sender, EventArgs e) => _controller.ExportCurrentMonth_Clicked(sender, e);
     private void PickOutboundText_Clicked(object? sender, EventArgs e) => _controller.PickOutboundText_Clicked(sender, e);
     private void ExportOutbound_Clicked(object? sender, EventArgs e) => _controller.ExportOutbound_Clicked(sender, e);
+    private void UploadPallet_Clicked(object? sender, EventArgs e) => _controller.UploadPallet_Clicked(sender, e);
     private void PickFeeTemplate_Clicked(object? sender, EventArgs e) => _controller.PickFeeTemplate_Clicked(sender, e);
     private void ExportFee_Clicked(object? sender, EventArgs e) => _controller.ExportFee_Clicked(sender, e);
 }

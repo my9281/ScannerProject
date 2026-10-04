@@ -1,0 +1,182 @@
+public class com.rt.printerlibrary.connect.BluetoothInterface extends com.rt.printerlibrary.connect.PrinterInterface {
+  private com.rt.printerlibrary.driver.bluetooth.EdrDriver a;
+
+  public com.rt.printerlibrary.connect.BluetoothInterface();
+    Code:
+       0: aload_0
+       1: invokespecial #17                 // Method com/rt/printerlibrary/connect/PrinterInterface."<init>":()V
+       4: return
+
+  public void connect(java.lang.Object) throws java.lang.Exception;
+    Code:
+       0: getstatic     #16                 // Field java/lang/System.out:Ljava/io/PrintStream;
+       3: new           #11                 // class java/lang/StringBuilder
+       6: dup
+       7: invokespecial #36                 // Method java/lang/StringBuilder."<init>":()V
+      10: ldc           #2                  // String com.rt.printerlibrary.connect.BluetoothInterface.connect:
+      12: invokevirtual #37                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      15: aload_1
+      16: invokevirtual #35                 // Method java/lang/Object.toString:()Ljava/lang/String;
+      19: invokevirtual #37                 // Method java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;
+      22: invokevirtual #38                 // Method java/lang/StringBuilder.toString:()Ljava/lang/String;
+      25: invokevirtual #33                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      28: aload_1
+      29: instanceof    #3                  // class com/rt/printerlibrary/bean/BluetoothEdrConfigBean
+      32: ifeq          87
+      35: aload_1
+      36: checkcast     #3                  // class com/rt/printerlibrary/bean/BluetoothEdrConfigBean
+      39: astore_2
+      40: aload_0
+      41: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      44: ifnonnull     62
+      47: aload_0
+      48: new           #6                  // class com/rt/printerlibrary/driver/bluetooth/EdrDriver
+      51: dup
+      52: aload_2
+      53: invokespecial #18                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver."<init>":(Lcom/rt/printerlibrary/bean/BluetoothEdrConfigBean;)V
+      56: putfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      59: goto          69
+      62: aload_0
+      63: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      66: invokevirtual #24                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.interrupt:()V
+      69: aload_0
+      70: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      73: invokevirtual #30                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.start:()V
+      76: aload_0
+      77: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      80: aload_0
+      81: invokevirtual #28                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.setPrinterInterface:(Lcom/rt/printerlibrary/connect/BluetoothInterface;)V
+      84: goto          97
+      87: new           #9                  // class java/lang/Exception
+      90: dup
+      91: ldc           #1                  // String Method com.rt.printerlibrary.connect.BluetoothInterface.connect\'s param must be BluetoothEdrConfigBean
+      93: invokespecial #34                 // Method java/lang/Exception."<init>":(Ljava/lang/String;)V
+      96: athrow
+      97: return
+
+  public void disConnect();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        14
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: invokevirtual #19                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.close:()V
+      14: return
+
+  public com.rt.printerlibrary.enumerate.ConnectStateEnum getConnectState();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnonnull     17
+       7: aload_0
+       8: getstatic     #15                 // Field com/rt/printerlibrary/enumerate/ConnectStateEnum.NoConnect:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      11: putfield      #14                 // Field curState:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      14: goto          28
+      17: aload_0
+      18: aload_0
+      19: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      22: invokevirtual #20                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.getConnectState:()Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      25: putfield      #14                 // Field curState:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      28: aload_0
+      29: getfield      #14                 // Field curState:Lcom/rt/printerlibrary/enumerate/ConnectStateEnum;
+      32: areturn
+
+  public void writeMsg(byte[]);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: aload_1
+      12: invokevirtual #31                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.write:([B)V
+      15: return
+
+  public void writeMsgAsync(byte[]);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: aload_1
+      12: invokevirtual #32                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.writeASync:([B)V
+      15: return
+
+  public byte[] readMsg();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: invokevirtual #25                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.readMsg:()[B
+      14: areturn
+      15: aconst_null
+      16: areturn
+
+  public boolean getIsPrinting();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: invokevirtual #21                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.getIsPrinting:()Z
+       7: ireturn
+
+  public void setPrintListener(com.rt.printerlibrary.utils.PrintListener);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: aload_1
+      12: invokevirtual #27                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.setPrintListener:(Lcom/rt/printerlibrary/utils/PrintListener;)V
+      15: return
+
+  public void setAlwaysReadInputStream(boolean);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: iload_1
+      12: invokevirtual #26                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.setAlwaysReadInputStream:(Z)V
+      15: return
+
+  public boolean getisAlwaysReadInputStream();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: invokevirtual #23                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.getisAlwaysReadInputStream:()Z
+      14: ireturn
+      15: iconst_1
+      16: ireturn
+
+  public void setSendintervalMs(int);
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: iload_1
+      12: invokevirtual #29                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.setSendintervalMs:(I)V
+      15: return
+
+  public int getSendintervalMs();
+    Code:
+       0: aload_0
+       1: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+       4: ifnull        15
+       7: aload_0
+       8: getfield      #13                 // Field a:Lcom/rt/printerlibrary/driver/bluetooth/EdrDriver;
+      11: invokevirtual #22                 // Method com/rt/printerlibrary/driver/bluetooth/EdrDriver.getSendintervalMs:()I
+      14: ireturn
+      15: iconst_0
+      16: ireturn
+}

@@ -1,15 +1,20 @@
 <Solution>
+  <Project Path="Scanner.AndroidTester/Scanner.AndroidTester.csproj" Id="6343230e-1085-4925-9b38-9f5dadad4ea6" />
+  <Project Path="Scanner.CheckListBoard/Scanner.CheckListBoard.csproj" Id="97e8f173-a874-4069-9b83-6cfaf3d90b38">
+    <Deploy Solution="Debug|*" />
+  </Project>
+  <Project Path="Scanner.Controllers/Scanner.Controllers.csproj" />
+  <Project Path="Scanner.DI/Scanner.DI.csproj" />
+  <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />
   <Project Path="Scanner.MaUI/Scanner.MaUI.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
-  <Project Path="Scanner.WPF/Scanner.WPF.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
-  <Project Path="Scanner.Web/Scanner.Web.csproj" />
+  <Project Path="Scanner.Models/Scanner.Models.csproj" />
+  <Project Path="Scanner.Rongta.Android/Scanner.Rongta.Android.csproj" />
   <Project Path="Scanner.Server.BLL/Scanner.Server.BLL.csproj" />
   <Project Path="Scanner.Server.DAL/Scanner.Server.DAL.csproj" />
   <Project Path="Scanner.Server.Model/Scanner.Server.Model.csproj" />
-  <Project Path="Scanner.Models/Scanner.Models.csproj" />
-  <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />
-  <Project Path="Scanner.DI/Scanner.DI.csproj" />
-  <Project Path="Scanner.Controllers/Scanner.Controllers.csproj" />
   <Project Path="Scanner.ViewModels/Scanner.ViewModels.csproj" />
+  <Project Path="Scanner.Web/Scanner.Web.csproj" />
+  <Project Path="Scanner.WPF/Scanner.WPF.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
 </Solution>

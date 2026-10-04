@@ -231,7 +231,8 @@ public sealed class LabelPrinter : ILabelPrinter
         CGRect page = paperSize.Contains("4 × 4", StringComparison.Ordinal) ? new CGRect(0, 0, 288, 288) : new CGRect(0, 0, 432, 288);
         UIGraphics.BeginPDFContext(path, page, (NSDictionary?)null);
         UIGraphics.BeginPDFPage();
-        CGContext context = UIGraphics.GetCurrentContext();
+        CGContext context = UIGraphics.GetCurrentContext()
+            ?? throw new InvalidOperationException("Unable to create the macOS PDF graphics context.");
         context.ScaleCTM((nfloat)(page.Width / 432d), 1);
         UIColor.Black.SetColor();
         DrawCentered($"SN : {serialNumber}", 18, 12, 300);

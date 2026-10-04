@@ -1,0 +1,26 @@
+using Scanner.AndroidTester.Services;
+void Check(bool value, string message) { if (!value) throw new Exception(message); }
+var session = new ScanSession();
+Check(!session.AddPreScan(" \r\n"), "Blank pre-scan ignored");
+session.AddPreScan("00123\r\n"); session.AddPreScan("00123");
+Check(session.PreScans.Count == 1 && session.PreScans[0] == "00123", "Deduplicate and preserve leading zeroes");
+Check(session.LastScan is null, "Pre-scan must not update last scan");
+var result = session.Detect("00123")!;
+Check(!result.SameAsLast && result.InPreScanList, "First list hit");
+result = session.Detect("00123")!;
+Check(result.SameAsLast && result.InPreScanList, "Both alerts must fire");
+result = session.Detect("OTHER")!;
+Check(!result.SameAsLast && !result.InPreScanList && session.LastScan == "OTHER", "Update last scan even without alert");
+Check(session.Detect(" \r\n") is null && session.LastScan == "OTHER", "Blank must not replace last scan");
+result = session.Detect("OTHER")!;
+Check(result.SameAsLast && !result.InPreScanList, "Same-only alert");
+result = session.Detect("other")!;
+Check(!result.SameAsLast, "Exact case-sensitive comparison");
+Check(new ScanSession().PreScans.Count == 0 && new ScanSession().LastScan is null, "New session starts empty");
+var latest = new LatestScan();
+latest.Record(" 000123\r\n");
+latest.Record(" ");
+Check(latest.Value == "000123", "Printable latest scan preserves zeroes and ignores empty input");
+latest.Record("NEXT");
+Check(latest.Value == "NEXT", "Latest printable scan updates");
+Console.WriteLine("PASS: pre-scan deduplication, both alerts, last-scan updates, blank input, exact comparison, session reset and printable latest scan.");

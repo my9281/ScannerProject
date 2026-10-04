@@ -32,6 +32,8 @@ namespace Scanner.WPF
         private void Window_Loaded(object sender, RoutedEventArgs e) => _controller.Window_Loaded(sender, e);
         private void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) => _controller.ScanTextBox_GotKeyboardFocus(sender, e);
         private void ImportGlobalBase_Click(object sender, RoutedEventArgs e) => _controller.ImportGlobalBase_Click(sender, e);
+        private void OpenMonthlyReport_Click(object sender, RoutedEventArgs e) => _controller.OpenMonthlyReport_Click(sender, e);
+        private void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e) => _controller.OpenRegistrationRepair_Click(sender, e);
         private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e) => _controller.OpenLocationFeeComparisonButton_Click(sender, e);
         private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e) => _controller.OpenOutboundInspectionButton_Click(sender, e);
         private void OpenChecklistButton_Click(object sender, RoutedEventArgs e) => _controller.OpenChecklistButton_Click(sender, e);

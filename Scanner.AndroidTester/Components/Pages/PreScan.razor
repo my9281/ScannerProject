@@ -1,0 +1,28 @@
+@page "/pre-scan"
+@inject Scanner.AndroidTester.Services.ScanSession Session
+@inject NavigationManager Navigation
+<section class="scan-page">
+    <h1>预扫描</h1>
+    <p>扫描条码后按回车，或点击“记录”。</p>
+    <form @onsubmit="Record" @onsubmit:preventDefault>
+        <label for="pre-input">扫描内容</label>
+        <input id="pre-input" class="form-control scan-input" @ref="_input" @bind="_value" @bind:event="oninput" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" />
+        <button class="btn btn-primary" type="submit">记录</button>
+    </form>
+    <p role="status">已记录 @Session.PreScans.Count 条。@_message</p>
+    <div class="scan-list"><ol>@foreach (var value in Session.PreScans) { <li>@value</li> }</ol></div>
+    <footer class="scan-footer"><button class="btn btn-primary" @onclick="Complete">完成</button></footer>
+</section>
+@code {
+    private string _value = "";
+    private string _message = "";
+    private ElementReference _input;
+    protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _input.FocusAsync(); }
+    private async Task Record()
+    {
+        _message = Session.AddPreScan(_value) ? "已保存。" : "内容为空或已扫描，未重复记录。";
+        _value = "";
+        await _input.FocusAsync();
+    }
+    private void Complete() => Navigation.NavigateTo("/");
+}

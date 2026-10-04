@@ -14,16 +14,21 @@ namespace Scanner.Helpers.Services
         public string SnFile { get; private set; }
         public DateTime? BaseDataImportedAt { get; private set; }
         public DateTime? SnImportedAt { get; private set; }
+        public MonthlyReportSource MonthlySource { get; private set; }
 
         public void ImportBase(string path)
         {
-            var records = ChecklistXlsxReader.Read(path);
-            if (records.Count == 0) throw new System.IO.InvalidDataException("基础表没有有效数据。");
+            var source = MonthlyReportSource.Load(path);
+            IList<InboundChecklistRecord> records;
+            using (var stream = new System.IO.MemoryStream(source.Workbook)) records = ChecklistXlsxReader.Read(stream);
+            if (source.Rows.Count == 0) throw new System.IO.InvalidDataException("基础表没有有效数据。");
             ReplaceRecords(records, path);
+            MonthlySource = source;
         }
 
         public void ReplaceRecords(IList<InboundChecklistRecord> records, string sourceFile)
         {
+            MonthlySource = null;
             _records = new ReadOnlyCollection<InboundChecklistRecord>(new List<InboundChecklistRecord>(records));
             BaseDataFile = sourceFile;
             BaseDataImportedAt = DateTime.Now;

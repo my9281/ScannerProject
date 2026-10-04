@@ -1,0 +1,6 @@
+<metadata>
+  <!-- Java covariant factory returns must match the abstract .NET base signature. -->
+  <attr path="/api/package[@name='com.rt.printerlibrary.cmd']/class[contains(@name,'Factory')]/method[@name='create']" name="managedReturn">Com.RT.Printerlibrary.Cmd.Cmd</attr>
+  <!-- Internal USB driver enum is package-private and is not part of Bluetooth integration. -->
+  <remove-node path="/api/package[@name='com.rt.printerlibrary.driver.usb.rw']/class[@name='PL2303Driver']/field" />
+</metadata>

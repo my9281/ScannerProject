@@ -27,7 +27,7 @@
                             <Picker Grid.Column="1" SelectedIndex="{Binding PrintCopies}" ItemsSource="{DynamicResource PrintOptions}" Title="{DynamicResource PrintCopiesLabel}" HorizontalOptions="Fill"></Picker>
                         </Grid>
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
-                            <Label Text="纸张规格" TextColor="#647089" FontAttributes="Bold" VerticalTextAlignment="Center"/>
+                            <Label Text="{DynamicResource LabelSizeSettingLabel}" TextColor="#647089" FontAttributes="Bold" VerticalTextAlignment="Center"/>
                             <Picker Grid.Column="1" ItemsSource="{Binding PaperSizes}" SelectedItem="{Binding PaperSize}" HorizontalOptions="Fill" />
                         </Grid>
                         <Button Text="{DynamicResource ProcessScanLabel}" Command="{Binding ProcessCommand}" HeightRequest="50" BackgroundColor="#2457D6" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
@@ -55,7 +55,7 @@
                     <Button Grid.Row="1" Text="{DynamicResource OpenScanLogMobile}" Command="{Binding OpenLogCommand}" HeightRequest="48" BackgroundColor="#F2F5FA" TextColor="#18243A" CornerRadius="10"/>
                     <Button Grid.Row="1" Grid.Column="1" Text="{DynamicResource UploadScanLog}" Command="{Binding UploadCommand}" HeightRequest="48" BackgroundColor="#F2F5FA" TextColor="#18243A" CornerRadius="10"/>
                 </Grid>
-                <Button Text="入库检测 / 出库检测 / 库位费比对" Clicked="OperationsButton_Clicked" HeightRequest="50" BackgroundColor="#18243A" TextColor="White" CornerRadius="10" />
+                <Button Text="{DynamicResource OperationsToolsButton}" Clicked="OperationsButton_Clicked" HeightRequest="50" BackgroundColor="#18243A" TextColor="White" CornerRadius="10" />
                 <Label Text="{DynamicResource MobilePlatformHint}" HorizontalTextAlignment="Center" TextColor="#8B96AA" FontSize="11" Margin="0,4,0,18"/>
             </VerticalStackLayout>
         </ScrollView>
