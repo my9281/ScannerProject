@@ -5,13 +5,66 @@ using System.Net.Http;
 
 namespace Scanner.Helpers.Services
 {
-    public sealed class ShelvedPalletApiService
+    public sealed partial class ShelvedPalletApiService
     {
         private readonly HttpClient _client;
 
         public ShelvedPalletApiService(HttpClient client)
         {
             _client = client ?? throw new ArgumentNullException(nameof(client));
+        }
+
+        public async Task<IReadOnlyList<WarehouseInventoryRow>> GetWarehouseInventoryAsync(string apiKey = null)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, "api/shelved-pallets/all"))
+            {
+                if (!string.IsNullOrWhiteSpace(apiKey)) request.Headers.Add("X-Upload-Key", apiKey.Trim());
+                using (var response = await _client.SendAsync(request).ConfigureAwait(false))
+                {
+                    string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (!response.IsSuccessStatusCode) throw new InvalidOperationException("导入 Web 上架表失败：HTTP " + (int)response.StatusCode);
+                    var table = Newtonsoft.Json.Linq.JObject.Parse(body);
+                    var rows = table["rows"] as Newtonsoft.Json.Linq.JArray ?? throw new InvalidOperationException("Web 没有返回有效的上架数据表。");
+                    var result = new List<WarehouseInventoryRow>();
+                    foreach (Newtonsoft.Json.Linq.JObject row in rows)
+                    {
+                        DateTime date;
+                        string dateText = (string)row["shelving_date"];
+                        DateTime? shelving = null;
+                        if (!string.IsNullOrWhiteSpace(dateText))
+                        {
+                            if (!DateTime.TryParse(dateText, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out date)) throw new InvalidOperationException("Web 上架日期格式无效。");
+                            shelving = date.Date;
+                        }
+                        result.Add(new WarehouseInventoryRow { Sn = (string)row["sn"], Sku = (string)row["sku"], PalletNumber = (string)row["pallet_number"], ShelvingDate = shelving });
+                    }
+                    return result.AsReadOnly();
+                }
+            }
+        }
+
+        public async Task<IReadOnlyList<PdaPalletRow>> GetPdaPalletsAsync(string apiKey = null)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Get, "api/tester-pallet-scans"))
+            {
+                if (!string.IsNullOrWhiteSpace(apiKey)) request.Headers.Add("X-Upload-Key", apiKey.Trim());
+                using (var response = await _client.SendAsync(request).ConfigureAwait(false))
+                {
+                    string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        var error = Deserialize<ApiErrorResponse>(body);
+                        string detail = error?.Message;
+                        if (string.IsNullOrWhiteSpace(detail))
+                            detail = response.StatusCode == System.Net.HttpStatusCode.NotFound
+                                ? "请确认服务器已部署自动匹配查询接口。"
+                                : "请检查服务器运行状态和访问配置。";
+                        throw new InvalidOperationException("获取 PDA 托盘数据失败：HTTP " + (int)response.StatusCode + "。" + detail);
+                    }
+                    return JsonConvert.DeserializeObject<List<PdaPalletRow>>(body)?.AsReadOnly()
+                        ?? throw new InvalidOperationException("服务器没有返回有效的 PDA 托盘数据。");
+                }
+            }
         }
 
         public async Task<ShelvedPalletUploadResult> UploadAsync(string palletNumber, IEnumerable<OutboundInspectionRecord> records, string apiKey = null)

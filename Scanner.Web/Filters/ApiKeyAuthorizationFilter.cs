@@ -12,7 +12,11 @@ public sealed class ApiKeyAuthorizationFilter(IOptions<UploadOptions> options) :
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         string expected = options.Value.ApiKey ?? string.Empty;
-        if (string.IsNullOrWhiteSpace(expected)) return;
+        if (string.IsNullOrWhiteSpace(expected))
+        {
+            context.Result = new ObjectResult(new { message = "服务访问密钥未配置。" }) { StatusCode = StatusCodes.Status503ServiceUnavailable };
+            return;
+        }
         string supplied = context.HttpContext.Request.Headers["X-Upload-Key"].ToString();
         if (!KeysEqual(expected, supplied)) context.Result = new UnauthorizedObjectResult(new { message = "访问密钥无效。" });
     }

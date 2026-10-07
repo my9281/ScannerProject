@@ -11,5 +11,20 @@
   </ItemGroup>
   <ItemGroup>
     <Content Update="appsettings.Local.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+    <Content Update="dotnet-tools.json;README.md;App_Data\**\*;Database\**\*;wwwroot\register.html;wwwroot\pallet-data.html;wwwroot\pallet-directory.html" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+    <None Update="dotnet-tools.json;README.md;App_Data\**\*;Database\**\*" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
   </ItemGroup>
+  <PropertyGroup>
+    <PublishTrimmed>false</PublishTrimmed>
+    <CompressionEnabled>false</CompressionEnabled>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+    <CopyDocumentationFilesFromPackages>false</CopyDocumentationFilesFromPackages>
+  </PropertyGroup>
+  <Target Name="ExcludeWebPublishDebugFiles" AfterTargets="ComputeFilesToPublish" BeforeTargets="GenerateSingleFileBundle">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb'" />
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.br' Or '%(ResolvedFileToPublish.Extension)' == '.gz'" />
+    </ItemGroup>
+  </Target>
 </Project>

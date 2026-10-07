@@ -66,19 +66,29 @@ namespace Scanner.WPF.Helpers
 
         public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark)
         {
+            if (string.IsNullOrWhiteSpace(remark)) throw new ArgumentException("备注不能为空。", nameof(remark));
+            PrintSkuSerialNumberLabel(sku, serialNumber, remark, false);
+        }
+
+        public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped)
+        {
             string normalizedSku = (sku ?? string.Empty).Trim();
             string normalizedSerialNumber = (serialNumber ?? string.Empty).Trim();
             string normalizedRemark = (remark ?? string.Empty).Trim();
             if (string.IsNullOrWhiteSpace(normalizedSku)) throw new ArgumentException("SKU 不能为空。", nameof(sku));
             if (string.IsNullOrWhiteSpace(normalizedSerialNumber)) throw new ArgumentException("SN 不能为空。", nameof(serialNumber));
-            if (string.IsNullOrWhiteSpace(normalizedRemark)) throw new ArgumentException("备注不能为空。", nameof(remark));
 
-            Canvas label = CreateSkuSerialNumberLabel(normalizedSku, normalizedSerialNumber, normalizedRemark);
+            Canvas label = CreateSkuSerialNumberLabel(normalizedSku, normalizedSerialNumber, normalizedRemark, scrapped);
             BitmapSource source = Render(label, DefaultPaperSize);
             using (Bitmap bitmap = ToBitmap(source)) PrintBitmap(bitmap, DefaultPaperSize);
         }
 
-        private static Canvas CreateSkuSerialNumberLabel(string sku, string serialNumber, string remark)
+        public static BitmapSource PreviewSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped = false)
+        {
+            return Render(CreateSkuSerialNumberLabel(sku, serialNumber, remark, scrapped), DefaultPaperSize);
+        }
+
+        private static Canvas CreateSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped = false)
         {
             const double border = 3;
             const double middle = WideLabelWidth / 2;
@@ -101,17 +111,24 @@ namespace Scanner.WPF.Helpers
             AddText(canvas, Shorten(sku, 34), 15, 15, 218, middle - 30);
             AddText(canvas, Shorten(serialNumber, 34), 15, middle + 15, 218, middle - 30);
 
-            var remarkLabel = CreateText("备注", 19, 92);
+            var remarkLabel = CreateText(scrapped ? "报废" : "备注", 19, 92);
             Canvas.SetLeft(remarkLabel, 18);
             Canvas.SetTop(remarkLabel, 338);
             canvas.Children.Add(remarkLabel);
-            var remarkText = CreateText(Shorten(remark, 70), 18, WideLabelWidth - 128);
+            var remarkText = CreateText(scrapped ? "Scrapped / Desechado" : Shorten(remark, 70), 18, WideLabelWidth - 128);
             remarkText.TextAlignment = TextAlignment.Left;
             remarkText.TextWrapping = TextWrapping.Wrap;
             remarkText.Height = 55;
             Canvas.SetLeft(remarkText, 108);
             Canvas.SetTop(remarkText, 333);
             canvas.Children.Add(remarkText);
+            if (scrapped)
+            {
+                AddLine(canvas, border, border, WideLabelWidth - border, LabelHeight - border, 6);
+                AddLine(canvas, WideLabelWidth - border, border, border, LabelHeight - border, 6);
+                Panel.SetZIndex(canvas.Children[canvas.Children.Count - 2], int.MaxValue);
+                Panel.SetZIndex(canvas.Children[canvas.Children.Count - 1], int.MaxValue);
+            }
             return canvas;
         }
 

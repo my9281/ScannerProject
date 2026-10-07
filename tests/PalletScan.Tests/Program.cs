@@ -66,6 +66,7 @@ Console.WriteLine("PASS: validation, local scan date/time, pallet snapshot, dupl
 
 sealed class FakeRepository : IPalletScanRepository
 {
+    public Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<PalletScanStoredRow>>(Array.Empty<PalletScanStoredRow>());
     public int Calls;
     public IReadOnlyList<PalletScanItem>? Last;
     public Task SaveAsync(IReadOnlyList<PalletScanItem> items, CancellationToken cancellationToken = default) { Calls++; Last = items; return Task.CompletedTask; }

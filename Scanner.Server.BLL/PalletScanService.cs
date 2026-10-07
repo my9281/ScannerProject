@@ -4,10 +4,12 @@ namespace Scanner.Server.BLL;
 
 public interface IPalletScanService
 {
+    Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<PalletScanBatchResult> UploadAsync(PalletScanBatchRequest request, CancellationToken cancellationToken = default);
 }
 public sealed class PalletScanService(IPalletScanRepository repository) : IPalletScanService
 {
+    public Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default) => repository.GetAllAsync(cancellationToken);
     public async Task<PalletScanBatchResult> UploadAsync(PalletScanBatchRequest request, CancellationToken cancellationToken = default)
     {
         if (request?.Items is null || request.Items.Count is < 1 or > 1000)

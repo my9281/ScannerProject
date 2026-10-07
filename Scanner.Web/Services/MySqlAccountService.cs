@@ -78,7 +78,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
             await using MySqlCommand command = connection.CreateCommand();
             command.Transaction = transaction;
             command.CommandText = """
-                SELECT u.`id`, u.`username`, u.`display_name`, u.`password_salt`, u.`password_hash`, u.`password_iterations`,
+                SELECT u.`id`, u.`username`, u.`display_name`, u.`password_salt`, u.`password_hash`, u.`password_algorithm`, u.`password_iterations`,
                        u.`role`, u.`status`, u.`failed_login_count`, u.`locked_until`, d.`id` AS `domain_id`, d.`domain_name`, d.`is_enabled`
                 FROM `app_users` u
                 INNER JOIN `user_domains` d ON d.`id` = u.`domain_id`
@@ -90,19 +90,23 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
             {
                 if (await reader.ReadAsync(cancellationToken)) user = ReadUser(reader);
             }
-            if (user is null) return null;
-            DateTime now = DateTime.UtcNow;
-            if (!user.DomainEnabled || !string.Equals(user.Status, "active", StringComparison.OrdinalIgnoreCase)
-                || user.LockedUntil.HasValue && user.LockedUntil.Value > now) return null;
-
-            byte[] suppliedHash = HashPassword(request.Password, user.PasswordSalt, user.Iterations);
-            if (!CryptographicOperations.FixedTimeEquals(suppliedHash, user.PasswordHash))
+            if (user is null)
             {
-                int failed = user.FailedLoginCount + 1;
+                AccountSecurity.VerifyPassword(request.Password, new byte[16], new byte[32], "PBKDF2-SHA256", DefaultIterations);
+                return null;
+            }
+            DateTime now = DateTime.UtcNow;
+            if (!AccountSecurity.CanLogin(user.Status, user.LockedUntil, user.DomainEnabled, user.Role, now)) return null;
+
+            if (!AccountSecurity.VerifyPassword(request.Password, user.PasswordSalt, user.PasswordHash, user.Algorithm, user.Iterations))
+            {
+                uint failed = user.LockedUntil.HasValue && user.LockedUntil <= now ? 1u
+                    : user.FailedLoginCount == uint.MaxValue ? uint.MaxValue : user.FailedLoginCount + 1;
                 await using MySqlCommand failure = connection.CreateCommand();
                 failure.Transaction = transaction;
-                failure.CommandText = "UPDATE `app_users` SET `failed_login_count`=@failed, `locked_until`=@lockedUntil WHERE `id`=@id;";
+                failure.CommandText = "UPDATE `app_users` SET `failed_login_count`=@failed, `locked_until`=@lockedUntil, `status`=@status WHERE `id`=@id;";
                 failure.Parameters.AddWithValue("@failed", failed);
+                failure.Parameters.AddWithValue("@status", failed >= MaxFailedLogins ? "locked" : "active");
                 failure.Parameters.Add("@lockedUntil", MySqlDbType.DateTime).Value = failed >= MaxFailedLogins ? now.Add(LockDuration) : DBNull.Value;
                 failure.Parameters.AddWithValue("@id", user.Id);
                 await failure.ExecuteNonQueryAsync(cancellationToken);
@@ -113,7 +117,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
             await using (MySqlCommand success = connection.CreateCommand())
             {
                 success.Transaction = transaction;
-                success.CommandText = "UPDATE `app_users` SET `failed_login_count`=0, `locked_until`=NULL, `last_login_at`=@now WHERE `id`=@id;";
+                success.CommandText = "UPDATE `app_users` SET `failed_login_count`=0, `locked_until`=NULL, `status`='active', `last_login_at`=@now WHERE `id`=@id;";
                 success.Parameters.Add("@now", MySqlDbType.DateTime).Value = now;
                 success.Parameters.AddWithValue("@id", user.Id);
                 await success.ExecuteNonQueryAsync(cancellationToken);
@@ -136,12 +140,15 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         await using MySqlConnection connection = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await using MySqlCommand command = connection.CreateCommand();
         command.CommandText = """
-            SELECT u.`username`, u.`display_name`, u.`role`, d.`id` AS `domain_id`, d.`domain_name`, s.`expires_at`
+            SELECT u.`id`, u.`username`, u.`display_name`, u.`role`, d.`id` AS `domain_id`, d.`domain_name`, s.`expires_at`
             FROM `user_sessions` s
             INNER JOIN `app_users` u ON u.`id` = s.`user_id`
             INNER JOIN `user_domains` d ON d.`id` = u.`domain_id`
             WHERE s.`token_hash`=@tokenHash AND s.`revoked_at` IS NULL AND s.`expires_at`>@now
-              AND u.`status`='active' AND d.`is_enabled`=1 LIMIT 1;
+              AND u.`status`='active' AND d.`is_enabled`=1
+              AND (u.`locked_until` IS NULL OR u.`locked_until`<=@now)
+              AND u.`role` IN ('admin','user','viewer')
+              AND (u.`password_changed_at` IS NULL OR u.`password_changed_at`<=s.`created_at`) LIMIT 1;
             """;
         command.Parameters.Add("@tokenHash", MySqlDbType.Binary, 32).Value = tokenHash;
         command.Parameters.Add("@now", MySqlDbType.DateTime).Value = DateTime.UtcNow;
@@ -149,7 +156,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         if (!await reader.ReadAsync(cancellationToken)) return null;
         return new AccountResult(reader.GetString("username"), reader.IsDBNull(reader.GetOrdinal("display_name")) ? null : reader.GetString("display_name"),
             new AccountDomain(reader.GetInt32("domain_id"), reader.GetString("domain_name")), reader.GetString("role"), token,
-            new DateTimeOffset(DateTime.SpecifyKind(reader.GetDateTime("expires_at"), DateTimeKind.Utc)));
+            new DateTimeOffset(DateTime.SpecifyKind(reader.GetDateTime("expires_at"), DateTimeKind.Utc))) { UserId = reader.GetUInt64("id") };
     }
 
     public async Task LogoutAsync(string token, CancellationToken cancellationToken = default)
@@ -185,13 +192,13 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         command.Parameters.Add("@expiresAt", MySqlDbType.DateTime).Value = expiresAt;
         command.Parameters.Add("@now", MySqlDbType.DateTime).Value = now;
         await command.ExecuteNonQueryAsync(cancellationToken);
-        return new AccountResult(username, displayName, domain, role, token, new DateTimeOffset(expiresAt, TimeSpan.Zero));
+        return new AccountResult(username, displayName, domain, role, token, new DateTimeOffset(expiresAt, TimeSpan.Zero)) { UserId = userId };
     }
 
     private static string RequiredUsername(string? value)
     {
         string username = value?.Trim() ?? string.Empty;
-        if (username.Length is < 3 or > 100) throw new ArgumentException("用户名长度必须在 3 到 100 个字符之间。");
+        if (username.Length is < 1 or > 100) throw new ArgumentException("用户名长度必须在 1 到 100 个字符之间。");
         return username;
     }
 
@@ -201,10 +208,10 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
 
     private static UserRow ReadUser(MySqlDataReader reader) => new(
         reader.GetUInt64("id"), reader.GetString("username"), reader.IsDBNull(reader.GetOrdinal("display_name")) ? null : reader.GetString("display_name"),
-        (byte[])reader["password_salt"], (byte[])reader["password_hash"], reader.GetInt32("password_iterations"), reader.GetString("role"),
-        reader.GetString("status"), reader.GetInt32("failed_login_count"), reader.IsDBNull(reader.GetOrdinal("locked_until")) ? null : reader.GetDateTime("locked_until"),
+        (byte[])reader["password_salt"], (byte[])reader["password_hash"], reader.GetString("password_algorithm"), reader.GetUInt32("password_iterations"), reader.GetString("role"),
+        reader.GetString("status"), reader.GetUInt32("failed_login_count"), reader.IsDBNull(reader.GetOrdinal("locked_until")) ? null : reader.GetDateTime("locked_until"),
         reader.GetInt32("domain_id"), reader.GetString("domain_name"), reader.GetBoolean("is_enabled"));
 
-    private sealed record UserRow(ulong Id, string Username, string? DisplayName, byte[] PasswordSalt, byte[] PasswordHash, int Iterations,
-        string Role, string Status, int FailedLoginCount, DateTime? LockedUntil, int DomainId, string DomainName, bool DomainEnabled);
+    private sealed record UserRow(ulong Id, string Username, string? DisplayName, byte[] PasswordSalt, byte[] PasswordHash, string Algorithm, uint Iterations,
+        string Role, string Status, uint FailedLoginCount, DateTime? LockedUntil, int DomainId, string DomainName, bool DomainEnabled);
 }

@@ -7,6 +7,7 @@ using Scanner.WPF.Helpers;
 using Scanner.WPF.Services;
 using Scanner.WPF.ViewModels;
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Net.Http;
 namespace Scanner.WPF.Controllers
@@ -42,6 +43,22 @@ namespace Scanner.WPF.Controllers
             services.AddTransient<UrgentWorkOrderImportHelper>();
             services.AddTransient<DialogHelper>();
             return services.BuildServiceProvider();
+        }
+        public static IEnumerable<dynamic> DynamicObj
+        {
+            get
+            {
+                yield return 1;
+                yield return "Hello";
+                yield return new { Name = "Alice", Age = 30 };
+            }
+        }
+        public static void Test()
+        {
+            foreach (var obj in DynamicObj)
+            {
+                Console.WriteLine(obj);
+            }
         }
     }
 }

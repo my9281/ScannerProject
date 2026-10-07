@@ -11,7 +11,12 @@ public interface IAccountService
     Task LogoutAsync(string token, CancellationToken cancellationToken = default);
 }
 
-public sealed record AccountResult(string Username, string? DisplayName, AccountDomain Domain, string Role, string Token, DateTimeOffset ExpiresAt);
+public sealed record AccountResult(string Username, string? DisplayName, AccountDomain Domain, string Role, string Token, DateTimeOffset ExpiresAt)
+{
+    public ulong UserId { get; init; }
+    public IReadOnlyList<string> Permissions => AccountSecurity.Permissions(Role);
+    public string Message => AccountSecurity.LoginMessage(Role);
+}
 
 public sealed class AccountAlreadyExistsException(string username)
     : Exception($"用户名“{username}”已存在。");

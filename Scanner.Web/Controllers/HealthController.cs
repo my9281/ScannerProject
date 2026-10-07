@@ -11,6 +11,7 @@ public sealed class HealthController(IDatabaseHealthService databaseHealth) : Co
     public IActionResult Health() => Ok(new { status = "ok", utc = DateTimeOffset.UtcNow });
 
     [HttpGet("/health/database")]
+    [Scanner.Web.Filters.ApiKey]
     public async Task<IActionResult> Database(CancellationToken cancellationToken)
     {
         DatabaseHealthStatus status = await databaseHealth.CheckAsync(cancellationToken);

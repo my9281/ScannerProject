@@ -5,17 +5,17 @@
 ## API
 
 - `GET /api/account/domains`：获取可选择的域列表。
-- `POST /api/account/register`：注册内存账户，请求字段为 `username`、`password`、`confirmPassword` 和 `domainId`。
-- `POST /api/account/login`：登录内存账户，请求字段为 `username` 和 `password`。
+- `POST /api/account/register`：注册账户（当前公开站点关闭注册入口），请求字段为 `username`、`password`、`confirmPassword` 和 `domainId`。
+- `POST /api/account/login`：登录 MySQL app_users 账户，请求字段为 `username` 和 `password`。
 - `POST /api/uploads/scans`：上传文件，表单字段为 `file` 和可选的 `deviceName`。
 - `GET /api/uploads`：列出已上传文件。
 - `GET /api/uploads/{id}/content`：读取文件内容，供网页预览。
 - `GET /api/uploads/{id}/download`：下载文件。
 - `GET /health`：健康检查。
 
-除健康检查外，所有 API 在配置了密钥时都需要请求头 `X-Upload-Key`。上传仅接受有效的 `.txt` 或 `.json` 文件，默认最大 10 MB；在线预览默认最大 1 MB。
+设备上传及业务数据 API 需要配置密钥并提供请求头 `X-Upload-Key`；账户登录接口可由浏览器直接访问。上传仅接受有效的 `.txt` 或 `.json` 文件，默认最大 10 MB；在线预览默认最大 1 MB。
 
-账户接口暂不连接数据库，注册数据仅保存在当前进程内，应用重启后会清空。登录成功后返回的随机令牌目前仅作为接口返回值，尚未接入其他接口的授权验证。
+账户登录使用 MySQL app_users，令牌会话存储在 user_sessions。登录状态通过 me 接口验证；检测模块业务接口可通过 AccountPermission 验证权限。部署依赖、角色和测试步骤见 [WEB_LOGIN.md](WEB_LOGIN.md)。
 
 ## 账户页面
 
@@ -33,7 +33,7 @@ Upload__MaxBytes=10485760
 Upload__MaxPreviewBytes=1048576
 ```
 
-未配置 `Upload__ApiKey` 时接口允许匿名访问，只适合本地测试。生产环境还需确保运行站点的账户对上传目录有读写权限。
+未配置 `Upload__ApiKey` 时，受密钥保护的接口返回 503。生产环境还需确保运行站点的账户对上传目录有读写权限。
 
 ## 运行与发布
 
@@ -42,7 +42,7 @@ dotnet run --project Scanner.Web.csproj
 dotnet publish Scanner.Web.csproj -p:PublishProfile=IIS-SelfContained
 ```
 
-`IIS-SelfContained` 和 Visual Studio 使用的 `FolderProfile` 均按 Windows x64 自包含方式发布。发布到 IIS 时，必须将发布目录的全部文件（不只是项目 DLL）部署到站点物理目录。服务器仍需安装 ASP.NET Core Hosting Bundle 以提供 IIS 的 AspNetCoreModuleV2，但不要求安装与项目匹配的 .NET 10 运行时。应用程序池使用“无托管代码”。
+Visual Studio 使用的 `FolderProfile` 按 Windows x64 框架依赖方式发布，需要服务器安装 ASP.NET Core 10 Hosting Bundle。它只携带应用和 MySQL 驱动，不复制 .NET 运行时。`IIS-SelfContained` 保留自包含方式，适用于需要随应用携带运行时的部署；IIS 仍需安装 Hosting Bundle 提供 AspNetCoreModuleV2。应用程序池使用“无托管代码”。请使用新发布目录部署，并保留服务器现有配置和上传数据，避免旧运行时文件留在站点目录。
 ## 上架托盘接口
 
 接口使用与上传接口相同的 `X-Upload-Key` 请求头。
@@ -94,6 +94,8 @@ dotnet publish Scanner.Web.csproj -p:PublishProfile=IIS-SelfContained
 
 ## 精简发布包
 
+首页为单屏黑底白字展示页，仅保留登录入口。`GET /api/home/metrics` 是公开的宣传数量接口，仅返回五个计数，不返回文件名、用户信息、SKU 或 SN；计数缓存 60 秒，不可用时返回 null。线路数对应上传目录中的 TXT／JSON 文件数；用户数取 `app_users` 全部记录；良品区托盘数按 `shelved_pallet_data` 的上架日期＋托盘号分组，记录数取该表全部行；维修方案数按 `tester_pallet_scans` 的扫描日期＋托盘号分组。良品区没有出库状态字段，数量表示表内累计数据，不代表实时在库量。
+
 服务器已安装 ASP.NET Core 10 Hosting Bundle 时，使用 `LeanUpload` 配置生成精简、单文件、无 PDB 的 Windows x64 发布包：
 
 ```powershell
@@ -101,3 +103,5 @@ dotnet publish Scanner.Web -c Release -p:PublishProfile=LeanUpload
 ```
 
 输出目录为 `Scanner.Web/bin/Release/net10.0/publish/secure-lean-win-x64`。此配置不启用 Trim，避免 ASP.NET Core 控制器和 JSON 反射被错误裁剪；它通过复用服务器运行时和单文件打包减少体积及上传文件数量。
+
+所有发布模式排除 PDB、开发工具清单、数据库脚本、README、本地私有配置、App_Data 数据和已关闭的注册／托盘网页。静态文件通过 `UseStaticFiles` 提供，不发布压缩副本；保留 SDK 生成的静态资源元数据。普通开发构建仍保留调试能力。业务程序集和 MySqlConnector 是实际依赖，必须保留；单文件模式将它们打包到可执行文件中。

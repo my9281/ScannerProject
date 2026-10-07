@@ -1,9 +1,9 @@
 <Window x:Class="Scanner.WPF.RegistrationRepairWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="登记表修复" Width="680" Height="690" ResizeMode="NoResize"
+        Title="登记表修复" Width="750" Height="760" ResizeMode="CanResize" MinWidth="700" MinHeight="550"
         WindowStartupLocation="CenterOwner" Background="#EAF3F7" FontFamily="{DynamicResource AppFontFamily}">
-    <StackPanel Margin="28">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="28">
         <TextBlock Text="登记表修复" FontSize="28" FontWeight="Bold" Foreground="#082F4D"/>
         <TextBlock Text="仅处理亚马逊、eBay 收件登记工作表，合并导出一套数据。" TextWrapping="Wrap" Margin="0,12,0,14"/>
         <TextBlock Text="1. A 列日期统一格式，空白、备注等沿用本工作表上一条有效日期。" TextWrapping="Wrap" Margin="0,0,0,8"/>
@@ -24,5 +24,25 @@
             <ComboBox x:Name="MonthBox" Width="80"/>
             <Button x:Name="WarehouseExportButton" Content="导出仓租检测" Click="WarehouseExport_Click" IsEnabled="False" Margin="20,0,0,0" Padding="12,8"/>
         </StackPanel>
-    </StackPanel>
+        <Separator Margin="0,18,0,14"/>
+        <TextBlock Text="第三步：月度仓租结算" FontSize="21" FontWeight="Bold" Foreground="#082F4D"/>
+        <TextBlock Text="合并统计所选月收货、系统当月处理完成和仍在仓清单，分别标记来源。同一 SN 取最新入库日期计算；仍在仓及仅收货记录算到月末，处理完成记录算到完成日，首尾均计一天。" TextWrapping="Wrap" Margin="0,8,0,12"/>
+        <WrapPanel>
+            <Button x:Name="WebInventoryButton" Content="一键导入 Web 上架表" Click="ImportWebInventory_Click" Padding="12,8" Margin="0,0,8,8"/>
+            <Button x:Name="InventoryFileButton" Content="导入在仓 Excel" Click="ImportInventoryFile_Click" Padding="12,8" Margin="0,0,8,8"/>
+            <Button x:Name="InventoryTemplateButton" Content="下载导入模板" Click="InventoryTemplate_Click" Padding="12,8" Margin="0,0,0,8"/>
+        </WrapPanel>
+        <TextBlock Text="Web 上架表没有出库状态；请确认导入的数据代表结算所用的在仓清单。历史月份可导入保存的清单。" TextWrapping="Wrap"/>
+        <TextBlock x:Name="InventoryText" Text="未导入在仓清单" TextWrapping="Wrap" Margin="0,8,0,10"/>
+        <WrapPanel>
+            <TextBlock Text="清单日期" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <DatePicker x:Name="SnapshotDateBox" Width="145" Margin="0,0,16,8"/>
+            <TextBlock Text="结算年份" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <ComboBox x:Name="RentYearBox" IsEditable="True" Width="95" Margin="0,0,16,8"/>
+            <TextBlock Text="月份" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <ComboBox x:Name="RentMonthBox" Width="65" Margin="0,0,0,8"/>
+        </WrapPanel>
+        <Button x:Name="RentExportButton" Content="导出仓租结算" IsEnabled="False" Click="RentExport_Click" Padding="14,8" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+        <TextBlock x:Name="RentStatusText" TextWrapping="Wrap" Margin="0,10,0,0"/>
+    </StackPanel></ScrollViewer>
 </Window>

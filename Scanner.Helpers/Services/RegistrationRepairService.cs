@@ -225,13 +225,13 @@ namespace Scanner.Helpers.Services
             finally { if (File.Exists(temporary)) File.Delete(temporary); }
         }
 
-        private static XElement Styles() => new XElement(Ns + "styleSheet",
+        internal static XElement Styles() => new XElement(Ns + "styleSheet",
             new XElement(Ns + "numFmts", new XAttribute("count", 2), new XElement(Ns + "numFmt", new XAttribute("numFmtId", 164), new XAttribute("formatCode", "yyyy-mm-dd")), new XElement(Ns + "numFmt", new XAttribute("numFmtId", 165), new XAttribute("formatCode", "yyyy-mm-dd hh:mm:ss"))),
             new XElement(Ns + "fonts", new XAttribute("count", 2), new XElement(Ns + "font", new XElement(Ns + "sz", new XAttribute("val", 11)), new XElement(Ns + "name", new XAttribute("val", "Calibri"))), new XElement(Ns + "font", new XElement(Ns + "b"), new XElement(Ns + "sz", new XAttribute("val", 11)), new XElement(Ns + "name", new XAttribute("val", "Calibri")))),
             new XElement(Ns + "fills", new XAttribute("count", 2), new XElement(Ns + "fill", new XElement(Ns + "patternFill", new XAttribute("patternType", "none"))), new XElement(Ns + "fill", new XElement(Ns + "patternFill", new XAttribute("patternType", "gray125")))),
             new XElement(Ns + "borders", new XAttribute("count", 1), new XElement(Ns + "border")),
             new XElement(Ns + "cellStyleXfs", new XAttribute("count", 1), Xf(0, 0)),
-            new XElement(Ns + "cellXfs", new XAttribute("count", 4), Xf(0, 0), Xf(164, 0), Xf(0, 1), Xf(165, 0)),
+            new XElement(Ns + "cellXfs", new XAttribute("count", 5), Xf(0, 0), Xf(164, 0), Xf(0, 1), Xf(165, 0), Xf(2, 0)),
             new XElement(Ns + "cellStyles", new XAttribute("count", 1), new XElement(Ns + "cellStyle", new XAttribute("name", "Normal"), new XAttribute("xfId", 0), new XAttribute("builtinId", 0))));
         private static XElement Xf(int format, int font) => new XElement(Ns + "xf", new XAttribute("numFmtId", format), new XAttribute("fontId", font), new XAttribute("fillId", 0), new XAttribute("borderId", 0), new XAttribute("xfId", 0), new XAttribute("applyNumberFormat", 1));
         private static XElement TextCell(string reference, string value, int style = 0) => new XElement(Ns + "c", new XAttribute("r", reference), new XAttribute("t", "inlineStr"), new XAttribute("s", style), new XElement(Ns + "is", new XElement(Ns + "t", new XAttribute(XNamespace.Xml + "space", "preserve"), value ?? "")));

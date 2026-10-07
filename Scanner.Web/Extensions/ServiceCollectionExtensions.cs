@@ -19,7 +19,11 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ApiKeyAuthorizationFilter>();
         services.AddScoped<ApiExceptionFilter>();
         services.AddScoped<IUploadService, UploadService>();
+        services.AddMemoryCache();
+        services.AddScoped<HomeMetricsService>();
         services.AddScoped<IAccountService, MySqlAccountService>();
+        services.AddScoped<IWorkOrderService, MySqlWorkOrderService>();
+        services.AddScoped<WorkOrderBatchService>();
         services.AddScannerDataAccess(configuration);
         services.AddScannerBusinessLogic();
         return services;

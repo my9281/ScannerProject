@@ -4,14 +4,17 @@ namespace Scanner.CheckListBoard
 {
     public partial class App : Application
     {
-        public App()
+        private readonly Services.AccountClient accounts;
+        public App(Services.AccountClient accounts)
         {
+            this.accounts = accounts;
             InitializeComponent();
+            UserAppTheme = AppTheme.Dark;
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new AppShell());
+            return new Window(new LoginPage(accounts));
         }
     }
 }

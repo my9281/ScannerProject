@@ -5,9 +5,11 @@ namespace Scanner.Web.Models;
 public sealed class LoginRequest
 {
     [Required(ErrorMessage = "用户名不能为空。")]
+    [StringLength(100, ErrorMessage = "用户名不能超过 100 个字符。")]
     public string Username { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "密码不能为空。")]
+    [StringLength(4096, ErrorMessage = "密码输入过长。")]
     public string Password { get; init; } = string.Empty;
 }
 

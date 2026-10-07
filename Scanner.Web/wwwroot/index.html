@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>LOGISTICS / CONTROL SYSTEM</title><link rel="stylesheet" href="/home.css">
+</head>
+<body><div class="page">
+<header><div class="brand">LOGISTICS<span>CONTROL SYSTEM / LCS</span></div><a href="/login.html">LOGIN ↗</a></header>
+<main>
+<div class="signal">GLOBAL NETWORK · OPERATIONAL INTELLIGENCE</div>
+<h1>EVERY ROUTE.<br>ONE SYSTEM.</h1>
+<div class="copy" aria-live="polite">
+<p>针对 <strong data-metric="routes">—</strong> 个物流线路，<br class="mobile">为 <strong data-metric="users">—</strong> 位用户提供服务。</p>
+<p>提供了 <strong data-metric="pallets">—</strong> 个托盘的数据，<br class="mobile">包含 <strong data-metric="records">—</strong> 条记录。</p>
+<p>并为 <strong data-metric="repairs">—</strong> 个托盘提供维修方案。</p>
+</div>
+<div class="baseline"><span>PRECISION / SYNCHRONIZATION / CONTROL</span><span aria-hidden="true">[ LCS / CORE ]</span></div>
+</main>
+<footer><span>LOGISTICS MANAGEMENT SYSTEM</span><span>个人项目，宣传仅供参考</span></footer>
+</div><script>
+(async()=>{try{const response=await fetch('/api/home/metrics',{cache:'no-store'});if(!response.ok)return;const metrics=await response.json();document.querySelectorAll('[data-metric]').forEach(node=>{const value=metrics[node.dataset.metric];node.textContent=Number.isSafeInteger(value)&&value>=0?value.toLocaleString('zh-CN'):'—';});}catch{}})();
+</script></body></html>

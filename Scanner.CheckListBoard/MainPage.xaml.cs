@@ -1,104 +1,86 @@
 using Microsoft.Maui.Controls.Shapes;
-using Microsoft.Maui.Graphics;
+using Scanner.CheckListBoard.Services;
 
 namespace Scanner.CheckListBoard;
 
 public partial class MainPage : ContentPage
 {
-    public MainPage()
+    private readonly AccountClient accounts;
+    public MainPage(AccountClient accounts)
     {
+        this.accounts = accounts;
         InitializeComponent();
-        PorcelainBackground.Drawable = new PorcelainDrawable();
-        string[] modules = ["入库检测", "安全检测", "裸机检测", "整机检测", "查看评级", "历史查看", "系统配置"];
-        string[] subtitles = ["来料验收", "安全核验", "单机检查", "整机验证", "品质分级", "检测记录", "工作台设置"];
-        for (var row = 0; row < 4; row++)
-            ModuleGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
-        for (var index = 0; index < modules.Length; index++)
+        var session = accounts.Session ?? throw new InvalidOperationException("请先登录。");
+        IdentityLabel.Text = $"{session.DisplayName ?? session.Username}，欢迎回来";
+        RoleLabel.Text = session.Message;
+        PermissionLabel.Text = session.Role switch
         {
-            var title = modules[index];
-            var card = new Border
+            "admin" => "管理员 / 检测查看 · 检测操作 · 系统配置",
+            "user" => "普通用户 / 检测查看 · 检测操作",
+            _ => "只读用户 / 检测查看"
+        };
+        string[] modules = ["入库检测", "安全检测", "裸机检测", "整机检测", "查看评级", "历史查看", "系统配置", "工单查看"];
+        string[] subtitles = ["来料验收", "安全核验", "单机检查", "整机验证", "品质分级", "检测记录", "工作台设置", "工单列表"];
+        for (int row = 0; row < 4; row++) ModuleGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        for (int index = 0; index < modules.Length; index++)
+        {
+            string title = modules[index];
+            string permission = index == 6 ? "system.configure" : index < 4 ? "checklist.write" : "checklist.read";
+            bool allowed = accounts.HasPermission(permission);
+            var content = new VerticalStackLayout
             {
-                Stroke = new SolidColorBrush(Color.FromArgb("#F9FDFF")), StrokeThickness = 1.5,
-                StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(22) },
-                Background = new LinearGradientBrush
-                {
-                    StartPoint = new Point(0, 0), EndPoint = new Point(0, 1),
-                    GradientStops = new GradientStopCollection
-                    {
-                        new GradientStop(Color.FromArgb("#F7FFFFFF"), 0),
-                        new GradientStop(Color.FromArgb("#B8FFFFFF"), 0.48f),
-                        new GradientStop(Color.FromArgb("#80D8EAF7"), 0.5f),
-                        new GradientStop(Color.FromArgb("#DAFFFFFF"), 1)
-                    }
-                },
-                Shadow = new Shadow { Brush = new SolidColorBrush(Color.FromArgb("#689ABB")), Offset = new Point(0, 6), Radius = 14, Opacity = 0.18f },
-                HeightRequest = index == 6 ? 90 : 138
-            };
-            var content = new Grid { Padding = new Thickness(17, 14), InputTransparent = true };
-            content.Add(new Label { Text = $"{index + 1:00}", FontSize = 26, TextColor = Color.FromArgb("#7DA8C8"), HorizontalOptions = LayoutOptions.End, VerticalOptions = LayoutOptions.Start });
-            content.Add(new VerticalStackLayout
-            {
-                Spacing = 5, VerticalOptions = LayoutOptions.End,
+                Padding = new Thickness(18, 16), Spacing = 9, InputTransparent = true,
                 Children =
                 {
-                    new Label { Text = title, FontSize = 19, FontAttributes = FontAttributes.Bold, TextColor = Color.FromArgb("#224F75") },
-                    new Label { Text = subtitles[index], FontSize = 12, TextColor = Color.FromArgb("#6587A2") }
+                    new Label { Text = $"{index + 1:00}", FontSize = 15, TextColor = Color.FromArgb(index == 6 ? "#D9B866" : "#8FCFDA") },
+                    new Label { Text = title, FontSize = 18, TextColor = Colors.White },
+                    new Label { Text = allowed ? subtitles[index] : "当前角色无操作权限", FontSize = 11, TextColor = Color.FromArgb(allowed ? "#929EAA" : "#E84949") }
                 }
-            });
+            };
             var layers = new Grid();
             layers.Add(content);
-            // Native button retains keyboard focus, accessibility and touch feedback.
-            var button = new Button { BackgroundColor = Colors.Transparent, Text = title, TextColor = Colors.Transparent, BorderWidth = 0, CornerRadius = 22, Padding = 0 };
+            var button = new Button { BackgroundColor = Colors.Transparent, Text = title, TextColor = Colors.Transparent, BorderWidth = 0, CornerRadius = 8, Padding = 0, IsEnabled = allowed };
             SemanticProperties.SetDescription(button, title);
-            button.Clicked += async (_, _) => await DisplayAlertAsync(title, "此功能页面待接入。", "返回工作台");
+            button.Clicked += async (_, _) =>
+            {
+                if (!accounts.HasPermission(permission))
+                {
+                    await DisplayAlertAsync("登录状态", "登录已过期或当前账户无此权限，请重新登录。", "返回登录");
+                    await LogoutAsync();
+                    return;
+                }
+                if (title == "工单查看")
+                {
+                    await Navigation.PushAsync(new WorkOrdersPage(accounts));
+                    return;
+                }
+                await DisplayAlertAsync(title, "此功能页面待接入。", "返回工作台");
+            };
             layers.Add(button);
-            card.Content = layers;
+            var card = new Border
+            {
+                Stroke = new SolidColorBrush(Color.FromArgb("#408FCFDA")), StrokeThickness = 1,
+                StrokeShape = new RoundRectangle { CornerRadius = new CornerRadius(8) },
+                BackgroundColor = Color.FromArgb("#99000000"), Content = layers, Opacity = allowed ? 1 : 0.55
+            };
             ModuleGrid.Add(card, index % 2, index / 2);
-            if (index == 6) { Grid.SetColumn(card, 0); Grid.SetColumnSpan(card, 2); }
         }
     }
-}
-
-internal sealed class PorcelainDrawable : IDrawable
-{
-    public void Draw(ICanvas canvas, RectF dirtyRect)
+    protected override void OnAppearing()
     {
-        canvas.FillColor = Color.FromArgb("#E5F2FA");
-        canvas.FillRectangle(dirtyRect);
-        canvas.StrokeColor = Color.FromArgb("#88ADCD");
-        canvas.StrokeSize = 1.3f;
-        canvas.Alpha = 0.26f;
-        DrawFlower(canvas, dirtyRect.Width - 30, 95, 92);
-        DrawFlower(canvas, 10, dirtyRect.Height - 100, 120);
-        canvas.Alpha = 0.16f;
-        for (var i = 0; i < 7; i++)
-        {
-            var y = 160 + i * 85f;
-            var vine = new PathF();
-            vine.MoveTo(dirtyRect.Width - 14, y - 60);
-            vine.CurveTo(dirtyRect.Width - 100, y - 20, dirtyRect.Width + 30, y + 30, dirtyRect.Width - 30, y + 80);
-            canvas.DrawPath(vine);
-            DrawFlower(canvas, dirtyRect.Width - 26, y, 25);
-        }
-        canvas.Alpha = 1;
+        base.OnAppearing();
+        if (accounts.Session is null || accounts.Session.ExpiresAt <= DateTimeOffset.UtcNow)
+            Dispatcher.Dispatch(() => { if (Window is { } window) window.Page = new LoginPage(accounts); });
     }
-
-    private static void DrawFlower(ICanvas canvas, float x, float y, float radius)
+    private async void OnLogoutClicked(object? sender, EventArgs e)
     {
-        canvas.SaveState();
-        canvas.Translate(x, y);
-        for (var i = 0; i < 8; i++)
-        {
-            canvas.Rotate(45);
-            var petal = new PathF();
-            petal.MoveTo(0, 0);
-            petal.CurveTo(-radius * 0.55f, -radius * 0.4f, -radius * 0.35f, -radius * 0.85f, 0, -radius);
-            petal.CurveTo(radius * 0.35f, -radius * 0.85f, radius * 0.55f, -radius * 0.4f, 0, 0);
-            canvas.DrawPath(petal);
-            canvas.DrawLine(0, -radius * 0.18f, 0, -radius * 0.75f);
-        }
-        canvas.DrawCircle(0, 0, radius * 0.13f);
-        canvas.DrawCircle(0, 0, radius * 0.2f);
-        canvas.RestoreState();
+        LogoutButton.IsEnabled = false;
+        await LogoutAsync();
+    }
+    private async Task LogoutAsync()
+    {
+        try { await accounts.LogoutAsync(); }
+        catch (Exception) { await DisplayAlertAsync("已退出此设备", "网络不可用，服务端会话将按有效期到期。", "确定"); }
+        finally { if (Window is { } window) window.Page = new LoginPage(accounts); }
     }
 }

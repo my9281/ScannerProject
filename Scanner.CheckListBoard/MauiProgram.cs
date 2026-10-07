@@ -19,6 +19,7 @@ namespace Scanner.CheckListBoard
     		builder.Logging.AddDebug();
 #endif
 
+            builder.Services.AddSingleton<Services.AccountClient>();
             return builder.Build();
         }
     }

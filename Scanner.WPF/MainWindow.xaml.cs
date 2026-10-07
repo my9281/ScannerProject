@@ -34,8 +34,10 @@ namespace Scanner.WPF
         private void ImportGlobalBase_Click(object sender, RoutedEventArgs e) => _controller.ImportGlobalBase_Click(sender, e);
         private void OpenMonthlyReport_Click(object sender, RoutedEventArgs e) => _controller.OpenMonthlyReport_Click(sender, e);
         private void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e) => _controller.OpenRegistrationRepair_Click(sender, e);
+        private void OpenBatchLabel_Click(object sender, RoutedEventArgs e) => _controller.OpenBatchLabel_Click(sender, e);
         private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e) => _controller.OpenLocationFeeComparisonButton_Click(sender, e);
         private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e) => _controller.OpenOutboundInspectionButton_Click(sender, e);
+        private void OpenAutomaticMatching_Click(object sender, RoutedEventArgs e) => _controller.OpenAutomaticMatching_Click(sender, e);
         private void OpenChecklistButton_Click(object sender, RoutedEventArgs e) => _controller.OpenChecklistButton_Click(sender, e);
         private void CreateDailyReportButton_Click(object sender, RoutedEventArgs e) => _controller.CreateDailyReportButton_Click(sender, e);
         private void OpenScanView_Click(object sender, RoutedEventArgs e)

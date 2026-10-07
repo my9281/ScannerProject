@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Scanner.CheckListBoard.Models"
+             x:Class="Scanner.CheckListBoard.WorkOrdersPage" Title="工单查看"
+             Shell.NavBarIsVisible="False" BackgroundColor="#080A0C">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalOptions" Value="Center" />
+        </Style>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="80,Auto,*,36">
+        <!-- 固定背景；只有表格数据区上下滚动。 -->
+        <Image Source="board_banner.png" Grid.RowSpan="4" Aspect="AspectFill" InputTransparent="True" />
+        <Grid ColumnDefinitions="Auto,*,100" 
+        HeightRequest="40"
+              ColumnSpacing="18" Padding="24,0">
+            <Button Text="← 返回" Clicked="OnBackClicked" 
+                    TextColor="#D9B866" BackgroundColor="Transparent" FontSize="13" Padding="8,0" />
+            <Label Grid.Column="1" Text="工单查看" FontSize="24" />
+            <Button Grid.Column="2" x:Name="SaveButton" Text="保 存 →" Clicked="OnSaveClicked"
+        
+                    BackgroundColor="Transparent" TextColor="White" CornerRadius="6" 
+                    FontSize="13"   />
+        </Grid>
+ 
+        <Grid Grid.Row="1" ColumnDefinitions="*,Auto,Auto" Margin="32,0,32,16" ColumnSpacing="12">
+            <Label x:Name="CountLabel" Text="工单" TextColor="#B8D9DF" FontSize="12" />
+            <Label Grid.Column="1" x:Name="SaveStatusLabel" Text="等待下载" TextColor="#D9B866" FontSize="11" />
+            <Button Grid.Column="2" x:Name="RefreshButton" Text="重新下载" Clicked="OnRefreshClicked" BackgroundColor="Transparent" TextColor="#8FCFDA" FontSize="12" Padding="4,0" />
+        </Grid>
+        <Border Grid.Row="2" Margin="24,0,24,12" Stroke="#408FCFDA" StrokeThickness="1"
+                BackgroundColor="#99000000" StrokeShape="RoundRectangle 8" Padding="0">
+            <Grid RowDefinitions="Auto,*">
+                <Grid ColumnDefinitions="40,1.5*,3*,100" ColumnSpacing="12" Padding="16,16"
+                      BackgroundColor="#66000000">
+                    <Label Text="序号" TextColor="#8FCFDA" FontSize="12" />
+                    <Label Grid.Column="1" Text="设备ID" TextColor="#8FCFDA" FontSize="12" />
+                    <Label Grid.Column="2" Text="描述" TextColor="#8FCFDA" FontSize="12" />
+                    <Label Grid.Column="3" Text="完成状态" TextColor="#D9B866" FontSize="12" 
+                           HorizontalOptions="Center"
+                           />
+                </Grid>
+                <CollectionView x:Name="OrdersTable" Grid.Row="1" SelectionMode="None"
+                                VerticalScrollBarVisibility="Always" BackgroundColor="Transparent">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="0" />
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.EmptyView>
+                        <VerticalStackLayout Padding="24,64" Spacing="10" VerticalOptions="Center">
+                            <Label Text="暂无工单" FontSize="18" HorizontalTextAlignment="Center" />
+                            <Label Text="当前用户没有审核位为0的工单" FontSize="12" TextColor="#A7B4BA" HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </CollectionView.EmptyView>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="local:WorkOrderRow">
+                            <Grid RowDefinitions="Auto,1" BackgroundColor="Transparent">
+                                <Grid ColumnDefinitions="40,1.5*,3*,100" ColumnSpacing="12" Padding="16,18">
+                                    <Label Text="{Binding Number}" LineBreakMode="CharacterWrap" />
+                                    <Label Grid.Column="1" Text="{Binding DeviceId}" LineBreakMode="CharacterWrap" />
+                                    <Label Grid.Column="2" Text="{Binding Description}" />
+                                    <VerticalStackLayout Grid.Column="3" Spacing="5" VerticalOptions="Center">
+                                        <HorizontalStackLayout Spacing="4" HorizontalOptions="Center">
+                                            <Label Text="{Binding Completion}" TextColor="#E53935"
+                                                   IsVisible="Collapse" 
+                                                   FontSize="18">
+                                                <Label.Triggers>
+                                                    <DataTrigger TargetType="Label" 
+                                                                             Binding="{Binding IsCompleted}" Value="True">
+                                                        <Setter Property="TextColor" Value="#43C786" />
+                                                    </DataTrigger>
+                                                </Label.Triggers>
+                                            </Label>
+                                            <Switch IsToggled="{Binding IsCompleted, Mode=TwoWay}"  
+                                                    ThumbColor="#E53935" OnColor="#226943" 
+                                               ScaleX="2"
+        ScaleY="1.8" 
+                                                    IsEnabled="{Binding CanEdit}">
+                                                <Switch.Triggers>
+                                                    <DataTrigger TargetType="Switch" Binding="{Binding IsCompleted}" Value="True">
+                                                        <Setter Property="ThumbColor" Value="#43C786" />
+                                                    </DataTrigger>
+                                                </Switch.Triggers>
+                                            </Switch>
+                                        </HorizontalStackLayout>
+                                        <Label Text="{Binding StatusText}"      IsVisible="Collapse" FontSize="11" TextColor="#E53935" HorizontalTextAlignment="Center">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsCompleted}" Value="True">
+                                                    <Setter Property="TextColor" Value="#43C786" />
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
+                                    </VerticalStackLayout>
+                                </Grid>
+                                <BoxView Grid.Row="1" HeightRequest="1" Color="#22FFFFFF" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Grid>
+        </Border>
+        <Label Grid.Row="3" Text="深圳 · 壹合国际" HorizontalTextAlignment="Center" FontSize="13" CharacterSpacing="2" TextColor="#D9B866" />
+    </Grid>
+</ContentPage>

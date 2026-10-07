@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ x:Class="Scanner.CheckListBoard.LoginPage" BackgroundColor="#080A0C" Title="登录">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="White" />
+            <Setter Property="PlaceholderColor" Value="#869399" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+    </ContentPage.Resources>
+    <Grid RowDefinitions="80,*,36">
+        <Image Source="board_banner.png" Grid.RowSpan="3" Aspect="AspectFill" InputTransparent="True" />
+        <Label Text="幽梦之星 · 云上检查单" Margin="32,0" FontSize="23" FontAttributes="Bold" VerticalOptions="Center" />
+        <ScrollView Grid.Row="1">
+            <Grid x:Name="FormGrid" ColumnDefinitions="1*,4*,5*" Padding="0,64,0,36">
+                <Border Grid.Column="1" StrokeThickness="0" BackgroundColor="#80000000" StrokeShape="RoundRectangle 8" Padding="24,28" VerticalOptions="Start">
+                    <VerticalStackLayout Spacing="18">
+                        <Label Text="登录" FontSize="23" />
+                        <VerticalStackLayout Spacing="4">
+                             <Entry x:Name="UsernameInput" Placeholder="用户名" MaxLength="100" ReturnType="Next" Completed="OnUsernameCompleted" />
+                            <BoxView HeightRequest="1" Color="#668FCFDA" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="4">
+                             <Grid ColumnDefinitions="*,Auto">
+                                <Entry x:Name="PasswordInput" Placeholder="密码" IsPassword="True" MaxLength="4096" ReturnType="Go" Completed="OnLoginClicked" />
+                                <Button Grid.Column="1" x:Name="RevealButton" Text="显示" Clicked="OnRevealClicked" BackgroundColor="Transparent" TextColor="#D9B866" Padding="8,0" FontSize="12" />
+                            </Grid>
+                            <BoxView HeightRequest="1" Color="#668FCFDA" />
+                        </VerticalStackLayout>
+                        <Grid ColumnDefinitions="Auto,*,Auto">
+                            <CheckBox x:Name="RememberInput" IsChecked="True" Color="#8FCFDA" CheckedChanged="OnRememberChanged" />
+                            <Label Grid.Column="1" Text="记住账号和密码" FontSize="12" VerticalOptions="Center" TextColor="#BCC6CB" />
+                            <Button Grid.Column="2" Text="服务设置" Clicked="OnSettingsClicked" TextColor="#D9B866" BackgroundColor="Transparent" FontSize="11" Padding="4,0" />
+                        </Grid>
+                        <VerticalStackLayout x:Name="ServerSettings" IsVisible="False" Spacing="4">
+                            <Label Text="服务地址（HTTPS）" FontSize="11" TextColor="#A7B4BA" />
+                            <Entry x:Name="ServerInput" Keyboard="Url" Placeholder="https://wms.ymforever.com/" />
+                            <BoxView HeightRequest="1" Color="#668FCFDA" />
+                        </VerticalStackLayout>
+                        <Button x:Name="LoginButton" Text="登  录  →" Clicked="OnLoginClicked" HeightRequest="48" CornerRadius="6" BackgroundColor="#8FCFDA" TextColor="#080A0C" FontSize="15" />
+                        <ActivityIndicator x:Name="BusyIndicator" IsVisible="False" IsRunning="False" Color="#D9B866" />
+                        <Label x:Name="StatusLabel" FontSize="12" TextColor="#E84949" IsVisible="False" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </ScrollView>
+        <Label Text="深圳 · 壹合国际" Grid.Row="2" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" FontSize="13" CharacterSpacing="2" TextColor="#D9B866" />
+    </Grid>
+</ContentPage>

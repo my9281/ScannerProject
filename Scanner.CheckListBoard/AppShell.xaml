@@ -4,11 +4,10 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Scanner.CheckListBoard"
-    Title="Scanner.CheckListBoard">
+    Title="检测工作台" FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        x:Name="HomeContent" Title="检测工作台"
         Route="MainPage" />
 
 </Shell>

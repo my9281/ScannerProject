@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Globalization;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -15,15 +16,25 @@ namespace Scanner.WPF
         private string _sourcePath;
         private bool _busy;
         private readonly ChecklistDataCache _baseData;
-        public RegistrationRepairWindow(ChecklistDataCache baseData)
+        private readonly ShelvedPalletApiService _palletApi;
+        private IReadOnlyList<WarehouseInventoryRow> _inventory;
+        private string _inventoryPath;
+        public RegistrationRepairWindow(ChecklistDataCache baseData, ShelvedPalletApiService palletApi)
         {
             InitializeComponent();
             _baseData = baseData ?? throw new ArgumentNullException(nameof(baseData));
+            _palletApi = palletApi ?? throw new ArgumentNullException(nameof(palletApi));
             var years = baseData.MonthlySource?.Years ?? new int[0];
             YearBox.ItemsSource = years.Concat(new[] { DateTime.Today.Year }).Distinct().OrderByDescending(y => y).ToList();
             YearBox.SelectedItem = years.Count > 0 ? years.Max() : DateTime.Today.Year;
             MonthBox.ItemsSource = Enumerable.Range(1, 12).ToList();
             MonthBox.SelectedItem = DateTime.Today.Month;
+            var settlement = DateTime.Today.AddMonths(-1);
+            RentYearBox.ItemsSource = YearBox.ItemsSource;
+            RentYearBox.Text = settlement.Year.ToString(CultureInfo.InvariantCulture);
+            RentMonthBox.ItemsSource = Enumerable.Range(1, 12).ToList();
+            RentMonthBox.SelectedItem = settlement.Month;
+            SnapshotDateBox.SelectedDate = DateTime.Today;
             BaseFileText.Text = baseData.MonthlySource == null ? "尚未导入基础表，请先在主界面导入。" : "基础表：" + Path.GetFileName(baseData.BaseDataFile);
             Closing += (sender, e) => { if (_busy) e.Cancel = true; };
         }
@@ -34,6 +45,76 @@ namespace Scanner.WPF
             ExportButton.IsEnabled = !busy && _result != null;
             WarehouseExportButton.IsEnabled = !busy && _result != null && _baseData.MonthlySource != null;
             YearBox.IsEnabled = MonthBox.IsEnabled = !busy;
+            WebInventoryButton.IsEnabled = InventoryFileButton.IsEnabled = InventoryTemplateButton.IsEnabled = !busy;
+            SnapshotDateBox.IsEnabled = RentYearBox.IsEnabled = RentMonthBox.IsEnabled = !busy;
+            RentExportButton.IsEnabled = !busy && _inventory != null && _result != null && _baseData.MonthlySource != null;
+        }
+        private async void ImportWebInventory_Click(object sender, RoutedEventArgs e)
+        {
+            SetBusy(true); RentStatusText.Text = "正在导入 Web 上架表…";
+            try
+            {
+                var rows = await _palletApi.GetWarehouseInventoryAsync(System.Configuration.ConfigurationManager.AppSettings["UploadApiKey"]);
+                _inventory = rows; _inventoryPath = null;
+                SnapshotDateBox.SelectedDate = DateTime.Today;
+                InventoryText.Text = "Web 上架表：" + rows.Count + " 条，导入时间 " + DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                RentStatusText.Text = "导入完成，请确认清单日期和结算年月。";
+            }
+            catch (Exception ex) { RentStatusText.Text = "导入失败：" + ex.Message; }
+            finally { SetBusy(false); }
+        }
+        private async void ImportInventoryFile_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new OpenFileDialog { Title = "导入在仓清单", Filter = "Excel 工作簿 (*.xlsx)|*.xlsx" };
+            if (dialog.ShowDialog(this) != true) return;
+            SetBusy(true); RentStatusText.Text = "正在导入在仓清单…";
+            try
+            {
+                var rows = await Task.Run(() => WarehouseRentService.Import(dialog.FileName));
+                _inventory = rows; _inventoryPath = dialog.FileName;
+                InventoryText.Text = Path.GetFileName(dialog.FileName) + "：" + rows.Count + " 条";
+                RentStatusText.Text = "导入完成，请填写这份清单的实际日期。";
+            }
+            catch (Exception ex) { RentStatusText.Text = "导入失败：" + ex.Message; }
+            finally { SetBusy(false); }
+        }
+        private void InventoryTemplate_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new SaveFileDialog { Filter = "Excel 工作簿 (*.xlsx)|*.xlsx", FileName = "在仓清单导入模板.xlsx" };
+            if (dialog.ShowDialog(this) != true) return;
+            if (IsSourcePath(dialog.FileName)) { MessageBox.Show(this, "请选择新文件名，保留已导入的源文件。"); return; }
+            try { WarehouseRentService.ExportTemplate(dialog.FileName); RentStatusText.Text = "已生成与 Web 上架表字段一致的导入模板，至少填写 SN。"; }
+            catch (Exception ex) { RentStatusText.Text = "模板导出失败：" + ex.Message; }
+        }
+        private bool IsSourcePath(string path)
+        {
+            return new[] { _sourcePath, _baseData.BaseDataFile, _inventoryPath }.Where(p => !string.IsNullOrWhiteSpace(p))
+                .Any(p => string.Equals(Path.GetFullPath(path), Path.GetFullPath(p), StringComparison.OrdinalIgnoreCase));
+        }
+        private async void RentExport_Click(object sender, RoutedEventArgs e)
+        {
+            int year;
+            if (!int.TryParse(RentYearBox.Text, NumberStyles.None, CultureInfo.InvariantCulture, out year) || year < 1 || year > 9999 || !(RentMonthBox.SelectedItem is int) || !SnapshotDateBox.SelectedDate.HasValue)
+            { MessageBox.Show(this, "请输入有效的结算年月和清单日期。", "仓租结算"); return; }
+            int month = (int)RentMonthBox.SelectedItem;
+            DateTime snapshot = SnapshotDateBox.SelectedDate.Value;
+            if (snapshot.Date <= new DateTime(year, month, DateTime.DaysInMonth(year, month))) { MessageBox.Show(this, "清单日期必须在结算月份之后，例如用10月清单结算9月。", "仓租结算"); return; }
+            var dialog = new SaveFileDialog { Filter = "Excel 工作簿 (*.xlsx)|*.xlsx", FileName = year + "年" + month + "月-仓租结算.xlsx", DefaultExt = ".xlsx", AddExtension = true };
+            if (dialog.ShowDialog(this) != true) return;
+            if (IsSourcePath(dialog.FileName)) { MessageBox.Show(this, "请选择新文件名，保留已导入的源文件。"); return; }
+            SetBusy(true); RentStatusText.Text = "正在匹配并结算…";
+            try
+            {
+                var result = await Task.Run(() =>
+                {
+                    var calculation = WarehouseRentService.Calculate(_result, _inventory, _baseData.MonthlySource, year, month, snapshot);
+                    WarehouseRentService.Export(calculation, dialog.FileName); return calculation;
+                });
+                RentStatusText.Text = "已统计 " + result.Rows.Count + " 台次，其中已计算 " + result.Rows.Count(r => r.MonthDays.HasValue) + " 台次，当月合计 " + result.Rows.Sum(r => (long)(r.MonthDays ?? 0)) + " 天，累计合计 " + result.Rows.Sum(r => (long)(r.TotalDays ?? 0)) + " 天。待核对 " + result.Issues.Count + " 条，结算月份之后入仓略过 " + result.FutureReceiptCount + " 条。";
+                MessageBox.Show(this, RentStatusText.Text + "\n" + dialog.FileName, "仓租结算完成", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex) { RentStatusText.Text = "结算失败：" + ex.Message; }
+            finally { SetBusy(false); }
         }
         private static string Summary(RegistrationRepairResult result)
         {

@@ -24,5 +24,5 @@ namespace Scanner.DI
             services.AddSingleton<ChecklistDataCache>();
             return services;
         }
-    }
+    } 
 }

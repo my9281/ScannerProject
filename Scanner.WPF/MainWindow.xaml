@@ -115,6 +115,12 @@
                     </GroupBox >
                     <GroupBox Header="出入库管理">
                         <WrapPanel  Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenAutomaticMatching_Click">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="自动匹配" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="匹配 PDA 托盘与待检测入库数据并导出 Excel" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel>
+                            </Button>
                             <Button Style="{StaticResource FeatureCard}" Click="OpenMonthlyReport_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
@@ -173,6 +179,12 @@
                                 <StackPanel VerticalAlignment="Center">
                                     <TextBlock Text="登记表修复" Style="{StaticResource FeatureTitle}"/>
                                     <TextBlock Text="修复收件日期，规范亚马逊与 eBay 登记数据并导出" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenBatchLabel_Click">
+                                <StackPanel VerticalAlignment="Center">
+                                    <TextBlock Text="批量打印标签" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="导入 Excel 批量打印 SKU/SN 标签，报废标签画 X" Style="{StaticResource FeatureDescription}"/>
                                 </StackPanel>
                             </Button>
                         </WrapPanel>

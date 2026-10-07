@@ -1,0 +1,26 @@
+<Window x:Class="Scanner.WPF.AutomaticMatchingWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="自动匹配" Width="1100" Height="650" WindowStartupLocation="CenterOwner">
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top">
+            <TextBlock Text="获取 PDA 托盘数据，按 SN 匹配基础表中待检测的记录" FontSize="18" Margin="0,0,0,12"/>
+            <StackPanel Orientation="Horizontal">
+                <Button x:Name="FetchButton" Content="获取并匹配" Click="Fetch_Click" Padding="20,8"/>
+                <Button x:Name="ExportButton" Content="导出 Excel" Click="Export_Click" IsEnabled="False" Padding="20,8" Margin="12,0,0,0"/>
+                <Button x:Name="UploadButton" Content="重试上传工单" Click="Upload_Click" IsEnabled="False" Padding="20,8" Margin="12,0,0,0"/>
+            </StackPanel>
+            <TextBlock x:Name="StatusText" Text="请点击获取并匹配。" Margin="0,12" TextWrapping="Wrap"/>
+        </StackPanel>
+        <DataGrid x:Name="ResultsGrid" IsReadOnly="True" AutoGenerateColumns="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="托盘号" Binding="{Binding PalletNumber}"/>
+                <DataGridTextColumn Header="SN" Binding="{Binding Sn}"/>
+                <DataGridTextColumn Header="SKU" Binding="{Binding Sku}"/>
+                <DataGridTextColumn Header="RMA编号" Binding="{Binding RmaNumber}"/>
+                <DataGridTextColumn Header="扫描日期" Binding="{Binding ScanDate, StringFormat=yyyy-MM-dd}"/>
+                <DataGridTextColumn Header="扫描时间" Binding="{Binding ScanTime, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                <DataGridTextColumn Header="类型" Binding="{Binding Type}"/>
+                <DataGridTextColumn Header="检测状态" Binding="{Binding DetectionStatus}"/>
+                <DataGridTextColumn Header="处理时间" Binding="{Binding ProcessingTime}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

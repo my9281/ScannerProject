@@ -28,7 +28,7 @@
 		<MauiXamlInflator>SourceGen</MauiXamlInflator>
 
 		<!-- Display name -->
-		<ApplicationTitle>Scanner.CheckListBoard</ApplicationTitle>
+		<ApplicationTitle>壹仓检测</ApplicationTitle>
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.scanner.checklistboard</ApplicationId>
@@ -53,10 +53,10 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#080A0C" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#080A0C" BaseSize="280,91" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />

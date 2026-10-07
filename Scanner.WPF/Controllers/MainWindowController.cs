@@ -16,13 +16,15 @@ namespace Scanner.WPF.Controllers
 
         private readonly MainWindowViewModel _viewModel;
         private readonly ChecklistDataCache _baseData;
+        private readonly ShelvedPalletApiService _palletApi;
         private bool _scanInitialized;
-        public MainWindowController(IMainWindowView view, ChecklistDataCache baseData, MainWindowViewModel viewModel, IDesktopWindows windows)
+        public MainWindowController(IMainWindowView view, ChecklistDataCache baseData, MainWindowViewModel viewModel, IDesktopWindows windows, ShelvedPalletApiService palletApi)
         {
             _view = view;
             _windows = windows;
 
             _baseData = baseData ?? throw new ArgumentNullException(nameof(baseData));
+            _palletApi = palletApi;
             _viewModel = viewModel;
             _view.OwnerWindow.DataContext = _viewModel;
             _viewModel.FocusRequested += ViewModel_FocusRequested;
@@ -90,7 +92,17 @@ namespace Scanner.WPF.Controllers
 
         public void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e)
         {
-            new RegistrationRepairWindow(_baseData) { Owner = _view.OwnerWindow }.ShowDialog();
+            new RegistrationRepairWindow(_baseData, _palletApi) { Owner = _view.OwnerWindow }.ShowDialog();
+        }
+        public void OpenBatchLabel_Click(object sender, RoutedEventArgs e)
+        {
+            new BatchLabelWindow { Owner = _view.OwnerWindow }.ShowDialog();
+        }
+
+        public void OpenAutomaticMatching_Click(object sender, RoutedEventArgs e)
+        {
+            if (!RequireGlobalBase()) return;
+            new AutomaticMatchingWindow(_baseData, _palletApi) { Owner = _view.OwnerWindow }.ShowDialog();
         }
 
         public void OpenMonthlyReport_Click(object sender, RoutedEventArgs e)

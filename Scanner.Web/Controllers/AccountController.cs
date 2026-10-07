@@ -44,15 +44,17 @@ public sealed class AccountController(IAccountService accounts) : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<AccountResult>> Login([FromBody] LoginRequest request, CancellationToken cancellationToken)
     {
+        Response.Headers.CacheControl = "no-store";
         AccountResult? result = await accounts.LoginAsync(request, cancellationToken);
         return result is null
-            ? Unauthorized(new { message = "用户名或密码错误。" })
+            ? Unauthorized(new { message = "登录失败：用户名或密码错误，或账户暂不可用，请稍后重试或联系管理员。" })
             : Ok(result);
     }
 
     [HttpGet("me")]
     public async Task<ActionResult<AccountResult>> Me(CancellationToken cancellationToken)
     {
+        Response.Headers.CacheControl = "no-store";
         string? token = BearerToken();
         if (token is null) return Unauthorized(new { message = "请先登录。" });
         AccountResult? result;
@@ -64,6 +66,7 @@ public sealed class AccountController(IAccountService accounts) : ControllerBase
     [HttpPost("logout")]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken)
     {
+        Response.Headers.CacheControl = "no-store";
         string? token = BearerToken();
         if (token is not null)
         {
