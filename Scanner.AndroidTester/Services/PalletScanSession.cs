@@ -13,7 +13,7 @@ public sealed class PalletScanSession
     {
         var sn = value.Trim();
         if (sn.Length is < 1 or > 100) throw new ArgumentException("请扫描 1–100 个字符的 SN。");
-        if (PalletNumber is < 1 or > 10) throw new ArgumentException("托盘号必须为 1–10。");
+        if (PalletNumber is < 1 or > 100) throw new ArgumentException("托盘号必须为 1–100。");
         if (!_scanned.Add(sn)) throw new ArgumentException("重复 SN，本次运行已扫描过，未重复记录。");
         _pending.Add(new PalletScanItem(Guid.NewGuid(), sn, PalletNumber, time));
     }

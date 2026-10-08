@@ -8,6 +8,7 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <RootNamespace>Scanner.WPF</RootNamespace>
     <AssemblyName>Scanner.WPF</AssemblyName>
+    <ApplicationIcon>app.ico</ApplicationIcon>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 

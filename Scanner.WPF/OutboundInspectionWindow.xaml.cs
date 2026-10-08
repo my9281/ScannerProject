@@ -22,6 +22,7 @@ namespace Scanner.WPF
         System.Windows.Controls.TextBlock IOutboundInspectionWindowView.SummaryTextBlock => SummaryTextBlock;
         System.Windows.Controls.DataGrid IOutboundInspectionWindowView.ResultDataGrid => ResultDataGrid;
         private void SelectTextButton_Click(object sender, RoutedEventArgs e) => _controller.SelectTextButton_Click(sender, e);
+        private void DownloadBatch_Click(object sender, RoutedEventArgs e) => _controller.DownloadBatch_Click(sender, e);
         private void PrintButton_Click(object sender, RoutedEventArgs e) => _controller.PrintButton_Click(sender, e);
         private void ExportButton_Click(object sender, RoutedEventArgs e) => _controller.ExportButton_Click(sender, e);
         private void UploadButton_Click(object sender, RoutedEventArgs e) => _controller.UploadButton_Click(sender, e);

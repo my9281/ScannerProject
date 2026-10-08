@@ -21,7 +21,7 @@ namespace Scanner.WPF.Helpers
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                throw new UnauthorizedAccessException("没有登录 Token，请重新登录。");
+                throw new UnauthorizedAccessException(Scanner.WPF.Helpers.UiText.Get("WpfComplete244"));
             }
             return _workOrderService.GetRemarksAsync(token);
         }

@@ -97,6 +97,11 @@ foreach (var invalidBatch in new[] {
     catch (ArgumentException) { Check(true, "Invalid batch rejected before database access"); }
 }
 Check(Attribute.IsDefined(typeof(WorkOrderUploadController), typeof(Scanner.Web.Filters.ApiKeyAttribute)), "Desktop batch API uses existing API key filter");
+Check(WorkOrderUploadErrors.Describe(1146) is (503, var missingTable) && missingTable.Contains("006_work_order_sources.sql"), "Missing upload table gives migration instructions");
+Check(WorkOrderUploadErrors.Describe(1054).Message.Contains("不会更新已有表"), "Old schema requires actual migration");
+Check(WorkOrderUploadErrors.Describe(1142).Status == 503, "Database permission failure classified");
+Check(WorkOrderUploadErrors.Describe(1213).Message.Contains("重试"), "Deadlock has retry guidance");
+Check(WorkOrderUploadErrors.Describe(9999).Message.Contains("日志"), "Unexpected database error points to server log without leaking SQL");
 Console.WriteLine($"PASS: {checks} account and work-order checks (no production database access).");
 
 sealed class FakeAccounts : IAccountService

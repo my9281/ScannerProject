@@ -9,6 +9,7 @@
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="18" Margin="0,0,0,14"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <StackPanel VerticalAlignment="Center" Margin="0,0,16,0"><TextBlock x:Name="TextFileTextBlock" Text="{DynamicResource TextNotSelected}" TextTrimming="CharacterEllipsis"/><TextBlock x:Name="BaseFileTextBlock" Text="{DynamicResource BaseWorkbookNotSelected}" TextTrimming="CharacterEllipsis" Margin="0,7,0,0" Foreground="{StaticResource TextSecondaryBrush}"/></StackPanel>
             <Button Grid.Column="1" Content="{DynamicResource SelectText}" Style="{StaticResource ActionButton}" Margin="0,0,10,0" Click="SelectTextButton_Click"/>
+            <Button Grid.Column="2" Content="{DynamicResource WpfComplete070}" Style="{StaticResource ActionButton}" Click="DownloadBatch_Click"/>
         </Grid></Border>
         <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="18" Margin="0,0,0,14"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
             <StackPanel Margin="0,0,16,0"><TextBlock Text="{DynamicResource PalletNumber}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="18" Margin="0,0,0,6"/><TextBox x:Name="PalletNumberTextBox" Height="42" FontSize="21" Padding="10,7"/></StackPanel>

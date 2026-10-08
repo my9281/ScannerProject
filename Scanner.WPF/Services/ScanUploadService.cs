@@ -17,12 +17,12 @@ namespace Scanner.WPF.Services
         {
             if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
             {
-                throw new FileNotFoundException("扫描记录文件不存在。", filePath);
+                throw new FileNotFoundException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt018"), filePath);
             }
 
             if (string.IsNullOrWhiteSpace(File.ReadAllText(filePath, Encoding.UTF8)))
             {
-                throw new InvalidOperationException("扫描记录为空，暂时没有内容可上传。");
+                throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfScanLogEmpty"));
             }
 
             using (var form = new MultipartFormDataContent())
@@ -50,25 +50,25 @@ namespace Scanner.WPF.Services
                         {
                             UploadError error = TryDeserialize<UploadError>(body);
                             throw new InvalidOperationException(error == null || string.IsNullOrWhiteSpace(error.Message)
-                                ? "上传服务返回错误：HTTP " + (int)response.StatusCode
+                                ? Scanner.WPF.Helpers.UiText.Get("WpfUploadHttpError") + (int)response.StatusCode
                                 : error.Message);
                         }
 
                         ScanUploadResult result = TryDeserialize<ScanUploadResult>(body);
                         if (result == null || string.IsNullOrWhiteSpace(result.FileName))
                         {
-                            throw new InvalidOperationException("上传服务器没有返回有效结果。");
+                            throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt019"));
                         }
                         return result;
                     }
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new InvalidOperationException("无法连接上传服务器 " + HttpClient.BaseAddress + "，请检查网络、DNS 和 UploadBaseUrl 配置。详细信息：" + GetInnermostMessage(ex), ex);
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt020") + HttpClient.BaseAddress + Scanner.WPF.Helpers.UiText.Get("WpfPrompt021") + GetInnermostMessage(ex), ex);
                 }
                 catch (TaskCanceledException ex)
                 {
-                    throw new InvalidOperationException("连接上传服务器 " + HttpClient.BaseAddress + " 超时，请检查网络或服务器状态。", ex);
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt022") + HttpClient.BaseAddress + Scanner.WPF.Helpers.UiText.Get("WpfPrompt023"), ex);
                 }
             }
         }

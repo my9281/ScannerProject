@@ -30,7 +30,7 @@ namespace Scanner.WPF.Services
         {
             if (string.IsNullOrWhiteSpace(customModelsFilePath))
             {
-                throw new ArgumentException("自定义型号配置文件路径不能为空。", nameof(customModelsFilePath));
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt016"), nameof(customModelsFilePath));
             }
             CustomModelsFilePath = customModelsFilePath;
             _customModels = LoadCustomModels();
@@ -68,7 +68,7 @@ namespace Scanner.WPF.Services
             string normalized = NormalizeModel(model);
             if (string.IsNullOrWhiteSpace(normalized))
             {
-                throw new ArgumentException("型号不能为空。", nameof(model));
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("ModelRequired"), nameof(model));
             }
             string existing = GetModels().FirstOrDefault(value => string.Equals(value, normalized, StringComparison.OrdinalIgnoreCase));
             if (existing != null)

@@ -25,11 +25,11 @@ namespace Scanner.WPF.Services
         {
             if (string.IsNullOrWhiteSpace(username))
             {
-                throw new ArgumentException("用户名不能为空。");
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfComplete236"));
             }
             if (string.IsNullOrWhiteSpace(password))
             {
-                throw new ArgumentException("密码不能为空。");
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfComplete237"));
             }
             LoginRequest requestData = new LoginRequest();
             requestData.Username = username.Trim();
@@ -44,11 +44,11 @@ namespace Scanner.WPF.Services
                 }
                 catch (TaskCanceledException)
                 {
-                    throw new InvalidOperationException("登录请求超时，请检查网络连接。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete238"));
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new InvalidOperationException("无法连接登录服务器：" + ex.Message);
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete239") + ex.Message);
                 }
                 string responseJson = await response.Content.ReadAsStringAsync();
                 if (!response.IsSuccessStatusCode)
@@ -56,9 +56,9 @@ namespace Scanner.WPF.Services
                     string errorMessage = TryReadErrorMessage(responseJson);
                     if (response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        throw new InvalidOperationException(string.IsNullOrWhiteSpace(errorMessage) ? "用户名或密码错误。" : errorMessage);
+                        throw new InvalidOperationException(string.IsNullOrWhiteSpace(errorMessage) ? Scanner.WPF.Helpers.UiText.Get("WpfComplete240") : errorMessage);
                     }
-                    throw new InvalidOperationException("登录失败，服务器返回 " + ((int)response.StatusCode) + "：" + (string.IsNullOrWhiteSpace(errorMessage) ? response.ReasonPhrase : errorMessage));
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete241") + ((int)response.StatusCode) + "：" + (string.IsNullOrWhiteSpace(errorMessage) ? response.ReasonPhrase : errorMessage));
                 }
                 LoginResponse loginResponse;
                 try
@@ -67,11 +67,11 @@ namespace Scanner.WPF.Services
                 }
                 catch (JsonException)
                 {
-                    throw new InvalidOperationException("服务器返回的数据格式不正确。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete242"));
                 }
                 if (loginResponse == null || string.IsNullOrWhiteSpace(loginResponse.Token))
                 {
-                    throw new InvalidOperationException("服务器没有返回有效 Token。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete243"));
                 }
                 DateTime expiresAt = ParseExpiration(loginResponse.ExpiresAt);
                 AuthSession session = new AuthSession();

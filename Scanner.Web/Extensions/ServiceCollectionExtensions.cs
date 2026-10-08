@@ -38,6 +38,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<IShelvedPalletRepository, ShelvedPalletRepository>();
         services.AddScoped<IPalletScanRepository, PalletScanRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
+        services.AddScoped<SkuSnBatchRepository>();
         return services;
     }
 
@@ -47,6 +49,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IOrderService, OrderService>();
         services.AddScoped<IShelvedPalletService, ShelvedPalletService>();
         services.AddScoped<IPalletScanService, PalletScanService>();
+        services.AddScoped<ILocationService, LocationService>();
         return services;
     }
 }

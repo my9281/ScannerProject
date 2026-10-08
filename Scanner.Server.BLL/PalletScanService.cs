@@ -21,7 +21,7 @@ public sealed class PalletScanService(IPalletScanRepository repository) : IPalle
             if (item is null || item.ScanId == Guid.Empty || !ids.Add(item.ScanId)) throw new ArgumentException("扫描标识不能为空或重复。");
             var sn = item.Sn?.Trim();
             if (string.IsNullOrEmpty(sn) || sn.Length > 100) throw new ArgumentException("SN 必须为 1–100 个字符。");
-            if (item.PalletNumber is < 1 or > 10) throw new ArgumentException("托盘号必须为 1–10。");
+            if (item.PalletNumber is < 1 or > 100) throw new ArgumentException("托盘号必须为 1–100。");
             if (item.ScannedAt.Year < 1000) throw new ArgumentException("扫描时间无效。");
             // Match the storage precision of MySQL DATETIME(3).
             var time = item.ScannedAt.AddTicks(-(item.ScannedAt.Ticks % TimeSpan.TicksPerMillisecond));

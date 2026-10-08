@@ -160,14 +160,14 @@ namespace Scanner.WPF.Controllers
 
             if (duplicatedPendingRecords.Count == 0)
             {
-                MessageBox.Show(_view.OwnerWindow, "基础表中没有同时满足“SN 总计出现至少 2 次”且“当前记录为待检测”的数据。", "临时功能1", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(_view.OwnerWindow, Scanner.WPF.Helpers.UiText.Get("WpfComplete228"), Scanner.WPF.Helpers.UiText.Get("WpfComplete025"), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             SaveFileDialog dialog = new SaveFileDialog
             {
-                Title = "导出重复待检测 SN",
-                Filter = "Excel 工作簿 (*.xlsx)|*.xlsx",
+                Title = Scanner.WPF.Helpers.UiText.Get("WpfComplete229"),
+                Filter = Scanner.WPF.Helpers.UiText.Get("ExcelFileFilter"),
                 AddExtension = true,
                 DefaultExt = ".xlsx",
                 FileName = "DuplicatePendingSN_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
@@ -178,8 +178,8 @@ namespace Scanner.WPF.Controllers
             {
                 DuplicatePendingXlsxWriter.Write(dialog.FileName, duplicatedPendingRecords, counts);
                 MessageBox.Show(_view.OwnerWindow,
-                    string.Format("已导出 {0} 个重复 SN，共 {1} 条待检测记录。", duplicatedPendingRecords.Select(record => record.Sn.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).Count(), duplicatedPendingRecords.Count),
-                    "临时功能1", MessageBoxButton.OK, MessageBoxImage.Information);
+                    string.Format(Scanner.WPF.Helpers.UiText.Get("WpfComplete230"), duplicatedPendingRecords.Select(record => record.Sn.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).Count(), duplicatedPendingRecords.Count),
+                    Scanner.WPF.Helpers.UiText.Get("WpfComplete025"), MessageBoxButton.OK, MessageBoxImage.Information);
                 Process.Start(new ProcessStartInfo(dialog.FileName) { UseShellExecute = true });
             }
             catch (Exception ex) { ShowError(UiText.Get("ExportFailedPrefix") + ex.Message); }

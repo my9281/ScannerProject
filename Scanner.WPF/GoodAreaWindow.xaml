@@ -1,0 +1,25 @@
+<Window Icon="{DynamicResource Logo}" x:Class="Scanner.WPF.GoodAreaWindow"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="{DynamicResource WpfComplete027}" Width="1000" Height="680" MinWidth="700" MinHeight="450"
+ WindowStartupLocation="CenterOwner" Background="#EAF3F7" Loaded="Window_Loaded">
+ <Grid Margin="20">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+  <WrapPanel Margin="0,0,0,12" VerticalAlignment="Center">
+   <TextBlock Text="{DynamicResource WpfComplete028}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+   <TextBox x:Name="PalletInput" Width="100" Padding="8" KeyDown="PalletInput_KeyDown"/>
+   <Button Content="{DynamicResource WpfComplete029}" Padding="18,8" Margin="8,0" Click="Query_Click"/>
+   <Button Content="{DynamicResource WpfComplete030}" Padding="18,8" Margin="0,0,8,0" Click="All_Click"/>
+   <Button x:Name="RefreshButton" Content="{DynamicResource WpfComplete031}" Padding="18,8" Click="Refresh_Click"/>
+  </WrapPanel>
+  <TextBlock x:Name="StatusText" Grid.Row="1" Margin="0,0,0,12" TextWrapping="Wrap" Text="{DynamicResource WpfComplete032}"/>
+  <DataGrid x:Name="ResultsGrid" Grid.Row="2" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" EnableRowVirtualization="True" EnableColumnVirtualization="True">
+   <DataGrid.Columns>
+    <DataGridTextColumn Header="SN" Binding="{Binding Sn}" Width="*" MinWidth="190"/>
+    <DataGridTextColumn Header="{DynamicResource PalletNumber}" Binding="{Binding PalletNumber}" Width="120"/>
+    <DataGridTextColumn Header="{DynamicResource WpfComplete008}" Binding="{Binding ScanDate, StringFormat=yyyy-MM-dd}" Width="150"/>
+    <DataGridTextColumn Header="{DynamicResource WpfComplete009}" Binding="{Binding ScanTime, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="210"/>
+   </DataGrid.Columns>
+  </DataGrid>
+ </Grid>
+</Window>

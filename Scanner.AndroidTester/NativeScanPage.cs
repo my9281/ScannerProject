@@ -10,19 +10,19 @@ public sealed class NativeScanPage : ContentPage
     private readonly ScanSession _scans;
     private readonly PalletScanSession _pallets;
     private readonly PalletScanApiService _api;
-    private readonly Entry _input = new() { Placeholder = "扫描 SN 后回车", ReturnType = ReturnType.Done, FontSize = 22, TextColor = Colors.Black, BackgroundColor = Colors.White };
-    private readonly Label _status = new() { Text = "等待扫描。", TextColor = Colors.DarkSlateGray };
-    private readonly Label _count = new() { TextColor = Colors.Black };
+    private readonly Entry _input = new() { Placeholder = "SN", ReturnType = ReturnType.Done, FontSize = 22, TextColor = Color.FromArgb("#F2F2F2"), BackgroundColor = Color.FromArgb("#181C20") };
+    private readonly Label _status = new() { Text = "", TextColor = Color.FromArgb("#92979D") };
+    private readonly Label _count = new() { TextColor = Color.FromArgb("#F2F2F2") };
     private readonly CollectionView _list = new() { SelectionMode = SelectionMode.None };
     private readonly Button _upload = new() { Text = "上传" };
-    private readonly Entry _number = new() { Keyboard = Keyboard.Numeric, WidthRequest = 90, HorizontalTextAlignment = TextAlignment.Center, FontSize = 24, TextColor = Colors.Black };
+    private readonly Entry _number = new() { Keyboard = Keyboard.Numeric, WidthRequest = 90, HorizontalTextAlignment = TextAlignment.Center, FontSize = 24, TextColor = Color.FromArgb("#F2F2F2") };
     private bool _active;
 
     public NativeScanPage(NativeScanMode mode, ScanSession scans, PalletScanSession pallets, PalletScanApiService api)
     {
         _mode = mode; _scans = scans; _pallets = pallets; _api = api;
         Title = mode switch { NativeScanMode.PreScan => "预扫描", NativeScanMode.Detection => "检测扫描", _ => "良品区扫描" };
-        BackgroundColor = Colors.White;
+        BackgroundColor = Color.FromArgb("#080A0C");
         var header = new VerticalStackLayout { Spacing = 10 };
         if (mode == NativeScanMode.Pallet)
         {
@@ -31,11 +31,8 @@ public sealed class NativeScanPage : ContentPage
             var down = new Button { Text = "▼", HeightRequest = 44 };
             up.Clicked += (_, _) => ChangePallet(1);
             down.Clicked += (_, _) => ChangePallet(-1);
-            header.Add(new Label { Text = "托盘号（1–10）", TextColor = Colors.Black });
+            header.Add(new Label { Text = "托盘号（1–100）", TextColor = Color.FromArgb("#F2F2F2") });
             header.Add(new HorizontalStackLayout { Spacing = 4, Children = { _number, new VerticalStackLayout { Children = { up, down } } } });
-            var key = new Entry { Placeholder = "上传密钥（服务器启用时填写）", IsPassword = true, Text = pallets.ApiKey, TextColor = Colors.Black };
-            key.TextChanged += (_, _) => pallets.ApiKey = key.Text ?? "";
-            header.Add(key);
         }
         header.Add(_input);
         var record = new Button { Text = mode == NativeScanMode.Detection ? "检测" : "记录" };
@@ -46,7 +43,7 @@ public sealed class NativeScanPage : ContentPage
         header.Add(_count);
         _list.ItemTemplate = new DataTemplate(() =>
         {
-            var label = new Label { Padding = new Thickness(4, 8), TextColor = Colors.Black, LineBreakMode = LineBreakMode.WordWrap };
+            var label = new Label { Padding = new Thickness(4, 8), TextColor = Color.FromArgb("#F2F2F2"), LineBreakMode = LineBreakMode.WordWrap };
             label.SetBinding(Label.TextProperty, ".");
             return label;
         });
@@ -69,7 +66,7 @@ public sealed class NativeScanPage : ContentPage
     private void ChangePallet(int delta)
     {
         int current = int.TryParse(_number.Text, out var parsed) ? parsed : _pallets.PalletNumber;
-        _pallets.PalletNumber = Math.Clamp(current + delta, 1, 10);
+        _pallets.PalletNumber = Math.Clamp(current + delta, 1, 100);
         _number.Text = _pallets.PalletNumber.ToString();
         _input.Focus();
     }
@@ -84,7 +81,7 @@ public sealed class NativeScanPage : ContentPage
             if (_mode == NativeScanMode.PreScan) { _status.Text = _scans.AddPreScan(value) ? "已保存。" : "重复 SN，未重复记录。"; }
             else if (_mode == NativeScanMode.Pallet)
             {
-                if (!int.TryParse(_number.Text, out var number) || number is < 1 or > 10) throw new ArgumentException("托盘号必须为 1–10 的整数。");
+                if (!int.TryParse(_number.Text, out var number) || number is < 1 or > 100) throw new ArgumentException("托盘号必须为 1–100 的整数。");
                 _pallets.PalletNumber = number;
                 _pallets.Add(value, DateTimeOffset.Now); _status.Text = "已记录。";
             }
@@ -95,7 +92,7 @@ public sealed class NativeScanPage : ContentPage
                 _status.Text = !same && !hit ? "扫描完成，无重复或列表匹配。" : (same ? "相同：与上次扫描一致。 " : "") + (hit ? "报警：命中预扫描列表。" : "");
             }
             _input.Text = "";
-            _status.TextColor = same || hit ? Colors.DarkRed : Colors.DarkSlateGray;
+            _status.TextColor = same || hit ? Color.FromArgb("#FF7474") : Color.FromArgb("#F2F2F2");
             Refresh();
             _input.Focus();
             if (same || hit) await NativeScanSound.PlayAsync(same, hit);

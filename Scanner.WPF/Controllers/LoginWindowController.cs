@@ -79,8 +79,8 @@ namespace Scanner.WPF.Controllers
             }
             Session = new AuthSession
             {
-                Operator = "本地扫描",
-                Role = "本地模式",
+                Operator = Scanner.WPF.Helpers.UiText.Get("LocalOperator"),
+                Role = Scanner.WPF.Helpers.UiText.Get("LocalRole"),
                 IsLocalMode = true
             };
             _view.OwnerWindow.DialogResult = true;

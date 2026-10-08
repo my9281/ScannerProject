@@ -99,6 +99,11 @@ namespace Scanner.WPF.Controllers
             new BatchLabelWindow { Owner = _view.OwnerWindow }.ShowDialog();
         }
 
+        public void OpenGoodArea_Click(object sender, RoutedEventArgs e)
+        {
+            new GoodAreaWindow(_palletApi) { Owner = _view.OwnerWindow }.ShowDialog();
+        }
+
         public void OpenAutomaticMatching_Click(object sender, RoutedEventArgs e)
         {
             if (!RequireGlobalBase()) return;
@@ -109,7 +114,7 @@ namespace Scanner.WPF.Controllers
         {
             if (_baseData.MonthlySource == null)
             {
-                MessageBox.Show(_view.OwnerWindow, "请先导入完整基础表。", "月报导出");
+                MessageBox.Show(_view.OwnerWindow, Scanner.WPF.Helpers.UiText.Get("WpfComplete232"), Scanner.WPF.Helpers.UiText.Get("WpfComplete046"));
                 return;
             }
             new MonthlyReportWindow(_baseData.MonthlySource) { Owner = _view.OwnerWindow }.ShowDialog();

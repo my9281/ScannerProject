@@ -27,7 +27,7 @@ namespace Scanner.WPF.Services
         {
             if (string.IsNullOrWhiteSpace(token))
             {
-                throw new UnauthorizedAccessException("没有登录 Token，请重新登录。");
+                throw new UnauthorizedAccessException(Scanner.WPF.Helpers.UiText.Get("WpfComplete244"));
             }
             if (limit < 1)
             {
@@ -50,24 +50,24 @@ namespace Scanner.WPF.Services
                 }
                 catch (TaskCanceledException)
                 {
-                    throw new InvalidOperationException("获取工单备注超时，请检查网络。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt024"));
                 }
                 catch (HttpRequestException ex)
                 {
-                    throw new InvalidOperationException("无法连接服务器：" + ex.Message);
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt025") + ex.Message);
                 }
                 string responseJson = await response.Content.ReadAsStringAsync();
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, "Token 已过期，请重新登录。"));
+                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt026")));
                 }
                 if (response.StatusCode == HttpStatusCode.Forbidden)
                 {
-                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, "当前账号没有查看工单备注的权限。"));
+                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt027")));
                 }
                 if (!response.IsSuccessStatusCode)
                 {
-                    throw new InvalidOperationException(ReadErrorMessage(responseJson, "获取工单备注失败，HTTP " + ((int)response.StatusCode).ToString()));
+                    throw new InvalidOperationException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt028") + ((int)response.StatusCode).ToString()));
                 }
                 WorkOrderRemarkResponse result;
                 try
@@ -76,15 +76,15 @@ namespace Scanner.WPF.Services
                 }
                 catch (JsonException ex)
                 {
-                    throw new InvalidOperationException("工单接口返回格式无法解析：" + ex.Message);
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt029") + ex.Message);
                 }
                 if (result == null)
                 {
-                    throw new InvalidOperationException("服务器返回了空响应。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt030"));
                 }
                 if (!result.Success)
                 {
-                    throw new InvalidOperationException("服务器返回 success=false。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt031"));
                 }
                 if (result.WorkOrders == null)
                 {

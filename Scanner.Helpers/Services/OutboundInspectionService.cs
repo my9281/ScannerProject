@@ -14,6 +14,11 @@ namespace Scanner.Helpers.Services
             List<string> lines = File.ReadAllLines(textPath)
                 .Select(line => (line ?? string.Empty).Trim().TrimStart('\uFEFF'))
                 .Where(line => !string.IsNullOrWhiteSpace(line)).ToList();
+            return BuildLines(lines, baseRecords);
+        }
+
+        public static IList<OutboundInspectionRecord> BuildLines(IReadOnlyList<string> lines, IEnumerable<InboundChecklistRecord> baseRecords)
+        {
             if (lines.Count == 0) throw new InvalidDataException("TXT 文件中没有有效数据。");
             if (lines.Count % 2 != 0) throw new InvalidDataException(string.Format("TXT 有 {0} 个非空行，必须严格按两行一条：第一行 SKU，第二行 SN。", lines.Count));
             IDictionary<string, InboundChecklistRecord> baseBySn = baseRecords

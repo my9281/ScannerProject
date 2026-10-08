@@ -9,5 +9,5 @@ CREATE TABLE IF NOT EXISTS `tester_pallet_scans` (
     UNIQUE KEY `uq_tester_pallet_scan_id` (`scan_id`),
     UNIQUE KEY `uq_tester_pallet_sn` (`sn`),
     KEY `ix_tester_pallet_date` (`scan_date`, `pallet_number`),
-    CONSTRAINT `ck_tester_pallet_number` CHECK (`pallet_number` BETWEEN 1 AND 10)
+    CONSTRAINT `ck_tester_pallet_number` CHECK (`pallet_number` BETWEEN 1 AND 100)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

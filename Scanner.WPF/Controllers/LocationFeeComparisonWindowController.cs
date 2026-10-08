@@ -47,7 +47,7 @@ namespace Scanner.WPF.Controllers
                 Filter = UiText.Get("ExcelFileFilter"),
                 DefaultExt = ".xlsx",
                 AddExtension = true,
-                FileName = "库位付费比对结果_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
+                FileName = Scanner.WPF.Helpers.UiText.Get("WpfComplete231") + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx"
             };
             if (dialog.ShowDialog(_view.OwnerWindow) != true) return;
             try

@@ -55,10 +55,10 @@
 
     <ItemGroup>
         <!-- App Icon -->
-        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#F4F7F5" />
+        <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\brand_logo.png" ForegroundScale="0.65" Color="#FFFFFF" />
 
         <!-- Splash Screen -->
-        <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#F4F7F5" BaseSize="192,192" />
+        <MauiSplashScreen Include="Resources\AppIcon\brand_logo.png" Color="#080A0C" BaseSize="160,160" />
 
         <!-- Images -->
         <MauiImage Include="Resources\Images\*" />
@@ -78,11 +78,13 @@
         <PackageReference Include="ZXing.Net" Version="0.16.11" />
     </ItemGroup>
     <ItemGroup>
+        <EmbeddedResource Include="appsettings.xml" LogicalName="Scanner.AndroidTester.appsettings.xml" />
         <Compile Include="..\Scanner.Server.Model\PalletScan.cs" Link="Contracts\PalletScan.cs" />
+        <Compile Include="..\Scanner.Server.Model\LocationScan.cs" Link="Contracts\LocationScan.cs" />
+        <Compile Include="..\Scanner.Server.Model\SkuSnBatch.cs" Link="Contracts\SkuSnBatch.cs" />
     </ItemGroup>
     <ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">
         <ProjectReference Include="..\Scanner.Rongta.Android\Scanner.Rongta.Android.csproj" />
     </ItemGroup>
 
 </Project>
-

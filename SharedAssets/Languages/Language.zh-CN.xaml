@@ -274,4 +274,295 @@
     <system:String x:Key="OperationsNeedFeeSources">请先选择模板和基础 Excel。</system:String>
     <system:String x:Key="OperationsInboundSummary">基础数据 {0:N0} 条；SN {1:N0} 条</system:String>
     <system:String x:Key="OperationsShareTitle">保存处理结果</system:String>
+    <system:String x:Key="WpfComplete001" xml:space="preserve">自动匹配</system:String>
+    <system:String x:Key="WpfComplete002" xml:space="preserve">获取 PDA 托盘数据，按 SN 匹配基础表中待检测的记录</system:String>
+    <system:String x:Key="WpfComplete003" xml:space="preserve">获取并匹配</system:String>
+    <system:String x:Key="WpfComplete004" xml:space="preserve">导出 Excel</system:String>
+    <system:String x:Key="WpfComplete005" xml:space="preserve">重试上传工单</system:String>
+    <system:String x:Key="WpfComplete006" xml:space="preserve">请点击获取并匹配。</system:String>
+    <system:String x:Key="WpfComplete007" xml:space="preserve">RMA编号</system:String>
+    <system:String x:Key="WpfComplete008" xml:space="preserve">扫描日期</system:String>
+    <system:String x:Key="WpfComplete009" xml:space="preserve">扫描时间</system:String>
+    <system:String x:Key="WpfComplete010" xml:space="preserve">检测状态</system:String>
+    <system:String x:Key="WpfComplete011" xml:space="preserve">处理时间</system:String>
+    <system:String x:Key="WpfComplete012" xml:space="preserve">批量打印标签</system:String>
+    <system:String x:Key="WpfComplete013" xml:space="preserve">导入 Excel，按数量打印 4 × 6 横向 SKU/SN 双二维码标签。报废标签在顶层画 X，并显示中英西三语报废标识。</system:String>
+    <system:String x:Key="WpfComplete014" xml:space="preserve">导入 Excel</system:String>
+    <system:String x:Key="WpfComplete015" xml:space="preserve">未导入文件</system:String>
+    <system:String x:Key="WpfComplete016" xml:space="preserve">行</system:String>
+    <system:String x:Key="WpfComplete017" xml:space="preserve">数量</system:String>
+    <system:String x:Key="WpfComplete018" xml:space="preserve">处理</system:String>
+    <system:String x:Key="WpfComplete019" xml:space="preserve">标签备注</system:String>
+    <system:String x:Key="WpfComplete020" xml:space="preserve">打印状态</system:String>
+    <system:String x:Key="WpfComplete021" xml:space="preserve">所选标签预览</system:String>
+    <system:String x:Key="WpfComplete022" xml:space="preserve">报废标签会覆盖原备注；空 SKU/SN 或无效数量的行会显示原因并跳过。已发送的标签不会在本批次继续打印时重复发送。</system:String>
+    <system:String x:Key="WpfComplete023" xml:space="preserve">请先导入文件。</system:String>
+    <system:String x:Key="WpfComplete024" xml:space="preserve">停止后续打印</system:String>
+    <system:String x:Key="WpfComplete025" xml:space="preserve">临时功能1</system:String>
+    <system:String x:Key="WpfComplete026" xml:space="preserve">导出待检测的重复 SN</system:String>
+    <system:String x:Key="WpfComplete027" xml:space="preserve">查看良品区</system:String>
+    <system:String x:Key="WpfComplete028" xml:space="preserve">托盘号（1–100，留空查看全部）</system:String>
+    <system:String x:Key="WpfComplete029" xml:space="preserve">查询</system:String>
+    <system:String x:Key="WpfComplete030" xml:space="preserve">查看全部</system:String>
+    <system:String x:Key="WpfComplete031" xml:space="preserve">刷新数据</system:String>
+    <system:String x:Key="WpfComplete032" xml:space="preserve">正在加载良品区…</system:String>
+    <system:String x:Key="WpfComplete033" xml:space="preserve">功能目录</system:String>
+    <system:String x:Key="WpfComplete034" xml:space="preserve">请选择需要使用的功能</system:String>
+    <system:String x:Key="WpfComplete035" xml:space="preserve">标签管理</system:String>
+    <system:String x:Key="WpfComplete036" xml:space="preserve">扫码打印</system:String>
+    <system:String x:Key="WpfComplete037" xml:space="preserve">扫描 SN 或 OID，记录并打印标签</system:String>
+    <system:String x:Key="WpfComplete038" xml:space="preserve">替换标签</system:String>
+    <system:String x:Key="WpfComplete039" xml:space="preserve">独立记录扫码数据，并按所选描述打印替换标签</system:String>
+    <system:String x:Key="WpfComplete040" xml:space="preserve">SKU / SN 标签</system:String>
+    <system:String x:Key="WpfComplete041" xml:space="preserve">打印带两个二维码和备注的 4 × 6 标签</system:String>
+    <system:String x:Key="WpfComplete042" xml:space="preserve">良品区</system:String>
+    <system:String x:Key="WpfComplete043" xml:space="preserve">查看全部良品区数据，按托盘号查询</system:String>
+    <system:String x:Key="WpfComplete044" xml:space="preserve">出入库管理</system:String>
+    <system:String x:Key="WpfComplete045" xml:space="preserve">匹配 PDA 托盘与待检测入库数据并导出 Excel</system:String>
+    <system:String x:Key="WpfComplete046" xml:space="preserve">月报导出</system:String>
+    <system:String x:Key="WpfComplete047" xml:space="preserve">按处理年月导出完整明细及分类表</system:String>
+    <system:String x:Key="WpfComplete048" xml:space="preserve">导入基础表</system:String>
+    <system:String x:Key="WpfComplete049" xml:space="preserve">加载全局基础 Excel 数据</system:String>
+    <system:String x:Key="WpfComplete050" xml:space="preserve">匹配入库 SN、检测状态并导出结果</system:String>
+    <system:String x:Key="WpfComplete051" xml:space="preserve">核对出库数据并打印汇总标签</system:String>
+    <system:String x:Key="WpfComplete052" xml:space="preserve">数据整理</system:String>
+    <system:String x:Key="WpfComplete053" xml:space="preserve">登记表修复</system:String>
+    <system:String x:Key="WpfComplete054" xml:space="preserve">修复收件日期，规范亚马逊与 eBay 登记数据并导出</system:String>
+    <system:String x:Key="WpfComplete055" xml:space="preserve">导入 Excel 批量打印 SKU/SN 标签，报废标签画 X</system:String>
+    <system:String x:Key="WpfComplete056" xml:space="preserve">其他功能</system:String>
+    <system:String x:Key="WpfComplete057" xml:space="preserve">生成并打开当天扫描日报</system:String>
+    <system:String x:Key="WpfComplete058" xml:space="preserve">导入工单</system:String>
+    <system:String x:Key="WpfComplete059" xml:space="preserve">导入紧急工单及运单关联规则</system:String>
+    <system:String x:Key="WpfComplete060" xml:space="preserve">重新获取在线工单与备注数据</system:String>
+    <system:String x:Key="WpfComplete061" xml:space="preserve">← 返回功能目录</system:String>
+    <system:String x:Key="WpfComplete062" xml:space="preserve">按基础表中的处理时间筛选，保留全部明细字段。</system:String>
+    <system:String x:Key="WpfComplete063" xml:space="preserve">年份</system:String>
+    <system:String x:Key="WpfComplete064" xml:space="preserve">月份</system:String>
+    <system:String x:Key="WpfComplete065" xml:space="preserve">导出月度总表及待检测、检测、翻新、维修、报废分类表。两个一件代发表和月份出入库表仅保留表头。</system:String>
+    <system:String x:Key="WpfComplete066" xml:space="preserve">可选附加表：按处理时间筛选年月，合并物料申领明细，按 SKU 汇总数量。</system:String>
+    <system:String x:Key="WpfComplete067" xml:space="preserve">上传 InboundDetection</system:String>
+    <system:String x:Key="WpfComplete068" xml:space="preserve">未上传</system:String>
+    <system:String x:Key="WpfComplete069" xml:space="preserve">上传 ProductMaintenance</system:String>
+    <system:String x:Key="WpfComplete070" xml:space="preserve">下载批次</system:String>
+    <system:String x:Key="WpfComplete071" xml:space="preserve">仅处理亚马逊、eBay 收件登记工作表，合并导出一套数据。</system:String>
+    <system:String x:Key="WpfComplete072" xml:space="preserve">1. A 列日期统一格式，空白、备注等沿用本工作表上一条有效日期。</system:String>
+    <system:String x:Key="WpfComplete073" xml:space="preserve">2. 规范机型大小写及空格；机型含字母、数字以外的字符且 F 列为“否”的记录删除。</system:String>
+    <system:String x:Key="WpfComplete074" xml:space="preserve">选择登记表 Excel</system:String>
+    <system:String x:Key="WpfComplete075" xml:space="preserve">未选择文件</system:String>
+    <system:String x:Key="WpfComplete076" xml:space="preserve">导出：仓库收件日期、机型、SN、物流单号、退件类型、是否录入BT系统、售后系统收件日期、调拨单号/RMA号。</system:String>
+    <system:String x:Key="WpfComplete077" xml:space="preserve">请选择登记表。</system:String>
+    <system:String x:Key="WpfComplete078" xml:space="preserve">修复并导出 Excel</system:String>
+    <system:String x:Key="WpfComplete079" xml:space="preserve">第二步：仓租检测</system:String>
+    <system:String x:Key="WpfComplete080" xml:space="preserve">按 SN 匹配基础表，仅输出基础表处理时间在所选年月的记录，并附上处理时间。</system:String>
+    <system:String x:Key="WpfComplete081" xml:space="preserve">处理年份</system:String>
+    <system:String x:Key="WpfComplete082" xml:space="preserve">导出仓租检测</system:String>
+    <system:String x:Key="WpfComplete083" xml:space="preserve">第三步：月度仓租结算</system:String>
+    <system:String x:Key="WpfComplete084" xml:space="preserve">合并统计所选月收货、系统当月处理完成和仍在仓清单，分别标记来源。同一 SN 取最新入库日期计算；仍在仓及仅收货记录算到月末，处理完成记录算到完成日，首尾均计一天。</system:String>
+    <system:String x:Key="WpfComplete085" xml:space="preserve">一键导入 Web 上架表</system:String>
+    <system:String x:Key="WpfComplete086" xml:space="preserve">导入在仓 Excel</system:String>
+    <system:String x:Key="WpfComplete087" xml:space="preserve">下载导入模板</system:String>
+    <system:String x:Key="WpfComplete088" xml:space="preserve">Web 上架表没有出库状态；请确认导入的数据代表结算所用的在仓清单。历史月份可导入保存的清单。</system:String>
+    <system:String x:Key="WpfComplete089" xml:space="preserve">未导入在仓清单</system:String>
+    <system:String x:Key="WpfComplete090" xml:space="preserve">清单日期</system:String>
+    <system:String x:Key="WpfComplete091" xml:space="preserve">结算年份</system:String>
+    <system:String x:Key="WpfComplete092" xml:space="preserve">导出仓租结算</system:String>
+    <system:String x:Key="WpfComplete093" xml:space="preserve">扫描编号，选择需要打印的替换内容</system:String>
+    <system:String x:Key="WpfComplete094" xml:space="preserve">标签内容</system:String>
+    <system:String x:Key="WpfComplete095" xml:space="preserve">检测OK</system:String>
+    <system:String x:Key="WpfComplete096" xml:space="preserve">线材</system:String>
+    <system:String x:Key="WpfComplete097" xml:space="preserve">包材</system:String>
+    <system:String x:Key="WpfComplete098" xml:space="preserve">维修</system:String>
+    <system:String x:Key="WpfComplete099" xml:space="preserve">纸张：</system:String>
+    <system:String x:Key="WpfComplete100" xml:space="preserve">打印替换标签</system:String>
+    <system:String x:Key="WpfComplete101" xml:space="preserve">上传</system:String>
+    <system:String x:Key="WpfComplete102" xml:space="preserve">打印份数：</system:String>
+    <system:String x:Key="WpfComplete103" xml:space="preserve">SKU / SN 二维码标签</system:String>
+    <system:String x:Key="WpfComplete104" xml:space="preserve">输入标签内容，打印一张 4 × 6 横向双二维码标签</system:String>
+    <system:String x:Key="WpfComplete105" xml:space="preserve">备注</system:String>
+    <system:String x:Key="WpfComplete106" xml:space="preserve">打印 4 × 6 标签</system:String>
+    <system:String x:Key="WpfComplete107" xml:space="preserve">清空</system:String>
+    <system:String x:Key="WpfComplete108" xml:space="preserve">等待输入</system:String>
+    <system:String x:Key="WpfComplete109" xml:space="preserve">标签布局：左侧 SKU 二维码，右侧 SN/MESSN 二维码，底部为备注。</system:String>
+    <system:String x:Key="WpfComplete110" xml:space="preserve">程序启动失败：</system:String>
+    <system:String x:Key="WpfComplete111" xml:space="preserve">错误</system:String>
+    <system:String x:Key="WpfComplete112" xml:space="preserve">正在获取 PDA 托盘数据…</system:String>
+    <system:String x:Key="WpfComplete113" xml:space="preserve">已获取 {0} 条托盘记录，匹配待检测明细 {1} 条，涉及 {2} 个托盘。</system:String>
+    <system:String x:Key="WpfComplete114" xml:space="preserve">匹配失败：</system:String>
+    <system:String x:Key="WpfComplete115" xml:space="preserve">已匹配 {0} 条，正在上传工单给 my9281…</system:String>
+    <system:String x:Key="WpfComplete116" xml:space="preserve">匹配 {0} 条，新增工单 {1} 条，跳过重复 {2} 条。分配用户：{3}，审核位：0，未完成。</system:String>
+    <system:String x:Key="WpfComplete117" xml:space="preserve">匹配结果已保留，工单上传未全部完成：</system:String>
+    <system:String x:Key="WpfComplete118" xml:space="preserve">自动匹配_</system:String>
+    <system:String x:Key="WpfComplete119" xml:space="preserve">请另存为新文件，不能覆盖基础表。</system:String>
+    <system:String x:Key="WpfComplete120" xml:space="preserve">导入批量标签 Excel</system:String>
+    <system:String x:Key="WpfComplete121" xml:space="preserve">已导入 </system:String>
+    <system:String x:Key="WpfComplete122" xml:space="preserve"> 行，可打印 </system:String>
+    <system:String x:Key="WpfComplete123" xml:space="preserve"> 张，报废 </system:String>
+    <system:String x:Key="WpfComplete124" xml:space="preserve"> 张，跳过 </system:String>
+    <system:String x:Key="WpfComplete125" xml:space="preserve"> 行。</system:String>
+    <system:String x:Key="WpfComplete126" xml:space="preserve">请选择一行。</system:String>
+    <system:String x:Key="WpfComplete127" xml:space="preserve">报废 / Scrapped / Desechado</system:String>
+    <system:String x:Key="WpfComplete128" xml:space="preserve">备注：</system:String>
+    <system:String x:Key="WpfComplete129" xml:space="preserve">预览失败：</system:String>
+    <system:String x:Key="WpfComplete130" xml:space="preserve">已发送 </system:String>
+    <system:String x:Key="WpfComplete131" xml:space="preserve"> 张到 </system:String>
+    <system:String x:Key="WpfComplete132" xml:space="preserve">已停止后续打印。</system:String>
+    <system:String x:Key="WpfComplete133" xml:space="preserve">批量标签已发送。</system:String>
+    <system:String x:Key="WpfComplete134" xml:space="preserve">失败（已发送 </system:String>
+    <system:String x:Key="WpfComplete135" xml:space="preserve"> 张）：</system:String>
+    <system:String x:Key="WpfComplete136" xml:space="preserve">打印已停止：</system:String>
+    <system:String x:Key="WpfComplete137" xml:space="preserve">。请核对打印队列后再继续。</system:String>
+    <system:String x:Key="WpfComplete138" xml:space="preserve">正在全量加载良品区…</system:String>
+    <system:String x:Key="WpfComplete139" xml:space="preserve">加载失败：</system:String>
+    <system:String x:Key="WpfComplete140" xml:space="preserve"> 当前仍显示上次加载的数据。</system:String>
+    <system:String x:Key="WpfComplete141" xml:space="preserve"> 请点击刷新重试。</system:String>
+    <system:String x:Key="WpfComplete142" xml:space="preserve">请输入 1–100 的整数托盘号，或留空查看全部。</system:String>
+    <system:String x:Key="WpfComplete143" xml:space="preserve">良品区共 {0} 条，当前显示 {1} 条</system:String>
+    <system:String x:Key="WpfComplete144" xml:space="preserve"> · 托盘 {0}</system:String>
+    <system:String x:Key="WpfComplete145" xml:space="preserve"> · 全部托盘</system:String>
+    <system:String x:Key="WpfComplete146" xml:space="preserve"> · 加载时间 {0:yyyy-MM-dd HH:mm:ss}（上架后请刷新）</system:String>
+    <system:String x:Key="WpfComplete147" xml:space="preserve"> · 尚未加载数据</system:String>
+    <system:String x:Key="WpfComplete148" xml:space="preserve">基础表有 </system:String>
+    <system:String x:Key="WpfComplete149" xml:space="preserve"> 条记录的处理时间为空或无效，导出时将跳过。</system:String>
+    <system:String x:Key="WpfComplete150" xml:space="preserve">请选择年月和导出位置。</system:String>
+    <system:String x:Key="WpfComplete151" xml:space="preserve">附加表已导入，导出时将合并统计所选年月的物料申领数量。</system:String>
+    <system:String x:Key="WpfComplete152" xml:space="preserve"> 该表有 </system:String>
+    <system:String x:Key="WpfComplete153" xml:space="preserve"> 条处理时间为空或无效，统计时将跳过。</system:String>
+    <system:String x:Key="WpfComplete154" xml:space="preserve">附加表导入</system:String>
+    <system:String x:Key="WpfComplete155" xml:space="preserve">请输入有效年份（1—9999）并选择月份。</system:String>
+    <system:String x:Key="WpfComplete156" xml:space="preserve">导出月报</system:String>
+    <system:String x:Key="WpfComplete157" xml:space="preserve">年</system:String>
+    <system:String x:Key="WpfComplete158" xml:space="preserve">月数据.xlsx</system:String>
+    <system:String x:Key="WpfComplete159" xml:space="preserve">正在导出…</system:String>
+    <system:String x:Key="WpfComplete160" xml:space="preserve">已导出 </system:String>
+    <system:String x:Key="WpfComplete161" xml:space="preserve"> 条当月记录，共 </system:String>
+    <system:String x:Key="WpfComplete162" xml:space="preserve"> 个工作表。</system:String>
+    <system:String x:Key="WpfComplete163" xml:space="preserve"> 物料申领统计共 </system:String>
+    <system:String x:Key="WpfComplete164" xml:space="preserve"> 个 SKU。</system:String>
+    <system:String x:Key="WpfComplete165" xml:space="preserve"> 附加表跳过无效处理时间 </system:String>
+    <system:String x:Key="WpfComplete166" xml:space="preserve"> 条。</system:String>
+    <system:String x:Key="WpfComplete167" xml:space="preserve"> 所选月份无数据，已生成表头。</system:String>
+    <system:String x:Key="WpfComplete168" xml:space="preserve"> 跳过无效处理时间 </system:String>
+    <system:String x:Key="WpfComplete169" xml:space="preserve"> 未分类记录 </system:String>
+    <system:String x:Key="WpfComplete170" xml:space="preserve"> 条保留在月度总表。</system:String>
+    <system:String x:Key="WpfComplete171" xml:space="preserve">尚未导入基础表，请先在主界面导入。</system:String>
+    <system:String x:Key="WpfComplete172" xml:space="preserve">基础表：</system:String>
+    <system:String x:Key="WpfComplete173" xml:space="preserve">正在导入 Web 上架表…</system:String>
+    <system:String x:Key="WpfComplete174" xml:space="preserve">Web 上架表：</system:String>
+    <system:String x:Key="WpfComplete175" xml:space="preserve"> 条，导入时间 </system:String>
+    <system:String x:Key="WpfComplete176" xml:space="preserve">导入完成，请确认清单日期和结算年月。</system:String>
+    <system:String x:Key="WpfComplete177" xml:space="preserve">导入在仓清单</system:String>
+    <system:String x:Key="WpfComplete178" xml:space="preserve">正在导入在仓清单…</system:String>
+    <system:String x:Key="WpfComplete179" xml:space="preserve"> 条</system:String>
+    <system:String x:Key="WpfComplete180" xml:space="preserve">导入完成，请填写这份清单的实际日期。</system:String>
+    <system:String x:Key="WpfComplete181" xml:space="preserve">在仓清单导入模板.xlsx</system:String>
+    <system:String x:Key="WpfComplete182" xml:space="preserve">请选择新文件名，保留已导入的源文件。</system:String>
+    <system:String x:Key="WpfComplete183" xml:space="preserve">已生成与 Web 上架表字段一致的导入模板，至少填写 SN。</system:String>
+    <system:String x:Key="WpfComplete184" xml:space="preserve">模板导出失败：</system:String>
+    <system:String x:Key="WpfComplete185" xml:space="preserve">请输入有效的结算年月和清单日期。</system:String>
+    <system:String x:Key="WpfComplete186" xml:space="preserve">仓租结算</system:String>
+    <system:String x:Key="WpfComplete187" xml:space="preserve">清单日期必须在结算月份之后，例如用10月清单结算9月。</system:String>
+    <system:String x:Key="WpfComplete188" xml:space="preserve">月-仓租结算.xlsx</system:String>
+    <system:String x:Key="WpfComplete189" xml:space="preserve">正在匹配并结算…</system:String>
+    <system:String x:Key="WpfComplete190" xml:space="preserve">已统计 </system:String>
+    <system:String x:Key="WpfComplete191" xml:space="preserve"> 台次，其中已计算 </system:String>
+    <system:String x:Key="WpfComplete192" xml:space="preserve"> 台次，当月合计 </system:String>
+    <system:String x:Key="WpfComplete193" xml:space="preserve"> 天，累计合计 </system:String>
+    <system:String x:Key="WpfComplete194" xml:space="preserve"> 天。待核对 </system:String>
+    <system:String x:Key="WpfComplete195" xml:space="preserve"> 条，结算月份之后入仓略过 </system:String>
+    <system:String x:Key="WpfComplete196" xml:space="preserve">仓租结算完成</system:String>
+    <system:String x:Key="WpfComplete197" xml:space="preserve">结算失败：</system:String>
+    <system:String x:Key="WpfComplete198" xml:space="preserve">保留 </system:String>
+    <system:String x:Key="WpfComplete199" xml:space="preserve"> 条，填充日期 </system:String>
+    <system:String x:Key="WpfComplete200" xml:space="preserve"> 条，按规则删除 </system:String>
+    <system:String x:Key="WpfComplete201" xml:space="preserve"> 无上一条有效日期，跳过 </system:String>
+    <system:String x:Key="WpfComplete202" xml:space="preserve"> 无效售后系统日期 </system:String>
+    <system:String x:Key="WpfComplete203" xml:space="preserve"> 条导出为空。</system:String>
+    <system:String x:Key="WpfComplete204" xml:space="preserve">选择收件登记表</system:String>
+    <system:String x:Key="WpfComplete205" xml:space="preserve">正在清洗登记表…</system:String>
+    <system:String x:Key="WpfComplete206" xml:space="preserve">请输入有效年份（1—9999）并选择处理月份。</system:String>
+    <system:String x:Key="WpfComplete207" xml:space="preserve">仓租检测</system:String>
+    <system:String x:Key="WpfComplete208" xml:space="preserve">月-仓租检测.xlsx</system:String>
+    <system:String x:Key="WpfComplete209" xml:space="preserve">请选择新的文件名，保留原始登记表和基础表。</system:String>
+    <system:String x:Key="WpfComplete210" xml:space="preserve">正在按基础表处理时间匹配并筛选…</system:String>
+    <system:String x:Key="WpfComplete211" xml:space="preserve"> 条处理时间在 </system:String>
+    <system:String x:Key="WpfComplete212" xml:space="preserve">月的匹配记录。</system:String>
+    <system:String x:Key="WpfComplete213" xml:space="preserve"> 未匹配 SN </system:String>
+    <system:String x:Key="WpfComplete214" xml:space="preserve"> 不在所选处理月份 </system:String>
+    <system:String x:Key="WpfComplete215" xml:space="preserve"> 条匹配明细。</system:String>
+    <system:String x:Key="WpfComplete216" xml:space="preserve"> 已生成表头。</system:String>
+    <system:String x:Key="WpfComplete217" xml:space="preserve">仓租检测导出完成</system:String>
+    <system:String x:Key="WpfComplete218" xml:space="preserve">导出修复后的登记数据</system:String>
+    <system:String x:Key="WpfComplete219" xml:space="preserve">-修复.xlsx</system:String>
+    <system:String x:Key="WpfComplete220" xml:space="preserve">请选择新的文件名，保留原始登记表。</system:String>
+    <system:String x:Key="WpfComplete221" xml:space="preserve">已导出。</system:String>
+    <system:String x:Key="WpfComplete222" xml:space="preserve">下载 SKU / SN 批次</system:String>
+    <system:String x:Key="WpfComplete223" xml:space="preserve">下载</system:String>
+    <system:String x:Key="WpfComplete224" xml:space="preserve">正在加载批次</system:String>
+    <system:String x:Key="WpfComplete225" xml:space="preserve">选择批次</system:String>
+    <system:String x:Key="WpfComplete226" xml:space="preserve">请选择批次</system:String>
+    <system:String x:Key="WpfComplete227" xml:space="preserve">批次数据不完整。</system:String>
+    <system:String x:Key="WpfComplete228" xml:space="preserve">基础表中没有同时满足“SN 总计出现至少 2 次”且“当前记录为待检测”的数据。</system:String>
+    <system:String x:Key="WpfComplete229" xml:space="preserve">导出重复待检测 SN</system:String>
+    <system:String x:Key="WpfComplete230" xml:space="preserve">已导出 {0} 个重复 SN，共 {1} 条待检测记录。</system:String>
+    <system:String x:Key="WpfComplete231" xml:space="preserve">库位付费比对结果_</system:String>
+    <system:String x:Key="WpfComplete232" xml:space="preserve">请先导入完整基础表。</system:String>
+    <system:String x:Key="WpfComplete233" xml:space="preserve">批次 </system:String>
+    <system:String x:Key="WpfComplete234" xml:space="preserve">批次加载失败：</system:String>
+    <system:String x:Key="WpfComplete235" xml:space="preserve">出库检测结果_</system:String>
+    <system:String x:Key="WpfComplete236" xml:space="preserve">用户名不能为空。</system:String>
+    <system:String x:Key="WpfComplete237" xml:space="preserve">密码不能为空。</system:String>
+    <system:String x:Key="WpfComplete238" xml:space="preserve">登录请求超时，请检查网络连接。</system:String>
+    <system:String x:Key="WpfComplete239" xml:space="preserve">无法连接登录服务器：</system:String>
+    <system:String x:Key="WpfComplete240" xml:space="preserve">用户名或密码错误。</system:String>
+    <system:String x:Key="WpfComplete241" xml:space="preserve">登录失败，服务器返回 </system:String>
+    <system:String x:Key="WpfComplete242" xml:space="preserve">服务器返回的数据格式不正确。</system:String>
+    <system:String x:Key="WpfComplete243" xml:space="preserve">服务器没有返回有效 Token。</system:String>
+    <system:String x:Key="WpfComplete244" xml:space="preserve">没有登录 Token，请重新登录。</system:String>
+    <system:String x:Key="WpfPrompt001" xml:space="preserve">请扫描或输入编号。</system:String>
+    <system:String x:Key="WpfPrompt002" xml:space="preserve">请至少选择一个标签内容。</system:String>
+    <system:String x:Key="WpfPrompt003" xml:space="preserve">检测到单独的 GS1 地区码，未处理。</system:String>
+    <system:String x:Key="WpfPrompt004" xml:space="preserve">OID 已记录，请继续扫描 SN。</system:String>
+    <system:String x:Key="WpfPrompt005" xml:space="preserve">已取消型号选择。</system:String>
+    <system:String x:Key="WpfPrompt006" xml:space="preserve">已打印替换标签：</system:String>
+    <system:String x:Key="WpfPrompt007" xml:space="preserve">替换标签打印失败：</system:String>
+    <system:String x:Key="WpfPrompt008" xml:space="preserve">已新建替换标签记录文件。</system:String>
+    <system:String x:Key="WpfPrompt009" xml:space="preserve">替换标签记录上传成功。</system:String>
+    <system:String x:Key="WpfPrompt010" xml:space="preserve">配置文件：</system:String>
+    <system:String x:Key="WpfPrompt011" xml:space="preserve">本次已记录：</system:String>
+    <system:String x:Key="WpfPrompt012" xml:space="preserve">请输入 SKU。</system:String>
+    <system:String x:Key="WpfPrompt013" xml:space="preserve">请输入 SN。</system:String>
+    <system:String x:Key="WpfPrompt014" xml:space="preserve">请输入备注。</system:String>
+    <system:String x:Key="WpfPrompt015" xml:space="preserve">标签已发送到默认打印机。</system:String>
+    <system:String x:Key="WpfPrompt016" xml:space="preserve">自定义型号配置文件路径不能为空。</system:String>
+    <system:String x:Key="WpfPrompt017" xml:space="preserve">扫描内容不能为空。</system:String>
+    <system:String x:Key="WpfPrompt018" xml:space="preserve">扫描记录文件不存在。</system:String>
+    <system:String x:Key="WpfPrompt019" xml:space="preserve">上传服务器没有返回有效结果。</system:String>
+    <system:String x:Key="WpfPrompt020" xml:space="preserve">无法连接上传服务器 </system:String>
+    <system:String x:Key="WpfPrompt021" xml:space="preserve">，请检查网络、DNS 和 UploadBaseUrl 配置。详细信息：</system:String>
+    <system:String x:Key="WpfPrompt022" xml:space="preserve">连接上传服务器 </system:String>
+    <system:String x:Key="WpfPrompt023" xml:space="preserve"> 超时，请检查网络或服务器状态。</system:String>
+    <system:String x:Key="WpfPrompt024" xml:space="preserve">获取工单备注超时，请检查网络。</system:String>
+    <system:String x:Key="WpfPrompt025" xml:space="preserve">无法连接服务器：</system:String>
+    <system:String x:Key="WpfPrompt026" xml:space="preserve">Token 已过期，请重新登录。</system:String>
+    <system:String x:Key="WpfPrompt027" xml:space="preserve">当前账号没有查看工单备注的权限。</system:String>
+    <system:String x:Key="WpfPrompt028" xml:space="preserve">获取工单备注失败，HTTP </system:String>
+    <system:String x:Key="WpfPrompt029" xml:space="preserve">工单接口返回格式无法解析：</system:String>
+    <system:String x:Key="WpfPrompt030" xml:space="preserve">服务器返回了空响应。</system:String>
+    <system:String x:Key="WpfPrompt031" xml:space="preserve">服务器返回 success=false。</system:String>
+    <system:String x:Key="WpfPrompt032" xml:space="preserve">没有找到 Windows 默认打印机。</system:String>
+    <system:String x:Key="WpfPrompt033" xml:space="preserve">备注不能为空。</system:String>
+    <system:String x:Key="WpfPrompt034" xml:space="preserve">SKU 不能为空。</system:String>
+    <system:String x:Key="WpfPrompt035" xml:space="preserve">SN 不能为空。</system:String>
+    <system:String x:Key="WpfPrompt036" xml:space="preserve">打印序列号不能为空。</system:String>
+    <system:String x:Key="WpfPrompt037" xml:space="preserve">打印份数必须大于零。</system:String>
+    <system:String x:Key="WpfPrompt038" xml:space="preserve">托盘号不能为空。</system:String>
+    <system:String x:Key="WpfPrompt039" xml:space="preserve">没有可打印的 SKU 统计数据。</system:String>
+    <system:String x:Key="WpfPrompt040" xml:space="preserve">Windows 默认打印机无效或不可用。</system:String>
+    <system:String x:Key="WpfPrompt041" xml:space="preserve">无法创建打印绘图环境。</system:String>
+    <system:String x:Key="WpfOpenTxt">打开 TXT</system:String>
+<system:String x:Key="WpfScanLogEmpty" xml:space="preserve">扫描记录为空，暂时没有内容可上传。</system:String>
+<system:String x:Key="WpfUploadHttpError" xml:space="preserve">上传服务返回错误：HTTP </system:String>
+<system:String x:Key="WpfBatchDownloadHttpError" xml:space="preserve">批次下载失败 HTTP </system:String>
+<system:String x:Key="WpfBatchResponseInvalid" xml:space="preserve">批次响应无效。</system:String>
+<system:String x:Key="WpfBatchRecordCount" xml:space="preserve">{0} · {1} 条 · {2}</system:String>
 </ResourceDictionary>

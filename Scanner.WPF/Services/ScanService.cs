@@ -50,7 +50,7 @@ namespace Scanner.WPF.Services
             string code = WorkOrderSearchService.NormalizeCode(input);
             if (string.IsNullOrWhiteSpace(code))
             {
-                throw new ArgumentException("扫描内容不能为空。", nameof(input));
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt017"), nameof(input));
             }
             bool wasRecorded = _recordedCodes.Add(code);
             if (wasRecorded)
@@ -66,7 +66,7 @@ namespace Scanner.WPF.Services
             string code = WorkOrderSearchService.NormalizeCode(input);
             if (string.IsNullOrWhiteSpace(code))
             {
-                throw new ArgumentException("扫描内容不能为空。", nameof(input));
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt017"), nameof(input));
             }
             bool isOid = OidService.IsOid(code);
             return new ScanResult(code, false, isOid ? new OidScanResult(true, 0) : OidScanResult.NotOid);

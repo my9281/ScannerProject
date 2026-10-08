@@ -61,19 +61,39 @@ namespace Scanner.WPF.Controllers
             TryLoad();
         }
 
+        public void DownloadBatch_Click(object sender, RoutedEventArgs e)
+        {
+            var picker = new SkuSnBatchPicker(_upload) { Owner = _view.OwnerWindow };
+            if (picker.ShowDialog() != true) return;
+            try
+            {
+                var batch = picker.SelectedBatch;
+                var lines = batch.Items.SelectMany(x => new[] { x.Sku, x.Sn }).ToArray();
+                var records = OutboundInspectionService.BuildLines(lines, _baseData.Records);
+                _records = records;
+                _textPath = null;
+                _view.TextFileTextBlock.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete233") + batch.BatchNumber + " · " + batch.BatchId;
+                ShowRecords();
+            }
+            catch (Exception ex) { MessageBox.Show(_view.OwnerWindow, Scanner.WPF.Helpers.UiText.Get("WpfComplete234") + ex.Message); }
+        }
+        private void ShowRecords()
+        {
+            _skuItems = _records.Where(item => !string.IsNullOrWhiteSpace(item.Sku)).GroupBy(item => item.Sku.Trim(), StringComparer.OrdinalIgnoreCase).Select(group => new OutboundSkuSummary { Sku = group.Key, Quantity = group.Count() }).OrderBy(item => item.Sku, StringComparer.OrdinalIgnoreCase).ToList();
+            _view.ResultDataGrid.ItemsSource = _records;
+            int matched = _records.Count(item => item.IsMatched);
+            _view.SummaryTextBlock.Text = string.Format(UiText.Get("OutboundSummary"), _records.Count, _skuItems.Count, matched, _records.Count - matched);
+            _view.ExportButton.IsEnabled = _records.Count > 0;
+            _view.PrintButton.IsEnabled = _skuItems.Count > 0;
+            _view.UploadButton.IsEnabled = _records.Count > 0;
+        }
         private void TryLoad()
         {
             if (string.IsNullOrWhiteSpace(_textPath) || _baseData.Records.Count == 0) return;
             try
             {
                 _records = OutboundInspectionService.Build(_textPath, _baseData.Records);
-                _skuItems = _records.Where(item => !string.IsNullOrWhiteSpace(item.Sku)).GroupBy(item => item.Sku.Trim(), StringComparer.OrdinalIgnoreCase).Select(group => new OutboundSkuSummary { Sku = group.Key, Quantity = group.Count() }).OrderBy(item => item.Sku, StringComparer.OrdinalIgnoreCase).ToList();
-                _view.ResultDataGrid.ItemsSource = _records;
-                int matched = _records.Count(item => item.IsMatched);
-                _view.SummaryTextBlock.Text = string.Format(UiText.Get("OutboundSummary"), _records.Count, _skuItems.Count, matched, _records.Count - matched);
-                _view.ExportButton.IsEnabled = _records.Count > 0;
-                _view.PrintButton.IsEnabled = _skuItems.Count > 0;
-                _view.UploadButton.IsEnabled = _records.Count > 0;
+                ShowRecords();
             }
             catch (Exception ex)
             {
@@ -119,7 +139,7 @@ namespace Scanner.WPF.Controllers
 
         public void ExportButton_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog dialog = new SaveFileDialog { Title = UiText.Get("ExportOutboundTitle"), Filter = UiText.Get("ExcelFileFilter"), DefaultExt = ".xlsx", AddExtension = true, FileName = "出库检测结果_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx" };
+            SaveFileDialog dialog = new SaveFileDialog { Title = UiText.Get("ExportOutboundTitle"), Filter = UiText.Get("ExcelFileFilter"), DefaultExt = ".xlsx", AddExtension = true, FileName = Scanner.WPF.Helpers.UiText.Get("WpfComplete235") + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx" };
             if (dialog.ShowDialog(_view.OwnerWindow) != true) return;
             try
             {

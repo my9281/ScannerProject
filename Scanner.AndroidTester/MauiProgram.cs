@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Scanner.AndroidTester
 {
@@ -14,13 +14,18 @@ namespace Scanner.AndroidTester
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
+            var settings = Services.AppSettings.Load();
+            builder.Services.AddSingleton(settings);
+            builder.Services.AddSingleton(new Services.SkuSnSession(Path.Combine(FileSystem.AppDataDirectory, "sku-sn-batch.json")));
             builder.Services.AddMauiBlazorWebView();
             builder.Services.AddSingleton<Services.ScanSession>();
             builder.Services.AddSingleton<Services.LatestScan>();
-            builder.Services.AddSingleton<Services.PalletScanSession>();
+            builder.Services.AddSingleton(new Services.PalletScanSession { ApiKey = settings.UploadApiKey });
+            builder.Services.AddSingleton(new Services.LocationScanSession { ApiKey = settings.UploadApiKey });
+            builder.Services.AddSingleton(new Services.LocationScanApiService(new HttpClient { BaseAddress = settings.UploadBaseUrl, Timeout = TimeSpan.FromSeconds(60) }));
             builder.Services.AddSingleton(new Services.PalletScanApiService(new HttpClient
             {
-                BaseAddress = new Uri("https://wms.ymforever.com/"),
+                BaseAddress = settings.UploadBaseUrl,
                 Timeout = TimeSpan.FromSeconds(60)
             }));
 

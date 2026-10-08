@@ -11,6 +11,15 @@ namespace Scanner.WPF.Helpers
             return Application.Current?.TryFindResource(key)?.ToString() ?? key;
         }
 
+        public static string ErrorMessage(Exception exception)
+        {
+            string message = exception.Message;
+            if (message.StartsWith("批次下载失败 HTTP ", StringComparison.Ordinal))
+                return Get("WpfBatchDownloadHttpError") + message.Substring("批次下载失败 HTTP ".Length);
+            if (message == "批次响应无效。") return Get("WpfBatchResponseInvalid");
+            return message;
+        }
+
         public static void ChangeLanguage(string language)
         {
             if (language != "en-US" && language != "es-ES") language = "zh-CN";

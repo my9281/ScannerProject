@@ -10,12 +10,12 @@ async Task Reject(Func<Task> action) { try { await action(); } catch (ArgumentEx
 var repository = new FakeRepository();
 var service = new PalletScanService(repository);
 var time = new DateTimeOffset(2026, 10, 3, 23, 59, 59, TimeSpan.FromHours(-7)).AddTicks(1234567);
-var valid = new PalletScanItem(Guid.NewGuid(), " 000123 ", 10, time);
+var valid = new PalletScanItem(Guid.NewGuid(), " 000123 ", 100, time);
 await service.UploadAsync(new(new[] { valid }));
 Check(repository.Last![0].Sn == "000123" && repository.Last[0].ScannedAt.Date == time.Date && repository.Last[0].ScannedAt.Offset == time.Offset, "SN/date/offset preservation");
 Check(repository.Last[0].ScannedAt.Ticks % 10000 == 0, "Millisecond precision");
 int calls = repository.Calls;
-foreach (var bad in new[] { valid with { PalletNumber = 0 }, valid with { PalletNumber = 11 }, valid with { Sn = " " }, valid with { Sn = new string('X', 101) }, valid with { ScanId = Guid.Empty }, valid with { ScannedAt = default } })
+foreach (var bad in new[] { valid with { PalletNumber = 0 }, valid with { PalletNumber = 101 }, valid with { Sn = " " }, valid with { Sn = new string('X', 101) }, valid with { ScanId = Guid.Empty }, valid with { ScannedAt = default } })
     await Reject(() => service.UploadAsync(new(new[] { bad })));
 await Reject(() => service.UploadAsync(new(new[] { valid, valid })));
 await Reject(() => service.UploadAsync(new(Array.Empty<PalletScanItem>())));
@@ -23,11 +23,13 @@ await Reject(() => service.UploadAsync(new(Enumerable.Range(0, 1001).Select(_ =>
 Check(repository.Calls == calls, "Invalid batch must not reach repository");
 
 var session = new PalletScanSession { PalletNumber = 1, ApiKey = "test-key" };
+foreach (var number in new[] { 0, 101 }) { session.PalletNumber = number; await Reject(() => { session.Add("INVALID", time); return Task.CompletedTask; }); }
+session.PalletNumber = 1;
 session.Add("000123", time);
-session.PalletNumber = 10;
+session.PalletNumber = 100;
 try { session.Add("000123", time.AddSeconds(1)); throw new Exception("Duplicate accepted"); } catch (ArgumentException) { }
 session.Add("000124", time.AddSeconds(1));
-Check(session.Pending[0].PalletNumber == 1 && session.Pending[1].PalletNumber == 10 && session.Pending[0].ScanId != session.Pending[1].ScanId, "Snapshot pallet and preserve repeated scans");
+Check(session.Pending[0].PalletNumber == 1 && session.Pending[1].PalletNumber == 100 && session.Pending[0].ScanId != session.Pending[1].ScanId, "Snapshot pallet and preserve repeated scans");
 Guid[] original = session.Pending.Select(x => x.ScanId).ToArray();
 var handler = new FakeHandler();
 var api = new PalletScanApiService(new HttpClient(handler) { BaseAddress = new Uri("https://example.invalid/") });

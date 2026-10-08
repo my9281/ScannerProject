@@ -30,7 +30,7 @@ namespace Scanner.WPF
         }
         private async void Import_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog { Title = "导入批量标签 Excel", Filter = "Excel 工作簿 (*.xlsx)|*.xlsx", CheckFileExists = true };
+            var dialog = new OpenFileDialog { Title = Scanner.WPF.Helpers.UiText.Get("WpfComplete120"), Filter = Scanner.WPF.Helpers.UiText.Get("ExcelFileFilter"), CheckFileExists = true };
             if (dialog.ShowDialog(this) != true) return;
             SetBusy(true);
             try
@@ -42,22 +42,22 @@ namespace Scanner.WPF
                 RowsGrid.SelectedItem = rows.FirstOrDefault(r => r.Error == null);
                 long total = rows.Where(r => r.Error == null).Sum(r => (long)r.Quantity);
                 PrintProgress.Maximum = Math.Max(1, total); PrintProgress.Value = 0;
-                StatusText.Text = "已导入 " + rows.Count + " 行，可打印 " + total + " 张，报废 " + rows.Where(r => r.Error == null && r.IsScrapped).Sum(r => (long)r.Quantity) + " 张，跳过 " + rows.Count(r => r.Error != null) + " 行。";
+                StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete121") + rows.Count + Scanner.WPF.Helpers.UiText.Get("WpfComplete122") + total + Scanner.WPF.Helpers.UiText.Get("WpfComplete123") + rows.Where(r => r.Error == null && r.IsScrapped).Sum(r => (long)r.Quantity) + Scanner.WPF.Helpers.UiText.Get("WpfComplete124") + rows.Count(r => r.Error != null) + Scanner.WPF.Helpers.UiText.Get("WpfComplete125");
             }
-            catch (Exception ex) { StatusText.Text = "导入失败：" + ex.Message; }
+            catch (Exception ex) { StatusText.Text = Scanner.WPF.Helpers.UiText.Get("ImportFailedPrefix") + ex.Message; }
             finally { SetBusy(false); }
         }
         private void Selection_Changed(object sender, SelectionChangedEventArgs e)
         {
             PreviewImage.Source = null;
-            if (!(RowsGrid.SelectedItem is BatchLabelRecord row)) { PreviewStatus.Text = "请选择一行。"; return; }
+            if (!(RowsGrid.SelectedItem is BatchLabelRecord row)) { PreviewStatus.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete126"); return; }
             if (row.Error != null) { PreviewStatus.Text = row.Error; return; }
             try
             {
                 PreviewImage.Source = PrintingHelper.PreviewSkuSerialNumberLabel(row.Sku, row.Sn, row.Remark, row.IsScrapped);
-                PreviewStatus.Text = row.IsScrapped ? "报废 / Scrapped / Desechado" : "备注：" + row.Remark;
+                PreviewStatus.Text = row.IsScrapped ? Scanner.WPF.Helpers.UiText.Get("WpfComplete127") : Scanner.WPF.Helpers.UiText.Get("WpfComplete128") + row.Remark;
             }
-            catch (Exception ex) { PreviewStatus.Text = "预览失败：" + ex.Message; }
+            catch (Exception ex) { PreviewStatus.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete129") + ex.Message; }
         }
         private void Cancel_Click(object sender, RoutedEventArgs e) { _cancel = true; CancelButton.IsEnabled = false; }
         private async void Print_Click(object sender, RoutedEventArgs e)
@@ -79,20 +79,20 @@ namespace Scanner.WPF
                         if (_cancel) break;
                         _printing.PrintSkuSerialNumberLabel(row.Sku, row.Sn, row.Remark, row.IsScrapped);
                         row.SentCount++; sent++;
-                        row.PrintStatus = "已发送 " + row.SentCount + "/" + row.Quantity;
+                        row.PrintStatus = Scanner.WPF.Helpers.UiText.Get("WpfComplete130") + row.SentCount + "/" + row.Quantity;
                         PrintProgress.Value = sent;
                         RowsGrid.Items.Refresh();
-                        StatusText.Text = "已发送 " + sent + "/" + total + " 张到 " + printer + "。";
+                        StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete130") + sent + "/" + total + Scanner.WPF.Helpers.UiText.Get("WpfComplete131") + printer + "。";
                     }
                     if (_cancel) break;
                 }
-                StatusText.Text = (_cancel ? "已停止后续打印。" : "批量标签已发送。") + "已发送 " + sent + "/" + total + " 张到 " + printer + "。";
+                StatusText.Text = (_cancel ? Scanner.WPF.Helpers.UiText.Get("WpfComplete132") : Scanner.WPF.Helpers.UiText.Get("WpfComplete133")) + Scanner.WPF.Helpers.UiText.Get("WpfComplete130") + sent + "/" + total + Scanner.WPF.Helpers.UiText.Get("WpfComplete131") + printer + "。";
             }
             catch (Exception ex)
             {
-                if (current != null) current.PrintStatus = "失败（已发送 " + current.SentCount + " 张）：" + ex.Message;
+                if (current != null) current.PrintStatus = Scanner.WPF.Helpers.UiText.Get("WpfComplete134") + current.SentCount + Scanner.WPF.Helpers.UiText.Get("WpfComplete135") + ex.Message;
                 RowsGrid.Items.Refresh();
-                StatusText.Text = "打印已停止：" + ex.Message + "。请核对打印队列后再继续。";
+                StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete136") + ex.Message + Scanner.WPF.Helpers.UiText.Get("WpfComplete137");
             }
             finally { CancelButton.IsEnabled = false; SetBusy(false); }
         }

@@ -2,15 +2,15 @@ using Scanner.AndroidTester.Services;
 namespace Scanner.AndroidTester;
 public sealed class PrintLabelPage : ContentPage
 {
-    private readonly Entry _input = new() { Placeholder = "扫描条码后回车，自动打印", ReturnType = ReturnType.Done, FontSize = 22, TextColor = Colors.Black, BackgroundColor = Colors.White, IsTextPredictionEnabled = false };
-    private readonly Label _status = new() { Text = "等待扫码，回车后打印。", TextColor = Colors.DarkSlateGray };
+    private readonly Entry _input = new() { Placeholder = "扫描条码后回车，自动打印", ReturnType = ReturnType.Done, FontSize = 22, TextColor = Color.FromArgb("#F2F2F2"), BackgroundColor = Color.FromArgb("#181C20"), IsTextPredictionEnabled = false };
+    private readonly Label _status = new() { Text = "", TextColor = Color.FromArgb("#92979D") };
     private bool _active;
     private bool _printing;
 
     public PrintLabelPage(LatestScan latest)
     {
         Title = "打印标签";
-        BackgroundColor = Colors.White;
+        BackgroundColor = Color.FromArgb("#080A0C");
         var button = new Button { Text = "打印", FontSize = 24, HeightRequest = 64, Margin = 24, VerticalOptions = LayoutOptions.Center };
 #if ANDROID
         SemanticProperties.SetHint(button, "长按可更换打印机或指令类型");

@@ -24,32 +24,32 @@ namespace Scanner.WPF
             FetchButton.IsEnabled = ExportButton.IsEnabled = UploadButton.IsEnabled = false;
             _rows = null;
             ResultsGrid.ItemsSource = null;
-            StatusText.Text = "正在获取 PDA 托盘数据…";
+            StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete112");
             try
             {
                 var inbound = _baseData.Records.ToArray();
                 var pallets = await _api.GetPdaPalletsAsync(System.Configuration.ConfigurationManager.AppSettings["UploadApiKey"]);
                 _rows = AutomaticMatchingService.Match(pallets, inbound);
                 ResultsGrid.ItemsSource = _rows;
-                StatusText.Text = $"已获取 {pallets.Count} 条托盘记录，匹配待检测明细 {_rows.Count} 条，涉及 {_rows.Select(x => x.PalletNumber).Distinct().Count()} 个托盘。";
+                StatusText.Text = string.Format(Scanner.WPF.Helpers.UiText.Get("WpfComplete113"), pallets.Count, _rows.Count, _rows.Select(x => x.PalletNumber).Distinct().Count());
                 ExportButton.IsEnabled = _rows.Count > 0;
                 if (_rows.Count > 0) await UploadRowsAsync();
             }
-            catch (Exception ex) { StatusText.Text = "匹配失败：" + ex.Message; }
+            catch (Exception ex) { StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete114") + ex.Message; }
             finally { FetchButton.IsEnabled = true; }
         }
         private async System.Threading.Tasks.Task UploadRowsAsync()
         {
-            StatusText.Text = $"已匹配 {_rows.Count} 条，正在上传工单给 my9281…";
+            StatusText.Text = string.Format(Scanner.WPF.Helpers.UiText.Get("WpfComplete115"), _rows.Count);
             UploadButton.IsEnabled = false;
             try
             {
                 var result = await _api.UploadMatchedWorkOrdersAsync(_rows, System.Configuration.ConfigurationManager.AppSettings["UploadApiKey"]);
-                StatusText.Text = $"匹配 {_rows.Count} 条，新增工单 {result.InsertedCount} 条，跳过重复 {result.SkippedCount} 条。分配用户：{result.Username}，审核位：0，未完成。";
+                StatusText.Text = string.Format(Scanner.WPF.Helpers.UiText.Get("WpfComplete116"), _rows.Count, result.InsertedCount, result.SkippedCount, result.Username);
             }
             catch (Exception ex)
             {
-                StatusText.Text = "匹配结果已保留，工单上传未全部完成：" + ex.Message;
+                StatusText.Text = Scanner.WPF.Helpers.UiText.Get("WpfComplete117") + ex.Message;
                 UploadButton.IsEnabled = true;
             }
         }
@@ -63,16 +63,16 @@ namespace Scanner.WPF
         private void Export_Click(object sender, RoutedEventArgs e)
         {
             if (_rows == null || _rows.Count == 0) return;
-            var dialog = new SaveFileDialog { Filter = "Excel 工作簿 (*.xlsx)|*.xlsx", FileName = "自动匹配_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx" };
+            var dialog = new SaveFileDialog { Filter = Scanner.WPF.Helpers.UiText.Get("ExcelFileFilter"), FileName = Scanner.WPF.Helpers.UiText.Get("WpfComplete118") + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".xlsx" };
             if (dialog.ShowDialog(this) != true) return;
             try
             {
                 if (string.Equals(Path.GetFullPath(dialog.FileName), Path.GetFullPath(_baseData.BaseDataFile), StringComparison.OrdinalIgnoreCase))
-                    throw new InvalidOperationException("请另存为新文件，不能覆盖基础表。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfComplete119"));
                 AutomaticMatchingService.Export(dialog.FileName, _rows);
-                StatusText.Text = "已导出：" + dialog.FileName;
+                StatusText.Text = Scanner.WPF.Helpers.UiText.Get("ExportedPrefix") + dialog.FileName;
             }
-            catch (Exception ex) { MessageBox.Show(this, "导出失败：" + ex.Message); }
+            catch (Exception ex) { MessageBox.Show(this, Scanner.WPF.Helpers.UiText.Get("ExportFailedPrefix") + ex.Message); }
         }
     }
 }

@@ -4,11 +4,11 @@
 
 <section class="scan-page">
     <h1>托盘扫描</h1>
-    <label for="pallet-number">托盘号（1–10）</label>
+    <label for="pallet-number">托盘号（1–100）</label>
     <div class="pallet-stepper">
-        <input id="pallet-number" type="number" min="1" max="10" step="1" @bind="Session.PalletNumber" aria-label="托盘号" />
+        <input id="pallet-number" type="number" min="1" max="100" step="1" @bind="Session.PalletNumber" aria-label="托盘号" />
         <div>
-            <button type="button" aria-label="增加托盘号" disabled="@(Session.PalletNumber >= 10)" @onclick="Increase">▲</button>
+            <button type="button" aria-label="增加托盘号" disabled="@(Session.PalletNumber >= 100)" @onclick="Increase">▲</button>
             <button type="button" aria-label="减少托盘号" disabled="@(Session.PalletNumber <= 1)" @onclick="Decrease">▼</button>
         </div>
     </div>
@@ -17,11 +17,6 @@
         <input id="pallet-sn" class="form-control scan-input" @ref="_input" @bind="_sn" @bind:event="oninput" autocomplete="off" autocapitalize="off" spellcheck="false" />
         <button type="submit" class="btn btn-primary">记录</button>
     </form>
-    <details><summary>上传设置</summary>
-        <label for="upload-key">上传密钥（服务器启用时填写）</label>
-        <input id="upload-key" class="form-control" type="password" @bind="Session.ApiKey" autocomplete="off" />
-        <p>服务器：https://wms.ymforever.com</p>
-    </details>
     <p role="status">@_message</p>
     <p>待上传 @Session.Pending.Count 条。上传成功后移出列表；退出应用将清空未上传数据。</p>
     <div class="scan-list">
@@ -39,8 +34,8 @@
     private string _message = "请选择托盘号并开始扫描。";
     private ElementReference _input;
     protected override async Task OnAfterRenderAsync(bool firstRender) { if (firstRender) await _input.FocusAsync(); }
-    private async Task Increase() { Session.PalletNumber = Math.Clamp(Session.PalletNumber + 1, 1, 10); await _input.FocusAsync(); }
-    private async Task Decrease() { Session.PalletNumber = Math.Clamp(Session.PalletNumber - 1, 1, 10); await _input.FocusAsync(); }
+    private async Task Increase() { Session.PalletNumber = Math.Clamp(Session.PalletNumber + 1, 1, 100); await _input.FocusAsync(); }
+    private async Task Decrease() { Session.PalletNumber = Math.Clamp(Session.PalletNumber - 1, 1, 100); await _input.FocusAsync(); }
     private async Task Scan()
     {
         try { Session.Add(_sn, DateTimeOffset.Now); _sn = ""; _message = "已记录。"; }

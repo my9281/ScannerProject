@@ -282,4 +282,295 @@
     <system:String x:Key="OperationsNeedFeeSources">Select a template and base Excel file first.</system:String>
     <system:String x:Key="OperationsInboundSummary">Base: {0:N0} records; SN: {1:N0}</system:String>
     <system:String x:Key="OperationsShareTitle">Save processing result</system:String>
+    <system:String x:Key="WpfComplete001" xml:space="preserve">Automatic matching</system:String>
+    <system:String x:Key="WpfComplete002" xml:space="preserve">Fetch PDA pallets and match SNs to pending inspections</system:String>
+    <system:String x:Key="WpfComplete003" xml:space="preserve">Fetch and match</system:String>
+    <system:String x:Key="WpfComplete004" xml:space="preserve">Export Excel</system:String>
+    <system:String x:Key="WpfComplete005" xml:space="preserve">Retry work order upload</system:String>
+    <system:String x:Key="WpfComplete006" xml:space="preserve">Click Fetch and match.</system:String>
+    <system:String x:Key="WpfComplete007" xml:space="preserve">RMA number</system:String>
+    <system:String x:Key="WpfComplete008" xml:space="preserve">Scan date</system:String>
+    <system:String x:Key="WpfComplete009" xml:space="preserve">Scan time</system:String>
+    <system:String x:Key="WpfComplete010" xml:space="preserve">Inspection status</system:String>
+    <system:String x:Key="WpfComplete011" xml:space="preserve">Processing time</system:String>
+    <system:String x:Key="WpfComplete012" xml:space="preserve">Batch label printing</system:String>
+    <system:String x:Key="WpfComplete013" xml:space="preserve">Import Excel to print 4 × 6 landscape SKU/SN labels by quantity. Scrapped labels have an X and a trilingual scrap mark.</system:String>
+    <system:String x:Key="WpfComplete014" xml:space="preserve">Import Excel</system:String>
+    <system:String x:Key="WpfComplete015" xml:space="preserve">No file imported</system:String>
+    <system:String x:Key="WpfComplete016" xml:space="preserve">Row</system:String>
+    <system:String x:Key="WpfComplete017" xml:space="preserve">Quantity</system:String>
+    <system:String x:Key="WpfComplete018" xml:space="preserve">Treatment</system:String>
+    <system:String x:Key="WpfComplete019" xml:space="preserve">Label note</system:String>
+    <system:String x:Key="WpfComplete020" xml:space="preserve">Print status</system:String>
+    <system:String x:Key="WpfComplete021" xml:space="preserve">Selected label preview</system:String>
+    <system:String x:Key="WpfComplete022" xml:space="preserve">Scrap marks replace notes. Rows with missing SKU/SN or invalid quantities are skipped with a reason. Already sent labels are not sent again when resuming.</system:String>
+    <system:String x:Key="WpfComplete023" xml:space="preserve">Import a file first.</system:String>
+    <system:String x:Key="WpfComplete024" xml:space="preserve">Stop remaining printing</system:String>
+    <system:String x:Key="WpfComplete025" xml:space="preserve">Duplicate pending SNs</system:String>
+    <system:String x:Key="WpfComplete026" xml:space="preserve">Export duplicate pending SNs</system:String>
+    <system:String x:Key="WpfComplete027" xml:space="preserve">View good stock</system:String>
+    <system:String x:Key="WpfComplete028" xml:space="preserve">Pallet (1–100; blank for all)</system:String>
+    <system:String x:Key="WpfComplete029" xml:space="preserve">Search</system:String>
+    <system:String x:Key="WpfComplete030" xml:space="preserve">Show all</system:String>
+    <system:String x:Key="WpfComplete031" xml:space="preserve">Refresh data</system:String>
+    <system:String x:Key="WpfComplete032" xml:space="preserve">Loading good stock…</system:String>
+    <system:String x:Key="WpfComplete033" xml:space="preserve">Features</system:String>
+    <system:String x:Key="WpfComplete034" xml:space="preserve">Select a feature</system:String>
+    <system:String x:Key="WpfComplete035" xml:space="preserve">Label management</system:String>
+    <system:String x:Key="WpfComplete036" xml:space="preserve">Scan and print</system:String>
+    <system:String x:Key="WpfComplete037" xml:space="preserve">Scan an SN or OID to record and print labels</system:String>
+    <system:String x:Key="WpfComplete038" xml:space="preserve">Replacement labels</system:String>
+    <system:String x:Key="WpfComplete039" xml:space="preserve">Record scans separately and print replacement labels</system:String>
+    <system:String x:Key="WpfComplete040" xml:space="preserve">SKU / SN labels</system:String>
+    <system:String x:Key="WpfComplete041" xml:space="preserve">Print 4 × 6 labels with two QR codes and a note</system:String>
+    <system:String x:Key="WpfComplete042" xml:space="preserve">Good stock area</system:String>
+    <system:String x:Key="WpfComplete043" xml:space="preserve">View all good stock and filter by pallet</system:String>
+    <system:String x:Key="WpfComplete044" xml:space="preserve">Inbound and outbound</system:String>
+    <system:String x:Key="WpfComplete045" xml:space="preserve">Match PDA pallets to pending inbound inspections and export to Excel</system:String>
+    <system:String x:Key="WpfComplete046" xml:space="preserve">Monthly report</system:String>
+    <system:String x:Key="WpfComplete047" xml:space="preserve">Export details and categories by processing month</system:String>
+    <system:String x:Key="WpfComplete048" xml:space="preserve">Import shared base</system:String>
+    <system:String x:Key="WpfComplete049" xml:space="preserve">Load shared base data from Excel</system:String>
+    <system:String x:Key="WpfComplete050" xml:space="preserve">Match inbound SNs and inspection status, then export</system:String>
+    <system:String x:Key="WpfComplete051" xml:space="preserve">Check outbound data and print summary labels</system:String>
+    <system:String x:Key="WpfComplete052" xml:space="preserve">Data tools</system:String>
+    <system:String x:Key="WpfComplete053" xml:space="preserve">Repair receiving register</system:String>
+    <system:String x:Key="WpfComplete054" xml:space="preserve">Correct receipt dates and normalize Amazon/eBay records for export</system:String>
+    <system:String x:Key="WpfComplete055" xml:space="preserve">Import Excel to print SKU/SN labels; mark scrapped items with X</system:String>
+    <system:String x:Key="WpfComplete056" xml:space="preserve">Other features</system:String>
+    <system:String x:Key="WpfComplete057" xml:space="preserve">Generate and open today's scan report</system:String>
+    <system:String x:Key="WpfComplete058" xml:space="preserve">Import work orders</system:String>
+    <system:String x:Key="WpfComplete059" xml:space="preserve">Import urgent work orders and shipment matching rules</system:String>
+    <system:String x:Key="WpfComplete060" xml:space="preserve">Reload online work orders and notes</system:String>
+    <system:String x:Key="WpfComplete061" xml:space="preserve">← Back to features</system:String>
+    <system:String x:Key="WpfComplete062" xml:space="preserve">Filter by processing time in the shared base and retain all detail fields.</system:String>
+    <system:String x:Key="WpfComplete063" xml:space="preserve">Year</system:String>
+    <system:String x:Key="WpfComplete064" xml:space="preserve">Month</system:String>
+    <system:String x:Key="WpfComplete065" xml:space="preserve">Export the monthly overview and pending, inspected, refurbished, repaired and scrapped categories. Dropshipping and monthly movement sheets contain headers only.</system:String>
+    <system:String x:Key="WpfComplete066" xml:space="preserve">Optional sheets: filter by processing month, merge material requests and summarize quantities by SKU.</system:String>
+    <system:String x:Key="WpfComplete067" xml:space="preserve">Import InboundDetection</system:String>
+    <system:String x:Key="WpfComplete068" xml:space="preserve">Not imported</system:String>
+    <system:String x:Key="WpfComplete069" xml:space="preserve">Import ProductMaintenance</system:String>
+    <system:String x:Key="WpfComplete070" xml:space="preserve">Download batch</system:String>
+    <system:String x:Key="WpfComplete071" xml:space="preserve">Process only Amazon and eBay receiving sheets and export one merged dataset.</system:String>
+    <system:String x:Key="WpfComplete072" xml:space="preserve">1. Normalize column A dates; blanks and notes inherit the previous valid date in the same sheet.</system:String>
+    <system:String x:Key="WpfComplete073" xml:space="preserve">2. Normalize model case and spaces; remove rows with non-alphanumeric model names when column F is “No”.</system:String>
+    <system:String x:Key="WpfComplete074" xml:space="preserve">Select register Excel</system:String>
+    <system:String x:Key="WpfComplete075" xml:space="preserve">No file selected</system:String>
+    <system:String x:Key="WpfComplete076" xml:space="preserve">Export: warehouse receipt date, model, SN, tracking number, return type, BT entry status, service-system receipt date and transfer/RMA number.</system:String>
+    <system:String x:Key="WpfComplete077" xml:space="preserve">Select a receiving register.</system:String>
+    <system:String x:Key="WpfComplete078" xml:space="preserve">Correct and export Excel</system:String>
+    <system:String x:Key="WpfComplete079" xml:space="preserve">Step 2: Storage fee inspection</system:String>
+    <system:String x:Key="WpfComplete080" xml:space="preserve">Match SNs to the shared base and export records processed in the selected month, including processing dates.</system:String>
+    <system:String x:Key="WpfComplete081" xml:space="preserve">Processing year</system:String>
+    <system:String x:Key="WpfComplete082" xml:space="preserve">Export storage fee inspection</system:String>
+    <system:String x:Key="WpfComplete083" xml:space="preserve">Step 3: Monthly storage settlement</system:String>
+    <system:String x:Key="WpfComplete084" xml:space="preserve">Combine receipts, completed processing and stock lists for the month, marking each source. Use the latest receipt date per SN; count through month-end for stock/receipt-only records, or through completion for processed records, including both endpoints.</system:String>
+    <system:String x:Key="WpfComplete085" xml:space="preserve">Import web shelved stock</system:String>
+    <system:String x:Key="WpfComplete086" xml:space="preserve">Import stock Excel</system:String>
+    <system:String x:Key="WpfComplete087" xml:space="preserve">Download import template</system:String>
+    <system:String x:Key="WpfComplete088" xml:space="preserve">The web stock table has no dispatch status. Confirm that imported data represents stock for settlement. Use saved lists for past months.</system:String>
+    <system:String x:Key="WpfComplete089" xml:space="preserve">No stock list imported</system:String>
+    <system:String x:Key="WpfComplete090" xml:space="preserve">Stock list date</system:String>
+    <system:String x:Key="WpfComplete091" xml:space="preserve">Settlement year</system:String>
+    <system:String x:Key="WpfComplete092" xml:space="preserve">Export storage settlement</system:String>
+    <system:String x:Key="WpfComplete093" xml:space="preserve">Scan a serial number and select replacement contents</system:String>
+    <system:String x:Key="WpfComplete094" xml:space="preserve">Label contents</system:String>
+    <system:String x:Key="WpfComplete095" xml:space="preserve">Inspection OK</system:String>
+    <system:String x:Key="WpfComplete096" xml:space="preserve">Cables</system:String>
+    <system:String x:Key="WpfComplete097" xml:space="preserve">Packaging</system:String>
+    <system:String x:Key="WpfComplete098" xml:space="preserve">Repair</system:String>
+    <system:String x:Key="WpfComplete099" xml:space="preserve">Paper: </system:String>
+    <system:String x:Key="WpfComplete100" xml:space="preserve">Print replacement label</system:String>
+    <system:String x:Key="WpfComplete101" xml:space="preserve">Upload</system:String>
+    <system:String x:Key="WpfComplete102" xml:space="preserve">Copies: </system:String>
+    <system:String x:Key="WpfComplete103" xml:space="preserve">SKU / SN QR labels</system:String>
+    <system:String x:Key="WpfComplete104" xml:space="preserve">Enter label contents to print one 4 × 6 landscape label with two QR codes</system:String>
+    <system:String x:Key="WpfComplete105" xml:space="preserve">Note</system:String>
+    <system:String x:Key="WpfComplete106" xml:space="preserve">Print 4 × 6 label</system:String>
+    <system:String x:Key="WpfComplete107" xml:space="preserve">Clear</system:String>
+    <system:String x:Key="WpfComplete108" xml:space="preserve">Waiting for input</system:String>
+    <system:String x:Key="WpfComplete109" xml:space="preserve">Layout: SKU QR on the left, SN/MESSN QR on the right, note at the bottom.</system:String>
+    <system:String x:Key="WpfComplete110" xml:space="preserve">Application startup failed: </system:String>
+    <system:String x:Key="WpfComplete111" xml:space="preserve">Error</system:String>
+    <system:String x:Key="WpfComplete112" xml:space="preserve">Fetching PDA pallets…</system:String>
+    <system:String x:Key="WpfComplete113" xml:space="preserve">Fetched {0} records; {1} pending matches across {2} pallets.</system:String>
+    <system:String x:Key="WpfComplete114" xml:space="preserve">Matching failed: </system:String>
+    <system:String x:Key="WpfComplete115" xml:space="preserve">Matched {0} records; uploading work orders to my9281…</system:String>
+    <system:String x:Key="WpfComplete116" xml:space="preserve">Matched {0}; created {1} work orders; skipped {2} duplicates. Assigned to {3}; review flag 0; incomplete.</system:String>
+    <system:String x:Key="WpfComplete117" xml:space="preserve">Matches retained; work order upload is incomplete: </system:String>
+    <system:String x:Key="WpfComplete118" xml:space="preserve">AutomaticMatch_</system:String>
+    <system:String x:Key="WpfComplete119" xml:space="preserve">Save to a new file; do not overwrite the shared base.</system:String>
+    <system:String x:Key="WpfComplete120" xml:space="preserve">Import batch label Excel</system:String>
+    <system:String x:Key="WpfComplete121" xml:space="preserve">Imported </system:String>
+    <system:String x:Key="WpfComplete122" xml:space="preserve"> rows; printable labels: </system:String>
+    <system:String x:Key="WpfComplete123" xml:space="preserve">; scrapped labels: </system:String>
+    <system:String x:Key="WpfComplete124" xml:space="preserve">; skipped rows: </system:String>
+    <system:String x:Key="WpfComplete125" xml:space="preserve"> rows.</system:String>
+    <system:String x:Key="WpfComplete126" xml:space="preserve">Select a row.</system:String>
+    <system:String x:Key="WpfComplete127" xml:space="preserve">Scrapped</system:String>
+    <system:String x:Key="WpfComplete128" xml:space="preserve">Note: </system:String>
+    <system:String x:Key="WpfComplete129" xml:space="preserve">Preview failed: </system:String>
+    <system:String x:Key="WpfComplete130" xml:space="preserve">Sent </system:String>
+    <system:String x:Key="WpfComplete131" xml:space="preserve"> labels to </system:String>
+    <system:String x:Key="WpfComplete132" xml:space="preserve">Remaining printing stopped.</system:String>
+    <system:String x:Key="WpfComplete133" xml:space="preserve">Batch labels sent.</system:String>
+    <system:String x:Key="WpfComplete134" xml:space="preserve">Failed (sent </system:String>
+    <system:String x:Key="WpfComplete135" xml:space="preserve"> labels): </system:String>
+    <system:String x:Key="WpfComplete136" xml:space="preserve">Printing stopped: </system:String>
+    <system:String x:Key="WpfComplete137" xml:space="preserve">. Check the print queue before continuing.</system:String>
+    <system:String x:Key="WpfComplete138" xml:space="preserve">Loading all good stock…</system:String>
+    <system:String x:Key="WpfComplete139" xml:space="preserve">Loading failed: </system:String>
+    <system:String x:Key="WpfComplete140" xml:space="preserve"> Previous data is still displayed.</system:String>
+    <system:String x:Key="WpfComplete141" xml:space="preserve"> Click Refresh to retry.</system:String>
+    <system:String x:Key="WpfComplete142" xml:space="preserve">Enter a pallet number from 1 to 100, or leave blank for all.</system:String>
+    <system:String x:Key="WpfComplete143" xml:space="preserve">Good stock: {0} records; showing {1}</system:String>
+    <system:String x:Key="WpfComplete144" xml:space="preserve"> · Pallet {0}</system:String>
+    <system:String x:Key="WpfComplete145" xml:space="preserve"> · All pallets</system:String>
+    <system:String x:Key="WpfComplete146" xml:space="preserve"> · Loaded {0:yyyy-MM-dd HH:mm:ss} (refresh after shelving)</system:String>
+    <system:String x:Key="WpfComplete147" xml:space="preserve"> · No data loaded</system:String>
+    <system:String x:Key="WpfComplete148" xml:space="preserve">Shared base: </system:String>
+    <system:String x:Key="WpfComplete149" xml:space="preserve"> records have missing or invalid processing dates and will be skipped.</system:String>
+    <system:String x:Key="WpfComplete150" xml:space="preserve">Select a year, month and export location.</system:String>
+    <system:String x:Key="WpfComplete151" xml:space="preserve">Additional sheet imported; material quantities for the selected month will be merged on export.</system:String>
+    <system:String x:Key="WpfComplete152" xml:space="preserve"> This sheet has </system:String>
+    <system:String x:Key="WpfComplete153" xml:space="preserve"> missing or invalid dates; these records will be skipped.</system:String>
+    <system:String x:Key="WpfComplete154" xml:space="preserve">Import additional sheet</system:String>
+    <system:String x:Key="WpfComplete155" xml:space="preserve">Enter a year from 1 to 9999 and select a month.</system:String>
+    <system:String x:Key="WpfComplete156" xml:space="preserve">Export monthly report</system:String>
+    <system:String x:Key="WpfComplete157" xml:space="preserve">-</system:String>
+    <system:String x:Key="WpfComplete158" xml:space="preserve">_MonthlyData.xlsx</system:String>
+    <system:String x:Key="WpfComplete159" xml:space="preserve">Exporting…</system:String>
+    <system:String x:Key="WpfComplete160" xml:space="preserve">Exported </system:String>
+    <system:String x:Key="WpfComplete161" xml:space="preserve"> monthly records across </system:String>
+    <system:String x:Key="WpfComplete162" xml:space="preserve"> sheets.</system:String>
+    <system:String x:Key="WpfComplete163" xml:space="preserve"> Material request summary: </system:String>
+    <system:String x:Key="WpfComplete164" xml:space="preserve"> SKUs.</system:String>
+    <system:String x:Key="WpfComplete165" xml:space="preserve"> Additional sheet records skipped for invalid dates: </system:String>
+    <system:String x:Key="WpfComplete166" xml:space="preserve"> records.</system:String>
+    <system:String x:Key="WpfComplete167" xml:space="preserve"> No data for the selected month; headers created.</system:String>
+    <system:String x:Key="WpfComplete168" xml:space="preserve"> Skipped records with invalid processing dates: </system:String>
+    <system:String x:Key="WpfComplete169" xml:space="preserve"> Unclassified records: </system:String>
+    <system:String x:Key="WpfComplete170" xml:space="preserve"> retained in the monthly overview.</system:String>
+    <system:String x:Key="WpfComplete171" xml:space="preserve">Import shared base data from the main window first.</system:String>
+    <system:String x:Key="WpfComplete172" xml:space="preserve">Shared base: </system:String>
+    <system:String x:Key="WpfComplete173" xml:space="preserve">Importing web shelved stock…</system:String>
+    <system:String x:Key="WpfComplete174" xml:space="preserve">Web shelved stock: </system:String>
+    <system:String x:Key="WpfComplete175" xml:space="preserve"> records; imported at </system:String>
+    <system:String x:Key="WpfComplete176" xml:space="preserve">Imported. Confirm the list date and settlement month.</system:String>
+    <system:String x:Key="WpfComplete177" xml:space="preserve">Import stock list</system:String>
+    <system:String x:Key="WpfComplete178" xml:space="preserve">Importing stock list…</system:String>
+    <system:String x:Key="WpfComplete179" xml:space="preserve"> records</system:String>
+    <system:String x:Key="WpfComplete180" xml:space="preserve">Imported. Enter the actual date of this stock list.</system:String>
+    <system:String x:Key="WpfComplete181" xml:space="preserve">StockImportTemplate.xlsx</system:String>
+    <system:String x:Key="WpfComplete182" xml:space="preserve">Choose a new filename to preserve imported source files.</system:String>
+    <system:String x:Key="WpfComplete183" xml:space="preserve">Created an import template matching the web stock fields. Fill in at least SN.</system:String>
+    <system:String x:Key="WpfComplete184" xml:space="preserve">Template export failed: </system:String>
+    <system:String x:Key="WpfComplete185" xml:space="preserve">Enter a valid settlement year, month and stock list date.</system:String>
+    <system:String x:Key="WpfComplete186" xml:space="preserve">Storage settlement</system:String>
+    <system:String x:Key="WpfComplete187" xml:space="preserve">The stock list date must follow the settlement month, e.g. an October list for September.</system:String>
+    <system:String x:Key="WpfComplete188" xml:space="preserve">_RentSettlement.xlsx</system:String>
+    <system:String x:Key="WpfComplete189" xml:space="preserve">Matching and calculating…</system:String>
+    <system:String x:Key="WpfComplete190" xml:space="preserve">Calculated </system:String>
+    <system:String x:Key="WpfComplete191" xml:space="preserve"> units; calculated units: </system:String>
+    <system:String x:Key="WpfComplete192" xml:space="preserve">; days this month: </system:String>
+    <system:String x:Key="WpfComplete193" xml:space="preserve">; total days: </system:String>
+    <system:String x:Key="WpfComplete194" xml:space="preserve">. Records to review: </system:String>
+    <system:String x:Key="WpfComplete195" xml:space="preserve">; skipped receipts after the settlement month: </system:String>
+    <system:String x:Key="WpfComplete196" xml:space="preserve">Storage settlement complete</system:String>
+    <system:String x:Key="WpfComplete197" xml:space="preserve">Calculation failed: </system:String>
+    <system:String x:Key="WpfComplete198" xml:space="preserve">Retained </system:String>
+    <system:String x:Key="WpfComplete199" xml:space="preserve"> records; dates filled: </system:String>
+    <system:String x:Key="WpfComplete200" xml:space="preserve">; removed by rules: </system:String>
+    <system:String x:Key="WpfComplete201" xml:space="preserve"> Skipped for lack of a previous valid date: </system:String>
+    <system:String x:Key="WpfComplete202" xml:space="preserve"> Invalid service-system dates: </system:String>
+    <system:String x:Key="WpfComplete203" xml:space="preserve"> exported as blank.</system:String>
+    <system:String x:Key="WpfComplete204" xml:space="preserve">Select receiving register</system:String>
+    <system:String x:Key="WpfComplete205" xml:space="preserve">Cleaning receiving register…</system:String>
+    <system:String x:Key="WpfComplete206" xml:space="preserve">Enter a year from 1 to 9999 and select a processing month.</system:String>
+    <system:String x:Key="WpfComplete207" xml:space="preserve">Storage fee inspection</system:String>
+    <system:String x:Key="WpfComplete208" xml:space="preserve">_RentInspection.xlsx</system:String>
+    <system:String x:Key="WpfComplete209" xml:space="preserve">Choose a new filename to preserve the register and shared base.</system:String>
+    <system:String x:Key="WpfComplete210" xml:space="preserve">Matching and filtering by processing date…</system:String>
+    <system:String x:Key="WpfComplete211" xml:space="preserve"> records processed in </system:String>
+    <system:String x:Key="WpfComplete212" xml:space="preserve"> (matched).</system:String>
+    <system:String x:Key="WpfComplete213" xml:space="preserve"> Unmatched SNs: </system:String>
+    <system:String x:Key="WpfComplete214" xml:space="preserve"> Outside the selected processing month: </system:String>
+    <system:String x:Key="WpfComplete215" xml:space="preserve"> matched records.</system:String>
+    <system:String x:Key="WpfComplete216" xml:space="preserve"> Headers created.</system:String>
+    <system:String x:Key="WpfComplete217" xml:space="preserve">Storage inspection exported</system:String>
+    <system:String x:Key="WpfComplete218" xml:space="preserve">Export corrected register</system:String>
+    <system:String x:Key="WpfComplete219" xml:space="preserve">_Corrected.xlsx</system:String>
+    <system:String x:Key="WpfComplete220" xml:space="preserve">Choose a new filename to preserve the original register.</system:String>
+    <system:String x:Key="WpfComplete221" xml:space="preserve">Exported.</system:String>
+    <system:String x:Key="WpfComplete222" xml:space="preserve">Download SKU / SN batch</system:String>
+    <system:String x:Key="WpfComplete223" xml:space="preserve">Download</system:String>
+    <system:String x:Key="WpfComplete224" xml:space="preserve">Loading batches</system:String>
+    <system:String x:Key="WpfComplete225" xml:space="preserve">Select a batch</system:String>
+    <system:String x:Key="WpfComplete226" xml:space="preserve">Select a batch first</system:String>
+    <system:String x:Key="WpfComplete227" xml:space="preserve">Batch data is incomplete.</system:String>
+    <system:String x:Key="WpfComplete228" xml:space="preserve">No pending records have an SN appearing at least twice in the shared base.</system:String>
+    <system:String x:Key="WpfComplete229" xml:space="preserve">Export duplicate pending SNs</system:String>
+    <system:String x:Key="WpfComplete230" xml:space="preserve">Exported {0} duplicate SNs across {1} pending records.</system:String>
+    <system:String x:Key="WpfComplete231" xml:space="preserve">LocationFeeComparison_</system:String>
+    <system:String x:Key="WpfComplete232" xml:space="preserve">Import the complete shared base first.</system:String>
+    <system:String x:Key="WpfComplete233" xml:space="preserve">Batch </system:String>
+    <system:String x:Key="WpfComplete234" xml:space="preserve">Batch loading failed: </system:String>
+    <system:String x:Key="WpfComplete235" xml:space="preserve">OutboundInspection_</system:String>
+    <system:String x:Key="WpfComplete236" xml:space="preserve">Username is required.</system:String>
+    <system:String x:Key="WpfComplete237" xml:space="preserve">Password is required.</system:String>
+    <system:String x:Key="WpfComplete238" xml:space="preserve">Login timed out. Check your network connection.</system:String>
+    <system:String x:Key="WpfComplete239" xml:space="preserve">Cannot connect to the login server: </system:String>
+    <system:String x:Key="WpfComplete240" xml:space="preserve">Incorrect username or password.</system:String>
+    <system:String x:Key="WpfComplete241" xml:space="preserve">Login failed; server returned </system:String>
+    <system:String x:Key="WpfComplete242" xml:space="preserve">The server returned an invalid data format.</system:String>
+    <system:String x:Key="WpfComplete243" xml:space="preserve">The server did not return a valid token.</system:String>
+    <system:String x:Key="WpfComplete244" xml:space="preserve">No login token. Sign in again.</system:String>
+    <system:String x:Key="WpfPrompt001" xml:space="preserve">Scan or enter a serial number.</system:String>
+    <system:String x:Key="WpfPrompt002" xml:space="preserve">Select at least one label item.</system:String>
+    <system:String x:Key="WpfPrompt003" xml:space="preserve">Standalone GS1 region code detected; not processed.</system:String>
+    <system:String x:Key="WpfPrompt004" xml:space="preserve">OID recorded. Scan the SN next.</system:String>
+    <system:String x:Key="WpfPrompt005" xml:space="preserve">Model selection cancelled.</system:String>
+    <system:String x:Key="WpfPrompt006" xml:space="preserve">Replacement label printed: </system:String>
+    <system:String x:Key="WpfPrompt007" xml:space="preserve">Replacement label printing failed: </system:String>
+    <system:String x:Key="WpfPrompt008" xml:space="preserve">Created a new replacement label log.</system:String>
+    <system:String x:Key="WpfPrompt009" xml:space="preserve">Replacement label log uploaded.</system:String>
+    <system:String x:Key="WpfPrompt010" xml:space="preserve">Configuration file: </system:String>
+    <system:String x:Key="WpfPrompt011" xml:space="preserve">Records this session: </system:String>
+    <system:String x:Key="WpfPrompt012" xml:space="preserve">Enter a SKU.</system:String>
+    <system:String x:Key="WpfPrompt013" xml:space="preserve">Enter an SN.</system:String>
+    <system:String x:Key="WpfPrompt014" xml:space="preserve">Enter a note.</system:String>
+    <system:String x:Key="WpfPrompt015" xml:space="preserve">Label sent to the default printer.</system:String>
+    <system:String x:Key="WpfPrompt016" xml:space="preserve">Custom model configuration path is required.</system:String>
+    <system:String x:Key="WpfPrompt017" xml:space="preserve">Scan data is required.</system:String>
+    <system:String x:Key="WpfPrompt018" xml:space="preserve">Scan log file does not exist.</system:String>
+    <system:String x:Key="WpfPrompt019" xml:space="preserve">The upload server returned no valid result.</system:String>
+    <system:String x:Key="WpfPrompt020" xml:space="preserve">Cannot connect to the upload server </system:String>
+    <system:String x:Key="WpfPrompt021" xml:space="preserve">. Check network, DNS and UploadBaseUrl. Details: </system:String>
+    <system:String x:Key="WpfPrompt022" xml:space="preserve">Connection to upload server </system:String>
+    <system:String x:Key="WpfPrompt023" xml:space="preserve"> timed out. Check network or server status.</system:String>
+    <system:String x:Key="WpfPrompt024" xml:space="preserve">Work order notes request timed out. Check the network.</system:String>
+    <system:String x:Key="WpfPrompt025" xml:space="preserve">Cannot connect to the server: </system:String>
+    <system:String x:Key="WpfPrompt026" xml:space="preserve">Token expired. Sign in again.</system:String>
+    <system:String x:Key="WpfPrompt027" xml:space="preserve">Your account cannot view work order notes.</system:String>
+    <system:String x:Key="WpfPrompt028" xml:space="preserve">Failed to get work order notes; HTTP </system:String>
+    <system:String x:Key="WpfPrompt029" xml:space="preserve">Cannot parse the work order response: </system:String>
+    <system:String x:Key="WpfPrompt030" xml:space="preserve">The server returned an empty response.</system:String>
+    <system:String x:Key="WpfPrompt031" xml:space="preserve">The server returned success=false.</system:String>
+    <system:String x:Key="WpfPrompt032" xml:space="preserve">No default Windows printer found.</system:String>
+    <system:String x:Key="WpfPrompt033" xml:space="preserve">Note is required.</system:String>
+    <system:String x:Key="WpfPrompt034" xml:space="preserve">SKU is required.</system:String>
+    <system:String x:Key="WpfPrompt035" xml:space="preserve">SN is required.</system:String>
+    <system:String x:Key="WpfPrompt036" xml:space="preserve">Print serial number is required.</system:String>
+    <system:String x:Key="WpfPrompt037" xml:space="preserve">Number of copies must be greater than zero.</system:String>
+    <system:String x:Key="WpfPrompt038" xml:space="preserve">Pallet number is required.</system:String>
+    <system:String x:Key="WpfPrompt039" xml:space="preserve">No SKU summary available to print.</system:String>
+    <system:String x:Key="WpfPrompt040" xml:space="preserve">Default Windows printer is invalid or unavailable.</system:String>
+    <system:String x:Key="WpfPrompt041" xml:space="preserve">Cannot create the print drawing context.</system:String>
+    <system:String x:Key="WpfOpenTxt">Open TXT</system:String>
+<system:String x:Key="WpfScanLogEmpty" xml:space="preserve">The scan log is empty; there is nothing to upload.</system:String>
+<system:String x:Key="WpfUploadHttpError" xml:space="preserve">Upload service error: HTTP </system:String>
+<system:String x:Key="WpfBatchDownloadHttpError" xml:space="preserve">Batch download failed; HTTP </system:String>
+<system:String x:Key="WpfBatchResponseInvalid" xml:space="preserve">Invalid batch response.</system:String>
+<system:String x:Key="WpfBatchRecordCount" xml:space="preserve">{0} · {1} records · {2}</system:String>
 </ResourceDictionary>

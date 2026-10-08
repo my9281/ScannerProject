@@ -34,7 +34,7 @@ namespace Scanner.WPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show("程序启动失败：" + ex.Message, "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(Scanner.WPF.Helpers.UiText.Get("WpfComplete110") + ex.Message, Scanner.WPF.Helpers.UiText.Get("WpfComplete111"), MessageBoxButton.OK, MessageBoxImage.Error);
                 Shutdown();
             }
         }

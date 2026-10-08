@@ -13,7 +13,7 @@
             <ImageSource x:Key="Logo">logo.png</ImageSource>
             <SolidColorBrush x:Key="GlobalWindowBackground" Color="#EAF3F7"/>
             <SolidColorBrush x:Key="GlobalTextBrush" Color="#0B2F4A"/>
-            <Style TargetType="Window"><Setter Property="Background" Value="{StaticResource GlobalWindowBackground}"/><Setter Property="Foreground" Value="{StaticResource GlobalTextBrush}"/><Setter Property="FontSize" Value="15"/><Setter Property="FontWeight" Value="Bold"/></Style>
+            <Style TargetType="Window"><Setter Property="Icon" Value="{DynamicResource Logo}"/><Setter Property="Background" Value="{StaticResource GlobalWindowBackground}"/><Setter Property="Foreground" Value="{StaticResource GlobalTextBrush}"/><Setter Property="FontSize" Value="15"/><Setter Property="FontWeight" Value="Bold"/></Style>
             <Style TargetType="TextBlock"><Setter Property="Foreground" Value="{StaticResource GlobalTextBrush}"/><Setter Property="FontSize" Value="15"/><Setter Property="FontWeight" Value="Bold"/></Style>
             <Style TargetType="Label"><Setter Property="Foreground" Value="{StaticResource GlobalTextBrush}"/><Setter Property="FontSize" Value="15"/><Setter Property="FontWeight" Value="Bold"/></Style>
             <Style TargetType="Button"><Setter Property="Foreground" Value="{StaticResource GlobalTextBrush}"/><Setter Property="FontSize" Value="15"/><Setter Property="FontWeight" Value="Bold"/></Style>

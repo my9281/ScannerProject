@@ -6,10 +6,9 @@ public partial class MainPage : ContentPage
         InitializeComponent();
         Title = "壹仓·PDA";
         NavigationPage.SetHasNavigationBar(this, false);
-        BackgroundColor = Color.FromArgb("#F4F7F5");
+        BackgroundColor = Color.FromArgb("#080A0C");
         var layout = new VerticalStackLayout { Padding = new Thickness(24, 32, 24, 24), Spacing = 18, MaximumWidthRequest = 480, HorizontalOptions = LayoutOptions.Fill };
-        layout.Add(new Label { Text = "壹 仓   /   移 动 作 业", FontSize = 12, CharacterSpacing = 3, TextColor = Color.FromArgb("#607C96"), HorizontalTextAlignment = TextAlignment.Center });
-        layout.Add(new Image { Source = "porcelain_dragon.png", HeightRequest = 100, Aspect = Aspect.AspectFit });
+        layout.Add(new Image { Source = "brand_logo.png", HeightRequest = 100, Aspect = Aspect.AspectFit });
           var scan = new Button { Text = "良品区扫描", HeightRequest = 72, FontSize = 22 };
         scan.Clicked += async (_, _) => {
             var s = Handler!.MauiContext!.Services;
@@ -19,7 +18,19 @@ public partial class MainPage : ContentPage
         var print = new Button { Text = "打印标签", HeightRequest = 72, FontSize = 22 };
         print.Clicked += async (_, _) => await Navigation.PushAsync(new PrintLabelPage(Handler!.MauiContext!.Services.GetRequiredService<Services.LatestScan>()));
         layout.Add(print);
-        layout.Add(new Label { Text = "扫描 · 归仓 · 标签", FontSize = 12, CharacterSpacing = 3, TextColor = Color.FromArgb("#607C96"), HorizontalTextAlignment = TextAlignment.Center, Margin = new Thickness(0, 14) });
+        var pairs = new Button { Text = "SKU / SN 扫描", HeightRequest = 72, FontSize = 22 };
+        pairs.Clicked += async (_, _) => {
+            var services = Handler!.MauiContext!.Services;
+            await Navigation.PushAsync(new SkuSnScanPage(services.GetRequiredService<Services.SkuSnSession>(), services.GetRequiredService<Services.AppSettings>()));
+        };
+        layout.Add(pairs);
+        layout.Add(new Label { Text = "基础资料", FontSize = 18, TextColor = Color.FromArgb("#92979D"), Margin = new Thickness(0, 12, 0, 0) });
+        var locations = new Button { Text = "库位扫描", HeightRequest = 72, FontSize = 22 };
+        locations.Clicked += async (_, _) => {
+            var services = Handler!.MauiContext!.Services;
+            await Navigation.PushAsync(new LocationScanPage(services.GetRequiredService<Services.LocationScanSession>(), services.GetRequiredService<Services.LocationScanApiService>()));
+        };
+        layout.Add(locations);
          Content = new ScrollView { Content = layout };
     }
 }

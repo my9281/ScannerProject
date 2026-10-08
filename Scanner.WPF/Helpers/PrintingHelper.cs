@@ -38,7 +38,7 @@ namespace Scanner.WPF.Helpers
                 PrintQueue queue = server.DefaultPrintQueue;
                 if (queue == null)
                 {
-                    throw new InvalidOperationException("没有找到 Windows 默认打印机。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt032"));
                 }
                 return queue.FullName;
             }
@@ -66,7 +66,7 @@ namespace Scanner.WPF.Helpers
 
         public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark)
         {
-            if (string.IsNullOrWhiteSpace(remark)) throw new ArgumentException("备注不能为空。", nameof(remark));
+            if (string.IsNullOrWhiteSpace(remark)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt033"), nameof(remark));
             PrintSkuSerialNumberLabel(sku, serialNumber, remark, false);
         }
 
@@ -75,8 +75,8 @@ namespace Scanner.WPF.Helpers
             string normalizedSku = (sku ?? string.Empty).Trim();
             string normalizedSerialNumber = (serialNumber ?? string.Empty).Trim();
             string normalizedRemark = (remark ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(normalizedSku)) throw new ArgumentException("SKU 不能为空。", nameof(sku));
-            if (string.IsNullOrWhiteSpace(normalizedSerialNumber)) throw new ArgumentException("SN 不能为空。", nameof(serialNumber));
+            if (string.IsNullOrWhiteSpace(normalizedSku)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt034"), nameof(sku));
+            if (string.IsNullOrWhiteSpace(normalizedSerialNumber)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt035"), nameof(serialNumber));
 
             Canvas label = CreateSkuSerialNumberLabel(normalizedSku, normalizedSerialNumber, normalizedRemark, scrapped);
             BitmapSource source = Render(label, DefaultPaperSize);
@@ -149,11 +149,11 @@ namespace Scanner.WPF.Helpers
         {
             if (string.IsNullOrWhiteSpace(serialNumber))
             {
-                throw new ArgumentException("打印序列号不能为空。", nameof(serialNumber));
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt036"), nameof(serialNumber));
             }
             if (copies <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(copies), "打印份数必须大于零。");
+                throw new ArgumentOutOfRangeException(nameof(copies), Scanner.WPF.Helpers.UiText.Get("WpfPrompt037"));
             }
             string normalizedPaperSize = NormalizePaperSize(paperSize);
             Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize, footerDescription, replacementLabel, replacementRepair);
@@ -170,8 +170,8 @@ namespace Scanner.WPF.Helpers
         public void PrintOutboundInspection(string palletNumber, IList<OutboundSkuSummary> skuItems)
         {
             string pallet = (palletNumber ?? string.Empty).Trim();
-            if (string.IsNullOrWhiteSpace(pallet)) throw new ArgumentException("托盘号不能为空。", nameof(palletNumber));
-            if (skuItems == null || skuItems.Count == 0) throw new ArgumentException("没有可打印的 SKU 统计数据。", nameof(skuItems));
+            if (string.IsNullOrWhiteSpace(pallet)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt038"), nameof(palletNumber));
+            if (skuItems == null || skuItems.Count == 0) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt039"), nameof(skuItems));
 
             const int itemsPerPage = 24;
             int pageCount = (skuItems.Count + itemsPerPage - 1) / itemsPerPage;
@@ -218,14 +218,14 @@ namespace Scanner.WPF.Helpers
             using (var document = new PrintDocument())
             {
                 document.PrintController = new StandardPrintController();
-                if (!document.PrinterSettings.IsValid) throw new InvalidOperationException("Windows 默认打印机无效或不可用。");
+                if (!document.PrinterSettings.IsValid) throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt040"));
                 document.DefaultPageSettings.PaperSize = new PaperSize("4x6 Portrait", 400, 600);
                 document.DefaultPageSettings.Landscape = false;
                 document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
                 document.OriginAtMargins = false;
                 document.PrintPage += (sender, args) =>
                 {
-                    if (args.Graphics == null) throw new InvalidOperationException("无法创建打印绘图环境。");
+                    if (args.Graphics == null) throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt041"));
                     args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
                     args.HasMorePages = false;
                 };
@@ -542,7 +542,7 @@ namespace Scanner.WPF.Helpers
                 document.PrintController = new StandardPrintController();
                 if (!document.PrinterSettings.IsValid)
                 {
-                    throw new InvalidOperationException("Windows 默认打印机无效或不可用。");
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt040"));
                 }
                 bool square = string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal);
                 document.DefaultPageSettings.PaperSize = square ? new PaperSize("4x4", 400, 400) : new PaperSize("4x6", 400, 600);
@@ -553,7 +553,7 @@ namespace Scanner.WPF.Helpers
                 {
                     if (args.Graphics == null)
                     {
-                        throw new InvalidOperationException("无法创建打印绘图环境。");
+                        throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt041"));
                     }
                     args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
                     args.HasMorePages = false;

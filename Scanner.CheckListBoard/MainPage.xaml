@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
  x:Class="Scanner.CheckListBoard.MainPage" Shell.NavBarIsVisible="False" BackgroundColor="#080A0C">
- <Grid RowDefinitions="80,*,36">
-  <Image Source="board_banner.png" Grid.RowSpan="3" Aspect="AspectFill" InputTransparent="True" />
-  <Grid Padding="32,0" ColumnDefinitions="*,Auto">
-   <Label Text="幽梦之星 · 云上检查单" FontSize="23" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
-   <Button Grid.Column="1" x:Name="LogoutButton" Text="退出登录" Clicked="OnLogoutClicked" BackgroundColor="Transparent" TextColor="#D9B866" FontSize="12" />
-  </Grid>
-  <ScrollView Grid.Row="1">
-   <VerticalStackLayout Padding="24,22,24,28" Spacing="20" MaximumWidthRequest="880" HorizontalOptions="Fill">
-    <Label Text="检测工作台" FontSize="26" TextColor="White" SemanticProperties.HeadingLevel="Level1" />
-    <Border StrokeThickness="0" BackgroundColor="#80000000" StrokeShape="RoundRectangle 8" Padding="18">
-     <VerticalStackLayout Spacing="7">
-      <Label x:Name="IdentityLabel" FontSize="15" TextColor="White" />
-      <Label x:Name="RoleLabel" FontSize="12" TextColor="#D9B866" />
-      <Label x:Name="PermissionLabel" FontSize="12" TextColor="#B8D9DF" />
-     </VerticalStackLayout>
-    </Border>
-    <Grid x:Name="ModuleGrid" ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="12" />
-   </VerticalStackLayout>
-  </ScrollView>
-  <Label Text="深圳 · 壹合国际" Grid.Row="2" FontSize="13" CharacterSpacing="2" TextColor="#D9B866" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
- </Grid>
+    <Grid RowDefinitions="80,*,36">
+        <Image Source="board_banner.png" Grid.RowSpan="3" Aspect="AspectFill" InputTransparent="True" />
+        <Grid Padding="20,0" ColumnDefinitions="*,Auto">
+            <Label x:Name="IdentityLabel"   FontSize="23" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
+            <Button Grid.Column="1" x:Name="LogoutButton" Text="退出登录" 
+           Clicked="OnLogoutClicked" BackgroundColor="Transparent" TextColor="#D9B866" FontSize="12" />
+        </Grid>
+        <Grid Grid.Row="1" x:Name="ModuleGrid" ColumnDefinitions="*,*" ColumnSpacing="12" 
+              RowSpacing="12" />
+        <ScrollView IsVisible="False">
+
+            <VerticalStackLayout Padding="24,22,24,28" Spacing="20" MaximumWidthRequest="880" HorizontalOptions="Fill">
+                <Label Text="检测工作台" FontSize="26" TextColor="White" SemanticProperties.HeadingLevel="Level1"  IsVisible="False" />
+                <Border IsVisible="Collapse" StrokeThickness="0" BackgroundColor="#80000000" StrokeShape="RoundRectangle 8" Padding="2">
+                    <VerticalStackLayout Spacing="7">
+
+                        <Label x:Name="RoleLabel" FontSize="12" TextColor="#D9B866"  IsVisible="False"/>
+                        <Label x:Name="PermissionLabel" FontSize="12" TextColor="#B8D9DF"  IsVisible="False"/>
+                    </VerticalStackLayout>
+                </Border>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <Label Text="深圳 · 壹合国际" Grid.Row="2" FontSize="13" CharacterSpacing="2" TextColor="#D9B866" HorizontalTextAlignment="Center" VerticalTextAlignment="Center" />
+    </Grid>
 </ContentPage>

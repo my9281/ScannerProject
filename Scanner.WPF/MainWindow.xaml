@@ -6,7 +6,7 @@
         <SolidColorBrush x:Key="Muted" Color="#315D7A"/>
         <SolidColorBrush x:Key="Line" Color="#79A9C4"/>
         <Style x:Key="FeatureCard" TargetType="Button">
-            <Setter Property="Height" Value="112"/>
+            <Setter Property="MinHeight" Value="140"/>
             <Setter Property="Margin" Value="8"/>
             <Setter Property="Padding" Value="18"/>
             <Setter Property="Background" Value="#FFFFFF"/>
@@ -40,7 +40,7 @@
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="FeatureTitle" TargetType="TextBlock">
+        <Style x:Key="FeatureTitle" TargetType="TextBlock"><Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="FontSize" Value="21"/>
             <Setter Property="FontWeight" Value="Bold"/>
             <Setter Property="Foreground" Value="{StaticResource Ink}"/>
@@ -61,18 +61,18 @@
             </Grid.RowDefinitions>
             <Grid>
                 <StackPanel>
-                    <TextBlock Text="功能目录" FontSize="36" Foreground="{StaticResource Ink}"/>
-                    <TextBlock Text="请选择需要使用的功能" FontSize="18" Foreground="{StaticResource Muted}" Margin="0,6,0,18"/>
+                    <TextBlock Text="{DynamicResource WpfComplete033}" FontSize="36" Foreground="{StaticResource Ink}"/>
+                    <TextBlock Text="{DynamicResource WpfComplete034}" FontSize="18" Foreground="{StaticResource Muted}" Margin="0,6,0,18"/>
                 </StackPanel>
-                <Border HorizontalAlignment="Right" VerticalAlignment="Top" Background="#DCECF3" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="5" Padding="15,9">
+                <StackPanel HorizontalAlignment="Right" VerticalAlignment="Top"><Border  Background="#DCECF3" BorderBrush="{StaticResource Line}" BorderThickness="1" CornerRadius="5" Padding="15,9">
                     <TextBlock Text="{Binding OperatorText}" FontSize="18" Foreground="{StaticResource Ink}"/>
-                </Border>
+                </Border><StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0"><Button Content="中文" Tag="zh-CN" Padding="10,4" Margin="4,0" Click="DirectoryLanguage_Click"/><Button Content="English" Tag="en-US" Padding="10,4" Margin="4,0" Click="DirectoryLanguage_Click"/><Button Content="Español" Tag="es-ES" Padding="10,4" Margin="4,0" Click="DirectoryLanguage_Click"/></StackPanel></StackPanel>
             </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
-                    <GroupBox Header="标签管理">
+                    <GroupBox Header="{DynamicResource WpfComplete035}">
                         <WrapPanel Orientation="Horizontal" ItemWidth="350">
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenScanView_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete037}" Style="{StaticResource FeatureCard}" Click="OpenScanView_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -80,12 +80,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE8A7;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="扫码打印" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="扫描 SN 或 OID，记录并打印标签" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete036}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete037}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenReplacementView_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete039}" Style="{StaticResource FeatureCard}" Click="OpenReplacementView_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -93,12 +93,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE8C8;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="替换标签" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="独立记录扫码数据，并按所选描述打印替换标签" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete038}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete039}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenSkuSerialLabelView_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete041}" Style="{StaticResource FeatureCard}" Click="OpenSkuSerialLabelView_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -106,32 +106,38 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE8A5;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="SKU / SN 标签" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="打印带两个二维码和备注的 4 × 6 标签" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete040}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete041}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
                         </WrapPanel>
                     </GroupBox >
-                    <GroupBox Header="出入库管理">
+                    <GroupBox Header="{DynamicResource WpfComplete042}">
+    <WrapPanel Orientation="Horizontal" ItemWidth="350">
+        <Button ToolTip="{DynamicResource WpfComplete043}" Style="{StaticResource FeatureCard}" Click="OpenGoodArea_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE7C1;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{DynamicResource WpfComplete027}" Style="{StaticResource FeatureTitle}"/>
+                <TextBlock Text="{DynamicResource WpfComplete043}" Style="{StaticResource FeatureDescription}"/>
+            </StackPanel></Grid></Button>
+    </WrapPanel>
+</GroupBox>
+<GroupBox Header="{DynamicResource WpfComplete044}">
                         <WrapPanel  Orientation="Horizontal" ItemWidth="350">
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenAutomaticMatching_Click">
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="自动匹配" Style="{StaticResource FeatureTitle}"/>
-                                    <TextBlock Text="匹配 PDA 托盘与待检测入库数据并导出 Excel" Style="{StaticResource FeatureDescription}"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenMonthlyReport_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete045}" Style="{StaticResource FeatureCard}" Click="OpenAutomaticMatching_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE8AB;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource WpfComplete001}" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="{DynamicResource WpfComplete045}" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel></Grid></Button>
+                            <Button ToolTip="{DynamicResource WpfComplete047}" Style="{StaticResource FeatureCard}" Click="OpenMonthlyReport_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE9D2;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="月报导出" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="按处理年月导出完整明细及分类表" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete046}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete047}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button x:Name="GlobalBaseButton" Style="{StaticResource FeatureCard}" Click="ImportGlobalBase_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete049}" x:Name="GlobalBaseButton" Style="{StaticResource FeatureCard}" Click="ImportGlobalBase_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -139,12 +145,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE8B7;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="导入基础表" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="加载全局基础 Excel 数据" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete048}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete049}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenChecklistButton_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete050}" Style="{StaticResource FeatureCard}" Click="OpenChecklistButton_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -152,12 +158,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE896;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="入库检测" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="匹配入库 SN、检测状态并导出结果" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource FooterInbound}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete050}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenOutboundInspectionButton_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete051}" Style="{StaticResource FeatureCard}" Click="OpenOutboundInspectionButton_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -165,33 +171,29 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE898;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="出库检测" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="核对出库数据并打印汇总标签" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource FooterOutbound}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete051}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
                         </WrapPanel>
                     </GroupBox>
 
-                    <GroupBox Header="数据整理">
+                    <GroupBox Header="{DynamicResource WpfComplete052}">
                         <WrapPanel Orientation="Horizontal" ItemWidth="350">
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenRegistrationRepair_Click">
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="登记表修复" Style="{StaticResource FeatureTitle}"/>
-                                    <TextBlock Text="修复收件日期，规范亚马逊与 eBay 登记数据并导出" Style="{StaticResource FeatureDescription}"/>
-                                </StackPanel>
-                            </Button>
-                            <Button Style="{StaticResource FeatureCard}" Click="OpenBatchLabel_Click">
-                                <StackPanel VerticalAlignment="Center">
-                                    <TextBlock Text="批量打印标签" Style="{StaticResource FeatureTitle}"/>
-                                    <TextBlock Text="导入 Excel 批量打印 SKU/SN 标签，报废标签画 X" Style="{StaticResource FeatureDescription}"/>
-                                </StackPanel>
-                            </Button>
+                            <Button ToolTip="{DynamicResource WpfComplete054}" Style="{StaticResource FeatureCard}" Click="OpenRegistrationRepair_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE70F;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource WpfComplete053}" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="{DynamicResource WpfComplete054}" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel></Grid></Button>
+                            <Button ToolTip="{DynamicResource WpfComplete055}" Style="{StaticResource FeatureCard}" Click="OpenBatchLabel_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE749;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource WpfComplete012}" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="{DynamicResource WpfComplete055}" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel></Grid></Button>
                         </WrapPanel>
                     </GroupBox>
-                    <GroupBox Header="其他功能">
+                    <GroupBox Header="{DynamicResource WpfComplete056}">
                         <WrapPanel  Orientation="Horizontal" ItemWidth="350">
-                            <Button Style="{StaticResource FeatureCard}" Click="CreateDailyReportButton_Click">
+                            <Button ToolTip="{DynamicResource WpfComplete057}" Style="{StaticResource FeatureCard}" Click="CreateDailyReportButton_Click">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -199,12 +201,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE9D2;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="日报" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="生成并打开当天扫描日报" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource DailyReport}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete057}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button x:Name="ImportUrgentWorkOrdersButton" Style="{StaticResource FeatureCard}" Command="{Binding ImportUrgentWorkOrdersCommand}">
+                            <Button ToolTip="{DynamicResource WpfComplete059}" x:Name="ImportUrgentWorkOrdersButton" Style="{StaticResource FeatureCard}" Command="{Binding ImportUrgentWorkOrdersCommand}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -212,12 +214,12 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE7BA;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="导入工单" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="导入紧急工单及运单关联规则" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete058}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete059}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
-                            <Button Style="{StaticResource FeatureCard}" Command="{Binding RefreshCommand}">
+                            <Button ToolTip="{DynamicResource WpfComplete060}" Style="{StaticResource FeatureCard}" Command="{Binding RefreshCommand}">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="70"/>
@@ -225,8 +227,8 @@
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE72C;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="手动刷新" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="重新获取在线工单与备注数据" Style="{StaticResource FeatureDescription}"/>
+                                        <TextBlock Text="{DynamicResource FooterRefresh}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfComplete060}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
@@ -240,7 +242,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="← 返回功能目录" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
+            <Button Content="{DynamicResource WpfComplete061}" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
             <views:ScanView x:Name="ScanContent" Grid.Row="1"/>
         </Grid>
         <Grid x:Name="ReplacementPanel" Visibility="Collapsed">
@@ -248,7 +250,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="← 返回功能目录" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
+            <Button Content="{DynamicResource WpfComplete061}" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
             <views:ReplacementLabelView Grid.Row="1"/>
         </Grid>
         <Grid x:Name="SkuSerialLabelPanel" Visibility="Collapsed">
@@ -256,7 +258,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Button Content="← 返回功能目录" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
+            <Button Content="{DynamicResource WpfComplete061}" HorizontalAlignment="Left" Margin="18,12,0,6" Padding="15,7" FontSize="18" Click="BackToDirectory_Click"/>
             <views:SkuSerialLabelView Grid.Row="1"/>
         </Grid>
     </Grid>
