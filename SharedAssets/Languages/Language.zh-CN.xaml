@@ -119,8 +119,8 @@
     <system:String x:Key="UsernameRequired">请输入用户名。</system:String>
     <system:String x:Key="PasswordRequired">请输入密码。</system:String>
     <system:String x:Key="SigningIn">正在登录……</system:String>
-    <system:String x:Key="InboundTitle">入库检测</system:String>
-    <system:String x:Key="ChecklistTitle">入库检测 Checklist</system:String>
+    <system:String x:Key="InboundTitle">手动匹配</system:String>
+    <system:String x:Key="ChecklistTitle">手动匹配</system:String>
     <system:String x:Key="ChecklistHint">使用主页导入的全局基础表，导入 SN 清单后生成匹配检测结果</system:String>
     <system:String x:Key="LocalCacheBadge">LOCAL CACHE</system:String>
     <system:String x:Key="ImportBaseStep">1  导入基础数据</system:String>
@@ -148,7 +148,7 @@
     <system:String x:Key="SelectBase">选择基础表</system:String>
     <system:String x:Key="SelectBothFiles">请选择模板，系统将使用全局基础表。</system:String>
     <system:String x:Key="GenerateComparison">生成比对结果</system:String>
-    <system:String x:Key="OutboundTitle">出库检测</system:String>
+    <system:String x:Key="OutboundTitle">良品上架</system:String>
     <system:String x:Key="OutboundHint">读取 TXT 中的 SKU/SN，匹配基础表；同一批数据既可导出明细，也可汇总 SKU 打印托盘核对标签。</system:String>
     <system:String x:Key="TextNotSelected">尚未选择 SKU/SN TXT（第一行 SKU，第二行 SN）</system:String>
     <system:String x:Key="BaseWorkbookNotSelected">尚未选择 InboundDetection 基础表</system:String>
@@ -237,11 +237,11 @@
     <system:String x:Key="MobileImported">已导入 {0:N0} 条紧急规则。</system:String>
     <system:String x:Key="ImportFailedPrefix">导入失败：</system:String>
     <system:String x:Key="ModelRequired">型号不能为空。</system:String>
-    <system:String x:Key="DailyReport">日报</system:String>
+    <system:String x:Key="DailyReport">日报查看</system:String>
     <system:String x:Key="DailyReportCreateFailedPrefix">日报生成失败：</system:String>
     <system:String x:Key="FooterLocationFee">库位费比对</system:String>
-    <system:String x:Key="FooterOutbound">出库检测</system:String>
-    <system:String x:Key="FooterInbound">入库检测</system:String>
+    <system:String x:Key="FooterOutbound">良品上架</system:String>
+    <system:String x:Key="FooterInbound">手动匹配</system:String>
     <system:String x:Key="FooterImportUrgent">导入紧急工单</system:String>
     <system:String x:Key="FooterRefresh">手动刷新</system:String>
     <system:String x:Key="ExportSimplified">导出简化版</system:String>
@@ -313,8 +313,8 @@
     <system:String x:Key="WpfComplete037" xml:space="preserve">扫描 SN 或 OID，记录并打印标签</system:String>
     <system:String x:Key="WpfComplete038" xml:space="preserve">替换标签</system:String>
     <system:String x:Key="WpfComplete039" xml:space="preserve">独立记录扫码数据，并按所选描述打印替换标签</system:String>
-    <system:String x:Key="WpfComplete040" xml:space="preserve">SKU / SN 标签</system:String>
-    <system:String x:Key="WpfComplete041" xml:space="preserve">打印带两个二维码和备注的 4 × 6 标签</system:String>
+    <system:String x:Key="WpfComplete040" xml:space="preserve">维修标签</system:String>
+    <system:String x:Key="WpfComplete041" xml:space="preserve">打印维修用 SKU/SN 双二维码标签</system:String>
     <system:String x:Key="WpfComplete042" xml:space="preserve">良品区</system:String>
     <system:String x:Key="WpfComplete043" xml:space="preserve">查看全部良品区数据，按托盘号查询</system:String>
     <system:String x:Key="WpfComplete044" xml:space="preserve">出入库管理</system:String>
@@ -323,8 +323,8 @@
     <system:String x:Key="WpfComplete047" xml:space="preserve">按处理年月导出完整明细及分类表</system:String>
     <system:String x:Key="WpfComplete048" xml:space="preserve">导入基础表</system:String>
     <system:String x:Key="WpfComplete049" xml:space="preserve">加载全局基础 Excel 数据</system:String>
-    <system:String x:Key="WpfComplete050" xml:space="preserve">匹配入库 SN、检测状态并导出结果</system:String>
-    <system:String x:Key="WpfComplete051" xml:space="preserve">核对出库数据并打印汇总标签</system:String>
+    <system:String x:Key="WpfComplete050" xml:space="preserve">按 SN 手动匹配基础表并导出结果</system:String>
+    <system:String x:Key="WpfComplete051" xml:space="preserve">下载 SKU/SN 批次，核对良品并上传上架记录</system:String>
     <system:String x:Key="WpfComplete052" xml:space="preserve">数据整理</system:String>
     <system:String x:Key="WpfComplete053" xml:space="preserve">登记表修复</system:String>
     <system:String x:Key="WpfComplete054" xml:space="preserve">修复收件日期，规范亚马逊与 eBay 登记数据并导出</system:String>
@@ -376,8 +376,8 @@
     <system:String x:Key="WpfComplete100" xml:space="preserve">打印替换标签</system:String>
     <system:String x:Key="WpfComplete101" xml:space="preserve">上传</system:String>
     <system:String x:Key="WpfComplete102" xml:space="preserve">打印份数：</system:String>
-    <system:String x:Key="WpfComplete103" xml:space="preserve">SKU / SN 二维码标签</system:String>
-    <system:String x:Key="WpfComplete104" xml:space="preserve">输入标签内容，打印一张 4 × 6 横向双二维码标签</system:String>
+    <system:String x:Key="WpfComplete103" xml:space="preserve">维修标签</system:String>
+    <system:String x:Key="WpfComplete104" xml:space="preserve">填写 SKU、SN 和备注，打印维修标签</system:String>
     <system:String x:Key="WpfComplete105" xml:space="preserve">备注</system:String>
     <system:String x:Key="WpfComplete106" xml:space="preserve">打印 4 × 6 标签</system:String>
     <system:String x:Key="WpfComplete107" xml:space="preserve">清空</system:String>
@@ -565,4 +565,9 @@
 <system:String x:Key="WpfBatchDownloadHttpError" xml:space="preserve">批次下载失败 HTTP </system:String>
 <system:String x:Key="WpfBatchResponseInvalid" xml:space="preserve">批次响应无效。</system:String>
 <system:String x:Key="WpfBatchRecordCount" xml:space="preserve">{0} · {1} 条 · {2}</system:String>
+    <system:String x:Key="DirectoryBaseData">基础数据</system:String>
+    <system:String x:Key="DirectoryInbound">入库</system:String>
+    <system:String x:Key="DirectoryGoodStock">良品区</system:String>
+    <system:String x:Key="DirectoryShelving">上架</system:String>
+    <system:String x:Key="DirectoryReports">报告</system:String>
 </ResourceDictionary>

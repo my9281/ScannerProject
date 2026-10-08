@@ -127,8 +127,8 @@
     <system:String x:Key="UsernameRequired">Introduzca su usuario.</system:String>
     <system:String x:Key="PasswordRequired">Introduzca su contraseña.</system:String>
     <system:String x:Key="SigningIn">Iniciando sesión…</system:String>
-    <system:String x:Key="InboundTitle">Inspección de entrada</system:String>
-    <system:String x:Key="ChecklistTitle">Lista de entrada</system:String>
+    <system:String x:Key="InboundTitle">Emparejamiento manual</system:String>
+    <system:String x:Key="ChecklistTitle">Emparejamiento manual</system:String>
     <system:String x:Key="ChecklistHint">Importe datos base y una lista SN para generar coincidencias.</system:String>
     <system:String x:Key="LocalCacheBadge">CACHÉ LOCAL</system:String>
     <system:String x:Key="ImportBaseStep">1  Datos base</system:String>
@@ -156,7 +156,7 @@
     <system:String x:Key="SelectBase">Elegir base</system:String>
     <system:String x:Key="SelectBothFiles">Seleccione la plantilla y los datos base.</system:String>
     <system:String x:Key="GenerateComparison">Generar comparación</system:String>
-    <system:String x:Key="OutboundTitle">Inspección de salida</system:String>
+    <system:String x:Key="OutboundTitle">Ubicar productos aptos</system:String>
     <system:String x:Key="OutboundHint">Cruce SKU/SN del TXT con la base. Exporte detalles o imprima una etiqueta de palé con totales SKU.</system:String>
     <system:String x:Key="TextNotSelected">Seleccione TXT de SKU/SN (línea SKU y luego SN)</system:String>
     <system:String x:Key="BaseWorkbookNotSelected">Sin base InboundDetection seleccionada</system:String>
@@ -245,11 +245,11 @@
     <system:String x:Key="MobileImported">Se importaron {0:N0} reglas urgentes.</system:String>
     <system:String x:Key="ImportFailedPrefix">Error al importar: </system:String>
     <system:String x:Key="ModelRequired">Introduzca un modelo.</system:String>
-    <system:String x:Key="DailyReport">Informe diario</system:String>
+    <system:String x:Key="DailyReport">Ver informe diario</system:String>
     <system:String x:Key="DailyReportCreateFailedPrefix">No se pudo crear el informe diario: </system:String>
     <system:String x:Key="FooterLocationFee">Comparar tarifas</system:String>
-    <system:String x:Key="FooterOutbound">Salida</system:String>
-    <system:String x:Key="FooterInbound">Entrada</system:String>
+    <system:String x:Key="FooterOutbound">Ubicar productos aptos</system:String>
+    <system:String x:Key="FooterInbound">Emparejamiento manual</system:String>
     <system:String x:Key="FooterImportUrgent">Importar urgentes</system:String>
     <system:String x:Key="FooterRefresh">Actualizar</system:String>
     <system:String x:Key="ExportSimplified">Versión simple</system:String>
@@ -321,8 +321,8 @@
     <system:String x:Key="WpfComplete037" xml:space="preserve">Escanee un SN u OID para registrar e imprimir etiquetas</system:String>
     <system:String x:Key="WpfComplete038" xml:space="preserve">Etiquetas de sustitución</system:String>
     <system:String x:Key="WpfComplete039" xml:space="preserve">Registre escaneos por separado e imprima etiquetas de sustitución</system:String>
-    <system:String x:Key="WpfComplete040" xml:space="preserve">Etiquetas SKU / SN</system:String>
-    <system:String x:Key="WpfComplete041" xml:space="preserve">Imprima etiquetas de 4 × 6 con dos códigos QR y una nota</system:String>
+    <system:String x:Key="WpfComplete040" xml:space="preserve">Etiquetas de reparación</system:String>
+    <system:String x:Key="WpfComplete041" xml:space="preserve">Imprimir etiquetas de reparación con QR SKU/SN</system:String>
     <system:String x:Key="WpfComplete042" xml:space="preserve">Zona de productos aptos</system:String>
     <system:String x:Key="WpfComplete043" xml:space="preserve">Ver todos los productos aptos y filtrar por palé</system:String>
     <system:String x:Key="WpfComplete044" xml:space="preserve">Entradas y salidas</system:String>
@@ -331,8 +331,8 @@
     <system:String x:Key="WpfComplete047" xml:space="preserve">Exporte detalles y categorías por mes de procesamiento</system:String>
     <system:String x:Key="WpfComplete048" xml:space="preserve">Importar datos base</system:String>
     <system:String x:Key="WpfComplete049" xml:space="preserve">Cargar datos base desde Excel</system:String>
-    <system:String x:Key="WpfComplete050" xml:space="preserve">Empareje SN de entrada y estados de inspección y exporte</system:String>
-    <system:String x:Key="WpfComplete051" xml:space="preserve">Verifique salidas e imprima etiquetas de resumen</system:String>
+    <system:String x:Key="WpfComplete050" xml:space="preserve">Emparejar SN manualmente con los datos base y exportar resultados</system:String>
+    <system:String x:Key="WpfComplete051" xml:space="preserve">Descargar lotes SKU/SN, verificar productos aptos y cargar su ubicación</system:String>
     <system:String x:Key="WpfComplete052" xml:space="preserve">Herramientas de datos</system:String>
     <system:String x:Key="WpfComplete053" xml:space="preserve">Corregir registro de recepción</system:String>
     <system:String x:Key="WpfComplete054" xml:space="preserve">Corrija fechas y normalice registros de Amazon/eBay para exportar</system:String>
@@ -384,8 +384,8 @@
     <system:String x:Key="WpfComplete100" xml:space="preserve">Imprimir etiqueta de sustitución</system:String>
     <system:String x:Key="WpfComplete101" xml:space="preserve">Cargar</system:String>
     <system:String x:Key="WpfComplete102" xml:space="preserve">Copias: </system:String>
-    <system:String x:Key="WpfComplete103" xml:space="preserve">Etiquetas QR SKU / SN</system:String>
-    <system:String x:Key="WpfComplete104" xml:space="preserve">Introduzca el contenido para imprimir una etiqueta horizontal de 4 × 6 con dos códigos QR</system:String>
+    <system:String x:Key="WpfComplete103" xml:space="preserve">Etiquetas de reparación</system:String>
+    <system:String x:Key="WpfComplete104" xml:space="preserve">Introducir SKU, SN y notas para imprimir etiquetas de reparación</system:String>
     <system:String x:Key="WpfComplete105" xml:space="preserve">Nota</system:String>
     <system:String x:Key="WpfComplete106" xml:space="preserve">Imprimir etiqueta de 4 × 6</system:String>
     <system:String x:Key="WpfComplete107" xml:space="preserve">Limpiar</system:String>
@@ -573,4 +573,9 @@
 <system:String x:Key="WpfBatchDownloadHttpError" xml:space="preserve">Error al descargar el lote; HTTP </system:String>
 <system:String x:Key="WpfBatchResponseInvalid" xml:space="preserve">Respuesta de lote inválida.</system:String>
 <system:String x:Key="WpfBatchRecordCount" xml:space="preserve">{0} · {1} registros · {2}</system:String>
+    <system:String x:Key="DirectoryBaseData">Datos base</system:String>
+    <system:String x:Key="DirectoryInbound">Recepción</system:String>
+    <system:String x:Key="DirectoryGoodStock">Zona de productos aptos</system:String>
+    <system:String x:Key="DirectoryShelving">Ubicación</system:String>
+    <system:String x:Key="DirectoryReports">Informes</system:String>
 </ResourceDictionary>

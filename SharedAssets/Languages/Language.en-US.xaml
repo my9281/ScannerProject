@@ -127,8 +127,8 @@
     <system:String x:Key="UsernameRequired">Enter your username.</system:String>
     <system:String x:Key="PasswordRequired">Enter your password.</system:String>
     <system:String x:Key="SigningIn">Signing in…</system:String>
-    <system:String x:Key="InboundTitle">Inbound inspection</system:String>
-    <system:String x:Key="ChecklistTitle">Inbound checklist</system:String>
+    <system:String x:Key="InboundTitle">Manual matching</system:String>
+    <system:String x:Key="ChecklistTitle">Manual matching</system:String>
     <system:String x:Key="ChecklistHint">Import base data and an SN list to generate matching results.</system:String>
     <system:String x:Key="LocalCacheBadge">LOCAL CACHE</system:String>
     <system:String x:Key="ImportBaseStep">1  Import base data</system:String>
@@ -156,7 +156,7 @@
     <system:String x:Key="SelectBase">Select base file</system:String>
     <system:String x:Key="SelectBothFiles">Select the template and base file.</system:String>
     <system:String x:Key="GenerateComparison">Generate comparison</system:String>
-    <system:String x:Key="OutboundTitle">Outbound inspection</system:String>
+    <system:String x:Key="OutboundTitle">Good stock shelving</system:String>
     <system:String x:Key="OutboundHint">Match SKU/SN entries from TXT to base data. Export details or print a pallet label with SKU totals.</system:String>
     <system:String x:Key="TextNotSelected">Select a SKU/SN TXT (SKU line, then SN line)</system:String>
     <system:String x:Key="BaseWorkbookNotSelected">No InboundDetection base file selected</system:String>
@@ -245,11 +245,11 @@
     <system:String x:Key="MobileImported">Imported {0:N0} urgent rules.</system:String>
     <system:String x:Key="ImportFailedPrefix">Import failed: </system:String>
     <system:String x:Key="ModelRequired">Enter a model.</system:String>
-    <system:String x:Key="DailyReport">Daily report</system:String>
+    <system:String x:Key="DailyReport">View daily report</system:String>
     <system:String x:Key="DailyReportCreateFailedPrefix">Unable to create daily report: </system:String>
     <system:String x:Key="FooterLocationFee">Fee comparison</system:String>
-    <system:String x:Key="FooterOutbound">Outbound</system:String>
-    <system:String x:Key="FooterInbound">Inbound</system:String>
+    <system:String x:Key="FooterOutbound">Good stock shelving</system:String>
+    <system:String x:Key="FooterInbound">Manual matching</system:String>
     <system:String x:Key="FooterImportUrgent">Import urgent</system:String>
     <system:String x:Key="FooterRefresh">Refresh</system:String>
     <system:String x:Key="ExportSimplified">Export simplified</system:String>
@@ -321,8 +321,8 @@
     <system:String x:Key="WpfComplete037" xml:space="preserve">Scan an SN or OID to record and print labels</system:String>
     <system:String x:Key="WpfComplete038" xml:space="preserve">Replacement labels</system:String>
     <system:String x:Key="WpfComplete039" xml:space="preserve">Record scans separately and print replacement labels</system:String>
-    <system:String x:Key="WpfComplete040" xml:space="preserve">SKU / SN labels</system:String>
-    <system:String x:Key="WpfComplete041" xml:space="preserve">Print 4 × 6 labels with two QR codes and a note</system:String>
+    <system:String x:Key="WpfComplete040" xml:space="preserve">Repair labels</system:String>
+    <system:String x:Key="WpfComplete041" xml:space="preserve">Print repair labels with SKU/SN QR codes</system:String>
     <system:String x:Key="WpfComplete042" xml:space="preserve">Good stock area</system:String>
     <system:String x:Key="WpfComplete043" xml:space="preserve">View all good stock and filter by pallet</system:String>
     <system:String x:Key="WpfComplete044" xml:space="preserve">Inbound and outbound</system:String>
@@ -331,8 +331,8 @@
     <system:String x:Key="WpfComplete047" xml:space="preserve">Export details and categories by processing month</system:String>
     <system:String x:Key="WpfComplete048" xml:space="preserve">Import shared base</system:String>
     <system:String x:Key="WpfComplete049" xml:space="preserve">Load shared base data from Excel</system:String>
-    <system:String x:Key="WpfComplete050" xml:space="preserve">Match inbound SNs and inspection status, then export</system:String>
-    <system:String x:Key="WpfComplete051" xml:space="preserve">Check outbound data and print summary labels</system:String>
+    <system:String x:Key="WpfComplete050" xml:space="preserve">Manually match SNs against the shared base and export results</system:String>
+    <system:String x:Key="WpfComplete051" xml:space="preserve">Download SKU/SN batches, check good stock and upload shelving records</system:String>
     <system:String x:Key="WpfComplete052" xml:space="preserve">Data tools</system:String>
     <system:String x:Key="WpfComplete053" xml:space="preserve">Repair receiving register</system:String>
     <system:String x:Key="WpfComplete054" xml:space="preserve">Correct receipt dates and normalize Amazon/eBay records for export</system:String>
@@ -384,8 +384,8 @@
     <system:String x:Key="WpfComplete100" xml:space="preserve">Print replacement label</system:String>
     <system:String x:Key="WpfComplete101" xml:space="preserve">Upload</system:String>
     <system:String x:Key="WpfComplete102" xml:space="preserve">Copies: </system:String>
-    <system:String x:Key="WpfComplete103" xml:space="preserve">SKU / SN QR labels</system:String>
-    <system:String x:Key="WpfComplete104" xml:space="preserve">Enter label contents to print one 4 × 6 landscape label with two QR codes</system:String>
+    <system:String x:Key="WpfComplete103" xml:space="preserve">Repair labels</system:String>
+    <system:String x:Key="WpfComplete104" xml:space="preserve">Enter SKU, SN and notes to print repair labels</system:String>
     <system:String x:Key="WpfComplete105" xml:space="preserve">Note</system:String>
     <system:String x:Key="WpfComplete106" xml:space="preserve">Print 4 × 6 label</system:String>
     <system:String x:Key="WpfComplete107" xml:space="preserve">Clear</system:String>
@@ -573,4 +573,9 @@
 <system:String x:Key="WpfBatchDownloadHttpError" xml:space="preserve">Batch download failed; HTTP </system:String>
 <system:String x:Key="WpfBatchResponseInvalid" xml:space="preserve">Invalid batch response.</system:String>
 <system:String x:Key="WpfBatchRecordCount" xml:space="preserve">{0} · {1} records · {2}</system:String>
+    <system:String x:Key="DirectoryBaseData">Base data</system:String>
+    <system:String x:Key="DirectoryInbound">Receiving</system:String>
+    <system:String x:Key="DirectoryGoodStock">Good stock area</system:String>
+    <system:String x:Key="DirectoryShelving">Shelving</system:String>
+    <system:String x:Key="DirectoryReports">Reports</system:String>
 </ResourceDictionary>
