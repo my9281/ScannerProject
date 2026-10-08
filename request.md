@@ -1,182 +1,175 @@
-# 幽梦运单之星扫描系统需求文档
+# 壹仓扫描系统：总需求与实现说明
 
-## 1. 项目概述
+整理日期：2026-10-09。本文统一记录 WPF、PDA、平板、Web 和原 Mac MAUI 工程，以当前代码为依据。“待接入”和“待验收”不代表已交付。历史详细扫码规则见 [原需求归档](docs/history/2026-10-09-需求文档-整理前.md)，其中旧工程名、运行时及平台状态由本文取代。
 
-幽梦运单之星扫描系统（YM-Star Scanner System）是一套运行于 Windows 的扫码、工单检索、标签打印与语音提示工具。系统面向连续扫码作业，通过扫码枪输入运单号或设备编号，自动记录扫描结果、匹配紧急工单、识别 OID 编码并按规则打印 4×6 或 4×4 标签。
+## 1. 工程与文档
 
-当前正式业务实现位于 `Scanner` WPF 项目；`Scanner.MaUI` 为独立的 .NET MAUI 模板项目，尚未接入本系统的业务流程。
+| 工程 | 定位与状态 | 文档 |
+| --- | --- | --- |
+| Scanner.WPF | .NET 10 Windows WPF，主仓库工作台 | 本文第 3 节 |
+| Scanner.AndroidTester | androidtest，原生 MAUI PDA 扫码、上传、打印 | [PDA 文档](Scanner.AndroidTester/README.md) |
+| Scanner.CheckListBoard | 原生 MAUI 平板登录、权限、真实工单读写 | [平板文档](Scanner.CheckListBoard/README.md) |
+| Scanner.Web | ASP.NET Core 10 Web 页面和统一业务 API | 本文第 6–8 节 |
+| Scanner.MaUI | 原 Mac 迁移客户端，已接入业务，不是空模板 | 本文第 5 节 |
+| Scanner.Models / Helpers / Controllers / ViewModels / DependencyInjection | 共享模型、业务规则、控制器和服务 | [共享工程](docs/shared-projects.md) |
+| Scanner.Server.Model / BLL / DAL | 服务端模型、校验、数据库访问 | 本文第 7 节 |
+| Scanner.Rongta.Android | 容大 Android 打印 SDK 绑定 | [SDK 文档](Scanner.Rongta.Android/README.md) |
 
-## 2. 使用角色
+## 2. 业务流程与共同要求
 
-- 操作员：登录系统，扫描编码，查看处理结果，打印标签和打开扫描日志。
-- 管理或维护人员：维护后端账号与工单数据，配置 Windows 默认打印机，排查网络、打印和日志错误。
+1. WPF 导入基础表和工单，支持扫码打印、SN 匹配、检测与上架。
+2. PDA 扫描 SN 并关联托盘，上传良品区表；WPF 一次下载全部数据，在本地按托盘查询。
+3. WPF 自动匹配良品区与基础资料，生成平板工单；平板下载当前用户、审核位为 0 的工单，保存完成状态。
+4. PDA 扫描库位，或按 SKU → SN 配对生成批次；WPF 良品上架可下载批次继续匹配、导出、打印和上传。
+5. 上架保存成功时，服务端在同一事务中按 SN 删除良品区表中的对应记录。
 
-## 3. 运行环境
+托盘号统一为整数 **1–100**。扫描内容去首尾空白，保留前导零。库位和 PDA 批次去重区分大小写；各模块日志、上传去重规则不能混为一套。业务本地日期与数据库 UTC 时间需区分。
 
-- 操作系统：Windows。
-- 运行时：.NET Framework 4.7.2。
-- 输入设备：能够以键盘方式输入并发送 Enter 的扫码枪，或普通键盘。
-- 打印设备：已安装驱动并设置为 Windows 默认打印机的标签打印机。
-- 标签规格：默认 4×6 英寸，可切换为 4×4 英寸，两种规格均无页边距。
-- 音频设备：Windows 默认音频输出设备。
-- 中文播报：Windows 需安装并启用中文 TTS 语音。
-- 网络：能够访问维修系统 HTTPS 接口。
+WPF 标题、目录、按钮和提示提供中文、英文、西班牙语资源；业务比较用的状态值保持稳定。PDA 和平板共用壹仓蓝金标识，保留图像透明区域；PDA 黑色界面只保留简洁标题，平板保留背景图和半透明卡片。
 
-## 4. 功能需求
+## 3. WPF 功能目录
 
-### 4.1 登录与会话
+运行目标 `net10.0-windows10.0.17763.0`，不再将主程序写作 .NET Framework 4.7.2。扫码枪以键盘方式输入，Enter 提交；打印需要驱动和 Windows 默认打印机。
 
-1. 程序启动时应读取本地会话；有效会话直接进入主界面，无效会话进入登录界面。
-2. 用户使用用户名和密码登录维修系统。
-3. 登录请求地址为 `https://repair-rms.vercel.app/api/v1/auth/login`，超时时间为 20 秒。
-4. 用户可选择记住密码。会话、用户名和密码使用 Windows DPAPI 按当前 Windows 用户加密，保存在程序目录下的 `session.dat` 和 `login.dat`。
-5. 登录会话失效或无权限时，应清除会话并要求重新登录。
-6. 登录界面应提供“本地扫描模式”；用户无需账号和密码即可进入主界面，本地模式不调用在线登录和在线工单接口。
+| 分组 | 入口 | 功能 |
+| --- | --- | --- |
+| 基础数据 | 导入基础表 | 导入共享基础资料，供 SN 匹配 |
+| 基础数据 | 导入工单 | 导入紧急工单与备注 |
+| 基础数据 | 手动刷新 | 更新工作台数据 |
+| 入库 | 扫码打印 | 编号识别、日志、标签和语音 |
+| 良品区 | 自动匹配 | 良品区匹配基础资料，生成并上传检查单工单 |
+| 良品区 | 手动匹配 | 原入库检测，导入 SN、匹配和导出 |
+| 良品区 | 替换标签 | 现有标签替换流程 |
+| 良品区 | 查看良品区 | 全量下载，本地按托盘筛选 |
+| 上架 | 维修标签 | 原 SKU/SN 标签入口 |
+| 上架 | 良品上架 | 原出库检测，导入/下载 SKU/SN、匹配、导出、打印和上传 |
+| 报告 | 日报查看 | 每日业务报告 |
+| 报告 | 月报导出 | 月报导出；“余额宝”为已纠正的输入错误 |
+| 报告 | 批量打印标签 | 批量标签打印 |
 
-### 4.2 扫描输入
+### 扫码打印
 
-1. 主界面打开、重新激活或完成一次操作后，焦点应回到扫描输入框。
-2. 扫码内容去除首尾空白后处理；空内容不得记录或打印。
-3. 按 Enter 或点击打印按钮触发处理。
-4. 扫描值应复制到 Windows 剪贴板；剪贴板不可用时不得中断主流程。
-5. 同一次程序运行期间，相同编码只写入扫描日志一次，比较时忽略大小写。
-6. 扫描计数表示本次运行期间首次记录的唯一编码数量。
+保留普通编号、OID、紧急工单、机型及日志规则。OID 包括 34 位数字、12 位 FedEx、1Z 编码和规范化后的长 420 编码；单独短 420 地区码拦截。OID 首次记录，后续按份数打印，并播报 O I D。标签支持 4×6 和 4×4。详细示例、状态和机型映射保留在历史需求与共享规则代码中。
 
-### 4.3 OID 识别与处理
+客户端登录和本地扫描模式沿用原认证流程，不与平板 Web Bearer 登录混同。日志去重、重复扫码打印次数与 PDA 服务端唯一键分别处理。
 
-以下编码应识别为 OID：
+### 良品区与上架
 
-- 34 位纯数字，例如 `9632001960534711760300874863082077`。
-- 12 位纯数字的 FedEx 编号。
-- 以 `1Z` 开头、后接 16 位字母或数字的编号，例如 `1ZA8339B0322277594`，匹配时忽略大小写。
-- 以 `420` 地区码开头且总长度超过 20 位的编码；判断前去除空白、不可见空白字符及扫码枪前缀 `]C1`。
+查看良品区在打开或刷新时调用 `GET /api/tester-pallet-scans`，一次获取全部数据；按托盘 1–100 本地查询。自动匹配工单每块最多 500 条，重试沿用稳定来源键。
 
-`420` 开头且长度不超过 20 位时按单独地区码拦截，不记录、不打印，也不因恰好 12 位而识别为 FedEx OID。
+良品上架先下载全部批次摘要，再按 GUID 下载选中批次。数据替换当前列表，并按基础表匹配 SN，继续导出、打印、上传。上传至 `POST /api/shelved-pallets` 后，服务器事务保存上架数据并删除 `tester_pallet_scans` 中相同 SN；仅下载或本地匹配不会删除。
 
-OID 处理规则：
+## 4. PDA 与平板
 
-1. 每次识别到 OID，电脑应异步播报“O I D”，不得阻塞界面线程。
-2. 同一 OID 第一次扫描时只记录，不打印。
-3. 同一 OID 从第二次扫描开始按当前自动打印份数打印标签；选择“不打印”时不打印。
-4. OID 的扫描次数仅在本次程序运行期间保留，关闭程序后重置。
+### PDA AndroidTester
 
-### 4.4 普通编码打印
+主入口：良品区扫描、打印标签、SKU / SN 扫描；基础资料组含库位扫描。
 
-1. 用户可在主界面选择 4×6 或 4×4 纸张规格，默认 4×6；选择保存为当前用户设置并在重启后恢复。
-2. 自动打印应提供“不打印”“打印一次”“打印两次”三个互斥选项，默认打印两次。
-3. 自动打印份数应保存为当前用户设置，并在程序重启后恢复；选择“不打印”时只记录编码。
-4. 打印完成后，应异步使用中文语音连续播报实际打印编号的末五位，不得阻塞界面线程。
-5. 编号不足五位时播报全部字符；数字转换为中文数字，其他字符保持原字符。
-6. 打印失败时应显示错误状态，并将异常写入错误日志。
+| 模块 | 记录规则 | 去重与恢复 |
+| --- | --- | --- |
+| 良品区扫描 | 托盘 1–100，SN、扫描 GUID、时间 | 本次运行内 SN 去重；服务端 SN 唯一更新归属；待上传数据仅在内存 |
+| 库位扫描 | 所有扫码作为库位 ID | PDA 本次运行去重；服务端主键去重，保留首次时间和禁用位；待上传数据仅在内存 |
+| SKU/SN | 第一枪 SKU、第二枪 SN，一对一条 | 同批 SN 去重，最多 5000 条；批次、半对和封存状态持久化 |
+| 打印标签 | 本页当前输入生成普通标签 | 容大 RP425 蓝牙 TSPL/ZPL；发送确认不等于已出纸 |
 
-### 4.5 工单检索与紧急工单
+每批 GUID 唯一；批次号按首次扫码本地时间 `yyyyMMddmmss`，**不含小时，可重复**，接口幂等和查询以 GUID 为准。有未配对 SKU 时禁止上传；上传封存后不可改动，失败原 GUID、原内容重试，回执核对后开启新批次。
 
-1. 主界面初始化及用户手动刷新时，从 `/api/v1/work-orders/remarks` 获取工单备注。
-2. 请求使用 Bearer Token，默认获取美国东部时间当月起始至今的数据，单次上限 200 条，超时时间为 30 秒。
-3. 扫描值可通过 SN 或运单号匹配在线工单，比较前移除空格、制表符和换行符并忽略大小写。
-4. 匹配到工单 SN 时，标签使用工单 SN 作为实际打印编号。
-5. 紧急工单标签应显示紧急标识和截断后的备注。
-6. 界面应显示网络服务状态、最后刷新时间、返回数量及紧急工单数量。
+三个上传模块共用嵌入 XML 中的地址和 Upload Key，修改需重新构建安装。详见 [PDA 完整文档](Scanner.AndroidTester/README.md)。
 
-### 4.6 紧急工单导入
+### 平板 CheckListBoard
 
-1. 用户可选择 `.xlsx` 工作簿或 UTF-8 编码的 CSV 文件导入紧急工单。
-2. 固定列映射为：H 列 SN、K 列备注、L 列售后处理类型、O 列退货运单号、S 列工单状态。
-3. 只有 O 列号码删除全部空格、制表符和换行符后长度大于 4，且 S 列严格等于“待收件”的行才导入；不满足条件的整行不生成 SN 或 OID 规则。
-4. H 列 SN 与扫描值精确匹配时，该标签显示“紧急”并使用同行 K 列作为备注。
-5. 扫描到 OID 时，若规范化后的 OID 包含某个 O 列号码，则从该 OID 起启用对应紧急上下文；其后所有非 OID 标签显示“紧急”并使用对应 K 列备注，直到扫描到下一个 OID。下一个 OID 无论是否匹配都会结束上一组。
-6. 多行共享同一 O 列号码时合并为一条 OID 规则，备注去重合并；包含匹配有多个候选时优先最长号码。
-7. L 列只要包含“维修”字样，对应 SN 或 OID 上下文打印的面单就增加“修”字。
-8. 导入数据优先于在线工单；重新导入时替换上一次导入规则，在线刷新不清除已导入规则。
-9. 导入成功或失败后应显示有效行数、SN 规则数和 OID 规则数或明确错误。
+已实现登录、角色权限和真实工单查看/保存。入库检测、安全检测、裸机检测、整机检测、查看评级、历史查看、系统配置仍为待接入页面。
 
-### 4.7 设备型号识别与标签内容
+工单下载当前用户审核位 0 的记录，分页拉取；以版本号保存完成状态。user/admin 按权限修改，viewer 只读。逐条保存，失败保留未成功项；重新下载和退出有未保存提示。会话仅内存，记住凭据使用 SecureStorage。详见 [平板完整文档](Scanner.CheckListBoard/README.md)。
 
-扫描内容包含下列型号时，标签应同时打印型号和编号末五位，顺序为“型号、末五位”：
+## 5. 原 Mac MAUI 工程
 
-`AC2A`、`AC2P`、`EB3A`、`AC50B`、`AC60`、`AC70`、`AC180`、`AC180P`、`AC180T`、`AC200L`、`AC200P`、`AC200M`、`AC200PL`、`AC240`、`AC300`、`AC500`、`EL10`、`EL30V2`、`EL100V2`、`EL200V2`、`EL300`、`EL400`、`B230`、`B300`、`B300K`、`B300K2`、`B300S`、`B500K`、`PS54`、`EB55`、`EB70`、`PINA`、`AP300`、`SP100L`、`PV350`、`PV200`。
+`Scanner.MaUI` 已实现业务接入，与 PDA、平板是三个独立应用；不能假定菜单和 WPF 完全相同。
 
-标签应包含：
+已实现：LoginPage、MainPage、OperationsPage 原生页面；认证与会话、扫码、日志、工单备注、语言切换、扫描文件上传；导入基础表和入库 SN 文本、导出匹配结果和当月待检测资料；导入 SKU/SN 文本、导出上架数据并上传；导入库位费用模板并导出费用结果。
 
-- SN 完整编号。
-- 型号与末五位，或仅末五位。
-- QR Code。
-- Code 128 条码及条码下方完整编号。
-- 当前日期。
-- 紧急工单的紧急标识与备注。
+Windows 使用标签绘制与默认打印机。Mac Catalyst 绘制 PDF，打开系统打印对话框，多份打印逐次交互；Android/iOS 分支不支持该工程的自动标签打印。
 
-当本次需要打印且无法从实际打印编号识别型号时：
+项目声明 Android、iOS、Mac Catalyst、Windows 目标。Mac 当前 runtime 为 `maccatalyst-x64`，支持平台版本 15.0（不是 macOS 产品版本的直接描述）；Apple Silicon 架构需另行核验。Mac 构建、签名、字体、条码、纸张、文件选择和打印需在具备 Apple 工具链的 Mac 上验收，Windows 编译不能代替此项。
 
-1. 应弹出型号选择窗口，上方 ListBox 显示所有内置及自定义型号，下方允许输入新型号。
-2. ListBox 选中型号后按 Enter 应直接继续打印；输入新型号后按 Enter 应先加入列表并保存，再继续打印。
-3. 自定义型号应保存在独立的 `%LOCALAPPDATA%\YM-Star Scanner\custom-models.config` 文件中，重启后恢复并参与后续自动识别。
-4. 新型号应移除空格、制表符和换行符并统一为大写，重复型号不重复保存。
-5. 用户取消型号选择时保留扫描记录，但本次不打印。
+## 6. Web 页面、认证与接口
 
-### 4.8 日志
+ASP.NET Core 10，Controller → BLL → DAL，MySqlConnector 数据访问。默认地址 `https://wms.ymforever.com/`。提供主页和登录；注册相关页面/API、域列表、`/pallet-data.html`、`/pallet-directory.html` 当前被入口中间件返回 404，保留代码不代表公开页面可用。
 
-1. 扫描日志路径为 `%USERPROFILE%\Documents\SN Label Printer\scanned_codes.txt`。
-2. 每条记录包含本地时间和扫描编码，以制表符分隔，文件使用带 BOM 的 UTF-8 编码。
-3. 用户可从主界面直接打开扫描日志。
-4. 程序处理异常写入同目录的 `error.log`，内容包含时间和完整异常信息。
+两套认证分别使用：业务上传/下载使用 `X-Upload-Key` 对应 `Upload:ApiKey`，服务端未配置返回 503，错误或缺少密钥返回 401；平板账号与工单读写使用 Bearer 会话及权限。
 
-### 4.8.1 入库检测统计
+账号：`POST /api/account/login`、`GET /api/account/me`、`POST /api/account/logout`。角色 admin/user/viewer，权限 checklist.read、checklist.write、system.configure。账号与域等原有表依赖需现场核验。
 
-1. 基础数据的处理日期按北京时间读取，参与月份统计及导出当前月待检测 CSV 前统一减去 12 小时。
-2. 跨月边界数据必须按减去 12 小时后的新泽西日期归入当前月、上一个月、上两个月或其余月份。
-3. 状态统计表应增加“总量”列，显示每个分类跨全部月份的数量合计。
+| 方法与路径 | 用途与规则 |
+| --- | --- |
+| GET /api/tester-pallet-scans | 全部良品区记录，Upload Key |
+| POST /api/tester-pallet-scans | SN/托盘上传，每块最多 1000 条，Upload Key |
+| POST /api/warehouse-locations | 库位上传，每块最多 1000 条，Upload Key |
+| GET /api/warehouse-locations 或 /download | 全部库位 JSON，包括禁用位，Upload Key |
+| POST /api/sku-sn-batches | 整批上传，最多 5000 条，Upload Key |
+| GET /api/sku-sn-batches | 全部批次摘要，Upload Key |
+| GET /api/sku-sn-batches/{guid} | 完整明细，不存在 404，Upload Key |
+| POST /api/shelved-pallets | 保存上架并删除对应良品区 SN，Upload Key |
+| GET /api/shelved-pallets/all | 全部上架数据，Upload Key |
+| GET /api/shelved-pallets | 日期/托盘查询，数量限制 1–1000，Upload Key |
+| POST /api/checklist-work-orders/batch | 生成工单，1–500 条，来源键去重，Upload Key |
+| GET /api/checklist-work-orders | 当前用户审核位 0，afterId 分页，每页最多 200，Bearer + checklist.read |
+| PUT /api/checklist-work-orders/{id} | 完成状态与 version，Bearer + checklist.write |
+| POST /api/uploads/scans | multipart 扫描文本/JSON，支持 deviceName，Upload Key |
+| GET /api/uploads、/{id}/content、/{id}/download | 文件列表、预览、下载，Upload Key |
 
-### 4.8.2 入库检测简化导出
+另有健康检查 `/health`、`/health/database`、主页指标、订单及飞书控制器；具体契约和授权以对应代码为准，不作为新增客户端功能。
 
-1. 入库检测窗口提供“导出简化版”TXT 功能，以已导入的 SN 清单顺序输出。
-2. 基础表匹配记录只输出 SN 和标记：类型包含“维修”时为 `○`，其他类型为 `✔`。
-3. 基础表中不存在的 SN 输出 `SN 不存在`，不得误标为正常或维修。
-4. TXT 使用带 BOM 的 UTF-8 编码，导出完成后立即打开。
+### 一致性与权限
 
-### 4.9 多语言界面
+工单上传默认关联启用的 my9281 账号与有效域，审核位 0、未完成。来源键重复跳过，不重置已完成状态。读取强制当前用户，即使管理员也不能以 userId 读取别人。保存校验归属、审核位、版本；成功版本加一，完成时间 UTC。冲突 409，失效 401，无权限 403。
 
-1. 主界面支持简体中文、英语和西班牙语即时切换。
-2. 窗口标题、操作按钮、运行信息、处理状态、网络状态、OID 提示、检索结果及导入对话框应使用语言资源。
-3. 产品名称分别为：
-   - 中文：幽梦运单之星扫描系统
-   - 英文：YM-Star Scanner System
-   - 西班牙语：Sistema de escaneo YM-Star
-4. 登录、主界面、入库检测、出库检测、库位付费比对、型号选择以及 MAUI 页面使用统一中、英、西班牙语资源；英文界面使用内嵌 Bickham Script Pro Semibold。扫描编号和型号保留等宽字体，原始业务数据及导出格式不翻译。
+SKU/SN 头与明细同事务保存；同 GUID 同内容幂等，不同内容 400。数据库时间 UTC，批次号保留 PDA 原值。上架保存与良品区删除同事务。可选飞书通知失败只记录日志，不回滚入库；旧公开托盘页被禁用，通知链接需部署验收。
 
-### 4.10 日报
+专项技术补充：[账号](Scanner.Web/WEB_LOGIN.md)、[工单](Scanner.Web/WORK_ORDERS.md)、[库位](Scanner.Web/Database/warehouse_locations.md)、[批次](Scanner.Web/Database/sku_sn_batches.md)、[托盘](docs/托盘扫描上传.md)。旧“出库检测”入口现名“良品上架”。Web 总体需求以本文为入口。
 
-1. 主界面底部功能按钮独占一行并保持等宽。
-2. 点击“日报”后，在程序同目录的 `tempexcel` 文件夹创建 Excel 并立即使用系统默认程序打开。
-3. 表头依次为“时间、日期、内容、备注”。时间列从当前日期往前三个月开始，连续到当前月 15 日；日期列填写对应星期。
-4. 日报生成逻辑放在独立服务中，为后续字段和统计扩展保留入口。
+## 7. 数据库与部署脚本
 
-## 5. 架构要求
+现场版本 **MySQL 5.7.17-log**。脚本在 `Scanner.Web/Database`，由维护人员手动部署，客户端不自动建表。按已有结构选择迁移，不盲目执行全部脚本。
 
-- 主界面采用 MVVM：`MainWindow.xaml` 负责视图，`MainWindowViewModel` 负责命令和状态协调。
-- 网络、扫描、OID、型号识别、语音、检索、打印、紧急工单导入和日志逻辑分别放入独立类。
-- 长耗时网络调用使用异步方式。
-- TTS 使用异步播报，避免阻塞 UI 线程。
-- 代码方法声明保持在一行，避免因局部变量产生过多换行；方法内部不保留无意义空行和注释代码。
+| 脚本 | 用途 / 注意 |
+| --- | --- |
+| 001_tester_pallet_scans.sql | 良品区初建，旧 CHECK 定义需核验 5.7 兼容 |
+| 002_tester_pallet_scans_unique_sn.sql | SN 唯一升级，先检查重复数据 |
+| 003_user_sessions.sql | 会话表 |
+| 004_checklist_work_orders.sql | 工单表 |
+| 005_work_order_samples.sql | 可选样例，不重复写生产 |
+| 006_work_order_sources.sql | 工单来源去重 |
+| 007_warehouse_locations.sql | 库位表，当前命名 CHECK 写法仍需适配 5.7 |
+| 008_tester_pallet_number_100.sql | 1–100 范围更新，无旧 CHECK 时跳过 |
+| 009_sku_sn_batches.sql | 批次头和明细，适配 5.7 |
 
-## 6. 验收标准
+核心表：
 
-1. 工程在 .NET Framework 4.7.2 下能够无错误编译。
-2. 登录成功或选择本地扫描模式后能够进入主界面；会话失效时能够重新登录。
-3. 普通编码首次扫描写入一条日志，并按当前选择打印 0、1 或 2 份；再次扫描不重复写日志。
-4. 所有 OID 首次扫描不打印、第二次扫描按当前选择打印 0、1 或 2 份，并在每次扫描时播报 OID；`420` 前缀编码以 20/21 位为地区码拦截与 OID 识别的边界。
-5. 开启自动打印后，普通设备打印完成会播报打印编号末五位，界面保持可响应。
-6. 指定型号能够以“型号、末五位”的顺序出现在标签上。
-7. H 列 SN 能精确匹配紧急工单；O 列号码能以包含方式匹配 OID，并将紧急上下文保持到下一个 OID。
-8. L 列包含“维修”时标签显示“修”字。
-9. 中文、英文、西班牙语切换后，主界面可见文本正确更新。
-10. 默认打印机不可用、网络异常或导入文件格式错误时，程序不崩溃并给出错误反馈。
-11. 日报文件生成到 `tempexcel`，日期区间、星期及四列表头正确，生成后立即打开。
+- tester_pallet_scans：id、scan_id、sn、scan_date、pallet_number、scan_time；SN 唯一，良品区来源。
+- warehouse_locations：location_id 主键、is_disabled 默认 0、scanned_at 首次 UTC 时间；0 启用/1 禁用。重复上传不修改首次时间或禁用位。当前无禁用管理界面/API，可维护 SQL 修改，下载包含禁用记录。
+- sku_sn_batches：batch_id GUID 主键、batch_number、created_at、item_count。
+- sku_sn_batch_items：batch_id、line_number、sku、sn；同批 SN 唯一，关联批次头。
+- checklist_work_orders 及来源去重数据：用户归属、审核、完成状态、版本和来源键。
+- shelved_pallet_data：上架结果，依赖现场已有结构；新增批次脚本不会创建此表。
 
-## 7. 当前限制与后续建议
+MySQL 5.7 不执行 CHECK 范围约束，托盘和输入校验依赖客户端及服务端；唯一键和事务负责并发一致性。
 
-- 扫描去重、OID 次数和工单缓存只保存在内存中，重启后清空。
-- 在线工单接口单次最多读取 200 条，当前未实现自动翻页。
-- 打印目标固定为 Windows 默认打印机，界面不支持选择打印机。
-- 标签支持 4×6 和 4×4 两套固定排版，不支持其他自定义尺寸。
-- 部分底层或系统异常文本仍显示原始消息。
-- MAUI 项目目前是模板，不属于已交付的扫码业务应用。
+## 8. 配置、构建与验收
+
+Web：Database 的 Enabled、Server、Port、Database、UserId、Password；Upload 的 ApiKey、Directory、MaxBytes、MaxPreviewBytes；可选 FeishuRobot。密码和密钥不复制到文档，可通过 `Database__Password`、`Upload__ApiKey` 环境变量覆盖。默认上传 10 MiB、预览 1 MiB，目录需写权限。
+
+PDA 使用嵌入 [appsettings.xml 配置](Scanner.AndroidTester/APPSETTINGS.md)；平板修改 HTTPS 地址并使用账号会话，不能用 Upload Key 代替登录。
+
+```powershell
+dotnet build Scanner.WPF/Scanner.WPF.csproj
+dotnet build Scanner.Web/Scanner.Web.csproj
+dotnet build Scanner.AndroidTester/Scanner.AndroidTester.csproj -f net10.0-android
+dotnet build Scanner.CheckListBoard/Scanner.CheckListBoard.csproj -f net10.0-android
+```
+
+需 .NET 10 SDK；Android 另需 MAUI 工作负载、Android SDK；Mac 在 Mac 上针对 net10.0-maccatalyst 构建。编译通过不代表 APK 安装、真实打印或 SQL 部署。
+
+验收：WPF 五组目录/三语提示、托盘边界、全量下载本地筛选、批次匹配上架；PDA 连续回车/去重/断网/回执、半对恢复与封存重试、真实出纸；平板角色/分页/到期/409/部分保存/未保存退出；Web 密钥/事务/并发去重/上架删除。
+
+待解决或待验收：库位 SQL 5.7 兼容性；PDA 良品区/库位待上传数据重启丢失；库位禁用管理无界面；平板七个入口待接入；Mac 构建和真机打印。测试位于 tests，本文整理核对源码和文档，不新增业务功能，不将历史测试视为现场验收。
