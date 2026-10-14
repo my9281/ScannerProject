@@ -16,6 +16,8 @@ public sealed class DocumentationService
     {
         [".md"] = "text/markdown; charset=utf-8",
         [".png"] = "image/png",
+        [".jpg"] = "image/jpeg",
+        [".jpeg"] = "image/jpeg",
         [".xlsx"] = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     };
 
@@ -72,8 +74,8 @@ public sealed class DocumentationService
             string? target = ResolveLink(path, url);
             if (target is null || !files.TryGetValue(target, out string? resource)) { link.Url = "#"; continue; }
             if (link.IsImage)
-                link.Url = target.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
-                    ? "data:image/png;base64," + Convert.ToBase64String(File.ReadAllBytes(resource)) : "#";
+                link.Url = MimeTypes[System.IO.Path.GetExtension(resource)].StartsWith("image/", StringComparison.Ordinal)
+                    ? "data:" + MimeTypes[System.IO.Path.GetExtension(resource)] + ";base64," + Convert.ToBase64String(File.ReadAllBytes(resource)) : "#";
             else
                 link.Url = target.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
                     ? "/documents.html?path=" + Uri.EscapeDataString(target)

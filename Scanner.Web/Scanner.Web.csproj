@@ -10,7 +10,7 @@
     <ProjectReference Include="..\Scanner.Server.Model\Scanner.Server.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\docs\**\*.md;..\docs\**\*.png;..\docs\**\*.xlsx"
+    <Content Include="..\docs\**\*.md;..\docs\**\*.png;..\docs\**\*.jpg;..\docs\**\*.jpeg;..\docs\**\*.xlsx"
              Link="Documentation\%(RecursiveDir)%(Filename)%(Extension)"
              CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Include="..\request.md" Link="Documentation\request.md"
