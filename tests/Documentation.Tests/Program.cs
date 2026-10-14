@@ -92,7 +92,15 @@ try
         foreach (var item in library!)
             Check((await client.GetAsync("api/documents/render?path=" + Uri.EscapeDataString(item.Path))).IsSuccessStatusCode, "Actual repository document renders: " + item.Path);
         var sop = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=" + Uri.EscapeDataString("sop/退回返修SOP.md"));
-        Check(sop!.Html.Split("data:image/png;base64,").Length - 1 == 10, "All ten actual SOP images embedded");
+        var imageReferences = System.Text.RegularExpressions.Regex.Matches(
+            File.ReadAllText(Path.Combine(repoDocs, "sop", "退回返修SOP.md")), @"!\[[^\]]*\]\(([^)]+)\)");
+        Check(imageReferences.Count > 0, "Actual repair SOP contains reference images");
+        foreach (System.Text.RegularExpressions.Match imageReference in imageReferences)
+        {
+            string imageFile = Path.GetFullPath(Path.Combine(repoDocs, "sop", imageReference.Groups[1].Value));
+            Check(File.Exists(imageFile) && sop!.Html.Contains(Convert.ToBase64String(File.ReadAllBytes(imageFile))),
+                "Actual referenced image displayed: " + imageReference.Groups[1].Value);
+        }
         var receiving = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=" + Uri.EscapeDataString("sop/收货SOP.md"));
         Check(receiving!.Html.Contains("/documents.html?path=request.md"), "Root-level functional guide link works");
     }
