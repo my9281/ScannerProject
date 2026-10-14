@@ -6,6 +6,8 @@
 
 | 文档 | 内容 |
 | --- | --- |
+| [文档总目录](docs/README.md) | 操作 SOP、技术资料与历史归档 |
+| [仓库操作 SOP](docs/sop/README.md) | 收货、测试、良品区、返修、报废和结算 |
 | [总需求与实现](request.md) | 全平台需求、WPF 目录、Web/API/SQL/部署、Mac MAUI、验收与限制 |
 | [PDA AndroidTester](Scanner.AndroidTester/README.md) | 良品区、库位、SKU/SN、打印、恢复和配置 |
 | [平板 CheckListBoard](Scanner.CheckListBoard/README.md) | 登录、权限、真实工单、待接入模块 |
