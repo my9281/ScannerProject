@@ -46,7 +46,7 @@ public sealed class DocumentationService
     public IReadOnlyList<DocumentationEntry> List() => Files()
         .Where(item => item.Key.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
         .Select(item => new DocumentationEntry(item.Key, Title(item.Value), Section(item.Key)))
-        .OrderBy(item => item.Section == "仓库 SOP" ? 0 : item.Section == "系统资料" ? 1 : item.Section == "数据库资料" ? 2 : 3)
+        .OrderBy(item => item.Section == "仓库 SOP" ? 0 : item.Section == "SOP (English)" ? 1 : item.Section == "系统资料" ? 2 : item.Section == "数据库资料" ? 3 : 4)
         .ThenBy(item => item.Path, StringComparer.Ordinal).ToArray();
 
     public (string File, string Mime)? FindFile(string? path)
@@ -82,7 +82,8 @@ public sealed class DocumentationService
                     : "/api/documents/file?path=" + Uri.EscapeDataString(target);
         }
         string title = Title(file);
-        string html = "<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"
+        string language = path.StartsWith("sop-en/", StringComparison.Ordinal) ? "en" : "zh-CN";
+        string html = "<!doctype html><html lang=\"" + language + "\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"
             + WebUtility.HtmlEncode(title) + "</title><style>"
             + "body{font:17px/1.8 system-ui,sans-serif;color:#172b3a;background:#fff;margin:0;padding:20px;overflow-wrap:anywhere}"
             + "h1,h2,h3{line-height:1.4}a{color:#086ca5}img{max-width:100%;height:auto}table{border-collapse:collapse;display:block;overflow-x:auto}"
@@ -110,5 +111,6 @@ public sealed class DocumentationService
     private static string Title(string file) => File.ReadLines(file).FirstOrDefault(line => line.StartsWith("# "))?[2..].Trim()
         ?? System.IO.Path.GetFileNameWithoutExtension(file);
     private static string Section(string path) => path.StartsWith("sop/") ? "仓库 SOP"
+        : path.StartsWith("sop-en/") ? "SOP (English)"
         : path.StartsWith("history/") ? "历史归档" : path.StartsWith("database/") ? "数据库资料" : "系统资料";
 }

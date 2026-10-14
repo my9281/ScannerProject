@@ -103,6 +103,15 @@ try
         }
         var receiving = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=" + Uri.EscapeDataString("sop/收货SOP.md"));
         Check(receiving!.Html.Contains("/documents.html?path=request.md"), "Root-level functional guide link works");
+        if (File.Exists(Path.Combine(repoDocs, "sop-en", "退回返修SOP-en.md")))
+        {
+            Check(library!.Any(item => item.Path == "sop-en/退回返修SOP-en.md" && item.Section == "SOP (English)"), "English SOP appears in its own section");
+            var english = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=" + Uri.EscapeDataString("sop-en/退回返修SOP-en.md"));
+            Check(english!.Html.Contains("<html lang=\"en\">"), "English reader uses English language metadata");
+            foreach (System.Text.RegularExpressions.Match reference in imageReferences)
+                Check(english!.Html.Contains(Convert.ToBase64String(File.ReadAllBytes(Path.Combine(repoDocs, "sop", reference.Groups[1].Value)))), "English SOP displays shared image: " + reference.Groups[1].Value);
+            Check(english!.Html.Contains("/api/documents/file?path=sop%2Fattachments%2F"), "English SOP uses protected shared attachment links");
+        }
     }
     Console.WriteLine($"PASS: {checks} documentation integration checks.");
     if (preview)
