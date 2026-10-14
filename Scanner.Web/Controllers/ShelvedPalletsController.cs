@@ -69,6 +69,7 @@ public sealed class ShelvedPalletsController(
         CancellationToken cancellationToken)
     {
         CreateShelvedPalletBatchResult result = await pallets.CreateBatchAsync(request, cancellationToken);
+        if (result.IsReplay) return Ok(result);
         string baseUrl = string.IsNullOrWhiteSpace(feishuOptions.Value.PublicBaseUrl)
             ? $"{Request.Scheme}://{Request.Host}{Request.PathBase}"
             : feishuOptions.Value.PublicBaseUrl.TrimEnd('/');

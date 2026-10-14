@@ -51,6 +51,10 @@ try
     var changed = new List<string?>();
     row.PropertyChanged += (_, e) => changed.Add(e.PropertyName);
     row.IsCompleted = true;
+    row.HasUnsavedChanges = true;
+    Check(row.SaveStateText == "未保存", "Changed row marked unsaved");
+    row.HasUnsavedChanges = false;
+    Check(row.SaveStateText == "已保存", "Acknowledged row marked saved");
     Check(row.Completion == 1 && row.StatusText == "已完成", "Completed toggle maps to 1");
     Check(changed.Contains("IsCompleted") && changed.Contains("Completion") && changed.Contains("StatusText"), "Toggle refreshes bindings");
     Check(!(await store.LoadAsync())[0].IsCompleted, "Unsaved edits are not persisted");
@@ -84,6 +88,19 @@ using (var body = JsonDocument.Parse(transport.Body!))
     Check(body.RootElement.GetProperty("isCompleted").GetBoolean() && body.RootElement.GetProperty("version").GetUInt32() == 3, "Update includes completion and concurrency version");
     Check(!body.RootElement.TryGetProperty("userId", out _) && !body.RootElement.TryGetProperty("auditStatus", out _), "Tablet cannot reassign or audit work orders");
 }
+transport.WorkOrdersJson = JsonSerializer.Serialize(new[] {
+    new { id = 11, userId = 42, location = "10" },
+    new { id = 12, userId = 42, location = "2" },
+    new { id = 13, userId = 42, location = "" },
+    new { id = 14, userId = 42, location = "A10" },
+    new { id = 15, userId = 42, location = "A2" },
+    new { id = 16, userId = 42, location = "1" },
+    new { id = 17, userId = 42, location = "2" }
+});
+var sortedOrders = await accounts.DownloadWorkOrdersAsync();
+Check(sortedOrders.Select(row => row.Id).SequenceEqual(new ulong[] {16, 12, 17, 11, 15, 14, 13}), "Locations sort naturally, blank last and ties by ID");
+Check(sortedOrders.Select(row => row.Number).SequenceEqual(Enumerable.Range(1, 7)), "Display numbering follows location order");
+transport.WorkOrdersJson = null;
 transport.WorkUser = 99;
 try { await accounts.DownloadWorkOrdersAsync(); throw new Exception("Expected owner mismatch"); }
 catch (InvalidOperationException) { Check(true, "Client rejects wrong-owner download data"); }
@@ -100,6 +117,7 @@ sealed class FakeHandler : HttpMessageHandler
     public string Role = "viewer";
     public bool Expired;
     public ulong WorkUser = 42;
+    public string? WorkOrdersJson;
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
         Path = request.RequestUri!.AbsolutePath;
@@ -109,7 +127,7 @@ sealed class FakeHandler : HttpMessageHandler
             ? JsonSerializer.Serialize(new { username = "alice", displayName = "Alice", role = Role, token = "session-token", expiresAt = DateTimeOffset.UtcNow.AddHours(Expired ? -1 : 8), userId = 42, permissions = Role == "viewer" ? new[] { "checklist.read" } : new[] { "checklist.read", "checklist.write" }, message = "登录成功" })
             : "{\"message\":\"账户暂不可用。\"}";
         if (Status == HttpStatusCode.OK && Path == "/api/checklist-work-orders")
-            json = JsonSerializer.Serialize(new[] { new { id = 7, userId = WorkUser, deviceId = "DEV-1", description = "Inspection", isCompleted = false, version = 3 } });
+            json = WorkOrdersJson ?? JsonSerializer.Serialize(new[] { new { id = 7, userId = WorkUser, deviceId = "DEV-1", description = "Inspection", isCompleted = false, version = 3 } });
         if (Status == HttpStatusCode.OK && request.Method == HttpMethod.Put)
             json = JsonSerializer.Serialize(new { id = 7, userId = WorkUser, deviceId = "DEV-1", description = "Inspection", isCompleted = true, version = 4 });
         return new HttpResponseMessage(Status) { Content = new StringContent(json) };

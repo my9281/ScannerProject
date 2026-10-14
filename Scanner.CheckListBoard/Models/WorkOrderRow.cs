@@ -14,6 +14,14 @@ public sealed class WorkOrderRow : INotifyPropertyChanged
     public DateTimeOffset UpdatedAt { get; set; }
     public int Number { get; set; }
     public string DeviceId { get; set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
+    private bool hasUnsavedChanges;
+    [JsonIgnore] public bool HasUnsavedChanges
+    {
+        get => hasUnsavedChanges;
+        set { if (hasUnsavedChanges == value) return; hasUnsavedChanges = value; Changed(); Changed(nameof(SaveStateText)); }
+    }
+    [JsonIgnore] public string SaveStateText => HasUnsavedChanges ? "未保存" : "已保存";
     public string Description { get; set; } = string.Empty;
     private bool isCompleted;
     public bool IsCompleted

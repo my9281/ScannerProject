@@ -4,4 +4,4 @@
     <add key="UploadBaseUrl" value="https://wms.ymforever.com/" />
     <add key="UploadApiKey" value="Logistarinc" />
   </appSettings>
-</configuration>
+</configuration> 

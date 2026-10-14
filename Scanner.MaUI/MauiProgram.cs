@@ -15,10 +15,10 @@ namespace Scanner.MaUI
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                fonts.AddFont("Bickham Script Pro Semibold.ttf", "BickhamScriptProSemibold");
                 fonts.AddFont("GenJyuuGothic.ttf", "GenJyuuGothic");
+#if MACCATALYST
                 fonts.AddFont("IMing.ttf", "IMingPrint");
-                fonts.AddFont("ZiHunShouJin.ttf", "ZiHunShouJinPrint");
+#endif
             });
             builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://wms.ymforever.com/"), Timeout = TimeSpan.FromSeconds(60) });
             builder.Services.AddScannerSharedServices();

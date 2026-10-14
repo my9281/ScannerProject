@@ -21,8 +21,8 @@ namespace Scanner.Helpers.Services
             var occurrences = new Dictionary<string, int>(StringComparer.Ordinal);
             var items = rows.Select(row =>
             {
-                string description = $"托盘号：{row.PalletNumber}；SKU：{row.Sku}；RMA：{row.RmaNumber}；类型：{row.Type}；检测状态：{row.DetectionStatus}；扫描日期：{row.ScanDate:yyyy-MM-dd}；扫描时间：{row.ScanTime:yyyy-MM-dd HH:mm:ss}；处理时间：{row.ProcessingTime}";
-                string source = JsonConvert.SerializeObject(row);
+                string description = $"SKU：{row.Sku}；RMA：{row.RmaNumber}；类型：{row.Type}；检测状态：{row.DetectionStatus}；扫描日期：{row.ScanDate:yyyy-MM-dd}；扫描时间：{row.ScanTime:yyyy-MM-dd HH:mm:ss}；处理时间：{row.ProcessingTime}";
+                string source = JsonConvert.SerializeObject(new { row.PalletNumber, row.Sn, row.Sku, row.RmaNumber, row.ScanDate, row.ScanTime, row.Type, row.DetectionStatus, row.ProcessingTime });
                 occurrences.TryGetValue(source, out int ordinal);
                 occurrences[source] = ordinal + 1;
                 string key;
@@ -30,7 +30,7 @@ namespace Scanner.Helpers.Services
                     key = BitConverter.ToString(hash.ComputeHash(Encoding.UTF8.GetBytes("automatic-match-v1:" + source + ":" + ordinal))).Replace("-", "").ToLowerInvariant();
                 if (string.IsNullOrWhiteSpace(row.Sn) || row.Sn.Trim().Length > 100 || description.Length > 1000)
                     throw new ArgumentException("匹配结果设备 ID 或描述超出服务端长度限制，请检查基础表。");
-                return new { sourceKey = key, deviceId = row.Sn.Trim(), description };
+                return new { sourceKey = key, cycleNumber = row.CycleNumber, deviceId = row.Sn.Trim(), location = row.PalletNumber.ToString(System.Globalization.CultureInfo.InvariantCulture), description };
             }).ToList();
             var total = new WorkOrderUploadResult();
             for (int offset = 0; offset < items.Count; offset += 500)
@@ -47,7 +47,7 @@ namespace Scanner.Helpers.Services
                             if (!response.IsSuccessStatusCode)
                                 throw new InvalidOperationException(Deserialize<ApiErrorResponse>(body)?.Message ?? "工单上传失败：HTTP " + (int)response.StatusCode);
                             var result = Deserialize<WorkOrderUploadResult>(body);
-                            if (result == null || result.UserId == 0 || result.Username != "my9281" || result.InsertedCount < 0 || result.SkippedCount < 0 || result.InsertedCount + result.SkippedCount != Math.Min(500, items.Count - offset))
+                            if (result == null || result.UserId == 0 || string.IsNullOrWhiteSpace(result.Username) || result.InsertedCount < 0 || result.SkippedCount < 0 || result.InsertedCount + result.SkippedCount != Math.Min(500, items.Count - offset))
                                 throw new InvalidOperationException("工单上传返回结果无效，请重试。");
                             total.InsertedCount += result.InsertedCount;
                             total.SkippedCount += result.SkippedCount;

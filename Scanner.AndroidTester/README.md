@@ -8,9 +8,9 @@
 
 ## 良品区扫描
 
-选择整数托盘 1–100，扫描 SN（去首尾空白，1–100 字符），每条记录扫描 GUID 和时间。本次运行相同 SN 大小写敏感去重，上传后仍保留去重集合。
+选择整数托盘 1–100，扫描 SN（去首尾空白，1–100 字符），每条记录扫描 GUID 和时间。本次运行相同 SN 大小写不敏感去重，上传后仍保留去重集合。
 
-POST `/api/tester-pallet-scans`，每块最多 1000 条，核对确认后移除已上传记录，失败保留待重试。服务器 SN 唯一，重复上传更新托盘归属及时间。WPF 全量下载查看；成功上架从良品区删除对应 SN。
+POST `/api/tester-pallet-scans`，每块最多 1000 条，核对确认后移除已上传记录，失败保留待重试。服务器有效 SN 唯一，历史记录保留归档，重复上传按 GUID 和扫描时间校验。WPF 全量下载查看；成功上架归档良品区对应 SN。
 
 当前列表和去重集合仅在内存，关闭/重启会丢失待上传数据，不是持久化离线队列。
 
@@ -24,7 +24,7 @@ POST `/api/tester-pallet-scans`，每块最多 1000 条，核对确认后移除�
 
 ## SKU / SN 批次
 
-第一枪 SKU（1–150 字符），第二枪 SN（1–100 字符），一对一条。去首尾空白、拒绝控制字符。同批 SN 大小写敏感去重，最多 5000 条。“重扫 SKU”取消半对，不删除完成记录。有半对或空批次时禁止上传。
+第一枪 SKU（1–150 字符），第二枪 SN（1–100 字符），一对一条。去首尾空白、拒绝控制字符。同批 SN 大小写不敏感去重，最多 5000 条。“重扫 SKU”取消半对，不删除完成记录。有半对或空批次时禁止上传。
 
 批次 GUID 唯一，批次号按首次扫码本地时间 `yyyyMMddmmss`，不含小时，可重复；选择和幂等使用 GUID。应用私有目录 `sku-sn-batch.json` 保存完成明细、半对和封存状态，临时文件替换写入，启动恢复。卸载/清除应用数据会删除文件。
 
@@ -59,3 +59,9 @@ dotnet build Scanner.AndroidTester/Scanner.AndroidTester.csproj -f net10.0-andro
 ```
 
 需 .NET 10 SDK、MAUI Android 工作负载与 Android SDK。测试入口 tests/AndroidTester.Tests、PalletScan.Tests、LocationScan.Tests、SkuSnBatch.Tests。设备验收覆盖边界、重复、连续回车、断网、错误密钥、分块失败、半对恢复、封存重试和真实蓝牙出纸；编译不能代替设备验收。
+
+Release 包体设置、构建参数与验收见 [MAUI 包体优化](../docs/MAUI包体优化.md)。
+
+## 语言
+
+首页 English / Español 标签切换英语、西班牙语，默认英语，保存到本机 Preferences，重启沿用。菜单、扫码计数、库位、SKU/SN 批次、打印机选择、蓝牙权限和失败/重试提示统一由 Services/UiText.cs 提供；扫描值与打印条码不做翻译。服务端未知中文错误保留 HTTP 状态码并显示本地翻译的失败提示。tests/AndroidTester.Localization.Tests 验证双语条目、占位符、错误提示和扫描值/时间保持。

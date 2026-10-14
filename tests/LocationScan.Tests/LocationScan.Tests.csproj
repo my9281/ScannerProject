@@ -7,5 +7,6 @@
 <Compile Include="../../Scanner.AndroidTester/Services/LocationScanSession.cs" />
 <Compile Include="../../Scanner.AndroidTester/Services/LocationScanApiService.cs" />
 </ItemGroup>
+  <ItemGroup><Compile Include="../../Scanner.AndroidTester/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
 </Project>
 

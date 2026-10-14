@@ -132,6 +132,22 @@
                     </GroupBox>
                     <GroupBox Header="{DynamicResource DirectoryGoodStock}">
                         <WrapPanel Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenSpecialLabels_Click" ToolTip="{DynamicResource WpfSpecialLabelDescription}">
+                                <Button.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="{DynamicResource WpfSpecialLabelTradeIn}" Tag="TradeIn" Click="PrintSpecialLabel_Click"/>
+                                        <MenuItem Header="{DynamicResource WpfSpecialLabelScrapped}" Tag="Scrapped" Click="PrintSpecialLabel_Click"/>
+                                    </ContextMenu>
+                                </Button.ContextMenu>
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE749;" Style="{StaticResource FeatureIcon}"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource WpfSpecialLabelTitle}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfSpecialLabelDescription}" Style="{StaticResource FeatureDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
 <Button ToolTip="{DynamicResource WpfComplete045}" Style="{StaticResource FeatureCard}" Click="OpenAutomaticMatching_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE8AB;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
                                     <TextBlock Text="{DynamicResource WpfComplete001}" Style="{StaticResource FeatureTitle}"/>
                                     <TextBlock Text="{DynamicResource WpfComplete045}" Style="{StaticResource FeatureDescription}"/>

@@ -12,14 +12,17 @@ public sealed class LocationScanApiService(HttpClient client)
         using var response = await client.SendAsync(request);
         if (!response.IsSuccessStatusCode)
         {
-            string message = $"上传失败（HTTP {(int)response.StatusCode}），未确认的记录已保留。";
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) message = "上传密钥无效，请检查密钥后重试。";
+            string message = UiText.F("上传失败（HTTP {0}），未确认的记录已保留。", (int)response.StatusCode);
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized) message = UiText.T("上传密钥无效，请检查密钥后重试。");
             else
             {
                 try
                 {
                     using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-                    if (json.RootElement.TryGetProperty("message", out var detail) && detail.ValueKind == JsonValueKind.String) message = detail.GetString()!;
+                    if (json.RootElement.TryGetProperty("message", out var detail) && detail.ValueKind == JsonValueKind.String) {
+                        var serverMessage = detail.GetString()!;
+                        if (!serverMessage.Any(c => c is >= '\u4E00' and <= '\u9FFF')) message = serverMessage;
+                    }
                 }
                 catch (JsonException) { }
             }
@@ -28,7 +31,7 @@ public sealed class LocationScanApiService(HttpClient client)
         var result = await response.Content.ReadFromJsonAsync<LocationBatchResult>();
         if (result?.AcceptedLocationIds is null || result.AcceptedLocationIds.Count != items.Count ||
             !result.AcceptedLocationIds.ToHashSet().SetEquals(items.Select(x => x.LocationId)))
-            throw new InvalidOperationException("服务器未确认全部扫描记录，已保留待上传数据，可重试。");
+            throw new InvalidOperationException(UiText.T("服务器未确认全部扫描记录，已保留待上传数据，可重试。"));
     }
 }
 

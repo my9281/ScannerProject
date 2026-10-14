@@ -61,7 +61,7 @@ sealed class UploadHandler : HttpMessageHandler
         var items = (Newtonsoft.Json.Linq.JArray)payload["items"]!;
         Keys.Add(items.Select(x => (string)x["sourceKey"]!).ToArray());
         Sizes.Add(items.Count);
-        if (items.Any(x => string.IsNullOrWhiteSpace((string)x["deviceId"]) || !((string)x["description"]!).Contains("托盘号：2") || x["userId"] != null || x["auditStatus"] != null)) throw new Exception("Wrong work order mapping");
+        if (items.Any(x => string.IsNullOrWhiteSpace((string)x["deviceId"]) || (string)x["location"]! != "2" || ((string)x["description"]!).Contains("托盘号：") || x["userId"] != null || x["auditStatus"] != null)) throw new Exception("Wrong work order mapping");
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent($"{{\"insertedCount\":{items.Count},\"skippedCount\":0,\"userId\":8,\"username\":\"my9281\"}}") };
     }
 }

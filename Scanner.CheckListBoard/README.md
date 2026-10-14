@@ -52,3 +52,11 @@ dotnet build Scanner.CheckListBoard/Scanner.CheckListBoard.csproj -f net10.0-and
 ```
 
 需 .NET 10 SDK、MAUI Android 工作负载、Android SDK。tests/CheckListBoard.Auth.Tests 覆盖相关逻辑，现场仍须验收凭据/地址切换、三角色、会话到期、分页、完成/取消、409、部分失败、断网、未保存退出、软键盘和滚动。其他七个模块待实现后验收。
+
+## 工单位置与保存更新
+
+部署前执行 `010_work_order_location.sql`：新增 location VARCHAR(100)，将旧描述开头“托盘号：编号；”拆出到位置列，同时移除该描述片段并增加 version。新上传独立传 location 字符串。平板显示位置及逐行已保存/未保存，只有服务器确认成功才标记已保存。完成状态保存不修改审核位；WPF 或 PDA 写入 shelved_pallet_data 表即上架；同一事务按 SN 将对应工单 audit_status 设为 1 并增加 version，平板仅下载审核位 0，因此上架后过滤掉。
+
+Release 包体设置、构建参数与验收见 [MAUI 包体优化](../docs/MAUI包体优化.md)。
+
+工单查看在全部分页下载完成后按位置自然升序排列（1、2、10；A2、A10），空位置排最后，同位置按 ID 排列，序号按显示顺序重新生成。保存完成状态保持当前顺序，重新下载应用同一排序规则。

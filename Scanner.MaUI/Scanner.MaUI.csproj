@@ -7,6 +7,8 @@
 		<TargetFrameworks Condition="!$([MSBuild]::IsOSPlatform('linux'))">$(TargetFrameworks);net10.0-ios;net10.0-maccatalyst</TargetFrameworks>
 		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net10.0-windows10.0.19041.0</TargetFrameworks>
 
+        <TargetFrameworks Condition="'$(ScannerTargetFramework)' != ''">$(ScannerTargetFramework)</TargetFrameworks>
+
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
 		When specifying both architectures, use the plural <RuntimeIdentifiers> instead of the singular <RuntimeIdentifier>.
@@ -57,35 +59,28 @@
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
 
-		<!-- Images -->
-		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
-		
 		<!-- Custom Fonts -->
-		<MauiFont Include="Resources\Fonts\*" />
-		<MauiFont Include="..\SharedAssets\Fonts\Bickham Script Pro Semibold.ttf" Link="Resources\Fonts\Bickham Script Pro Semibold.ttf" />
+		<MauiFont Include="Resources\Fonts\OpenSans-Regular.ttf" />
+        <MauiFont Include="Resources\Fonts\OpenSans-Semibold.ttf" />
+        <MauiFont Include="Resources\Fonts\GenJyuuGothic.ttf" />
+        <MauiFont Include="Resources\Fonts\IMing.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
 		<EmbeddedResource Include="Resources\Fonts\IMing.ttf" LogicalName="Scanner.MaUI.PrintFonts.IMing.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
 		<EmbeddedResource Include="Resources\Fonts\OpenSans-Regular.ttf" LogicalName="Scanner.MaUI.PrintFonts.OpenSans-Regular.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
-		<EmbeddedResource Include="Resources\Fonts\ZiHunShouJin.ttf" LogicalName="Scanner.MaUI.PrintFonts.ZiHunShouJin.ttf" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
 		<EmbeddedResource Include="..\SharedAssets\Languages\Language.*.xaml" LogicalName="%(Filename)%(Extension)" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
-		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
         <MauiAsset Include="Resources\Fonts\OpenSans-OFL.txt" LogicalName="OpenSans-OFL.txt" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="10.0.101" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" />
-		<PackageReference Include="ZXing.Net" Version="0.16.11" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.0" Condition="'$(Configuration)' == 'Debug'" />
+		<PackageReference Include="ZXing.Net" Version="0.16.11" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows' or $([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
 		<PackageReference Include="System.Drawing.Common" Version="10.0.12" Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'" />
 	</ItemGroup>
 
-	<!-- Keep the spreadsheet business rules shared with the production WPF app. -->
-	<ItemGroup>
-	</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../Scanner.Models/Scanner.Models.csproj" />
@@ -97,4 +92,5 @@
     <ProjectReference Include="../Scanner.ViewModels/Scanner.ViewModels.csproj" />
 
   </ItemGroup>
+  <Import Project="..\build\MauiPackageSize.targets" />
 </Project>

@@ -58,18 +58,20 @@ public sealed class SkuSnBatchRepository(IMySqlConnectionFactory factory)
     {
         await using var connection = await factory.OpenConnectionAsync(ct);
         await using var cmd = connection.CreateCommand();
-        cmd.CommandText = "SELECT batch_number,created_at FROM sku_sn_batches WHERE batch_id=@id;";
+        cmd.CommandText = "SELECT batch_number,created_at,item_count FROM sku_sn_batches WHERE batch_id=@id;";
         cmd.Parameters.AddWithValue("@id",id.ToString("D"));
-        string number; DateTimeOffset time;
+        string number; DateTimeOffset time; int expectedCount;
         await using (var reader = await cmd.ExecuteReaderAsync(ct))
         {
             if (!await reader.ReadAsync(ct)) return null;
+            expectedCount = reader.GetInt32(2);
             number = reader.GetString(0); time = new(DateTime.SpecifyKind(reader.GetDateTime(1),DateTimeKind.Utc));
         }
         cmd.CommandText = "SELECT sku,sn FROM sku_sn_batch_items WHERE batch_id=@id ORDER BY line_number;";
         var items = new List<SkuSnItem>();
         await using (var reader = await cmd.ExecuteReaderAsync(ct))
             while (await reader.ReadAsync(ct)) items.Add(new(reader.GetString(0),reader.GetString(1)));
+        if (items.Count != expectedCount) throw new InvalidOperationException("批次计数与明细不一致，请维护人员核对，未自动修改数据。");
         return new(id,number,time,items);
     }
 }

@@ -23,9 +23,11 @@ public sealed class ShelvedPalletService(IShelvedPalletRepository repository) : 
             Optional(item.ProcessingMethod, 100, "处理方式"),
             Optional(item.ProcessingTime, 50, "处理时间"))).ToArray();
 
+        if (!request.RequestId.HasValue || request.RequestId == Guid.Empty) throw new ArgumentException("请求标识不能为空 GUID。");
         DateTime shelvedAt = DateTime.Now;
-        IReadOnlyList<ShelvedPalletRecord> created = await repository.CreateBatchAsync(palletNumber, shelvedAt, items, cancellationToken);
-        return new CreateShelvedPalletBatchResult(palletNumber, shelvedAt, created.Count, created.Select(item => item.Uuid).ToArray());
+        IReadOnlyList<ShelvedPalletRecord> created = await repository.CreateBatchAsync(palletNumber, shelvedAt, items, cancellationToken, request.RequestId);
+        if (created.Count > 0) shelvedAt = created[0].ShelvingDate.ToDateTime(TimeOnly.MinValue).Add(created[0].ShelvingTime.ToTimeSpan());
+        return new CreateShelvedPalletBatchResult(palletNumber, shelvedAt, created.Count, created.Select(item => item.Uuid).ToArray(), request.RequestId, created.Any(item => item.IsReplay));
     }
 
     public Task<IReadOnlyList<ShelvedPalletRecord>> QueryAsync(DateTime? from, DateTime? to, string? palletNumber, int limit, CancellationToken cancellationToken = default)

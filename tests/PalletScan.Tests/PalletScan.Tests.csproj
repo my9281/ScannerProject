@@ -7,4 +7,5 @@
     <Compile Include="../../Scanner.AndroidTester/Services/PalletScanSession.cs" Link="PalletScanSession.cs"/>
     <Compile Include="../../Scanner.AndroidTester/Services/PalletScanApiService.cs" Link="PalletScanApiService.cs"/>
   </ItemGroup>
+  <ItemGroup><Compile Include="../../Scanner.AndroidTester/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
 </Project>

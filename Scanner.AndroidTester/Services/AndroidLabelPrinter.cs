@@ -35,15 +35,15 @@ public static class AndroidLabelPrinter
         // Validate both encodings before opening the system print UI.
         var qr = new MultiFormatWriter().encode(sn, BarcodeFormat.QR_CODE, 190, 190);
         var barcode = new MultiFormatWriter().encode(sn, BarcodeFormat.CODE_128, 430, 85);
-        var activity = Platform.CurrentActivity ?? throw new InvalidOperationException("当前活动不可用。");
+        var activity = Platform.CurrentActivity ?? throw new InvalidOperationException(UiText.T("当前活动不可用。"));
         var manager = (PrintManager?)activity.GetSystemService(Android.Content.Context.PrintService)
-            ?? throw new InvalidOperationException("设备未提供系统打印服务。");
+            ?? throw new InvalidOperationException(UiText.T("设备未提供系统打印服务。"));
         var attributes = new PrintAttributes.Builder()
-            .SetMediaSize(new PrintAttributes.MediaSize("label-4x6", "4 × 6 标签", 6000, 4000))
+            .SetMediaSize(new PrintAttributes.MediaSize("label-4x6", UiText.T("4 × 6 标签"), 6000, 4000))
             .SetMinMargins(new PrintAttributes.Margins(0, 0, 0, 0))
             .SetResolution(new PrintAttributes.Resolution("label300", "300 dpi", 300, 300))
             .SetColorMode(PrintColorMode.Monochrome).Build();
-        manager.Print("SN 标签", new LabelAdapter(sn, qr, barcode, DateTime.Now), attributes);
+        manager.Print(UiText.T("SN 标签"), new LabelAdapter(sn, qr, barcode, DateTime.Now), attributes);
     }
 
     private sealed class LabelAdapter(string sn, BitMatrix qr, BitMatrix barcode, DateTime printedAt) : PrintDocumentAdapter
@@ -63,7 +63,7 @@ public static class AndroidLabelPrinter
                 if (pages is null || !pages.Any(x => x.Start <= 0 && x.End >= 0)) { callback?.OnWriteFinished(Array.Empty<PageRange>()); return; }
                 using var document = new PdfDocument();
                 using var info = new PdfDocument.PageInfo.Builder(_width, _height, 1).Create();
-                var page = document.StartPage(info) ?? throw new InvalidOperationException("无法创建标签页面。");
+                var page = document.StartPage(info) ?? throw new InvalidOperationException(UiText.T("无法创建标签页面。"));
                 var canvas = page.Canvas!;
                 canvas.DrawColor(Color.White);
                 float scale = Math.Min(_width / 576f, _height / 384f);
@@ -79,7 +79,7 @@ public static class AndroidLabelPrinter
                 output.Flush();
                 callback?.OnWriteFinished(new[] { new PageRange(0, 0) });
             }
-            catch (Exception ex) { callback?.OnWriteFailed(ex.Message); }
+            catch (Exception ex) { callback?.OnWriteFailed(UiText.Error(ex)); }
         }
         internal void DrawLabel(Canvas canvas)
         {

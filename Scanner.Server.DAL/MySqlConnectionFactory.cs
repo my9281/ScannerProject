@@ -18,6 +18,9 @@ public sealed class MySqlConnectionFactory(DatabaseOptions options) : IMySqlConn
         try
         {
             await connection.OpenAsync(cancellationToken);
+            await using var timezone = connection.CreateCommand();
+            timezone.CommandText = "SET time_zone='+00:00';";
+            await timezone.ExecuteNonQueryAsync(cancellationToken);
             return connection;
         }
         catch

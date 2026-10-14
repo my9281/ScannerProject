@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS `checklist_work_orders` (
     `user_id` BIGINT UNSIGNED NOT NULL COMMENT 'Assigned app_users.id',
     `device_id` VARCHAR(100) NOT NULL,
     `description` VARCHAR(1000) NOT NULL,
+    `location` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '位置，托盘编号字符串',
     `task_at` DATETIME(3) NOT NULL COMMENT 'Task time in UTC',
     `is_completed` TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0 incomplete, 1 complete',
     `completed_at` DATETIME(3) NULL,

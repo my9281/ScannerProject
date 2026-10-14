@@ -8,7 +8,7 @@ public interface IShelvedPalletRepository
         string palletNumber,
         DateTime shelvedAt,
         IReadOnlyList<ShelvedPalletItemRequest> items,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default, Guid? requestId = null);
 
     Task<IReadOnlyList<ShelvedPalletRecord>> QueryAsync(
         DateTime? from,

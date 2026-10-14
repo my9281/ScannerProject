@@ -67,7 +67,7 @@ namespace Scanner.Helpers.Services
             }
         }
 
-        public async Task<ShelvedPalletUploadResult> UploadAsync(string palletNumber, IEnumerable<OutboundInspectionRecord> records, string apiKey = null)
+        public async Task<ShelvedPalletUploadResult> UploadAsync(string palletNumber, IEnumerable<OutboundInspectionRecord> records, string apiKey = null, Guid? requestId = null)
         {
             string pallet = (palletNumber ?? string.Empty).Trim();
             if (pallet.Length == 0) throw new ArgumentException("请输入托盘号。", nameof(palletNumber));
@@ -88,6 +88,8 @@ namespace Scanner.Helpers.Services
                 }).ToList()
             };
 
+            string pendingPath = ShelvingRequestJournal.PathFor(_client.BaseAddress?.ToString(), JsonConvert.SerializeObject(payload));
+            payload.RequestId = requestId ?? ShelvingRequestJournal.GetOrCreate(pendingPath);
             using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, "api/shelved-pallets"))
             {
                 request.Content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
@@ -105,9 +107,10 @@ namespace Scanner.Helpers.Services
                                 : error.Message);
                         }
                         ShelvedPalletUploadResult result = Deserialize<ShelvedPalletUploadResult>(body);
-                        return result != null && result.InsertedCount > 0
-                            ? result
-                            : throw new InvalidOperationException("上传服务器没有返回有效结果。");
+                        if (result == null || result.RequestId != payload.RequestId || result.InsertedCount != source.Count || result.Uuids == null || result.Uuids.Count != source.Count)
+                            throw new InvalidOperationException("上传服务器回执不匹配，请部署新版服务端后用原请求重试。");
+                        ShelvingRequestJournal.Complete(pendingPath);
+                        return result;
                     }
                 }
                 catch (TaskCanceledException exception)

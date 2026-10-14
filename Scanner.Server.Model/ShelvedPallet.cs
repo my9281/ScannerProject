@@ -10,7 +10,7 @@ public sealed record ShelvedPalletRecord(
     DateTime? ProcessingTime,
     DateOnly ShelvingDate,
     string PalletNumber,
-    TimeOnly ShelvingTime);
+    TimeOnly ShelvingTime, bool IsReplay = false);
 
 public sealed record ShelvedPalletItemRequest(
     int Number,
@@ -22,13 +22,13 @@ public sealed record ShelvedPalletItemRequest(
 
 public sealed record CreateShelvedPalletBatchRequest(
     string PalletNumber,
-    IReadOnlyList<ShelvedPalletItemRequest> Items);
+    IReadOnlyList<ShelvedPalletItemRequest> Items, Guid? RequestId = null);
 
 public sealed record CreateShelvedPalletBatchResult(
     string PalletNumber,
     DateTime ShelvedAt,
     int InsertedCount,
-    IReadOnlyList<string> Uuids);
+    IReadOnlyList<string> Uuids, Guid? RequestId = null, bool IsReplay = false);
 
 public sealed record ShelvedPalletTableResult(
     IReadOnlyList<string> Columns,

@@ -11,4 +11,5 @@
 <Compile Include="../../Scanner.AndroidTester/Services/SkuSnSession.cs" Link="SkuSnSession.cs" />
 <Compile Include="../../Scanner.Server.BLL/SkuSnBatchValidator.cs" Link="SkuSnBatchValidator.cs" />
 </ItemGroup>
+  <ItemGroup><Compile Include="../../Scanner.AndroidTester/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
 </Project>

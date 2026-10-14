@@ -4,7 +4,7 @@ using Scanner.Server.DAL;
 namespace Scanner.Web.Services;
 
 public sealed record WorkOrderResult(ulong Id, ulong UserId, string DeviceId, string Description,
-    bool IsCompleted, DateTimeOffset TaskAt, DateTimeOffset? CompletedAt, DateTimeOffset UpdatedAt, uint Version);
+    bool IsCompleted, DateTimeOffset TaskAt, DateTimeOffset? CompletedAt, DateTimeOffset UpdatedAt, uint Version, string Location = "");
 
 public interface IWorkOrderService
 {
@@ -14,7 +14,7 @@ public interface IWorkOrderService
 
 public sealed class MySqlWorkOrderService(IMySqlConnectionFactory connections) : IWorkOrderService
 {
-    private const string Columns = "`id`,`user_id`,`device_id`,`description`,`is_completed`,`task_at`,`completed_at`,`updated_at`,`version`";
+    private const string Columns = "`id`,`user_id`,`device_id`,`description`,`is_completed`,`task_at`,`completed_at`,`updated_at`,`version`,`location`";
     public async Task<IReadOnlyList<WorkOrderResult>> DownloadAsync(ulong userId, ulong afterId, CancellationToken cancellationToken)
     {
         await using var connection = await connections.OpenConnectionAsync(cancellationToken);
@@ -60,5 +60,5 @@ public sealed class MySqlWorkOrderService(IMySqlConnectionFactory connections) :
         reader.GetUInt64("id"), reader.GetUInt64("user_id"), reader.GetString("device_id"), reader.GetString("description"),
         reader.GetByte("is_completed") == 1, Utc(reader.GetDateTime("task_at")),
         reader.IsDBNull(reader.GetOrdinal("completed_at")) ? null : Utc(reader.GetDateTime("completed_at")),
-        Utc(reader.GetDateTime("updated_at")), reader.GetUInt32("version"));
+        Utc(reader.GetDateTime("updated_at")), reader.GetUInt32("version"), reader.GetString("location"));
 }

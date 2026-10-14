@@ -12,7 +12,16 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+    <CopyDocumentationFilesFromPackages>false</CopyDocumentationFilesFromPackages>
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+
   <ItemGroup>
+    <EmbeddedResource Include="Services\ApplyUpdate.ps1" LogicalName="Scanner.WPF.ApplyUpdate.ps1" />
     <ProjectReference Include="..\Scanner.Models\Scanner.Models.csproj" />
     <ProjectReference Include="..\Scanner.Helpers\Scanner.Helpers.csproj" />
     <ProjectReference Include="..\Scanner.DI\Scanner.DI.csproj" />
@@ -32,9 +41,6 @@
     <Page Include="..\SharedAssets\Languages\Language.es-ES.xaml" Link="Languages\Language.es-ES.xaml" />
     <Page Include="..\SharedAssets\Languages\Language.zh-CN.xaml" Link="Languages\Language.zh-CN.xaml" />
     <Resource Include="logo.png" />
-    <Resource Include="Resources\Bickham Script Pro Bold.ttf" />
-    <Resource Include="Resources\Bickham Script Pro Regular.ttf" />
-    <Resource Include="..\SharedAssets\Fonts\Bickham Script Pro Semibold.ttf" Link="Resources\Bickham Script Pro Semibold.ttf" />
     <Resource Include="Resources\Fonts\IMing.ttf" />
     <Resource Include="Resources\Fonts\OpenSans-Regular.ttf" />
     <Resource Include="Resources\Fonts\GenJyuuGothic.ttf" />
@@ -62,4 +68,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
+  <Target Name="ExcludePublishDiagnostics" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb' Or '%(ResolvedFileToPublish.Extension)' == '.xml'" />
+    </ItemGroup>
+  </Target>
 </Project>

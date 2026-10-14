@@ -578,4 +578,11 @@
     <system:String x:Key="DirectoryGoodStock">Zona de productos aptos</system:String>
     <system:String x:Key="DirectoryShelving">Ubicación</system:String>
     <system:String x:Key="DirectoryReports">Informes</system:String>
+    <system:String x:Key="WpfSpecialLabelTitle">Imprimir etiquetas especiales</system:String>
+    <system:String x:Key="WpfSpecialLabelDescription">Seleccione renovación o desecho, revise e imprima</system:String>
+    <system:String x:Key="WpfSpecialLabelTradeIn">Renovación</system:String>
+    <system:String x:Key="WpfSpecialLabelScrapped">Desechado</system:String>
+    <system:String x:Key="WpfSpecialLabelPaper">Etiqueta de texto horizontal de 4 × 6 enviada a la impresora predeterminada.</system:String>
+    <system:String x:Key="WpfSpecialLabelInvalidCopies">Introduzca un número entero de copias entre 1 y 999.</system:String>
+    <system:String x:Key="WpfSpecialLabelSent">Se enviaron {0} etiquetas a la impresora predeterminada.</system:String>
 </ResourceDictionary>

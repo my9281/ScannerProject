@@ -18,10 +18,15 @@ namespace Scanner.WPF
 
         public static AuthSession CurrentSession { get; private set; }
 
-        private void Application_Startup(object sender, StartupEventArgs e)
+        private async void Application_Startup(object sender, StartupEventArgs e)
         {
             try
             {
+                if (await DesktopUpdateService.TryUpdateAsync(e.Args))
+                {
+                    Shutdown();
+                    return;
+                }
                 AuthSession session = LocalAuthStore.LoadSession();
                 if (session != null && session.IsValid())
                 {

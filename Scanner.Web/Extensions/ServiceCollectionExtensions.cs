@@ -19,6 +19,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ApiKeyAuthorizationFilter>();
         services.AddScoped<ApiExceptionFilter>();
         services.AddScoped<IUploadService, UploadService>();
+        services.AddSingleton<WpfUpdateService>();
         services.AddMemoryCache();
         services.AddScoped<HomeMetricsService>();
         services.AddScoped<IAccountService, MySqlAccountService>();

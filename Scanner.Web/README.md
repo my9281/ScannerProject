@@ -4,4 +4,6 @@ Web 端需求、页面状态、认证、完整业务接口目录、数据库脚�
 
 技术补充：[账号与会话](WEB_LOGIN.md)、[检查单工单](WORK_ORDERS.md)、[库位](Database/warehouse_locations.md)、[SKU/SN 批次](Database/sku_sn_batches.md)。
 
+WPF 更新包发布：管理员登录后打开 `/wpf-updates.html`，上传 WPF 发布 ZIP，服务器自动生成版本清单。配置、权限、IIS 上传限制及持久目录见 [WPF 发布与自动更新](../docs/WPF发布与自动更新.md)。
+
 当前公开注册和旧托盘静态页面被禁用；现场 MySQL 5.7.17，库位建表命名 CHECK 兼容性仍需处理。当前实现状态以总文档为准，[旧说明](../docs/history/2026-10-09-Web说明-整理前.md) 保留供查阅。

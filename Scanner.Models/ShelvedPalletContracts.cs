@@ -2,6 +2,7 @@ namespace Scanner.Models
 {
     public sealed class ShelvedPalletBatchRequest
     {
+        public Guid? RequestId { get; set; }
         public string PalletNumber { get; set; }
         public IList<ShelvedPalletItem> Items { get; set; }
     }
@@ -18,6 +19,7 @@ namespace Scanner.Models
 
     public sealed class ShelvedPalletUploadResult
     {
+        public Guid? RequestId { get; set; }
         public string PalletNumber { get; set; }
         public DateTime ShelvedAt { get; set; }
         public int InsertedCount { get; set; }

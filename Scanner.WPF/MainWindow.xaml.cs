@@ -40,6 +40,20 @@ namespace Scanner.WPF
         private void OpenMonthlyReport_Click(object sender, RoutedEventArgs e) => _controller.OpenMonthlyReport_Click(sender, e);
         private void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e) => _controller.OpenRegistrationRepair_Click(sender, e);
         private void OpenBatchLabel_Click(object sender, RoutedEventArgs e) => _controller.OpenBatchLabel_Click(sender, e);
+        private void OpenSpecialLabels_Click(object sender, RoutedEventArgs e)
+        {
+            var button = (System.Windows.Controls.Button)sender;
+            button.ContextMenu.PlacementTarget = button;
+            button.ContextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            button.ContextMenu.IsOpen = true;
+        }
+        private void PrintSpecialLabel_Click(object sender, RoutedEventArgs e)
+        {
+            var item = (System.Windows.Controls.MenuItem)sender;
+            var kind = (string)item.Tag == "TradeIn"
+                ? Helpers.SpecialLabelKind.TradeIn : Helpers.SpecialLabelKind.Scrapped;
+            new SpecialLabelWindow(kind) { Owner = this }.ShowDialog();
+        }
         private void OpenLocationFeeComparisonButton_Click(object sender, RoutedEventArgs e) => _controller.OpenLocationFeeComparisonButton_Click(sender, e);
         private void OpenOutboundInspectionButton_Click(object sender, RoutedEventArgs e) => _controller.OpenOutboundInspectionButton_Click(sender, e);
         private void OpenGoodArea_Click(object sender, RoutedEventArgs e) => _controller.OpenGoodArea_Click(sender, e);

@@ -1,0 +1,23 @@
+<Window x:Class="Scanner.WPF.SpecialLabelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource WpfSpecialLabelTitle}" Icon="{DynamicResource Logo}"
+        Width="680" Height="580" ResizeMode="NoResize" WindowStartupLocation="CenterOwner"
+        Background="#EAF3F7" FontFamily="{DynamicResource AppFontFamily}">
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/><RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/><RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock x:Name="LabelTitle" FontSize="26" FontWeight="Bold" Foreground="#082F4D" Margin="0,0,0,16"/>
+        <Border Grid.Row="1" Background="White" BorderBrush="#79A9C4" BorderThickness="1" Padding="12">
+            <Image x:Name="PreviewImage" Stretch="Uniform"/>
+        </Border>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,18,0,12">
+            <TextBlock Text="{DynamicResource PrintCopiesLabel}" VerticalAlignment="Center" FontSize="18"/>
+            <TextBox x:Name="CopiesInput" Text="1" Width="70" Margin="12,0,24,0" Padding="6" FontSize="18"/>
+            <Button x:Name="PrintButton" Content="{DynamicResource PrintTwoCopies}" Click="Print_Click" Padding="24,8" FontSize="18" IsDefault="True"/>
+        </StackPanel>
+        <TextBlock Grid.Row="3" x:Name="StatusText" Text="{DynamicResource WpfSpecialLabelPaper}" TextWrapping="Wrap" FontSize="16"/>
+    </Grid>
+</Window>

@@ -578,4 +578,11 @@
     <system:String x:Key="DirectoryGoodStock">Good stock area</system:String>
     <system:String x:Key="DirectoryShelving">Shelving</system:String>
     <system:String x:Key="DirectoryReports">Reports</system:String>
+    <system:String x:Key="WpfSpecialLabelTitle">Print special labels</system:String>
+    <system:String x:Key="WpfSpecialLabelDescription">Choose Trade-in or Scrapped, preview and print</system:String>
+    <system:String x:Key="WpfSpecialLabelTradeIn">Trade-in</system:String>
+    <system:String x:Key="WpfSpecialLabelScrapped">Scrapped</system:String>
+    <system:String x:Key="WpfSpecialLabelPaper">4 × 6 landscape text label sent to the default printer.</system:String>
+    <system:String x:Key="WpfSpecialLabelInvalidCopies">Enter a whole number of copies from 1 to 999.</system:String>
+    <system:String x:Key="WpfSpecialLabelSent">Submitted {0} labels to the default printer.</system:String>
 </ResourceDictionary>

@@ -48,7 +48,7 @@ public partial class WorkOrdersPage : ContentPage
                 Orders.Add(row);
             }
             CountLabel.Text = $"工单 · {Orders.Count} 条";
-            SaveStatusLabel.Text = accounts.HasPermission("checklist.write") ? "已下载审核位为0的工单" : "只读用户";
+            SaveStatusLabel.Text = accounts.HasPermission("checklist.write") ? "已下载工单" : "只读用户";
             loaded = true;
         }
         catch (Exception exception)
@@ -58,7 +58,7 @@ public partial class WorkOrdersPage : ContentPage
         }
         finally
         {
-            SaveButton.IsEnabled = loaded && accounts.HasPermission("checklist.write");
+            SaveButton.IsEnabled = loaded && pending.Count > 0 && accounts.HasPermission("checklist.write");
             RefreshButton.IsEnabled = true;
             OrdersTable.IsEnabled = true;
         }
@@ -66,8 +66,9 @@ public partial class WorkOrdersPage : ContentPage
     private void OnRowChanged(object? sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName != nameof(WorkOrderRow.IsCompleted)) return;
-        if (sender is WorkOrderRow row) pending.Add(row.Id);
+        if (sender is WorkOrderRow row) { pending.Add(row.Id); row.HasUnsavedChanges = true; }
         dirty = true;
+        SaveButton.IsEnabled = accounts.HasPermission("checklist.write");
         SaveStatusLabel.Text = "有未保存的修改";
         SaveStatusLabel.TextColor = Color.FromArgb("#D9B866");
     }
@@ -86,6 +87,7 @@ public partial class WorkOrdersPage : ContentPage
                 row.CompletedAt = updated.CompletedAt;
                 row.UpdatedAt = updated.UpdatedAt;
                 pending.Remove(row.Id);
+                row.HasUnsavedChanges = false;
             }
             dirty = false;
             SaveStatusLabel.Text = "已保存到服务器";

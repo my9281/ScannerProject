@@ -148,6 +148,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
               AND u.`status`='active' AND d.`is_enabled`=1
               AND (u.`locked_until` IS NULL OR u.`locked_until`<=@now)
               AND u.`role` IN ('admin','user','viewer')
+              AND u.`credential_version`=s.`credential_version`
               AND (u.`password_changed_at` IS NULL OR u.`password_changed_at`<=s.`created_at`) LIMIT 1;
             """;
         command.Parameters.Add("@tokenHash", MySqlDbType.Binary, 32).Value = tokenHash;
@@ -186,7 +187,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         DateTime expiresAt = now.Add(TokenLifetime);
         await using MySqlCommand command = connection.CreateCommand();
         command.Transaction = transaction;
-        command.CommandText = "INSERT INTO `user_sessions` (`user_id`,`token_hash`,`expires_at`,`created_at`,`last_used_at`) VALUES (@userId,@tokenHash,@expiresAt,@now,@now);";
+        command.CommandText = "INSERT INTO `user_sessions` (`user_id`,`token_hash`,`expires_at`,`created_at`,`last_used_at`,`credential_version`) VALUES (@userId,@tokenHash,@expiresAt,@now,@now,(SELECT credential_version FROM app_users WHERE id=@userId));";
         command.Parameters.AddWithValue("@userId", userId);
         command.Parameters.Add("@tokenHash", MySqlDbType.Binary, 32).Value = TokenHash(token);
         command.Parameters.Add("@expiresAt", MySqlDbType.DateTime).Value = expiresAt;

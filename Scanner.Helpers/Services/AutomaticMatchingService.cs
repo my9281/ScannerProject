@@ -9,9 +9,11 @@ namespace Scanner.Helpers.Services
         public int PalletNumber { get; set; }
         public DateTime ScanDate { get; set; }
         public DateTime ScanTime { get; set; }
+        public ulong CycleNumber { get; set; } = 1;
     }
     public sealed class AutomaticMatchRow
     {
+        public ulong CycleNumber { get; set; } = 1;
         public int PalletNumber { get; set; }
         public string Sn { get; set; }
         public string Sku { get; set; }
@@ -31,7 +33,7 @@ namespace Scanner.Helpers.Services
             return pallets.Where(x => !string.IsNullOrWhiteSpace(x.Sn))
                 .OrderBy(x => x.PalletNumber).ThenBy(x => x.ScanTime).ThenBy(x => x.Sn, StringComparer.OrdinalIgnoreCase)
                 .SelectMany(p => pending[p.Sn.Trim()].Select(b => new AutomaticMatchRow {
-                    PalletNumber = p.PalletNumber, Sn = b.Sn.Trim(), Sku = b.Sku, RmaNumber = b.RmaNumber,
+                    CycleNumber = p.CycleNumber, PalletNumber = p.PalletNumber, Sn = b.Sn.Trim(), Sku = b.Sku, RmaNumber = b.RmaNumber,
                     ScanDate = p.ScanDate, ScanTime = p.ScanTime, Type = b.Type,
                     DetectionStatus = b.DetectionStatus, ProcessingTime = b.ProcessingTime
                 })).ToList().AsReadOnly();

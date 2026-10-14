@@ -21,6 +21,8 @@ using WpfImage = System.Windows.Controls.Image;
 
 namespace Scanner.WPF.Helpers
 {
+    public enum SpecialLabelKind { TradeIn, Scrapped }
+
     public sealed class PrintingHelper
     {
         private static readonly WpfFontFamily PrintLatinAndNumberFont = new WpfFontFamily("/Scanner.WPF;component/Resources/Fonts/OpenSans-Regular.ttf#Open Sans");
@@ -31,6 +33,32 @@ namespace Scanner.WPF.Helpers
         private const double WideLabelWidth = 576.0;
         private const double LabelHeight = 384.0;
         private const double SquareLabelWidth = 384.0;
+        public static BitmapSource PreviewSpecialLabel(SpecialLabelKind kind)
+        {
+            string text;
+            switch (kind)
+            {
+                case SpecialLabelKind.TradeIn: text = "以旧换新"; break;
+                case SpecialLabelKind.Scrapped: text = "报废"; break;
+                default: throw new ArgumentOutOfRangeException(nameof(kind));
+            }
+            var canvas = new Canvas { Width = WideLabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
+            var label = CreateText(text, 110, WideLabelWidth - 48);
+            label.Measure(new System.Windows.Size(WideLabelWidth - 48, LabelHeight));
+            Canvas.SetLeft(label, 24);
+            Canvas.SetTop(label, (LabelHeight - label.DesiredSize.Height) / 2);
+            canvas.Children.Add(label);
+            return Render(canvas, DefaultPaperSize);
+        }
+
+        public void PrintSpecialLabel(SpecialLabelKind kind, int copies)
+        {
+            if (copies <= 0) throw new ArgumentOutOfRangeException(nameof(copies), UiText.Get("WpfPrompt037"));
+            using (Bitmap bitmap = ToBitmap(PreviewSpecialLabel(kind)))
+            {
+                PrintBitmap(bitmap, DefaultPaperSize, copies);
+            }
+        }
         public string GetDefaultPrinterName()
         {
             using (var server = new LocalPrintServer())
@@ -535,7 +563,7 @@ namespace Scanner.WPF.Helpers
             }
         }
 
-        private static void PrintBitmap(Bitmap bitmap, string paperSize)
+        private static void PrintBitmap(Bitmap bitmap, string paperSize, int copies = 1)
         {
             using (var document = new PrintDocument())
             {
@@ -549,6 +577,7 @@ namespace Scanner.WPF.Helpers
                 document.DefaultPageSettings.Landscape = !square;
                 document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
                 document.OriginAtMargins = false;
+                int printedPages = 0;
                 document.PrintPage += (sender, args) =>
                 {
                     if (args.Graphics == null)
@@ -556,7 +585,7 @@ namespace Scanner.WPF.Helpers
                         throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt041"));
                     }
                     args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
-                    args.HasMorePages = false;
+                    args.HasMorePages = ++printedPages < copies;
                 };
                 document.Print();
             }

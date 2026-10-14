@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -85,6 +86,12 @@ public sealed class AccountClient
             if (rows.Count < 200) break;
             afterId = rows.Max(x => x.Id);
         }
+        var locations = Comparer<string>.Create((left, right) =>
+            CultureInfo.InvariantCulture.CompareInfo.Compare(left, right,
+                CompareOptions.IgnoreCase | CompareOptions.NumericOrdering));
+        all = all.OrderBy(row => string.IsNullOrWhiteSpace(row.Location))
+            .ThenBy(row => row.Location?.Trim() ?? string.Empty, locations)
+            .ThenBy(row => row.Id).ToList();
         for (int i = 0; i < all.Count; i++) all[i].Number = i + 1;
         return all;
     }

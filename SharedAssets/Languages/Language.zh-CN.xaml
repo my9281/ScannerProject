@@ -570,4 +570,11 @@
     <system:String x:Key="DirectoryGoodStock">良品区</system:String>
     <system:String x:Key="DirectoryShelving">上架</system:String>
     <system:String x:Key="DirectoryReports">报告</system:String>
+    <system:String x:Key="WpfSpecialLabelTitle">打印特殊标签</system:String>
+    <system:String x:Key="WpfSpecialLabelDescription">选择以旧换新或报废标签，预览后打印</system:String>
+    <system:String x:Key="WpfSpecialLabelTradeIn">以旧换新</system:String>
+    <system:String x:Key="WpfSpecialLabelScrapped">报废</system:String>
+    <system:String x:Key="WpfSpecialLabelPaper">4 × 6 横向文字标签，发送到默认打印机。</system:String>
+    <system:String x:Key="WpfSpecialLabelInvalidCopies">请输入 1–999 的整数份数。</system:String>
+    <system:String x:Key="WpfSpecialLabelSent">已向默认打印机提交 {0} 份标签。</system:String>
 </ResourceDictionary>

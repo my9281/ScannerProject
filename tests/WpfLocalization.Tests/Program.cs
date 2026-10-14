@@ -34,7 +34,7 @@ internal static class Program
    using var provider=(IDisposable)composition.GetMethod("Build",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).Invoke(null,null);
    var services=(IServiceProvider)provider;
    var api=(ShelvedPalletApiService)services.GetService(typeof(ShelvedPalletApiService));
-   var windows=new Window[]{(Window)services.GetService(typeof(MainWindow)),(Window)services.GetService(typeof(OutboundInspectionWindow)),new GoodAreaWindow(api),new SkuSnBatchPicker(api),new AutomaticMatchingWindow(new ChecklistDataCache(),api),new BatchLabelWindow(),new RegistrationRepairWindow(new ChecklistDataCache(),api)};
+   var windows=new Window[]{(Window)services.GetService(typeof(MainWindow)),(Window)services.GetService(typeof(OutboundInspectionWindow)),new GoodAreaWindow(api),new SkuSnBatchPicker(api),new AutomaticMatchingWindow(new ChecklistDataCache(),api),new BatchLabelWindow(),new SpecialLabelWindow(SpecialLabelKind.TradeIn),new SpecialLabelWindow(SpecialLabelKind.Scrapped),new RegistrationRepairWindow(new ChecklistDataCache(),api)};
    foreach(var window in windows)
    {
     if(window.Icon==null) throw new Exception("Missing icon "+window.GetType().Name);
@@ -46,9 +46,9 @@ internal static class Program
     var bmp=new RenderTargetBitmap(width,height,96,96,PixelFormats.Pbgra32);bmp.Render(visual);
     var encoder=new PngBitmapEncoder();encoder.Frames.Add(BitmapFrame.Create(bmp));
     var dir=Path.Combine(AppContext.BaseDirectory,"previews");Directory.CreateDirectory(dir);
-    using var output=File.Create(Path.Combine(dir,window.GetType().Name+"-"+language+".png"));encoder.Save(output);
+    using var output=File.Create(Path.Combine(dir,window.GetType().Name+"-"+Array.IndexOf(windows,window)+"-"+language+".png"));encoder.Save(output);
    }
-   Console.WriteLine("PASS: "+language+" resources, placeholders, icons and 7 window renders");
+   Console.WriteLine("PASS: "+language+" resources, placeholders, icons and 9 window renders");
   }
  }
 }

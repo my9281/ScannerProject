@@ -4,7 +4,7 @@ namespace Scanner.AndroidTester.Services;
 public sealed class PalletScanSession
 {
     private readonly List<PalletScanItem> _pending = new();
-    private readonly HashSet<string> _scanned = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _scanned = new(StringComparer.OrdinalIgnoreCase);
     public IReadOnlyList<PalletScanItem> Pending => _pending.AsReadOnly();
     public int PalletNumber { get; set; } = 1;
     public string ApiKey { get; set; } = "";
@@ -12,15 +12,15 @@ public sealed class PalletScanSession
     public void Add(string value, DateTimeOffset time)
     {
         var sn = value.Trim();
-        if (sn.Length is < 1 or > 100) throw new ArgumentException("请扫描 1–100 个字符的 SN。");
-        if (PalletNumber is < 1 or > 100) throw new ArgumentException("托盘号必须为 1–100。");
-        if (!_scanned.Add(sn)) throw new ArgumentException("重复 SN，本次运行已扫描过，未重复记录。");
+        if (sn.Length is < 1 or > 100) throw new ArgumentException(UiText.T("请扫描 1–100 个字符的 SN。"));
+        if (PalletNumber is < 1 or > 100) throw new ArgumentException(UiText.T("托盘号必须为 1–100。"));
+        if (!_scanned.Add(sn)) throw new ArgumentException(UiText.T("重复 SN，本次运行已扫描过，未重复记录。"));
         _pending.Add(new PalletScanItem(Guid.NewGuid(), sn, PalletNumber, time));
     }
     public async Task<int> UploadAsync(PalletScanApiService api)
     {
-        if (IsUploading) throw new InvalidOperationException("正在上传，请稍候。");
-        if (_pending.Count == 0) throw new InvalidOperationException("没有待上传记录。");
+        if (IsUploading) throw new InvalidOperationException(UiText.T("正在上传，请稍候。"));
+        if (_pending.Count == 0) throw new InvalidOperationException(UiText.T("没有待上传记录。"));
         IsUploading = true;
         int count = 0;
         try

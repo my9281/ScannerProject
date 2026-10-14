@@ -36,14 +36,40 @@ public sealed class ShelvedPalletRepository(IMySqlConnectionFactory connectionFa
         string palletNumber,
         DateTime shelvedAt,
         IReadOnlyList<ShelvedPalletItemRequest> items,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default, Guid? requestId = null)
     {
         await using MySqlConnection connection = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await using MySqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken);
         List<ShelvedPalletRecord> created = new(items.Count);
         try
         {
-            foreach (ShelvedPalletItemRequest item in items)
+            if (requestId.HasValue)
+            {
+                string hash = Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(
+                    System.Text.Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(new { palletNumber, items }))));
+                await using var claim = connection.CreateCommand();
+                claim.Transaction = transaction;
+                claim.Parameters.AddWithValue("@request", requestId.Value.ToString("D"));
+                claim.Parameters.AddWithValue("@hash", hash);
+                claim.CommandText = "INSERT INTO shelving_requests (request_id,content_hash) VALUES (@request,@hash) ON DUPLICATE KEY UPDATE request_id=request_id;";
+                await claim.ExecuteNonQueryAsync(cancellationToken);
+                claim.CommandText = "SELECT content_hash,result_json FROM shelving_requests WHERE request_id=@request FOR UPDATE;";
+                string? saved;
+                await using (var reader = await claim.ExecuteReaderAsync(cancellationToken))
+                {
+                    await reader.ReadAsync(cancellationToken);
+                    if (reader.GetString(0) != hash) throw new ArgumentException("上架请求标识已用于不同内容。");
+                    saved = reader.IsDBNull(1) ? null : reader.GetString(1);
+                }
+                if (saved is not null)
+                {
+                    var prior = System.Text.Json.JsonSerializer.Deserialize<List<ShelvedPalletRecord>>(saved)
+                        ?? throw new InvalidOperationException("上架请求回执损坏。");
+                    await transaction.CommitAsync(cancellationToken);
+                    return prior.Select(row => row with { IsReplay = true }).ToArray();
+                }
+            }
+            foreach (ShelvedPalletItemRequest item in items.OrderBy(x => x.Sn, StringComparer.OrdinalIgnoreCase))
             {
                 string uuid = Guid.NewGuid().ToString();
                 DateTime? processingTime = ParseProcessingTime(item.ProcessingTime);
@@ -66,13 +92,31 @@ public sealed class ShelvedPalletRepository(IMySqlConnectionFactory connectionFa
                 command.Parameters.Add("@palletNumber", MySqlDbType.VarChar, 100).Value = palletNumber;
                 command.Parameters.Add("@shelvingTime", MySqlDbType.Time).Value = shelvedAt.TimeOfDay;
                 await command.ExecuteNonQueryAsync(cancellationToken);
+                command.CommandText = "INSERT INTO inventory_device_state (sn,cycle_number,is_shelved) VALUES (@sn,1,0) ON DUPLICATE KEY UPDATE sn=sn;";
+                await command.ExecuteNonQueryAsync(cancellationToken);
+                command.CommandText = "SELECT cycle_number FROM inventory_device_state WHERE sn=@sn FOR UPDATE;";
+                var cycle = await command.ExecuteScalarAsync(cancellationToken);
+                command.Parameters.AddWithValue("@cycle", cycle);
+                command.CommandText = "UPDATE inventory_device_state SET is_shelved=1 WHERE sn=@sn;";
+                await command.ExecuteNonQueryAsync(cancellationToken);
                 // Use the same connection and transaction: shelving and removal must commit together.
-                command.CommandText = "DELETE FROM `tester_pallet_scans` WHERE `sn` = @sn;";
+                command.CommandText = "UPDATE `checklist_work_orders` SET `audit_status`=1, `version`=`version`+1 WHERE `device_id`=@sn COLLATE utf8mb4_unicode_ci AND `cycle_number`=@cycle AND `audit_status`=0;";
+                await command.ExecuteNonQueryAsync(cancellationToken);
+                command.CommandText = "UPDATE `tester_pallet_scans` SET `is_archived`=1, `archived_reason`='shelved', `archived_at`=UTC_TIMESTAMP(3) WHERE `sn` COLLATE utf8mb4_unicode_ci = @sn AND `is_archived`=0;";
                 await command.ExecuteNonQueryAsync(cancellationToken);
                 created.Add(new ShelvedPalletRecord(uuid, item.Number, item.Sn, item.Sku, item.Type, item.ProcessingMethod,
                     processingTime, DateOnly.FromDateTime(shelvedAt), palletNumber, TimeOnly.FromDateTime(shelvedAt)));
             }
 
+            if (requestId.HasValue)
+            {
+                await using var receipt = connection.CreateCommand();
+                receipt.Transaction = transaction;
+                receipt.CommandText = "UPDATE shelving_requests SET result_json=@result WHERE request_id=@request;";
+                receipt.Parameters.AddWithValue("@request", requestId.Value.ToString("D"));
+                receipt.Parameters.AddWithValue("@result", System.Text.Json.JsonSerializer.Serialize(created));
+                await receipt.ExecuteNonQueryAsync(cancellationToken);
+            }
             await transaction.CommitAsync(cancellationToken);
             return created;
         }
@@ -95,12 +139,12 @@ public sealed class ShelvedPalletRepository(IMySqlConnectionFactory connectionFa
         List<string> conditions = new();
         if (from.HasValue)
         {
-            conditions.Add("TIMESTAMP(`shelving_date`, `shelving_time`) >= @from");
+            conditions.Add("(`shelving_date` > DATE(@from) OR (`shelving_date` = DATE(@from) AND `shelving_time` >= TIME(@from)))");
             command.Parameters.Add("@from", MySqlDbType.DateTime).Value = from.Value;
         }
         if (to.HasValue)
         {
-            conditions.Add("TIMESTAMP(`shelving_date`, `shelving_time`) <= @to");
+            conditions.Add("(`shelving_date` < DATE(@to) OR (`shelving_date` = DATE(@to) AND `shelving_time` <= TIME(@to)))");
             command.Parameters.Add("@to", MySqlDbType.DateTime).Value = to.Value;
         }
         if (!string.IsNullOrWhiteSpace(palletNumber))

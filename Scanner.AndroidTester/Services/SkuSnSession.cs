@@ -19,7 +19,7 @@ public sealed class SkuSnSession
         if (statePath is not null && File.Exists(statePath))
         {
             var state = System.Text.Json.JsonSerializer.Deserialize<SavedState>(File.ReadAllText(statePath))
-                ?? throw new InvalidOperationException("批次缓存无效。");
+                ?? throw new InvalidOperationException(UiText.T("批次缓存无效。"));
             BatchId = state.Batch.BatchId; CreatedAt = state.Batch.CreatedAt;
             _items.AddRange(state.Batch.Items); PendingSku = state.PendingSku;
             if (state.Sealed) _snapshot = state.Batch;
@@ -35,19 +35,19 @@ public sealed class SkuSnSession
     private sealed record SavedState(SkuSnBatch Batch, string? PendingSku, bool Sealed);
     public void Scan(string value)
     {
-        if (IsUploading || _snapshot is not null) throw new ArgumentException("批次已封存，请重试上传。");
+        if (IsUploading || _snapshot is not null) throw new ArgumentException(UiText.T("批次已封存，请重试上传。"));
         value = value.Trim();
         int max = PendingSku is null ? 150 : 100;
-        if (value.Length < 1 || value.Length > max || value.Any(char.IsControl)) throw new ArgumentException("扫码内容无效。");
-        if (_items.Count >= 5000) throw new ArgumentException("每批最多 5000 条，请上传。");
+        if (value.Length < 1 || value.Length > max || value.Any(char.IsControl)) throw new ArgumentException(UiText.T("扫码内容无效。"));
+        if (_items.Count >= 5000) throw new ArgumentException(UiText.T("每批最多 5000 条，请上传。"));
         if (PendingSku is null) { if (_items.Count == 0) CreatedAt = DateTimeOffset.Now; PendingSku = value; Save(); return; }
-        if (_items.Any(x => x.Sn == value)) throw new ArgumentException("本批 SN 重复。");
+        if (_items.Any(x => string.Equals(x.Sn, value, StringComparison.OrdinalIgnoreCase))) throw new ArgumentException(UiText.T("本批 SN 重复。"));
         _items.Add(new(PendingSku, value)); PendingSku = null; Save();
     }
     public void ResetPair() { if (!IsUploading && _snapshot is null) { PendingSku = null; Save(); } }
     public async Task UploadAsync(HttpClient client, AppSettings settings)
     {
-        if (IsUploading || PendingSku is not null || _items.Count == 0) throw new InvalidOperationException("请完成 SKU/SN 配对后上传。");
+        if (IsUploading || PendingSku is not null || _items.Count == 0) throw new InvalidOperationException(UiText.T("请完成 SKU/SN 配对后上传。"));
         IsUploading = true;
         try
         {
@@ -56,9 +56,9 @@ public sealed class SkuSnSession
             using var request = new HttpRequestMessage(HttpMethod.Post, "api/sku-sn-batches") { Content = JsonContent.Create(_snapshot) };
             request.Headers.Add("X-Upload-Key", settings.UploadApiKey);
             using var response = await client.SendAsync(request);
-            if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"上传失败 HTTP {(int)response.StatusCode}，批次已保留。");
+            if (!response.IsSuccessStatusCode) throw new InvalidOperationException(UiText.F("上传失败 HTTP {0}，批次已保留。", (int)response.StatusCode));
             var ack = await response.Content.ReadFromJsonAsync<Acknowledgement>();
-            if (ack?.BatchId != BatchId || ack.ItemCount != _items.Count) throw new InvalidOperationException("批次确认不完整，请重试。");
+            if (ack?.BatchId != BatchId || ack.ItemCount != _items.Count) throw new InvalidOperationException(UiText.T("批次确认不完整，请重试。"));
             _items.Clear(); _snapshot = null; BatchId = Guid.NewGuid(); CreatedAt = DateTimeOffset.Now; Save();
         }
         finally { IsUploading = false; }
