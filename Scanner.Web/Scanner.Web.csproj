@@ -10,9 +10,17 @@
     <ProjectReference Include="..\Scanner.Server.Model\Scanner.Server.Model.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\docs\**\*.md;..\docs\**\*.png;..\docs\**\*.xlsx"
+             Link="Documentation\%(RecursiveDir)%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="..\request.md" Link="Documentation\request.md"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <Content Update="appsettings.Local.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
     <Content Update="dotnet-tools.json;README.md;App_Data\**\*;Database\**\*;wwwroot\register.html;wwwroot\pallet-data.html;wwwroot\pallet-directory.html" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
     <None Update="dotnet-tools.json;README.md;App_Data\**\*;Database\**\*" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.41.3" />
   </ItemGroup>
   <PropertyGroup>
     <PublishTrimmed>false</PublishTrimmed>

@@ -20,6 +20,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ApiExceptionFilter>();
         services.AddScoped<IUploadService, UploadService>();
         services.AddSingleton<WpfUpdateService>();
+        services.AddSingleton<DocumentationService>();
         services.AddMemoryCache();
         services.AddScoped<HomeMetricsService>();
         services.AddScoped<IAccountService, MySqlAccountService>();

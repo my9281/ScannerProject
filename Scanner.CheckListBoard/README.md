@@ -12,8 +12,11 @@
 | 查看评级、历史查看 | checklist.read | 待接入 |
 | 系统配置 | system.configure | 待接入 |
 | 工单查看 | checklist.read | 真实服务器读写 |
+| 操作文档 | checklist.read | 服务端 Markdown、截图和 Excel 附件 |
 
 admin/user/viewer 按服务器返回权限显示入口；viewer 不可修改工单。服务端独立校验授权，按钮禁用不能代替 API 权限。
+
+操作文档通过登录会话读取 Web 发布的文档目录，支持 SOP、图片和参考 Excel 下载分享。更新文档内容只需更新服务端资源；入口与发布说明见 [文档浏览与发布](../docs/文档浏览与发布.md)。工作台现有九个入口，卡片区域可滚动。
 
 ## 登录、凭据和退出
 

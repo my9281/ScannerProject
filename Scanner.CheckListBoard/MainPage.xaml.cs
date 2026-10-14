@@ -19,9 +19,9 @@ public partial class MainPage : ContentPage
             "user" => "普通用户 / 检测查看 · 检测操作",
             _ => "只读用户 / 检测查看"
         };
-        string[] modules = ["入库检测", "安全检测", "裸机检测", "整机检测", "查看评级", "历史查看", "系统配置", "工单查看"];
-        string[] subtitles = ["来料验收", "安全核验", "单机检查", "整机验证", "品质分级", "检测记录", "工作台设置", "工单列表"];
-        for (int row = 0; row < 4; row++) ModuleGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
+        string[] modules = ["入库检测", "安全检测", "裸机检测", "整机检测", "查看评级", "历史查看", "系统配置", "工单查看", "操作文档"];
+        string[] subtitles = ["来料验收", "安全核验", "单机检查", "整机验证", "品质分级", "检测记录", "工作台设置", "工单列表", "SOP 与参考附件"];
+        for (int row = 0; row < (modules.Length + 1) / 2; row++) ModuleGrid.RowDefinitions.Add(new RowDefinition(GridLength.Auto));
         for (int index = 0; index < modules.Length; index++)
         {
             string title = modules[index];
@@ -52,6 +52,11 @@ public partial class MainPage : ContentPage
                 if (title == "工单查看")
                 {
                     await Navigation.PushAsync(new WorkOrdersPage(accounts));
+                    return;
+                }
+                if (title == "操作文档")
+                {
+                    await Navigation.PushAsync(new DocumentsPage(accounts));
                     return;
                 }
                 await DisplayAlertAsync(title, "此功能页面待接入。", "返回工作台");

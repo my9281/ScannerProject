@@ -8,8 +8,9 @@
             <Button Grid.Column="1" x:Name="LogoutButton" Text="退出登录" 
            Clicked="OnLogoutClicked" BackgroundColor="Transparent" TextColor="#D9B866" FontSize="12" />
         </Grid>
-        <Grid Grid.Row="1" x:Name="ModuleGrid" ColumnDefinitions="*,*" ColumnSpacing="12" 
-              RowSpacing="12" />
+        <ScrollView Grid.Row="1">
+            <Grid x:Name="ModuleGrid" ColumnDefinitions="*,*" ColumnSpacing="12" RowSpacing="12" />
+        </ScrollView>
         <ScrollView IsVisible="False">
 
             <VerticalStackLayout Padding="24,22,24,28" Spacing="20" MaximumWidthRequest="880" HorizontalOptions="Fill">

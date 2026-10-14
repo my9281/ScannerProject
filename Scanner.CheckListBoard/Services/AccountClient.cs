@@ -105,6 +105,30 @@ public sealed class AccountClient
         using var response = await client.SendAsync(request);
         return await ReadResponseAsync<WorkOrderRow>(response);
     }
+    public async Task<List<BoardDocument>> DownloadDocumentsAsync()
+    {
+        using var response = await SendDocumentRequestAsync("api/documents");
+        return await ReadResponseAsync<List<BoardDocument>>(response);
+    }
+    public async Task<BoardDocumentView> DownloadDocumentAsync(string path)
+    {
+        using var response = await SendDocumentRequestAsync("api/documents/render?path=" + Uri.EscapeDataString(path));
+        return await ReadResponseAsync<BoardDocumentView>(response);
+    }
+    public async Task<byte[]> DownloadDocumentFileAsync(string path)
+    {
+        using var response = await SendDocumentRequestAsync("api/documents/file?path=" + Uri.EscapeDataString(path));
+        if (!response.IsSuccessStatusCode) throw new InvalidOperationException($"附件下载失败（HTTP {(int)response.StatusCode}）。");
+        return await response.Content.ReadAsByteArrayAsync();
+    }
+    private async Task<HttpResponseMessage> SendDocumentRequestAsync(string relativePath)
+    {
+        var session = Session ?? throw new InvalidOperationException("请先登录。");
+        if (!HasPermission("checklist.read")) throw new InvalidOperationException("登录已过期或无文档查看权限。");
+        using var request = new HttpRequestMessage(HttpMethod.Get, new Uri(ValidateServer(ServerAddress), relativePath));
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", session.Token);
+        return await client.SendAsync(request);
+    }
     private static async Task<T> ReadResponseAsync<T>(HttpResponseMessage response)
     {
         string json = await response.Content.ReadAsStringAsync();
@@ -130,6 +154,8 @@ public sealed record BoardSession(string Username, string? DisplayName, string R
 }
 
 public sealed record SavedAccount(string Username, string Password, string ServerAddress);
+public sealed record BoardDocument(string Path, string Title, string Section);
+public sealed record BoardDocumentView(string Path, string Title, string Html);
 
 public static class AccountStorage
 {
