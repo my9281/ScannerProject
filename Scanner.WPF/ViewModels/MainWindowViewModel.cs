@@ -369,8 +369,7 @@ namespace Scanner.WPF.ViewModels
             }
             try
             {
-                UrgentWorkOrderImportResult imported = _workOrderImport.Import(filePath);
-                _search.ReplaceImported(imported.Rules);
+                UrgentWorkOrderImportResult imported = ApplyForecastFile(filePath);
                 SetStatus(FormatResource("UrgentImportSuccess", imported.ImportedRowCount, imported.SnRuleCount, imported.OidRuleCount), false);
                 _dialogs.Information(FormatResource("UrgentImportDialog", imported.ImportedRowCount, imported.SnRuleCount, imported.OidRuleCount), Resource("ImportCompleteTitle"));
             }
@@ -383,6 +382,14 @@ namespace Scanner.WPF.ViewModels
             {
                 RequestFocus();
             }
+        }
+
+        public UrgentWorkOrderImportResult ApplyForecastFile(string filePath)
+        {
+            var imported = _workOrderImport.Import(filePath);
+            _search.ReplaceImported(imported.Rules);
+            SetStatus(FormatResource("UrgentImportSuccess", imported.ImportedRowCount, imported.SnRuleCount, imported.OidRuleCount), false);
+            return imported;
         }
 
         private void OpenLog()

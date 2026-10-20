@@ -1,0 +1,43 @@
+<Window x:Class="Scanner.WPF.BluettiSessionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="{DynamicResource WpfAutoSyncTitle}" Width="1200" Height="860" MinWidth="1000" MinHeight="780"
+        WindowStartupLocation="CenterOwner" Loaded="Window_Loaded">
+    <Grid x:Name="MainGrid" Margin="20">
+        <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <Grid.ColumnDefinitions><ColumnDefinition Width="340"/><ColumnDefinition Width="20"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <TextBlock x:Name="DescriptionText" Grid.ColumnSpan="3" Text="{DynamicResource WpfAutoSyncDescription}" TextWrapping="Wrap" Margin="0,0,0,18"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+        <StackPanel x:Name="FormPanel">
+            <StackPanel x:Name="SettingsPanel">
+            <TextBlock Text="{DynamicResource WpfBluettiAccount}"/>
+            <TextBox x:Name="AccountBox" Margin="0,6,0,12" Padding="8"/>
+            <TextBlock Text="{DynamicResource WpfConfigPassword}"/>
+            <PasswordBox x:Name="PasswordInput" Margin="0,6,0,12" Padding="8"/>
+            <Button x:Name="LoginButton" Content="{DynamicResource WpfBluettiLogin}" Click="Login_Click" Padding="12,8"/>
+            <TextBlock Text="{DynamicResource WpfBluettiSite}" Margin="0,18,0,6"/>
+            <ComboBox x:Name="SiteBox" DisplayMemberPath="SiteName" Padding="6"/>
+            <Button x:Name="SaveButton" Content="{DynamicResource WpfBluettiSave}" Click="Save_Click" IsEnabled="False" Margin="0,10,0,0" Padding="12,8"/>
+            <Button Content="{DynamicResource WpfBluettiClear}" Click="Clear_Click" Margin="0,10,0,0" Padding="12,8"/>
+            <CheckBox x:Name="RememberCredentials" Content="{DynamicResource WpfConfigRemember}" Margin="0,16,0,8"/>
+            <Button Content="{DynamicResource WpfConfigSave}" Click="SaveConfig_Click" Padding="12,8"/>
+            <TextBlock x:Name="ConfigPathText" TextWrapping="Wrap" FontSize="12" Margin="0,8,0,0"/>
+            </StackPanel>
+            <StackPanel x:Name="SyncPanel">
+            <Separator Margin="0,16,0,12"/>
+            <Button x:Name="SyncAllButton" Content="{DynamicResource WpfAutoSyncAll}" Click="SyncAll_Click" IsEnabled="False" Padding="12,10"/>
+            <Button x:Name="SyncForecastButton" Content="{DynamicResource WpfAutoSyncForecast}" Click="SyncForecast_Click" IsEnabled="False" Margin="0,10,0,0" Padding="12,8"/>
+            <Button x:Name="SyncBaseButton" Content="{DynamicResource WpfAutoSyncBase}" Click="SyncBase_Click" IsEnabled="False" Margin="0,10,0,0" Padding="12,8"/>
+            </StackPanel>
+        </StackPanel>
+        </ScrollViewer>
+        <Border x:Name="BrowserBorder" Grid.Row="1" Grid.Column="2" BorderBrush="#79A9C4" BorderThickness="1" Background="White">
+            <wv:WebView2 x:Name="ExportBrowser"/>
+        </Border>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="3">
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Margin="0,16,0,8" Foreground="#0B5F99"/>
+            <TextBox x:Name="ProgressLog" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="90" FontSize="13"/>
+        </StackPanel>
+    </Grid>
+</Window>

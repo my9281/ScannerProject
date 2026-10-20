@@ -17,6 +17,8 @@ namespace Scanner.WPF.Controllers
         TextBlock StatusTextBlock { get; }
         TextBlock WebStatus { get; }
         TextBlock WebLastTime { get; }
+        Button AutoSyncButton { get; }
+        TextBlock AutoSyncStatus { get; }
         Button GlobalBaseButton { get; }
         Button ImportUrgentWorkOrdersButton { get; }
     }

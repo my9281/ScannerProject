@@ -369,3 +369,6 @@ FodyWeavers.xsd
 /artifacts/wpf/
 /artifacts/web-wpf-updates/
 !Scanner.WPF/Properties/PublishProfiles/Lean.pubxml
+# Local BLUETTI credentials are runtime configuration, never source data.
+bluetti.config
+bluetti.config.tmp

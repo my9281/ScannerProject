@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';
+import {FileBlob,SpreadsheetFile} from 'file:///C:/Users/Thomas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs';
+const path='C:/Users/Thomas/Documents/xwechat_files/wxid_k0jq6i5dl9b622_7773/msg/file/2026-10/bluetti 打单成本价(1).XLSX';
+const w=await SpreadsheetFile.importXlsx(await FileBlob.load(path));const s=w.worksheets.getItemAt(0);
+const zh='快递或陆运跟踪单号|运输费用金额|净费用金额|服务类型|陆运服务|发货日期|签收日期（POD）|签收时间（POD）|签收服务区域代码|签收说明|实际重量|实际重量单位|计费重量|计费重量单位|件数|捆包编号|计费设备编号|TD主跟踪单号|服务包装类型|包裹长度|包裹宽度|包裹高度|体积重量除数|尺寸单位|收件人姓名|收件人公司|收件人地址第1行|收件人地址第2行|收件人城市|收件人州/省|收件人邮编|收件人国家/地区|寄件人公司|寄件人姓名|寄件人地址第1行|寄件人地址第2行|寄件人城市|寄件人州/省|寄件人邮编|寄件人国家/地区|原始客户参考号|原始参考号2|原始参考号3/采购订单号|原始部门参考说明|更新后客户参考号|更新后参考号2|更新后参考号3/采购订单号|更新后部门参考说明|退货授权编号（RMA）|原始收件人地址第1行|原始收件人地址第2行|原始收件人城市|原始收件人州/省|原始收件人邮编|原始收件人国家/地区|分区代码|成本分摊|备用地址第1行|备用地址第2行|备用城市|备用州/省|备用邮编|备用国家/地区代码|交叉参考跟踪单号前缀|交叉参考跟踪单号|报关日期|报关单号|海关货值|海关货值币种代码|申报价值|申报价值币种代码|商品描述|商品国家/地区代码|商品描述|商品国家/地区代码|商品描述|商品国家/地区代码|商品描述|商品国家/地区代码|汇率换算日期|换算汇率|多件合并计费编号|多件合并计费总件数|多件合并计费总重量|多件合并计费总运费|多件合并计费货件总重量|陆运单号地址更正费用折扣金额|陆运单号地址更正费用原价金额|计费方式|分拣枢纽|预估重量|预估重量单位|邮政类别|处理类别|包裹尺寸类别|投递确认|交运日期|多包裹货件包裹编号（MPS）'.split('|');
+if(zh.length!==98)throw Error(zh.length);
+for(let i=99;i<=200;i++)zh.push(i%2?'跟踪单号费用说明':'跟踪单号费用金额');zh.push('货件备注');
+console.log('headers',zh.length);
+await fs.writeFile(new URL('./headers.json',import.meta.url),JSON.stringify(zh));
+s.getRange('A1:GS1').values=[zh];w.recalculate();
+console.log((await w.inspect({kind:'table',range:'Data!A1:H2',tableMaxRows:2,tableMaxCols:8,maxChars:1200})).ndjson);
+await fs.writeFile(new URL('./translated-preview.png',import.meta.url),new Uint8Array(await (await w.render({sheetName:'Data',range:'A1:H4',scale:1.5,format:'png'})).arrayBuffer()));
+await (await SpreadsheetFile.exportXlsx(w)).save('D:/GitRepos/ScannerProject/outputs/aug_rebound/translated-stage.xlsx');

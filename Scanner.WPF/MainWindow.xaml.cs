@@ -27,16 +27,22 @@ namespace Scanner.WPF
         System.Windows.Controls.TextBlock IMainWindowView.StatusTextBlock => ScanContent.StatusTextBlock;
         System.Windows.Controls.TextBlock IMainWindowView.WebStatus => ScanContent.WebStatus;
         System.Windows.Controls.TextBlock IMainWindowView.WebLastTime => ScanContent.WebLastTime;
+        System.Windows.Controls.Button IMainWindowView.AutoSyncButton => AutoSyncButton;
+        System.Windows.Controls.TextBlock IMainWindowView.AutoSyncStatus => AutoSyncStatus;
         System.Windows.Controls.Button IMainWindowView.GlobalBaseButton => GlobalBaseButton;
         System.Windows.Controls.Button IMainWindowView.ImportUrgentWorkOrdersButton => ImportUrgentWorkOrdersButton;
+        private void ImportGlobalBase_Click(object sender, RoutedEventArgs e) => _controller.ImportGlobalBase_Click(sender, e);
         private void DirectoryLanguage_Click(object sender, RoutedEventArgs e)
         {
             var button = (System.Windows.Controls.Button)sender;
             ((Scanner.WPF.ViewModels.MainWindowViewModel)DataContext).ChangeLanguageCommand.Execute(button.Tag);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e) => _controller.Window_Loaded(sender, e);
+        private void OpenBluettiSession_Click(object sender, RoutedEventArgs e)
+            => _controller.OpenAutoSync();
+        private void OpenSystemSettings_Click(object sender, RoutedEventArgs e)
+            => new BluettiSessionWindow(null, null, true) { Owner = this }.ShowDialog();
         private void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) => _controller.ScanTextBox_GotKeyboardFocus(sender, e);
-        private void ImportGlobalBase_Click(object sender, RoutedEventArgs e) => _controller.ImportGlobalBase_Click(sender, e);
         private void OpenMonthlyReport_Click(object sender, RoutedEventArgs e) => _controller.OpenMonthlyReport_Click(sender, e);
         private void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e) => _controller.OpenRegistrationRepair_Click(sender, e);
         private void OpenBatchLabel_Click(object sender, RoutedEventArgs e) => _controller.OpenBatchLabel_Click(sender, e);

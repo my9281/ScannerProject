@@ -16,7 +16,7 @@ namespace Scanner.BreezaryStar.CheckBoard
                 });
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+		builder.Logging.AddDebug();
 #endif
 
             builder.Services.AddSingleton<Services.AccountClient>();

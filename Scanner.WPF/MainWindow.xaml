@@ -54,6 +54,13 @@
         </Style>
     </Window.Resources>
     <Grid>
+        <Grid.Style>
+            <Style TargetType="Grid">
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False"><Setter Property="Opacity" Value="0.45"/></Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Style>
         <Grid x:Name="DirectoryPanel" Margin="36,24">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -70,14 +77,21 @@
             </Grid>
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
                 <StackPanel Orientation="Vertical">
-                    <GroupBox Header="{DynamicResource DirectoryBaseData}">
+                    <GroupBox Header="{DynamicResource WpfAutoSyncTitle}">
                         <WrapPanel Orientation="Horizontal" ItemWidth="350">
-<Button ToolTip="{DynamicResource WpfComplete049}" x:Name="GlobalBaseButton" Style="{StaticResource FeatureCard}" Click="ImportGlobalBase_Click">
+                            <Button x:Name="AutoSyncButton" Style="{StaticResource FeatureCard}" Click="OpenBluettiSession_Click" ToolTip="{DynamicResource WpfAutoSyncDescription}">
                                 <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE72C;" Style="{StaticResource FeatureIcon}"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource WpfOneClickRefresh}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock x:Name="AutoSyncStatus" Text="{DynamicResource WpfAutoSyncDescription}" Style="{StaticResource FeatureDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                            <Button x:Name="GlobalBaseButton" Style="{StaticResource FeatureCard}" Click="ImportGlobalBase_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE8B7;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{DynamicResource WpfComplete048}" Style="{StaticResource FeatureTitle}"/>
@@ -85,29 +99,13 @@
                                     </StackPanel>
                                 </Grid>
                             </Button>
-<Button ToolTip="{DynamicResource WpfComplete059}" x:Name="ImportUrgentWorkOrdersButton" Style="{StaticResource FeatureCard}" Command="{Binding ImportUrgentWorkOrdersCommand}">
+                            <Button x:Name="ImportUrgentWorkOrdersButton" Style="{StaticResource FeatureCard}" Command="{Binding ImportUrgentWorkOrdersCommand}">
                                 <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
                                     <TextBlock Text="&#xE7BA;" Style="{StaticResource FeatureIcon}"/>
                                     <StackPanel Grid.Column="1" VerticalAlignment="Center">
                                         <TextBlock Text="{DynamicResource WpfComplete058}" Style="{StaticResource FeatureTitle}"/>
                                         <TextBlock Text="{DynamicResource WpfComplete059}" Style="{StaticResource FeatureDescription}"/>
-                                    </StackPanel>
-                                </Grid>
-                            </Button>
-<Button ToolTip="{DynamicResource WpfComplete060}" Style="{StaticResource FeatureCard}" Command="{Binding RefreshCommand}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="70"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="&#xE72C;" Style="{StaticResource FeatureIcon}"/>
-                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                        <TextBlock Text="{DynamicResource FooterRefresh}" Style="{StaticResource FeatureTitle}"/>
-                                        <TextBlock Text="{DynamicResource WpfComplete060}" Style="{StaticResource FeatureDescription}"/>
                                     </StackPanel>
                                 </Grid>
                             </Button>
@@ -243,6 +241,20 @@
                                     <TextBlock Text="{DynamicResource WpfComplete012}" Style="{StaticResource FeatureTitle}"/>
                                     <TextBlock Text="{DynamicResource WpfComplete055}" Style="{StaticResource FeatureDescription}"/>
                                 </StackPanel></Grid></Button>
+                        </WrapPanel>
+                    </GroupBox>
+                    <GroupBox Header="{DynamicResource WpfSystemSettings}">
+                        <WrapPanel Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenSystemSettings_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE713;" Style="{StaticResource FeatureIcon}"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource WpfSystemSettings}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfSystemSettingsDescription}" Style="{StaticResource FeatureDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
                         </WrapPanel>
                     </GroupBox>
                 </StackPanel>

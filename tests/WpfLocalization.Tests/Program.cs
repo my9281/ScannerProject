@@ -13,6 +13,11 @@ internal static class Program
  static void Main(string[] args)
  {
   var root = args[0];
+  var directoryMarkup = XDocument.Load(Path.Combine(root,"Scanner.WPF","MainWindow.xaml"));
+  var directoryGroups = directoryMarkup.Descendants().Where(e=>e.Name.LocalName=="GroupBox").ToArray();
+  if ((string)directoryGroups.Last().Attribute("Header") != "{DynamicResource WpfSystemSettings}") throw new Exception("System settings must be the last directory group.");
+  if (directoryMarkup.Descendants().Any(e=>(string)e.Attribute("Command")=="{Binding RefreshCommand}")) throw new Exception("Manual refresh button still exists.");
+  if (directoryGroups.First().Descendants().Count(e=>e.Name.LocalName=="Button") != 3) throw new Exception("Refresh and both manual import entries are required.");
   var app = new Scanner.WPF.App(); app.InitializeComponent();
   var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
   Dictionary<string,string> baseline = null;
@@ -39,6 +44,20 @@ internal static class Program
    {
     if(window.Icon==null) throw new Exception("Missing icon "+window.GetType().Name);
     var content=(FrameworkElement)window.Content;
+    if(window is MainWindow)
+    {
+     content.Measure(new Size(window.Width-16,window.Height-39));
+     content.Arrange(new Rect(0,0,window.Width-16,window.Height-39));
+     content.UpdateLayout();
+     content.IsEnabled=false;
+     if(((System.Windows.Controls.Button)window.FindName("AutoSyncButton")).IsEnabled ||
+        ((System.Windows.Controls.Button)window.FindName("GlobalBaseButton")).IsEnabled ||
+        ((System.Windows.Controls.Button)window.FindName("ImportUrgentWorkOrdersButton")).IsEnabled || content.Opacity!=0.45)
+      throw new Exception("Busy state must disable and dim the complete main interface: opacity="+content.Opacity+", refresh enabled="+((System.Windows.Controls.Button)window.FindName("AutoSyncButton")).IsEnabled);
+     content.IsEnabled=true;
+     if(!((System.Windows.Controls.Button)window.FindName("AutoSyncButton")).IsEnabled || content.Opacity!=1)
+      throw new Exception("Busy state must restore the main interface.");
+    }
     int width=(int)window.Width-16,height=(int)window.Height-39;
     content.Measure(new Size(width,height));content.Arrange(new Rect(0,0,width,height));content.UpdateLayout();
     var visual=new DrawingVisual();
