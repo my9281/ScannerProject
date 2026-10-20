@@ -4,6 +4,8 @@
 
 ## 1. 工程与文档
 
+2026-10-21 补充：完整的 17 个工程清单、BreezaryStar 三个应用与引用关系见 [工程总览](docs/项目结构审计.md)。下表为主要工程分组；共享注入工程的实际名称为 Scanner.DI。上架现场闭环状态见 [SOP 完备性检查](docs/上架SOP完备性检查.md)。
+
 | 工程 | 定位与状态 | 文档 |
 | --- | --- | --- |
 | Scanner.WPF | .NET 10 Windows WPF，主仓库工作台 | 本文第 3 节 |
@@ -11,7 +13,7 @@
 | Scanner.CheckListBoard | 原生 MAUI 平板登录、权限、真实工单读写 | [平板文档](Scanner.CheckListBoard/README.md) |
 | Scanner.Web | ASP.NET Core 10 Web 页面和统一业务 API | 本文第 6–8 节 |
 | Scanner.MaUI | 原 Mac 迁移客户端，已接入业务，不是空模板 | 本文第 5 节 |
-| Scanner.Models / Helpers / Controllers / ViewModels / DependencyInjection | 共享模型、业务规则、控制器和服务 | [共享工程](docs/shared-projects.md) |
+| Scanner.Models / Helpers / Controllers / ViewModels / DI | 共享模型、业务规则、控制器和服务 | [共享工程](docs/shared-projects.md) |
 | Scanner.Server.Model / BLL / DAL | 服务端模型、校验、数据库访问 | 本文第 7 节 |
 | Scanner.Rongta.Android | 容大 Android 打印 SDK 绑定 | [SDK 文档](Scanner.Rongta.Android/README.md) |
 

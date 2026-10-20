@@ -1,5 +1,7 @@
 # 壹仓 PDA / Scanner.AndroidTester
 
+操作入口：[系统安装与维护](../docs/系统使用与维护.md)、[良品区操作 SOP](../docs/sop/良品区操作SOP.md)。良品区内换托使用目标托盘重新扫描并上传；本次运行去重、待上传保护与工单位置差异须按 SOP 核对。当前无独立移库按钮，库位扫描不移动设备。
+
 更新：2026-10-09。对应 androidtest，主流程采用原生 MAUI 页面，不依赖旧 Blazor/WebView。Web、SQL 和全平台需求见 [总文档](../request.md)。
 
 ## 运行与首页

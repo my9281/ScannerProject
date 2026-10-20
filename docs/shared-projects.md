@@ -1,4 +1,6 @@
-# 公共项目（第一阶段）
+# 共享工程说明
+
+核对：2026-10-21。完整工程清单见 [工程总览](项目结构审计.md)。以下说明共享实现及其边界。
 
 - `Scanner.Models`：两端使用的数据模型。保留既有命名空间，以免改变调用和序列化契约。`MauiContracts` 中的登录、工单 DTO 暂时仍与 WPF DTO 分开，分别使用 System.Text.Json 和 Newtonsoft.Json；本阶段不合并接口契约。
 - `Scanner.Helpers`：跨平台 Excel 读取、检测匹配、导出、紧急工单导入，以及基础表缓存。纯计算和无状态操作继续使用静态方法，不强行为每个类添加接口。
@@ -6,7 +8,7 @@
 
 引用方向：客户端 → DI / Helpers / Models；DI → Helpers → Models。公共项目不引用客户端项目。原有源文件已移动，不再通过 Compile Link 共享。
 
-Models 目标为 netstandard2.0。Helpers 和 DI 多目标 net472 / net10.0，以保留紧急工单 CSV 使用的 TextFieldParser 行为，并兼容 WPF 的 .NET Framework 4.7.2 和 MAUI。
+Models、Controllers、ViewModels 目标为 netstandard2.0。Helpers 和 DI 多目标 net472 / net10.0，保留兼容目标及紧急工单 CSV 的 TextFieldParser 行为。当前 WPF 主程序使用 .NET 10，不是 .NET Framework 4.7.2。Controllers 提供控制器生命周期与工厂契约，ViewModels 提供属性通知基类；具体界面逻辑留在各客户端。
 
 打印、界面文本、窗口弹框，以及仍依赖客户端服务的 Helper 暂留各客户端。这次没有改变打印渲染或网络调用流程，也没有把全部服务都改成 DI。
 

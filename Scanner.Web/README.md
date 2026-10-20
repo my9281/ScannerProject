@@ -1,5 +1,7 @@
 # Scanner.Web 文档入口
 
+首次安装与数据库/账号初始化、升级备份和排障统一见 [系统使用与维护](../docs/系统使用与维护.md)。旧结构快照不是完整新版初始化脚本，公开注册仍关闭。
+
 BreezaryStar Android 扫码入库：新表脚本 `Database/019_breezarystar_inbound_scans.sql`，管理员查看页 `/breezary-inbound.html`；设备缓存、上传设置及接口见 [AndroidScanner 说明](../BreezaryStar/Scanner.BreezaryStar.AndroidScanner/README.md)。
 
 BreezaryStar 腾讯文档：管理员授权及读取测试页 `/tencent-docs.html`；开放平台回调地址、服务器配置和权限要求见 [腾讯文档 OAuth 接入](TENCENT_DOCS.md)。
