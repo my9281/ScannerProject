@@ -18,8 +18,8 @@
   document.querySelector('#start').textContent=start;document.querySelector('#end').textContent=end;
   const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   async function load(){try{
-    const query=new URLSearchParams({ts:start,te:end}),key=sessionStorage.getItem('uploadApiKey')||'';
-    const response=await fetch(`/api/shelved-pallets/directory?${query}`,{headers:{'X-Upload-Key':key}}),result=await response.json().catch(()=>({}));
+    const query=new URLSearchParams({ts:start,te:end});
+    const response=await fetch(`/api/shelved-pallets/directory?${query}`),result=await response.json().catch(()=>({}));
     if(!response.ok)throw new Error(result.message||`请求失败（HTTP ${response.status}）`);
     const data=result.pallets||[];
     rows.innerHTML=data.length?data.map((item,index)=>{const url=`/pallet-data.html?t=${encodeURIComponent(item.shelvingDate)}&p=${encodeURIComponent(item.palletNumber)}`;return `<tr><td class="number">${index+1}</td><td>${escapeHtml(item.shelvingDate)}</td><td><a class="link" href="${url}">${escapeHtml(item.palletNumber)}</a></td><td>${item.itemCount}</td><td>${item.skuCount}</td></tr>`}).join(''):'<tr><td colspan="5" class="empty">该时间范围内没有托盘数据</td></tr>';

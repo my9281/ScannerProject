@@ -9,12 +9,12 @@ namespace Scanner.Web.Controllers;
 
 [ApiController]
 [Route("api/shelved-pallets")]
-[ApiKey]
 public sealed class ShelvedPalletsController(
     IShelvedPalletService pallets,
     IFeishuRobotService feishu,
     IOptions<FeishuRobotOptions> feishuOptions) : ControllerBase
 {
+    [ApiKey]
     [HttpGet("all")]
     public async Task<ActionResult<ShelvedPalletTableResult>> GetAll(CancellationToken cancellationToken)
         => Ok(await pallets.GetAllAsync(cancellationToken));
@@ -63,6 +63,7 @@ public sealed class ShelvedPalletsController(
         return Ok(new PalletDirectoryResult(ts, te, result));
     }
 
+    [ApiKey]
     [HttpPost]
     public async Task<ActionResult<CreateShelvedPalletBatchResult>> Create(
         [FromBody] CreateShelvedPalletBatchRequest request,
@@ -84,6 +85,7 @@ public sealed class ShelvedPalletsController(
         return Ok(result);
     }
 
+    [ApiKey]
     [HttpGet]
     public async Task<ActionResult<IReadOnlyList<ShelvedPalletRecord>>> Query(
         [FromQuery] DateTime? from,

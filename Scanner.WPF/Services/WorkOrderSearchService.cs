@@ -1,4 +1,4 @@
-using Scanner.Models;
+﻿using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +33,7 @@ namespace Scanner.WPF.Services
             string normalized = NormalizeCode(code);
             if (isOid)
             {
-                _activeOidRule = _importedRules.Where(item => item.IsOidRule && EndsWithOidSuffix(normalized, item.TrackingNumber)).OrderByDescending(item => NormalizeCode(item.TrackingNumber).Length).FirstOrDefault();
+                _activeOidRule = _importedRules.Where(item => item.IsOidRule && (item.IsForecast ? MatchesForecast(normalized, item.TrackingNumber) : EndsWithOidSuffix(normalized, item.TrackingNumber))).OrderByDescending(item => NormalizeCode(item.TrackingNumber).Length).FirstOrDefault();
                 if (_activeOidRule != null)
                 {
                     return new WorkOrderMatch(_activeOidRule, false);
@@ -65,6 +65,11 @@ namespace Scanner.WPF.Services
                 return importedSn;
             }
             return _onlineWorkOrders.FirstOrDefault(item => EqualsCode(item.Sn, normalizedCode) || EqualsCode(item.TrackingNumber, normalizedCode));
+        }
+
+        private static bool MatchesForecast(string code, string tracking)
+        {
+            return EndsWithOidSuffix(code, tracking);
         }
 
         private static bool EndsWithOidSuffix(string oid, string configuredSuffix)

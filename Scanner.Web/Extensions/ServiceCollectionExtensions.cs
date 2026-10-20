@@ -22,6 +22,18 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<WpfUpdateService>();
         services.AddSingleton<DocumentationService>();
         services.AddMemoryCache();
+        services.Configure<TencentDocsOptions>(configuration.GetSection(TencentDocsOptions.SectionName));
+        services.AddHttpClient(TencentDocsService.HttpClientName, client => client.Timeout = TimeSpan.FromSeconds(30))
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })
+            .RemoveAllLoggers();
+        services.AddSingleton<TencentDocsTokenStore>();
+        services.AddSingleton<TencentDocsService>();
+        services.AddScoped<IBreezaryStore, MySqlBreezaryStore>();
+        services.AddScoped<IBreezaryRemote, BreezaryRemote>();
+        services.AddScoped<BreezarySyncService>();
+        services.AddScoped<IBreezaryInboundStore, MySqlBreezaryInboundStore>();
+        services.AddScoped<BreezaryInboundService>();
+        services.AddHostedService<BreezarySyncWorker>();
         services.AddScoped<HomeMetricsService>();
         services.AddScoped<IAccountService, MySqlAccountService>();
         services.AddScoped<IWorkOrderService, MySqlWorkOrderService>();

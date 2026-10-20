@@ -1,4 +1,4 @@
-using DesktopScan = Scanner.WPF.Services.ScanService;
+﻿using DesktopScan = Scanner.WPF.Services.ScanService;
 using DesktopOid = Scanner.WPF.Services.OidService;
 using MobileScan = Scanner.MaUI.Services.ScanService;
 using MobileOid = Scanner.MaUI.Services.OidService;
@@ -60,6 +60,45 @@ Assert(middleSearch.Resolve("420123456789999", true) == null, "OID rule must mat
 var shortSearch = new WorkOrderSearchService();
 shortSearch.ReplaceImported(new[] { new WorkOrderRemark { TrackingNumber = "12345678", Remark = "不应匹配", IsUrgent = true, IsOidRule = true } });
 Assert(shortSearch.Resolve("42099912345678", true) == null, "O-column suffix must be longer than eight characters");
+
+var file = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".csv");
+try
+{
+    File.WriteAllText(file, "A,B,C,D,E,F,G,SN码,I,J,故障描述,售后处理类型,M,退货物流商,退货运单号\n" +
+        "a,,,,,,,WRONG-SN,,,无法开机,退回维修,,FedEx, 878721809793\n" +
+        "b,,,,,,,OTHER-SN,,,无法充电,退回换货,,FedEx,878721809793\n" +
+        "c,,,,,,,WRONG-SN,,,忽略,退回维修,,UPS,123456789012\n" +
+        "d,,,,,,,WRONG-SN,,,忽略,退回维修,,FedEx,   \n" +
+        "e,,,,,,,WRONG-SN,,,忽略,退回维修,,FedEx,1234567\n" +
+        "f,,,,,,,WRONG-SN,,,忽略,退回维修,,FedEx,12345678\n" +
+        "g,,,,,,,WRONG-SN,,,九位预报,退回换货,,FedEx, 123 456 789 \n");
+    var result = new Scanner.Helpers.UrgentWorkOrderImportHelper().Import(file);
+    Assert(result.ImportedRowCount == 3 && result.SnRuleCount == 0 && result.OidRuleCount == 2, "FedEx only and deduplication");
+    var rule = result.Rules.Single(r => r.TrackingNumber == "878721809793");
+    Assert(rule.IsForecast && !rule.IsUrgent && rule.IsRepair && rule.Remark == "无法开机；无法充电", "Forecast remarks and repair");
+    var search = new WorkOrderSearchService();
+    search.ReplaceImported(result.Rules);
+    Assert(search.Resolve("WRONG-SN", false) == null, "No source SN matching");
+    Assert(search.Resolve("878721809793", true)?.WorkOrder == rule, "Tracking match");
+    Assert(search.Resolve("REAL-SN", false)?.WorkOrder == rule, "Carry to SN");
+    Assert(search.Resolve(new string('9', 22) + "878721809793", true)?.WorkOrder == rule, "Long barcode tail");
+    Assert(search.Resolve("999878721809793", true)?.WorkOrder == rule, "Suffix match does not require 34 digits");
+    Assert(search.Resolve("999123456789", true)?.WorkOrder.Remark == "九位预报", "Nine digit suffix and whitespace normalization");
+    Assert(search.Resolve("123456789999", true) == null && search.Resolve("REAL-SN", false) == null, "Middle match rejected and clears context");
+    Assert(search.Resolve("12345678", true) == null, "Eight digits do not trigger forecast");
+    search.ReplaceImported(new[] {
+        new WorkOrderRemark { IsOidRule = true, IsForecast = true, TrackingNumber = " " },
+        new WorkOrderRemark { IsOidRule = true, IsForecast = true, TrackingNumber = "12345678" }
+    });
+    Assert(search.Resolve("99912345678", true) == null, "Blank and short rules rejected at matching layer too");
+    if (args.Length > 0)
+    {
+        var sample = new Scanner.Helpers.UrgentWorkOrderImportHelper().Import(args[0]);
+        Assert(sample.OidRuleCount > 0 && sample.Rules.All(r => r.IsForecast && string.IsNullOrEmpty(r.Sn)), "Actual sample");
+        Console.WriteLine($"Sample: {sample.ImportedRowCount} rows, {sample.OidRuleCount} forecasts.");
+    }
+}
+finally { File.Delete(file); }
 
 Console.WriteLine($"PASS: {cases.Length} classification cases; OID occurrence and urgent work-order matching rules.");
 

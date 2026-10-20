@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:Scanner.BreezaryStar.CheckBoard.Models"
+             x:Class="Scanner.BreezaryStar.CheckBoard.ForecastPage" Title="查看预报" BackgroundColor="#080A0C">
+    <Grid Padding="18" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="12">
+        <Grid ColumnDefinitions="*,Auto">
+            <Label x:Name="CountLabel" Text="收货预报" FontSize="22" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
+            <Button x:Name="RefreshButton" Grid.Column="1" Text="刷新预报" Clicked="OnRefreshClicked" BackgroundColor="#8FCFDA" TextColor="#080A0C" />
+        </Grid>
+        <SearchBar x:Name="SearchInput" Grid.Row="1" Placeholder="搜索工单、SKU、运单、状态" TextChanged="OnSearchChanged" TextColor="White" PlaceholderColor="#929EAA" />
+        <HorizontalStackLayout Grid.Row="2" Spacing="10">
+            <ActivityIndicator x:Name="BusyIndicator" Color="#8FCFDA" />
+            <Label x:Name="StatusLabel" Text="读取服务器本地数据库，不调用腾讯接口" TextColor="#D9B866" FontSize="12" VerticalOptions="Center" />
+        </HorizontalStackLayout>
+        <CollectionView x:Name="ForecastList" Grid.Row="3" SelectionMode="None">
+            <CollectionView.EmptyView><Label Text="暂无预报。可刷新重试；首次使用请先在 Web 端同步入库。" TextColor="#929EAA" Margin="12" /></CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ForecastRow">
+                    <Border Margin="0,0,0,12" Padding="16" BackgroundColor="#151D25" Stroke="#408FCFDA" StrokeShape="RoundRectangle 8">
+                        <VerticalStackLayout Spacing="9">
+                            <Label Text="{Binding Heading}" FontSize="18" FontAttributes="Bold" TextColor="White" />
+                            <Label Text="{Binding Status}" TextColor="#8FCFDA" />
+                            <Label Text="{Binding Transport}" TextColor="#D5DCE3" />
+                            <Label Text="{Binding Dates}" TextColor="#D5DCE3" />
+                            <Label Text="{Binding Notes}" TextColor="#D5DCE3" />
+                            <HorizontalStackLayout Spacing="12">
+                                <Label Text="{Binding SyncStatus}" TextColor="#D9B866" FontSize="11" />
+                                <Label Text="{Binding RecordId, StringFormat='记录 ID：{0}'}" TextColor="#929EAA" FontSize="11" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

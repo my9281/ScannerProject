@@ -1,4 +1,4 @@
-<ResourceDictionary
+﻿<ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:system="clr-namespace:System;assembly=mscorlib">
@@ -97,12 +97,12 @@
     <system:String x:Key="WebError">Error</system:String>
     <system:String x:Key="FetchFailed">No se pudieron obtener las observaciones: {0}</system:String>
     <system:String x:Key="FetchFailedTitle">Error de consulta</system:String>
-    <system:String x:Key="UrgentImportSuccess">Importación urgente completada: {0} filas, {1} reglas SN y {2} reglas OID.</system:String>
-    <system:String x:Key="UrgentImportDialog">Se importaron {0} filas válidas.&#10;&#10;Reglas SN urgentes: {1}&#10;Reglas OID por contenido: {2}</system:String>
+    <system:String x:Key="UrgentImportSuccess">Preavisos importados: {0} filas válidas, {2} envíos FedEx.</system:String>
+    <system:String x:Key="UrgentImportDialog">Se importaron {0} filas como {2} preavisos FedEx.&#10;&#10;Origen: Órdenes → Posventa → Exportación de reclamaciones DTC.&#10;Las etiquetas muestran la descripción de la columna K y la marca de reparación según la columna L.</system:String>
     <system:String x:Key="ImportCompleteTitle">Importación completada</system:String>
-    <system:String x:Key="UrgentImportFailed">Error al importar órdenes urgentes: {0}</system:String>
-    <system:String x:Key="UrgentImportFailedTitle">Error de importación urgente</system:String>
-    <system:String x:Key="SelectUrgentWorkOrderTitle">Seleccione un archivo Excel o CSV de órdenes urgentes</system:String>
+    <system:String x:Key="UrgentImportFailed">Error al importar preavisos: {0}</system:String>
+    <system:String x:Key="UrgentImportFailedTitle">Error de importación de preavisos</system:String>
+    <system:String x:Key="SelectUrgentWorkOrderTitle">Seleccionar Excel o CSV de reclamaciones DTC</system:String>
     <system:String x:Key="UrgentWorkOrderFilter">Libros de Excel (*.xlsx)|*.xlsx|Archivos CSV (*.csv)|*.csv|Todos los archivos (*.*)|*.*</system:String>
     <system:String x:Key="Gs1AreaWarning">Advertencia: se detectó el código de zona GS1 AI 420. No se registró ni imprimió.</system:String>
     <system:String x:Key="ModelSelectionTitle">Seleccionar modelo de impresión</system:String>
@@ -339,8 +339,8 @@
     <system:String x:Key="WpfComplete055" xml:space="preserve">Importe Excel para imprimir etiquetas SKU/SN; marque los desechados con X</system:String>
     <system:String x:Key="WpfComplete056" xml:space="preserve">Otras funciones</system:String>
     <system:String x:Key="WpfComplete057" xml:space="preserve">Generar y abrir el informe de escaneos de hoy</system:String>
-    <system:String x:Key="WpfComplete058" xml:space="preserve">Importar órdenes</system:String>
-    <system:String x:Key="WpfComplete059" xml:space="preserve">Importar órdenes urgentes y reglas de envío</system:String>
+    <system:String x:Key="WpfComplete058" xml:space="preserve">Preavisos</system:String>
+    <system:String x:Key="WpfComplete059" xml:space="preserve">Importar reclamaciones DTC y buscar por seguimiento FedEx</system:String>
     <system:String x:Key="WpfComplete060" xml:space="preserve">Recargar órdenes y notas en línea</system:String>
     <system:String x:Key="WpfComplete061" xml:space="preserve">← Volver a funciones</system:String>
     <system:String x:Key="WpfComplete062" xml:space="preserve">Filtrar por fecha de procesamiento y conservar todos los campos.</system:String>

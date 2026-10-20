@@ -21,8 +21,8 @@
   async function load(){
     if(!date||!pallet){rows.innerHTML='<tr><td colspan="3" class="empty error">地址必须包含 t 和 p 参数</td></tr>';message.textContent='示例：?t=2026-09-24&p=1';message.className='message error';return}
     try{
-      const key=sessionStorage.getItem('uploadApiKey')||'',query=new URLSearchParams({t:date,p:pallet});
-      const response=await fetch(`/api/shelved-pallets/view?${query}`,{headers:{'X-Upload-Key':key}}),result=await response.json().catch(()=>({}));
+      const query=new URLSearchParams({t:date,p:pallet});
+      const response=await fetch(`/api/shelved-pallets/view?${query}`),result=await response.json().catch(()=>({}));
       if(!response.ok)throw new Error(result.message||`请求失败（HTTP ${response.status}）`);
       const data=result.items||[];
       rows.innerHTML=data.length?data.map((item,index)=>`<tr><td class="number">${index+1}</td><td>${escapeHtml(item.sku)}</td><td>${escapeHtml(item.sn)}</td></tr>`).join(''):'<tr><td colspan="3" class="empty">没有符合条件的数据</td></tr>';

@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Scanner.Models
 {
@@ -45,6 +45,9 @@ namespace Scanner.Models
 
         [JsonProperty("is_urgent")]
         public bool IsUrgent { get; set; }
+
+        [JsonIgnore]
+        public bool IsForecast { get; set; }
 
         [JsonIgnore]
         public bool IsRepair { get; set; }

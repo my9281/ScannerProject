@@ -10,6 +10,7 @@
 *.userosscache
 *.sln.docstates
 Scanner.Web/appsettings.Local.json
+Scanner.Web/App_Data/TencentDocs/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs

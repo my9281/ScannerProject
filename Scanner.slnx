@@ -1,4 +1,13 @@
 <Solution>
+  <Folder Name="/BreezaryStar/">
+    <Project Path="BreezaryStar/Scanner.BreezaryStar.AndroidScanner/Scanner.BreezaryStar.AndroidScanner.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="BreezaryStar/Scanner.BreezaryStar.CheckBoard/Scanner.BreezaryStar.CheckBoard.csproj">
+      <Deploy Solution="Debug|*" />
+    </Project>
+    <Project Path="BreezaryStar/ScannerProject.BreezaryStar.WPF/ScannerProject.BreezaryStar.WPF.csproj" />
+  </Folder>
   <Project Path="Scanner.AndroidTester/Scanner.AndroidTester.csproj" Id="6343230e-1085-4925-9b38-9f5dadad4ea6" />
   <Project Path="Scanner.CheckListBoard/Scanner.CheckListBoard.csproj" Id="97e8f173-a874-4069-9b83-6cfaf3d90b38">
     <Deploy Solution="Debug|*" />

@@ -1,4 +1,4 @@
-using Scanner.Models;
+﻿using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -275,7 +275,8 @@ namespace Scanner.WPF.Helpers
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
-            string remark = urgent ? Shorten(workOrder.Remark, 50) : string.Empty;
+            bool hasRemark = workOrder != null && (urgent || workOrder.IsForecast);
+            string remark = hasRemark ? Shorten(workOrder.Remark, 50) : string.Empty;
             var canvas = new Canvas
             {
                 Width = WideLabelWidth,
@@ -300,7 +301,7 @@ namespace Scanner.WPF.Helpers
             }
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 430, 85), 78, 170, 420, 68, Stretch.Fill);
             AddText(canvas, serialNumber, 17, 35, 238, WideLabelWidth - 70);
-            if (urgent && !string.IsNullOrWhiteSpace(remark))
+            if (hasRemark && !string.IsNullOrWhiteSpace(remark))
             {
                 var remarkText = CreateText("备注：" + remark, 18, WideLabelWidth - 60);
                 remarkText.Height = 58;
@@ -310,7 +311,7 @@ namespace Scanner.WPF.Helpers
                 Canvas.SetTop(remarkText, 267);
                 canvas.Children.Add(remarkText);
             }
-            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 20 : 25, 35, urgent ? 348 : 310, WideLabelWidth - 70);
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), hasRemark ? 20 : 25, 35, hasRemark ? 348 : 310, WideLabelWidth - 70);
             if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, replacementLabel ? 20 : 260, replacementLabel ? 278 : 280, replacementLabel ? 400 : 300, 102, replacementLabel ? 42 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
             if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 425, 306, 130, 62, 48);
             return canvas;
@@ -320,7 +321,8 @@ namespace Scanner.WPF.Helpers
         {
             bool urgent = workOrder != null && workOrder.IsUrgent;
             bool repair = workOrder != null && workOrder.IsRepair;
-            string remark = urgent ? Shorten(workOrder.Remark, 38) : string.Empty;
+            bool hasRemark = workOrder != null && (urgent || workOrder.IsForecast);
+            string remark = hasRemark ? Shorten(workOrder.Remark, 38) : string.Empty;
             var canvas = new Canvas
             {
                 Width = SquareLabelWidth,
@@ -345,7 +347,7 @@ namespace Scanner.WPF.Helpers
             }
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 360, 80), 30, 151, 324, 60, Stretch.Fill);
             AddText(canvas, serialNumber, 14, 15, 211, SquareLabelWidth - 30);
-            if (urgent && !string.IsNullOrWhiteSpace(remark))
+            if (hasRemark && !string.IsNullOrWhiteSpace(remark))
             {
                 var remarkText = CreateText("备注：" + remark, 15, SquareLabelWidth - 30);
                 remarkText.Height = 84;
@@ -355,7 +357,7 @@ namespace Scanner.WPF.Helpers
                 Canvas.SetTop(remarkText, 238);
                 canvas.Children.Add(remarkText);
             }
-            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), urgent ? 17 : 21, 15, urgent ? 352 : 320, SquareLabelWidth - 30);
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), hasRemark ? 17 : 21, 15, hasRemark ? 352 : 320, SquareLabelWidth - 30);
             if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 15, replacementLabel ? 278 : 280, replacementLabel ? 270 : 354, 102, replacementLabel ? 38 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
             if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 284, 310, 85, 56, 40);
             return canvas;

@@ -96,7 +96,7 @@ Windows 使用标签绘制与默认打印机。Mac Catalyst 绘制 PDF，打开�
 
 ## 6. Web 页面、认证与接口
 
-ASP.NET Core 10，Controller → BLL → DAL，MySqlConnector 数据访问。默认地址 `https://wms.ymforever.com/`。提供主页和登录；注册相关页面/API、域列表、`/pallet-data.html`、`/pallet-directory.html` 当前被入口中间件返回 404，保留代码不代表公开页面可用。
+ASP.NET Core 10，Controller → BLL → DAL，MySqlConnector 数据访问。默认地址 `https://wms.ymforever.com/`。提供主页和登录；注册相关页面/API、域列表保持 404。托盘目录 `/pallet-directory.html?ts=起始日期&te=结束日期` 和每托明细 `/pallet-data.html?t=上架日期&p=托盘号` 可直接访问，无需 Upload Key，主页不提供入口；根地址带 t、p 参数自动跳转至明细。每次上架的数据按日期和托盘号动态展示 SKU/SN。
 
 两套认证分别使用：业务上传/下载使用 `X-Upload-Key` 对应 `Upload:ApiKey`，服务端未配置返回 503，错误或缺少密钥返回 401；平板账号与工单读写使用 Bearer 会话及权限。
 
@@ -126,7 +126,7 @@ ASP.NET Core 10，Controller → BLL → DAL，MySqlConnector 数据访问。默
 
 工单上传默认关联启用的 my9281 账号与有效域，审核位 0、未完成。来源键重复跳过，不重置已完成状态。读取强制当前用户，即使管理员也不能以 userId 读取别人。保存校验归属、审核位、版本；成功版本加一，完成时间 UTC。冲突 409，失效 401，无权限 403。
 
-SKU/SN 头与明细同事务保存；同 GUID 同内容幂等，不同内容 400。数据库时间 UTC，批次号保留 PDA 原值。上架保存与良品区删除同事务。可选飞书通知失败只记录日志，不回滚入库；旧公开托盘页被禁用，通知链接需部署验收。
+SKU/SN 头与明细同事务保存；同 GUID 同内容幂等，不同内容 400。数据库时间 UTC，批次号保留 PDA 原值。上架保存与良品区删除同事务。可选飞书通知失败只记录日志，不回滚入库；托盘页已恢复直接访问，通知链接需部署验收。
 
 专项技术补充：[账号](Scanner.Web/WEB_LOGIN.md)、[工单](Scanner.Web/WORK_ORDERS.md)、[库位](Scanner.Web/Database/warehouse_locations.md)、[批次](Scanner.Web/Database/sku_sn_batches.md)、[托盘](docs/托盘扫描上传.md)。旧“出库检测”入口现名“良品上架”。Web 总体需求以本文为入口。
 
