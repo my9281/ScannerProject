@@ -243,6 +243,31 @@
                                 </StackPanel></Grid></Button>
                         </WrapPanel>
                     </GroupBox>
+
+                    <GroupBox Header="{DynamicResource WpfSupplement0}">
+                        <WrapPanel Orientation="Horizontal" ItemWidth="350">
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenShipmentTracking_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE707;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource WpfSupplement1}" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="{DynamicResource WpfSupplement2}" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel></Grid>
+                            </Button>
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenBluettiLabels_Click">
+                                <Grid>
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions>
+                                    <TextBlock Text="&#xE8A5;" Style="{StaticResource FeatureIcon}"/>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{DynamicResource WpfSupplement3}" Style="{StaticResource FeatureTitle}"/>
+                                        <TextBlock Text="{DynamicResource WpfSupplement4}" Style="{StaticResource FeatureDescription}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Button>
+                            <Button Style="{StaticResource FeatureCard}" Click="OpenOmsShipping_Click"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="70"/><ColumnDefinition/></Grid.ColumnDefinitions><TextBlock Text="&#xE8CB;" Style="{StaticResource FeatureIcon}"/><StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                    <TextBlock Text="{DynamicResource WpfSupplement5}" Style="{StaticResource FeatureTitle}"/>
+                                    <TextBlock Text="{DynamicResource WpfSupplement6}" Style="{StaticResource FeatureDescription}"/>
+                                </StackPanel></Grid>
+                            </Button>
+                        </WrapPanel>
+                    </GroupBox>
                     <GroupBox Header="{DynamicResource WpfSystemSettings}">
                         <WrapPanel Orientation="Horizontal" ItemWidth="350">
                             <Button Style="{StaticResource FeatureCard}" Click="OpenSystemSettings_Click">

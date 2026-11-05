@@ -15,3 +15,7 @@ Bluetooth EDR interface, not its serial-port interface.
 Build with `dotnet build Scanner.Rongta.Android/Scanner.Rongta.Android.csproj`.
 Upstream binary ownership and distribution terms remain with Rongta; this
 repository's license does not relicense this vendor binary.
+
+Listener binding also removes duplicate empty ConnectListener/PrintListener declarations
+from the extracted API metadata. The declarations containing callbacks are retained;
+otherwise generated Java implementors fail compilation and printer callbacks are missing.

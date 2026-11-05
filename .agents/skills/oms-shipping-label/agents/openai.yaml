@@ -1,0 +1,4 @@
+interface:
+  display_name: "OMS 网页填单与人工审核"
+  short_description: "在 OMS 网页协助填写发货资料，填好即停，交给用户人工审核和提交"
+  default_prompt: "使用 $oms-shipping-label，帮我在 OMS 网页填好这条发货资料，填写完成后停下来，等我人工审核和提交。"

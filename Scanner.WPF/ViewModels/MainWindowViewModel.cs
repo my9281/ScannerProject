@@ -231,6 +231,15 @@ namespace Scanner.WPF.ViewModels
                 RequestFocus();
                 return;
             }
+            if (WorkOrderSearchService.NormalizeCode(code) == "00000000")
+            {
+                _search.ClearTrackingCache();
+                _scanning.ClearTrackingCache();
+                SetStatus("已清空上一个快递缓存", false);
+                ScanCode = string.Empty;
+                RequestFocus();
+                return;
+            }
             if (ScanService.IsGs1AreaCode(code))
             {
                 _speech.SpeakGs1AreaWarning();
@@ -252,11 +261,12 @@ namespace Scanner.WPF.ViewModels
                 }
                 WorkOrderMatch match = _search.Resolve(code, scan.Oid.IsOid);
                 WorkOrderRemark matched = match == null ? null : match.WorkOrder;
+                string rmaNumber = matched != null && matched.IsForecast ? matched.RmaNumber : string.Empty;
                 string printCode = match == null ? code : match.GetPrintCode(code);
                 string meterModel = _meterModels.FindModel(printCode);
                 if (scan.Oid.IsOid)
                 {
-                    _scanning.RecordWorkbook(scan, string.Empty);
+                    _scanning.RecordWorkbook(scan, string.Empty, rmaNumber);
                 }
                 if (scan.Oid.IsOid && !scan.Oid.ShouldPrint && !inspectionOk)
                 {
@@ -270,13 +280,13 @@ namespace Scanner.WPF.ViewModels
                         meterModel = _dialogs.SelectMeterModel(_meterModels);
                         if (string.IsNullOrWhiteSpace(meterModel))
                         {
-                            _scanning.RecordWorkbook(scan, string.Empty);
+                            _scanning.RecordWorkbook(scan, string.Empty, rmaNumber);
                             SetStatus(FormatResource("ModelSelectionCancelled", printCode), true);
                             ScanCode = string.Empty;
                             return;
                         }
                     }
-                    _scanning.RecordWorkbook(scan, meterModel);
+                    _scanning.RecordWorkbook(scan, meterModel, rmaNumber);
                     _printing.PrintLabel(printCode, copiesToPrint, matched, meterModel, LabelPaperSize, inspectionOk);
                     if (scan.Oid.ShouldPrint)
                     {
@@ -290,7 +300,7 @@ namespace Scanner.WPF.ViewModels
                 }
                 else
                 {
-                    _scanning.RecordWorkbook(scan, meterModel);
+                    _scanning.RecordWorkbook(scan, meterModel, rmaNumber);
                     SetStatus(FormatResource("SavedWithoutPrint", code), false);
                 }
                 ScanCode = string.Empty;

@@ -5,10 +5,18 @@ namespace Scanner.Server.BLL;
 public interface IPalletScanService
 {
     Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<PalletScanStoredRow?> FindBySnAsync(string sn, CancellationToken cancellationToken = default);
     Task<PalletScanBatchResult> UploadAsync(PalletScanBatchRequest request, CancellationToken cancellationToken = default);
 }
 public sealed class PalletScanService(IPalletScanRepository repository) : IPalletScanService
 {
+    public Task<PalletScanStoredRow?> FindBySnAsync(string sn, CancellationToken cancellationToken = default)
+    {
+        sn = sn?.Trim() ?? string.Empty;
+        if (sn.Length is < 1 or > 100) throw new ArgumentException("SN 必须为 1–100 个字符。");
+        return repository.FindBySnAsync(sn, cancellationToken);
+    }
+
     public Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default) => repository.GetAllAsync(cancellationToken);
     public async Task<PalletScanBatchResult> UploadAsync(PalletScanBatchRequest request, CancellationToken cancellationToken = default)
     {

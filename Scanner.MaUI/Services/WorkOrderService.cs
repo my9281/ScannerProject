@@ -22,7 +22,7 @@ public sealed class WorkOrderSearchService
         var exact = FindExact(normalized); return exact is null ? null : new(exact, true);
     }
     private WorkOrderRemark? FindExact(string code) => _imported.FirstOrDefault(x => !x.IsOidRule && Equal(x.Sn, code)) ?? _online.FirstOrDefault(x => Equal(x.Sn, code) || Equal(x.TrackingNumber, code));
-    private static bool Contains(string oid, string? tracking) { string value = Normalize(tracking); return value.Length > 0 && oid.Contains(value, StringComparison.OrdinalIgnoreCase); }
+    private static bool Contains(string oid, string? tracking) { string value = Normalize(tracking); return value.Length > 8 && oid.EndsWith(value, StringComparison.OrdinalIgnoreCase); }
     private static bool Equal(string? left, string right) => Normalize(left).Equals(right, StringComparison.OrdinalIgnoreCase);
     public static string Normalize(string? value) => string.Concat((value ?? string.Empty).Where(c => !char.IsWhiteSpace(c) && c != '\uFEFF' && c != '\u200B'));
 }

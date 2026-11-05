@@ -1,4 +1,4 @@
-﻿using Scanner.Models;
+using Scanner.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +24,8 @@ namespace Scanner.WPF.Services
             _activeOidRule = null;
         }
 
+        public void ClearTrackingCache() => _activeOidRule = null;
+
         public WorkOrderMatch Resolve(string code, bool isOid)
         {
             if (string.IsNullOrWhiteSpace(code))
@@ -31,6 +33,7 @@ namespace Scanner.WPF.Services
                 return null;
             }
             string normalized = NormalizeCode(code);
+            if (normalized == "00000000") { ClearTrackingCache(); return null; }
             if (isOid)
             {
                 _activeOidRule = _importedRules.Where(item => item.IsOidRule && (item.IsForecast ? MatchesForecast(normalized, item.TrackingNumber) : EndsWithOidSuffix(normalized, item.TrackingNumber))).OrderByDescending(item => NormalizeCode(item.TrackingNumber).Length).FirstOrDefault();
@@ -47,7 +50,9 @@ namespace Scanner.WPF.Services
             }
             if (_activeOidRule != null)
             {
-                return new WorkOrderMatch(_activeOidRule, false);
+                var active = _activeOidRule;
+                if (active.IsForecast) ClearTrackingCache();
+                return new WorkOrderMatch(active, false);
             }
             WorkOrderRemark exactMatch = FindExact(normalized);
             if (exactMatch != null)

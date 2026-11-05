@@ -39,7 +39,7 @@ namespace Scanner.WPF.Helpers
             }
         }
 
-        public static void Append(string path, string model, string sn, string oid)
+        public static void Append(string path, string model, string sn, string oid, string rmaNumber = "", bool pairPendingOid = true)
         {
             EnsureExists(path);
             using (ZipArchive archive = ZipFile.Open(path, ZipArchiveMode.Update))
@@ -50,7 +50,7 @@ namespace Scanner.WPF.Helpers
                 XElement data = document.Root.Element(Main + "sheetData");
                 XElement last = data.Elements(Main + "row").Last();
                 int lastNumber = (int)last.Attribute("r");
-                bool pendingOid = !string.IsNullOrEmpty(CellValue(last, "C")) && string.IsNullOrEmpty(CellValue(last, "B"));
+                bool pendingOid = pairPendingOid && !string.IsNullOrEmpty(CellValue(last, "C")) && string.IsNullOrEmpty(CellValue(last, "B"));
                 if (!string.IsNullOrEmpty(sn) && pendingOid)
                 {
                     SetCell(last, "A" + lastNumber, model);
@@ -60,6 +60,9 @@ namespace Scanner.WPF.Helpers
                 {
                     data.Add(Row(lastNumber + 1, model, sn, oid));
                 }
+                SetCell(data.Elements(Main + "row").First(), "I1", "RMA号");
+                if (!string.IsNullOrEmpty(rmaNumber))
+                    SetCell(data.Elements(Main + "row").Last(), "I" + (string)data.Elements(Main + "row").Last().Attribute("r"), rmaNumber);
                 entry.Delete();
                 Write(archive, "xl/worksheets/sheet1.xml", document);
             }

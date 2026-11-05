@@ -1,0 +1,47 @@
+import fs from 'node:fs/promises';
+import {Workbook,SpreadsheetFile} from 'file:///C:/Users/Thomas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs';
+const dir='D:/GitRepos/ScannerProject/outputs/01a15f1b';
+const src=JSON.parse(await fs.readFile(dir+'/source.json','utf8')).slice(2);
+const wb=Workbook.create();
+const s=wb.worksheets.add('尺寸重量核对表');
+s.showGridLines=false;
+s.getRange('A2').values=[['各机型尺寸重量核对表']];
+s.getRange('A3').values=[['黄色栏为填写区；尺寸按长×宽×高记录，单位 in；重量单位 LB。原表空缺数据保留为空。']];
+s.getRange('A4').values=[['参考来源：各机型尺寸重量数据.xlsx']];
+const headers=['序号','机型','参考重量（LB）','参考尺寸（in）长×宽×高','实测重量（LB）','实测尺寸（in）长×宽×高','核对结果','核对人','核对日期','备注／差异记录'];
+s.getRange('A6:J6').values=[headers];
+const rows=src.map((r,i)=>[i+1,...r,null,null,null,null,null,null]);
+for(let i=0;i<10;i++) rows.push([null,null,null,null,null,null,null,null,null,null]);
+const end=6+rows.length;
+for (const [model,dim,weight] of [['AC300','25*18*22',60],['EL100V2','16*12*16',30]]) {
+  const row=rows.find(r=>r[1]===model);
+  row[4]=weight; row[5]=dim; row[6]='有差异';
+  row[9]=`重量比参考值增加 ${weight-row[2]} LB；尺寸一致。`;
+}
+rows[src.length]=[src.length+1,'AC200MAX',null,null,76,'22*17*23','待补数据',null,null,'新增机型；原表无 AC200MAX 参考数据，待核实。'];
+s.getRange(`A7:J${end}`).values=rows;
+s.getRange(`A2:J${end}`).format.font={name:'Arial',size:11};
+s.getRange('A2').format.font={name:'Arial',size:16,bold:true,color:'#243746'};
+s.getRange('A3:A4').format.font={name:'Arial',size:10,color:'#687787'};
+s.getRange(`A6:J${end}`).format.rowHeight=30;
+s.getRange(`A6:J${end}`).format.verticalAlignment='center';
+s.getRange('A6:J6').format={fill:'#304C66',font:{bold:true,color:'#FFFFFF'},wrapText:true,horizontalAlignment:'center',rowHeight:44};
+const widths=[7,15,18,28,18,28,16,14,16,34];
+widths.forEach((w,i)=>s.getRangeByIndexes(5,i,end-5,1).format.columnWidth=w);
+s.getRange(`C7:C${end}`).setNumberFormat('0.##');
+s.getRange(`E7:E${end}`).setNumberFormat('0.##');
+s.getRange(`I7:I${end}`).setNumberFormat('yyyy-mm-dd');
+s.getRange(`E7:J${end}`).format.fill='#FFF5D6';
+s.getRange(`A46:D${end}`).format.fill='#FFF5D6';
+s.getRange(`J7:J${end}`).format.wrapText=true;
+s.getRange(`G7:G${end}`).dataValidation={rule:{type:'list',values:['一致','有差异','待补数据','待复核']}};
+s.getRange(`G7:G${end}`).conditionalFormats.add('containsText',{text:'有差异',format:{fill:'#FCE3E3',font:{color:'#A82828',bold:true}}});
+s.tables.add(`A6:J${end}`,true,'ModelChecklist');
+s.freezePanes.freezeRows(6);
+s.freezePanes.freezeColumns(2);
+wb.recalculate();
+console.log((await wb.inspect({kind:'table',range:'尺寸重量核对表!A6:J10',include:'values',tableMaxCols:10,tableMaxRows:5})).ndjson);
+const preview=await wb.render({sheetName:s.name,range:'A6:J15',scale:1,format:'png'});
+await fs.writeFile(dir+'/preview.png',new Uint8Array(await preview.arrayBuffer()));
+await(await SpreadsheetFile.exportXlsx(wb)).save(dir+'/各机型尺寸重量核对表.xlsx');
+

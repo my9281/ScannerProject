@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/webjars/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="//g.alicdn.com/de/prismplayer/2.15.2/skins/default/aliplayer-min.css" />
+    <script type="text/javascript" src="/webjars/plugins/jquery/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="/webjars/plugins/crypto/crypto-js.js"></script>
+    <script type="text/javascript" src="//g.alicdn.com/de/prismplayer/2.15.2/aliplayer-h5-min.js"></script>
+    <script type="text/javascript" src="/assets/libs/aliplayercomponents-1.0.9.min.js"></script>
+    <script type="text/javascript" src="/assets/scripts/module.js"></script>
+    <script type="text/javascript" src="/webjars/layout/uideploy.js"></script>
+    <script type="text/javascript" src="/webjars/layout/sidebar.js"></script>
+    <script type="text/javascript" src="/webjars/plugins/draggable/sortable/Sortable@1.8.4.min.js"></script>
+    <script>
+        let isMixin = true
+    </script>
+<!--    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/vuex/3.6.2/vuex.min.js" type="application/javascript"></script>-->
+    <script src="/webjars/plugins/vuex/3.6.2/index.min.js"></script>
+    <script type="text/javascript" src="/assets/store/index.js"></script>
+    <script type="text/javascript" src="/webjars/plugins/require.js" data-main="/assets/scripts/config.js"></script>
+    <script type="text/javascript" src="/assets/scripts/slots.js"></script>
+    <script type="text/javascript" src="/assets/scripts/wangEditor.js"></script>
+<!--    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/qrcodejs/1.0.0/qrcode.js" type="application/javascript"></script>-->
+    <script src="/webjars/plugins/qrcode/index.js"></script>
+    <link rel="stylesheet" href="/webjars/global/main.css">
+    <link href="/assets/style/fonts/iconfont.css" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/style/themes/index.css">
+    <link rel="stylesheet" href="/assets/style/base.css">
+    <link rel="stylesheet" href="/assets/style/common.css">
+    <link rel="stylesheet" href="/assets/style/afterSale.css">
+    <title>BLUETTI After-sales Service</title>
+</head>
+<body>
+<div id="app">
+    <main-layout/>
+</div>
+</body>
+<script>
+    window.onload = function () {
+        function IEVersion() {
+            if (document.documentMode) return document.documentMode;
+        }
+
+        if (IEVersion()) {
+            console.log('当前IE浏览器版本号是', IEVersion());
+            window.alert('IE浏览器无法兼容')
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,103 @@
+{
+  "stats": {
+    "pallets": 17,
+    "rows": 140,
+    "total": 587,
+    "known": 539,
+    "unknown": 48,
+    "unknownRows": 29,
+    "skuCount": 65,
+    "target": 253,
+    "targetExpected": 253,
+    "issues": 79,
+    "differenceRows": 48
+  },
+  "diffs": [],
+  "pallets": [
+    {
+      "pallet": 1,
+      "total": 84,
+      "target": 0
+    },
+    {
+      "pallet": 2,
+      "total": 25,
+      "target": 0
+    },
+    {
+      "pallet": 3,
+      "total": 75,
+      "target": 33
+    },
+    {
+      "pallet": 4,
+      "total": 32,
+      "target": 26
+    },
+    {
+      "pallet": 5,
+      "total": 32,
+      "target": 24
+    },
+    {
+      "pallet": 6,
+      "total": 47,
+      "target": 44
+    },
+    {
+      "pallet": 7,
+      "total": 14,
+      "target": 0
+    },
+    {
+      "pallet": 8,
+      "total": 23,
+      "target": 23
+    },
+    {
+      "pallet": 9,
+      "total": 21,
+      "target": 16
+    },
+    {
+      "pallet": 10,
+      "total": 32,
+      "target": 32
+    },
+    {
+      "pallet": 11,
+      "total": 58,
+      "target": 0
+    },
+    {
+      "pallet": 12,
+      "total": 21,
+      "target": 7
+    },
+    {
+      "pallet": 13,
+      "total": 22,
+      "target": 10
+    },
+    {
+      "pallet": 14,
+      "total": 17,
+      "target": 4
+    },
+    {
+      "pallet": 15,
+      "total": 33,
+      "target": 16
+    },
+    {
+      "pallet": 16,
+      "total": 27,
+      "target": 0
+    },
+    {
+      "pallet": 17,
+      "total": 24,
+      "target": 18
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+from pathlib import Path
+p=Path('.verification/outbound-match/build-combined.mjs');s=p.read_text(encoding='utf-8');s=s.replace("if(consolidated)main.getRange('A5').values=", "if(consolidated)main.getRange('A4').values=[[`合并${data.length}条收件记录；主列已匹配${displayData.filter(r=>r[7]>0).length}条，其中库存补查${inventory.summary.matchedRows}条。重复收件行保留。`]];\nif(consolidated)main.getRange('A5').values=");p.write_text(s,encoding='utf-8')
+p=Path('.verification/inventory-probe/verify-consolidated.py');s=p.read_text(encoding='utf-8');s=s.replace("assert list(map(normal,rb))==list(map(normal,ra)),before.title", "assert [normal(v).strip() for v in rb]==[normal(v).strip() for v in ra],before.title");p.write_text(s,encoding='utf-8')

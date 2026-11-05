@@ -82,10 +82,12 @@ namespace Scanner.WPF.Services
             _log.OpenWorkbook();
         }
 
-        public void RecordWorkbook(ScanResult scan, string selectedModel)
+        public void ClearTrackingCache() => _log.ClearTrackingCache();
+
+        public void RecordWorkbook(ScanResult scan, string selectedModel, string rmaNumber = "")
         {
             if (scan == null || !scan.WasRecorded) return;
-            _log.AppendWorkbook(scan.Code, scan.Oid.IsOid, selectedModel ?? string.Empty);
+            _log.AppendWorkbook(scan.Code, scan.Oid.IsOid, selectedModel ?? string.Empty, rmaNumber);
         }
 
         public void CreateNewRecordFiles()

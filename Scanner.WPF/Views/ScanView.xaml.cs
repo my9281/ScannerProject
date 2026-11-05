@@ -10,6 +10,10 @@ namespace Scanner.WPF.Views
         public ScanView()
         {
             InitializeComponent();
+            DashboardPluginHost.Content = Services.DashboardPluginLoader.Load(
+                AppContext.BaseDirectory, Services.DesktopUpdateService.LocalVersion);
+            if (DashboardPluginHost.Content == null)
+                HeaderRow.Height = new GridLength(58);
         }
 
         public event EventHandler<KeyboardFocusChangedEventArgs> ScanInputFocused;

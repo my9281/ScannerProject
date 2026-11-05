@@ -42,11 +42,15 @@ namespace Scanner.WPF.Helpers
             File.AppendAllText(FilePath, line, new UTF8Encoding(true));
         }
 
-        public void AppendWorkbook(string code, bool isOid, string selectedModel)
+        private bool _pairPendingOid = true;
+        public void ClearTrackingCache() => _pairPendingOid = false;
+
+        public void AppendWorkbook(string code, bool isOid, string selectedModel, string rmaNumber = "")
         {
             EnsureExists();
             ScanWorkbookHelper.Append(WorkbookPath, isOid ? string.Empty : selectedModel,
-                isOid ? string.Empty : code, isOid ? code : string.Empty);
+                isOid ? string.Empty : code, isOid ? code : string.Empty, rmaNumber, _pairPendingOid);
+            _pairPendingOid = isOid;
         }
 
         public void CreateNewFiles()

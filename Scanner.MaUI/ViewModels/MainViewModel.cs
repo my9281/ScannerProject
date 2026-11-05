@@ -47,23 +47,24 @@ public sealed class MainViewModel : ViewModelBase
     public async Task InitializeAsync() { Notify(nameof(OperatorText)); Notify(nameof(ServiceText)); if (_sessions.Current?.IsLocalMode != true) await RefreshAsync(false); RequestFocus(); }
     private async Task ProcessAsync()
     {
-        string code = ScanCode.Trim();
+        if (Busy) return;
+        string code = ScanService.NormalizeCode(ScanCode);
         if (string.IsNullOrWhiteSpace(code))
         {
             SetStatus(L.Get("EmptyCode"), true);
             RequestFocus();
             return;
         }
-        if (ScanService.IsGs1AreaCode(code))
-        {
-            await _speech.SpeakGs1AreaWarningAsync();
-            SetStatus(L.Get("Gs1AreaWarning"), true);
-            ScanCode = string.Empty; RequestFocus();
-            return;
-        }
         Busy = true;
         try
         {
+            if (ScanService.IsGs1AreaCode(code))
+            {
+                await _speech.SpeakGs1AreaWarningAsync();
+                SetStatus(L.Get("Gs1AreaWarning"), true);
+                ScanCode = string.Empty;
+                return;
+            }
             ScanResult result = await _scan.RecordAsync(code);
             WorkOrderMatch? match = _workOrders.Resolve(result.Code, result.Oid.IsOid);
             WorkOrderRemark? workOrder = match?.WorkOrder;
@@ -98,6 +99,7 @@ public sealed class MainViewModel : ViewModelBase
         }
         finally
         {
+            Notify(nameof(CountText));
             Busy = false;
             RequestFocus();
         }

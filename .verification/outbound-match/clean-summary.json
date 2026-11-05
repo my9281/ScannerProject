@@ -1,0 +1,20 @@
+{
+  "rows": 3971,
+  "uniqueSN": 3659,
+  "uniqueMatched": 1209,
+  "records": 1273,
+  "counts": {
+    "未查到出库记录": 2548,
+    "未填SN": 103,
+    "已匹配": 1212,
+    "多条出库记录": 65,
+    "无有效出库记录": 41,
+    "收件日期待核对": 2
+  },
+  "filled": 3682,
+  "inferred": 3,
+  "removedPairs": 106,
+  "affectedRows": 98,
+  "removedDetailRecords": 18,
+  "uncertainDates": 2
+}

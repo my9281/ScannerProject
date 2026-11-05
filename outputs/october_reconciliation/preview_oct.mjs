@@ -1,0 +1,2 @@
+import fs from 'node:fs/promises';import {FileBlob,SpreadsheetFile} from 'file:///C:/Users/Thomas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs';
+const p='D:/GitRepos/ScannerProject/outputs/october_reconciliation';const w=await SpreadsheetFile.importXlsx(await FileBlob.load(p+'/当前实物库存_增加10月收货.xlsx'));const b=await w.render({sheetName:'10月全部收货',range:'A1:F9',scale:1,format:'png'});await fs.writeFile(p+'/before_outbound_preview.png',new Uint8Array(await b.arrayBuffer()));

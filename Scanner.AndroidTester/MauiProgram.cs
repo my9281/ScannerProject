@@ -6,7 +6,7 @@ namespace Scanner.AndroidTester
     {
         public static MauiApp CreateMauiApp()
         {
-            Services.UiText.Language = Preferences.Get(Services.UiText.PreferenceKey, "en");
+            Services.UiText.Language = Preferences.Get(Services.UiText.PreferenceKey, "zh");
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()

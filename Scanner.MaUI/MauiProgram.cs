@@ -1,8 +1,5 @@
 using Microsoft.Extensions.Logging;
-using Scanner.DI;
-using Scanner.MaUI.Services;
-using Scanner.MaUI.ViewModels;
-using Scanner.Helpers.Services;
+using Scanner.MaUI.Controllers;
 
 namespace Scanner.MaUI
 {
@@ -20,28 +17,7 @@ namespace Scanner.MaUI
                 fonts.AddFont("IMing.ttf", "IMingPrint");
 #endif
             });
-            builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri("https://wms.ymforever.com/"), Timeout = TimeSpan.FromSeconds(60) });
-            builder.Services.AddScannerSharedServices();
-            builder.Services.AddTransient(typeof(Scanner.Controllers.IControllerFactory<,>), typeof(Controllers.MauiControllerFactory<,>));
-            builder.Services.AddSingleton<Windows.IWindow, Windows.MauiWindow>();
-            builder.Services.AddSingleton<AuthService>();
-            builder.Services.AddSingleton<SessionStore>();
-            builder.Services.AddSingleton<OidService>();
-            builder.Services.AddSingleton<ScanLogService>();
-            builder.Services.AddSingleton<ScanService>();
-            builder.Services.AddSingleton<MeterModelService>();
-            builder.Services.AddSingleton<SpeechService>();
-            builder.Services.AddSingleton<ScanUploadService>();
-            builder.Services.AddSingleton<ShelvedPalletApiService>();
-            builder.Services.AddSingleton<WorkOrderSearchService>();
-            builder.Services.AddSingleton<WorkOrderRemarkApiService>();
-            builder.Services.AddSingleton<CsvImportService>();
-            builder.Services.AddSingleton(LocalizationService.Current);
-            builder.Services.AddSingleton<ILabelPrinter, LabelPrinter>();
-            builder.Services.AddTransient<MainViewModel>();
-            builder.Services.AddTransient<MainPage>();
-            builder.Services.AddTransient<OperationsPage>();
-            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddScannerMaui();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

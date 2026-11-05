@@ -1,0 +1,61 @@
+<Window x:Class="WPF.Camara.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Camara · 摄像头标签打印" Width="1260" Height="880" MinWidth="1100" MinHeight="800" Background="#F3F5F8" FontFamily="Microsoft YaHei UI">
+ <Window.Resources>
+  <Style TargetType="TextBlock"><Setter Property="VerticalAlignment" Value="Center"/></Style>
+  <Style TargetType="ComboBox"><Setter Property="Height" Value="34"/><Setter Property="Margin" Value="0,6,0,18"/></Style>
+  <Style TargetType="TextBox"><Setter Property="Height" Value="34"/><Setter Property="Padding" Value="7"/><Setter Property="Margin" Value="0,6,0,18"/></Style>
+ </Window.Resources>
+ <Grid Margin="28">
+  <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,24"><TextBlock Text="摄像头标签打印" FontSize="26" FontWeight="Bold"/><TextBlock Text="按卡板选择收货预报，打印4×6条码与SKU标签；未知SKU自动跳过。" Foreground="#667085" Margin="0,8,0,0"/></StackPanel>
+  <Grid Grid.Row="1">
+   <Grid.ColumnDefinitions><ColumnDefinition Width="650"/><ColumnDefinition Width="24"/><ColumnDefinition/></Grid.ColumnDefinitions>
+   <Border Background="White" CornerRadius="10" Padding="16"><DockPanel><StackPanel DockPanel.Dock="Bottom">
+    <StackPanel x:Name="PrinterSettings"><TextBlock Text="ZPL标签打印机（逐张直接发送）"/><DockPanel><Button DockPanel.Dock="Right" Content="刷新" Width="55" Height="30" Margin="8,0,0,0" Click="RefreshPrinters_Click"/><ComboBox x:Name="Printer" Margin="0,5,0,8"/></DockPanel><ComboBox x:Name="PrinterDpi" SelectedIndex="0" Margin="0,0,0,8"><ComboBoxItem Content="203 DPI（RP425常用）"/><ComboBoxItem Content="300 DPI"/></ComboBox></StackPanel><TextBlock Text="标签宽 × 高（毫米）"/><StackPanel Orientation="Horizontal"><TextBox x:Name="LabelWidth" Text="101.6" Width="90" TextChanged="RefreshPreview"/><TextBlock Text=" × " Margin="4,0,4,12"/><TextBox x:Name="LabelHeight" Text="152.4" Width="70" TextChanged="RefreshPreview"/></StackPanel>
+    <TextBlock Text="当前行打印份数（整板使用预报数量或每行一张）"/><TextBox x:Name="Copies" Text="1"/>
+    <StackPanel Orientation="Horizontal"><Button x:Name="PrintCurrentButton" Content="打印当前 SKU" Padding="18,10" Background="#245BDB" Foreground="White" Click="Print_Click"/><Button x:Name="PrintBatchButton" Content="按清单数量批量打印" Margin="12,0,0,0" Padding="18,10" Click="PrintAll_Click"/></StackPanel>
+    <StackPanel Orientation="Horizontal" Margin="0,8,0,0"><ProgressBar x:Name="SendProgress" Width="350" Height="16"/><Button x:Name="StopSending" Content="停止后续发送" IsEnabled="False" Margin="12,0,0,0" Padding="10,4" Click="StopSending_Click"/></StackPanel>
+   </StackPanel>
+    <TabControl x:Name="Mode" SelectionChanged="Mode_Changed" Margin="0,0,0,12">
+     <TabItem Header="本次打印清单"><DataGrid x:Name="Catalog" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="Catalog_Changed" RowHeight="30" HeadersVisibility="Column">
+      <DataGrid.Columns>
+       <DataGridTextColumn Header="SKU" Binding="{Binding Sku}" IsReadOnly="True" Width="220"/>
+       <DataGridTextColumn Header="核对码（不打印）" Binding="{Binding CheckCodes}" IsReadOnly="True" Width="*"/>
+       <DataGridTextColumn Header="数量" Binding="{Binding Quantity, ValidatesOnExceptions=True, UpdateSourceTrigger=LostFocus}" Width="55"/>
+      </DataGrid.Columns>
+     </DataGrid></TabItem>
+     <TabItem Header="型号与规格"><StackPanel Margin="12"><TextBlock Text="产品型号 / SKU"/><ComboBox x:Name="Sku" SelectionChanged="RefreshPreview"/><TextBlock Text="完整 SKU / 电缆与米数规格"/><ComboBox x:Name="Meters" SelectionChanged="RefreshPreview"/></StackPanel></TabItem>
+     <TabItem Header="按卡板打印4×6"><DockPanel Margin="8">
+      <StackPanel DockPanel.Dock="Top">
+       <StackPanel Orientation="Horizontal"><TextBlock Text="选择卡板"/><ComboBox x:Name="Pallet" DisplayMemberPath="Name" SelectedValuePath="Number" Width="120" Margin="10,0,10,8" SelectionChanged="Pallet_Changed"/><Button Content="导入其他预报" Height="30" VerticalAlignment="Top" Click="ImportForecast_Click"/></StackPanel>
+       <ComboBox x:Name="LabelPolicy" Margin="0,0,0,8" SelectionChanged="Receiving_Changed"><ComboBoxItem Content="逐件打印：每件一张，按预报数量"/><ComboBoxItem Content="作业单：每行一张，标签注明该行数量"/></ComboBox>
+       <TextBlock x:Name="PalletSummary" TextWrapping="Wrap" Margin="0,0,0,8"/>
+      </StackPanel>
+      <DataGrid x:Name="ReceivingRows" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" SelectionMode="Single" SelectionUnit="FullRow" SelectionChanged="Receiving_Changed" HeadersVisibility="Column" RowHeight="32">
+       <DataGrid.Columns>
+        <DataGridTextColumn Header="SKU" Binding="{Binding Sku}" Width="190"/>
+        <DataGridTextColumn Header="校对条码" Binding="{Binding Barcode}" Width="115"/>
+        <DataGridTextColumn Header="数量" Binding="{Binding Quantity}" Width="45"/>
+        <DataGridTextColumn Header="状态" Binding="{Binding State}" Width="230"/>
+       </DataGrid.Columns>
+      </DataGrid>
+     </DockPanel></TabItem>
+    </TabControl>
+   </DockPanel></Border>
+   <Border Grid.Column="2" Background="#E5E9F0" CornerRadius="10" Padding="20"><Grid>
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <TextBlock Text="标签预览" FontSize="16" FontWeight="SemiBold"/>
+    <Viewbox Grid.Row="1" Margin="0,20" Stretch="Uniform"><ContentControl x:Name="Preview"/></Viewbox>
+    <StackPanel Grid.Row="2"><TextBlock x:Name="Configuration" FontSize="12" Foreground="#667085" TextWrapping="Wrap" Margin="0,0,0,12"/><TextBlock Text="按卡板模式固定4×6英寸，包含条码、SKU、配置与核对信息；其他模式保留SKU标签。" Foreground="#667085" TextWrapping="Wrap"/></StackPanel>
+   </Grid></Border>
+  </Grid>
+  <TextBlock Grid.Row="2" x:Name="Status" Margin="0,18,0,0" Text="就绪" TextWrapping="Wrap"/>
+ </Grid>
+</Window>
+
+
+
+
+
+
+
+

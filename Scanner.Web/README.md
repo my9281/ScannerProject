@@ -15,3 +15,5 @@ Web 端需求、页面状态、认证、完整业务接口目录、数据库脚�
 WPF 更新包发布：管理员登录后打开 `/wpf-updates.html`，上传 WPF 发布 ZIP，服务器自动生成版本清单。配置、权限、IIS 上传限制及持久目录见 [WPF 发布与自动更新](../docs/WPF发布与自动更新.md)。
 
 公开注册保持禁用；托盘目录 `/pallet-directory.html?ts=2026-10-01&te=2026-10-31` 和每托明细 `/pallet-data.html?t=2026-10-13&p=2` 可直接访问，无需上传密钥，主页不提供入口。根地址带 `?t=日期&p=托盘号` 会跳转至明细。页面按日期和托盘号动态显示 SKU/SN，上架后无需生成独立静态文件；现场 MySQL 5.7.17，库位建表命名 CHECK 兼容性仍需处理。当前实现状态以总文档为准，[旧说明](../docs/history/2026-10-09-Web说明-整理前.md) 保留供查阅。
+
+良品区 PDA 托盘查询接口：`GET /api/tester-pallet-scans/lookup?sn=设备SN`，沿用 `X-Upload-Key` 认证。直接按 SN 查询 `tester_pallet_scans` 并返回对应托盘号（1–100）及扫描时间，不依赖库存或归档状态；重复 SN 取扫描时间最新、ID 最大的记录；未找到返回 404，非法 SN 返回 400。无需新增数据库脚本。部署及 PDA 验收步骤见 [AndroidTester 说明](../Scanner.AndroidTester/README.md#良品区托盘查询)。

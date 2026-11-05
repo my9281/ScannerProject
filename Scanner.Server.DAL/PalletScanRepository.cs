@@ -4,6 +4,23 @@ namespace Scanner.Server.DAL;
 
 public sealed class PalletScanRepository(IMySqlConnectionFactory factory) : IPalletScanRepository
 {
+    public async Task<PalletScanStoredRow?> FindBySnAsync(string sn, CancellationToken cancellationToken = default)
+    {
+        await using var connection = await factory.OpenConnectionAsync(cancellationToken);
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT p.sn, p.pallet_number, p.scan_date, p.scan_time
+            FROM tester_pallet_scans p
+            WHERE p.sn=@sn
+            ORDER BY p.scan_time DESC, p.id DESC
+            LIMIT 1;
+            """;
+        command.Parameters.Add("@sn", MySqlDbType.VarChar, 100).Value = sn;
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken)) return null;
+        return new(reader.GetString(0), reader.GetInt32(1), reader.GetDateTime(2), reader.GetDateTime(3));
+    }
+
     public async Task<IReadOnlyList<PalletScanStoredRow>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         await using var connection = await factory.OpenConnectionAsync(cancellationToken);

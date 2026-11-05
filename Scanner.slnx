@@ -14,6 +14,7 @@
   </Project>
   <Project Path="Scanner.Controllers/Scanner.Controllers.csproj" />
   <Project Path="Scanner.DI/Scanner.DI.csproj" />
+  <Project Path="Scanner.DashboardPlugin/Scanner.DashboardPlugin.csproj" />
   <Project Path="Scanner.Helpers/Scanner.Helpers.csproj" />
   <Project Path="Scanner.MaUI/Scanner.MaUI.csproj">
     <Deploy Solution="Debug|*" />
@@ -26,4 +27,5 @@
   <Project Path="Scanner.ViewModels/Scanner.ViewModels.csproj" />
   <Project Path="Scanner.Web/Scanner.Web.csproj" />
   <Project Path="Scanner.WPF/Scanner.WPF.csproj" Id="588812b9-db7f-47a1-b851-00cb9df1c1cb" />
+  <Project Path="WPF.Camara/WPF.Camara.csproj" />
 </Solution>

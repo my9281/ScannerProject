@@ -1,0 +1,30 @@
+{
+  "page": "https://ntm8zfn.oms.eccangtms.com/single/moreLines",
+  "paths": [
+    "/alpaca-oms/alpaca-auth/getTenantInfoByDomain",
+    "/alpaca-oms/alpaca-auth/login",
+    "/alpaca-oms/oms/omsUserAccount/check",
+    "/alpaca-oms/alpaca-auth/permission/getUserPermissionByToken",
+    "/alpaca-oms/common/getMyInfo",
+    "/alpaca-oms/sys/annountCement/listByUser",
+    "/alpaca-oms/sys/annountCement/pageJob",
+    "/alpaca-oms/sys/dict/getDictItems/goods_type",
+    "/alpaca-oms/sys/dict/getDictItems/weight_size_unit",
+    "/alpaca-oms/oms/order/getCommonProduct",
+    "/alpaca-oms/oms/product/group/list",
+    "/alpaca-oms/common/getCountryList",
+    "/alpaca-oms/common/getCurrencyOptions",
+    "/alpaca-oms/sys/dict/getDictItems/channel_package_type",
+    "/alpaca-oms/sys/dict/getDictItems/signature_service",
+    "/alpaca-oms/common/getSignatureServiceOptions",
+    "/alpaca-oms/sys/dict/getDictItems/alpaca_hazardous_identification_class",
+    "/alpaca-oms/sys/dict/getDictItems/alpaca_hazardous_packing_code",
+    "/alpaca-oms/sys/dict/getDictItems/fedex_battery_type",
+    "/alpaca-oms/sys/dict/getDictItems/fedex_battery_material_type",
+    "/alpaca-oms/oms/omsUserShipperAddress/all",
+    "/alpaca-oms/oms/omsUserConsigneeAddress/all",
+    "/alpaca-oms/oms/order/submit",
+    "/alpaca-oms/oms/order/payOrder"
+  ],
+  "note": "Observed resource paths only; request methods, headers and bodies are not captured."
+}

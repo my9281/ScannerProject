@@ -74,7 +74,8 @@ public sealed class NativeScanPage : ContentPage
     {
         var value = _input.Text ?? "";
         if (string.IsNullOrWhiteSpace(value)) { _status.Text = UiText.T("请先扫描或输入内容。"); _input.Focus(); return; }
-        Handler!.MauiContext!.Services.GetRequiredService<LatestScan>().Record(value);
+        if (_mode != NativeScanMode.Pallet)
+            Handler!.MauiContext!.Services.GetRequiredService<LatestScan>().Record(value);
         bool same = false, hit = false;
         try
         {
@@ -83,7 +84,9 @@ public sealed class NativeScanPage : ContentPage
             {
                 if (!int.TryParse(_number.Text, out var number) || number is < 1 or > 100) throw new ArgumentException(UiText.T("托盘号必须为 1–100 的整数。"));
                 _pallets.PalletNumber = number;
-                _pallets.Add(value, DateTimeOffset.Now); _status.Text = UiText.T("已记录。");
+                _pallets.Add(value, DateTimeOffset.Now);
+                Handler!.MauiContext!.Services.GetRequiredService<LatestScan>().Record(value);
+                _status.Text = UiText.T("已记录。");
             }
             else
             {
@@ -97,7 +100,15 @@ public sealed class NativeScanPage : ContentPage
             _input.Focus();
             if (same || hit) await NativeScanSound.PlayAsync(same, hit);
         }
-        catch (Exception ex) { _status.Text = UiText.Error(ex); _input.Text = ""; _input.Focus(); }
+        catch (Exception ex)
+        {
+            _status.Text = UiText.Error(ex);
+            _status.TextColor = Color.FromArgb("#FF7474");
+            _input.Text = "";
+            _input.Focus();
+            if (_mode == NativeScanMode.Pallet && ex is ArgumentException)
+                await NativeScanSound.PlayAsync(false, true);
+        }
     }
     private void Refresh()
     {

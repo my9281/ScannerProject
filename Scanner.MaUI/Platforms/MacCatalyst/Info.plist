@@ -21,7 +21,7 @@
 		<integer>2</integer>
 	</array>
 	<key>LSApplicationCategoryType</key>
-	<string>public.app-category.lifestyle</string>
+	<string>public.app-category.business</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>

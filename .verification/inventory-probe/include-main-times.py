@@ -1,0 +1,2 @@
+from pathlib import Path
+p=Path('.verification/inventory-probe/match-rent.py');s=p.read_text(encoding='utf-8');s=s.replace("sn=key(row[0]);entry=row[2].date();allhits=by.get(sn,[])","sn=key(row[0]);entry=row[2].date();allhits=list(by.get(sn,[]))\n if isinstance(row[4],datetime.datetime):allhits.append({'time':row[4].strftime('%Y-%m-%d %H:%M:%S'),'number':f'主表第{n}行','type':'原有处理时间','source':'本次主表','timeBasis':'主表原值'})");p.write_text(s,encoding='utf-8')

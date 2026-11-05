@@ -18,6 +18,8 @@ internal static class Program
   if ((string)directoryGroups.Last().Attribute("Header") != "{DynamicResource WpfSystemSettings}") throw new Exception("System settings must be the last directory group.");
   if (directoryMarkup.Descendants().Any(e=>(string)e.Attribute("Command")=="{Binding RefreshCommand}")) throw new Exception("Manual refresh button still exists.");
   if (directoryGroups.First().Descendants().Count(e=>e.Name.LocalName=="Button") != 3) throw new Exception("Refresh and both manual import entries are required.");
+  foreach (var card in directoryMarkup.Descendants().Where(e => e.Name.LocalName == "Button" && (string)e.Attribute("Style") == "{StaticResource FeatureCard}"))
+   if (!card.Descendants().Any(e => (string)e.Attribute("Style") == "{StaticResource FeatureIcon}")) throw new Exception("Missing feature icon: " + card.Attribute("Click"));
   var app = new Scanner.WPF.App(); app.InitializeComponent();
   var x = XNamespace.Get("http://schemas.microsoft.com/winfx/2006/xaml");
   Dictionary<string,string> baseline = null;
@@ -39,7 +41,7 @@ internal static class Program
    using var provider=(IDisposable)composition.GetMethod("Build",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).Invoke(null,null);
    var services=(IServiceProvider)provider;
    var api=(ShelvedPalletApiService)services.GetService(typeof(ShelvedPalletApiService));
-   var windows=new Window[]{(Window)services.GetService(typeof(MainWindow)),(Window)services.GetService(typeof(OutboundInspectionWindow)),new GoodAreaWindow(api),new SkuSnBatchPicker(api),new AutomaticMatchingWindow(new ChecklistDataCache(),api),new BatchLabelWindow(),new SpecialLabelWindow(SpecialLabelKind.TradeIn),new SpecialLabelWindow(SpecialLabelKind.Scrapped),new RegistrationRepairWindow(new ChecklistDataCache(),api)};
+   var windows=new Window[]{(Window)services.GetService(typeof(MainWindow)),(Window)services.GetService(typeof(OutboundInspectionWindow)),new GoodAreaWindow(api),new SkuSnBatchPicker(api),new AutomaticMatchingWindow(new ChecklistDataCache(),api),new BatchLabelWindow(),new BluettiLabelWindow(),new OmsShippingWindow(),new ShipmentTrackingWindow(),new SpecialLabelWindow(SpecialLabelKind.TradeIn),new SpecialLabelWindow(SpecialLabelKind.Scrapped),new RegistrationRepairWindow(new ChecklistDataCache(),api)};
    foreach(var window in windows)
    {
     if(window.Icon==null) throw new Exception("Missing icon "+window.GetType().Name);
@@ -67,7 +69,7 @@ internal static class Program
     var dir=Path.Combine(AppContext.BaseDirectory,"previews");Directory.CreateDirectory(dir);
     using var output=File.Create(Path.Combine(dir,window.GetType().Name+"-"+Array.IndexOf(windows,window)+"-"+language+".png"));encoder.Save(output);
    }
-   Console.WriteLine("PASS: "+language+" resources, placeholders, icons and 9 window renders");
+   Console.WriteLine("PASS: "+language+" resources, placeholders, icons and 12 window renders");
   }
  }
 }

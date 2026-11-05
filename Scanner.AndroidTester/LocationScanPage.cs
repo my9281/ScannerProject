@@ -15,6 +15,9 @@ public sealed class LocationScanPage : ContentPage
         _session = session; _api = api; Title = UiText.T("库位扫描"); BackgroundColor = Color.FromArgb("#080A0C");
         var header = new VerticalStackLayout { Spacing = 8 };
         header.Add(_input);
+        var verify = new Button { Text = UiText.T("库位核对绑定") };
+        verify.Clicked += async (_, _) => await Navigation.PushAsync(new LocationSkuPage(Handler!.MauiContext!.Services.GetRequiredService<AppSettings>(), true));
+        header.Add(verify);
         var record = new Button { Text = UiText.T("记录库位") };
         record.Clicked += (_, _) => Scan(); _input.Completed += (_, _) => Scan(); header.Add(record);
         header.Add(_status); header.Add(_count);

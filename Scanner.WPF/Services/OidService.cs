@@ -9,6 +9,7 @@ namespace Scanner.WPF.Services
         private static readonly Regex LongNumericOid = new Regex(@"^\d{34}$", RegexOptions.Compiled);
         private static readonly Regex FedExOid = new Regex(@"^\d{12}$", RegexOptions.Compiled);
         private static readonly Regex AmazonOid = new Regex(@"^1Z[A-Z0-9]{16}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TbaOid = new Regex(@"^TBA[0-9]{12}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Dictionary<string, int> _scanCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         private readonly SpeechService _speech;
         public OidService()
@@ -41,7 +42,7 @@ namespace Scanner.WPF.Services
             {
                 return normalized.Length > 20;
             }
-            return LongNumericOid.IsMatch(normalized) || FedExOid.IsMatch(normalized) || AmazonOid.IsMatch(normalized);
+            return LongNumericOid.IsMatch(normalized) || FedExOid.IsMatch(normalized) || AmazonOid.IsMatch(normalized) || TbaOid.IsMatch(normalized);
         }
 
         public void Dispose()

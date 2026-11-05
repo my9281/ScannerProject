@@ -42,6 +42,12 @@ namespace Scanner.WPF
             => _controller.OpenAutoSync();
         private void OpenSystemSettings_Click(object sender, RoutedEventArgs e)
             => new BluettiSessionWindow(null, null, true) { Owner = this }.ShowDialog();
+        private void OpenBluettiLabels_Click(object sender, RoutedEventArgs e)
+            => new BluettiLabelWindow { Owner = this }.ShowDialog();
+        private void OpenOmsShipping_Click(object sender, RoutedEventArgs e)
+            => new OmsShippingWindow { Owner = this }.ShowDialog();
+        private void OpenShipmentTracking_Click(object sender, RoutedEventArgs e)
+            => new ShipmentTrackingWindow { Owner = this }.ShowDialog();
         private void ScanTextBox_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e) => _controller.ScanTextBox_GotKeyboardFocus(sender, e);
         private void OpenMonthlyReport_Click(object sender, RoutedEventArgs e) => _controller.OpenMonthlyReport_Click(sender, e);
         private void OpenRegistrationRepair_Click(object sender, RoutedEventArgs e) => _controller.OpenRegistrationRepair_Click(sender, e);

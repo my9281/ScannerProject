@@ -36,7 +36,7 @@ public sealed class OidService
     private readonly Dictionary<string, int> _counts = new(StringComparer.OrdinalIgnoreCase);
     public OidScanResult Inspect(string code)
     {
-        string value = code.Trim();
+        string value = ScanService.NormalizeCode(code);
         if (!IsOid(value)) return OidScanResult.NotOid;
         _counts.TryGetValue(value, out int count);
         _counts[value] = ++count;
@@ -70,23 +70,37 @@ public sealed class ScanService
     }
     internal static string GetBarcodePayload(string input)
     {
-        string value = new string((input ?? string.Empty).Where(c => !char.IsWhiteSpace(c) && c != '\uFEFF' && c != '\u200B').ToArray());
+        string value = NormalizeCode(input);
         if (value.StartsWith("]C1", StringComparison.OrdinalIgnoreCase)) value = value[3..];
         return value;
     }
+    public static string NormalizeCode(string? input) => string.Concat((input ?? string.Empty)
+        .Where(c => !char.IsWhiteSpace(c) && c != '\uFEFF' && c != '\u200B'));
+
+    private readonly SemaphoreSlim _recordLock = new(1, 1);
     public async Task<ScanResult> RecordAsync(string input)
     {
-        string code = input.Trim();
+        string code = NormalizeCode(input);
         if (string.IsNullOrWhiteSpace(code)) throw new ArgumentException("扫描内容不能为空。");
-        bool wasRecorded = _recorded.Add(code);
-        if (wasRecorded) await _log.AppendAsync(code);
-        return new ScanResult(code, wasRecorded, _oid.Inspect(code));
+        await _recordLock.WaitAsync();
+        try
+        {
+            bool wasRecorded = !_recorded.Contains(code);
+            if (wasRecorded)
+            {
+                await _log.AppendAsync(code);
+                _recorded.Add(code);
+            }
+            return new ScanResult(code, wasRecorded, _oid.Inspect(code));
+        }
+        finally { _recordLock.Release(); }
     }
 }
 
 public sealed class MeterModelService
 {
     private static readonly string[] Models = { "AC200PL", "AC200L", "AC200P", "AC200M", "AC180P", "AC180T", "EL100V2", "EL200V2", "B300K2", "SP100L", "AC180", "AC240", "AC300", "AC500", "EL30V2", "EL300", "EL400", "B300K", "B300S", "B500K", "PV350", "PV200", "AP300", "AC50B", "AC2A", "AC2P", "EB3A", "AC60", "AC70", "EL10", "B230", "B300", "PS54", "EB55", "EB70", "PINA" };
-    public string Find(string code) => Models.FirstOrDefault(model => code.Contains(model, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+    public string Find(string code) => Models.OrderByDescending(model => model.Length)
+        .FirstOrDefault(model => (code ?? string.Empty).Contains(model, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
     public IReadOnlyList<string> GetModels() => Models.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToArray();
 }

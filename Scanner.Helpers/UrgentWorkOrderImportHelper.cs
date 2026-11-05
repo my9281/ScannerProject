@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.FileIO;
+using Microsoft.VisualBasic.FileIO;
 using Scanner.Models;
 using System.Globalization;
 using System.IO.Compression;
@@ -53,6 +53,7 @@ namespace Scanner.Helpers
             {
                 throw new InvalidOperationException("未找到预报表头，请导入 DTC客诉单导出文件（K：故障描述，L：售后处理类型，N：退货物流商，O：退货运单号）。");
             }
+            int rmaColumn = Array.FindIndex(rows[headerIndex], value => NormalizeText(value).IndexOf("RMA", StringComparison.OrdinalIgnoreCase) >= 0);
             var oidRules = new Dictionary<string, OidRuleBuilder>(StringComparer.OrdinalIgnoreCase);
             int importedRows = 0;
             long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -70,7 +71,7 @@ namespace Scanner.Helpers
                     builder = new OidRuleBuilder(tracking, sourceName, index + 1, timestamp);
                     oidRules.Add(tracking, builder);
                 }
-                builder.Add(remark, isRepair);
+                builder.Add(remark, isRepair, GetField(row, rmaColumn));
             }
             return new UrgentWorkOrderImportResult(oidRules.Values.Select(item => item.Build()).ToList(), importedRows, 0, oidRules.Count);
         }
@@ -127,11 +128,11 @@ namespace Scanner.Helpers
                 var rows = new List<string[]>();
                 foreach (XElement rowElement in worksheet.Descendants(spreadsheet + "row"))
                 {
-                    var values = new string[RequiredColumnCount];
+                    var values = new string[Math.Max(RequiredColumnCount, rowElement.Elements(spreadsheet + "c").Select(cell => GetColumnIndex((string)cell.Attribute("r")) + 1).DefaultIfEmpty(0).Max())];
                     foreach (XElement cell in rowElement.Elements(spreadsheet + "c"))
                     {
                         int columnIndex = GetColumnIndex((string)cell.Attribute("r"));
-                        if (columnIndex >= 0 && columnIndex < RequiredColumnCount)
+                        if (columnIndex >= 0 && columnIndex < values.Length)
                         {
                             values[columnIndex] = ReadCellValue(cell, spreadsheet, sharedStrings);
                         }
@@ -251,6 +252,7 @@ namespace Scanner.Helpers
 
         private sealed class OidRuleBuilder
         {
+            private readonly HashSet<string> _rmas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             private readonly List<string> _remarks = new List<string>();
             private readonly HashSet<string> _knownRemarks = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             private readonly string _id;
@@ -266,12 +268,13 @@ namespace Scanner.Helpers
 
             public string TrackingNumber { get; }
 
-            public void Add(string remark, bool isRepair)
+            public void Add(string remark, bool isRepair, string rma)
             {
                 if (!string.IsNullOrWhiteSpace(remark) && _knownRemarks.Add(remark))
                 {
                     _remarks.Add(remark);
                 }
+                if (!string.IsNullOrWhiteSpace(rma)) _rmas.Add(rma);
                 _isRepair |= isRepair;
             }
 
@@ -282,6 +285,7 @@ namespace Scanner.Helpers
                     Id = _id,
                     TrackingNumber = TrackingNumber,
                     Remark = string.Join("；", _remarks),
+                    RmaNumber = string.Join("；", _rmas),
                     IsForecast = true,
                     IsRepair = _isRepair,
                     IsOidRule = true,

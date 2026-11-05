@@ -1,0 +1,1 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0e95df"],{"8cdb":function(n,e,a){"use strict";a.r(e);var c=function(){var n=this,e=n._self._c;return e("div",[n._v("\n  404 page\n")])},t=[],u={name:"404"},s=u,d=a("2877"),i=Object(d["a"])(s,c,t,!1,null,"37b6afa0",null);e["default"]=i.exports}}]);

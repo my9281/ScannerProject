@@ -17,7 +17,8 @@ namespace Scanner.WPF.Helpers
         public string FilePath => "in-memory";
         public string WorkbookPath => "in-memory.xlsx";
         public void Append(string code) { }
-        public void AppendWorkbook(string code, bool isOid, string selectedModel) { }
+        public void ClearTrackingCache() { }
+        public void AppendWorkbook(string code, bool isOid, string selectedModel, string rmaNumber = "") { }
         public void CreateNewFiles() { }
         public void Open() { }
         public void OpenWorkbook() { }
@@ -30,6 +31,30 @@ namespace Scanner.MaUI.Services
     public sealed class ScanLogService
     {
         public string FilePath => "in-memory";
-        public Task AppendAsync(string code) => Task.CompletedTask;
+        public bool FailNextAppend { get; set; }
+        public int AppendCount { get; private set; }
+        public Task AppendAsync(string code)
+        {
+            if (FailNextAppend)
+            {
+                FailNextAppend = false;
+                throw new IOException("Simulated log failure");
+            }
+            AppendCount++;
+            return Task.CompletedTask;
+        }
+    }
+}
+
+namespace Scanner.MaUI.Services
+{
+    public static class FileSystem
+    {
+        public static string CacheDirectory => Path.GetTempPath();
+    }
+    public sealed class FileResult
+    {
+        public string FileName { get; init; }
+        public Task<Stream> OpenReadAsync() => Task.FromResult<Stream>(File.OpenRead(FileName));
     }
 }

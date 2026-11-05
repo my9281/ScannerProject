@@ -66,4 +66,26 @@ Release 包体设置、构建参数与验收见 [MAUI 包体优化](../docs/MAUI
 
 ## 语言
 
-首页 English / Español 标签切换英语、西班牙语，默认英语，保存到本机 Preferences，重启沿用。菜单、扫码计数、库位、SKU/SN 批次、打印机选择、蓝牙权限和失败/重试提示统一由 Services/UiText.cs 提供；扫描值与打印条码不做翻译。服务端未知中文错误保留 HTTP 状态码并显示本地翻译的失败提示。tests/AndroidTester.Localization.Tests 验证双语条目、占位符、错误提示和扫描值/时间保持。
+首页 中文 / English / Español 标签切换中文、英语、西班牙语，默认中文，保存到本机 Preferences，重启沿用。菜单、扫码计数、库位、SKU/SN 批次、打印机选择、蓝牙权限和失败/重试提示统一由 Services/UiText.cs 提供；扫描值与打印条码不做翻译。服务端未知中文错误保留 HTTP 状态码并显示本地翻译的失败提示。tests/AndroidTester.Localization.Tests 验证三语条目、占位符、错误提示和扫描值/时间保持。
+
+## 良品区托盘查询
+
+PDA 首页新增“托盘查询”（英文 Find pallet，西文 Buscar palé）。扫描设备 SN 后按回车或点击查询，直接在 `tester_pallet_scans` 表按 SN 匹配，显示对应的 `pallet_number`（1–100）及扫描时间。不依赖库存或归档状态；重复 SN 取扫描时间最新的一条，时间相同取 ID 最大的一条。本机待上传记录不会出现在服务器查询结果中。
+
+接口：`GET /api/tester-pallet-scans/lookup?sn=设备SN`，请求头 `X-Upload-Key` 与现有良品区上传密钥相同。SN 去首尾空白，长度 1–100，保留前导零，按数据库现有 SN 匹配规则查询。
+
+- 200：`{ "sn": "000123", "palletNumber": 12, "scanDate": "2026-10-21T00:00:00", "scanTime": "2026-10-21T10:30:00", "cycleNumber": 1 }`
+- 400：SN 为空或超长。
+- 401：密钥错误。
+- 404：表中没有该 SN 的记录。
+
+部署顺序：先发布 Scanner.Web，再更新 PDA APK。沿用现有数据库结构与 appsettings.xml 中的 UploadBaseUrl / UploadApiKey，无需数据库迁移。旧 Web 未部署该接口时也可能返回 404，因此应先检查 Web 版本。
+
+```powershell
+dotnet publish Scanner.Web/Scanner.Web.csproj -c Release -p:PublishProfile=IIS-SelfContained
+dotnet publish Scanner.AndroidTester/Scanner.AndroidTester.csproj -c Release -p:ScannerTargetFramework=net10.0-android -p:AndroidPackageFormats=apk
+```
+
+APK 更新需使用与现有安装一致的签名。实机验收：已上传 SN、未上传 SN、换托后重新上传、上架归档、断网、密钥错误、连续回车和返回页面。查询不改变托盘记录或上传队列。
+
+托盘扫描条码校验：同一内容中 / 出现两次及以上，或 - 出现两次及以上，拒绝记录并显示红色三语提示、发出警报音。一个 / 加一个 - 允许扫描。

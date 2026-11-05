@@ -4,14 +4,28 @@ namespace Scanner.AndroidTester.Services;
 public static class UiText
 {
     public const string PreferenceKey = "pda-language";
-    private static string language = "en";
+    private static string language = "zh";
     public static string Language
     {
         get => language;
-        set => language = value == "es" ? "es" : "en";
+        set => language = value switch { "zh" or "zh-CN" => "zh", "es" or "es-ES" => "es", "en" or "en-US" => "en", _ => "zh" };
     }
     private static readonly Dictionary<string, (string English, string Spanish)> Messages = new()
     {
+        ["报警：条码包含两个及以上 / 或 -，未记录，请扫描设备 SN。"] = ("Alarm: barcode contains two or more / or - characters. Not recorded. Scan the device SN.", "Alarma: el código contiene dos o más / o dos o más -. No se registró. Escanee el SN del dispositivo."),
+        ["托盘查询"] = ("Find pallet", "Buscar palé"),
+        ["SN 必须为 1–100 个字符。"] = ("SN must contain 1–100 characters.", "El SN debe tener entre 1 y 100 caracteres."),
+        ["扫描 SN 查询托盘"] = ("Scan SN to find pallet", "Escanee el SN para buscar el palé"),
+        ["查询"] = ("Search", "Buscar"),
+        ["正在查询…"] = ("Searching…", "Buscando…"),
+        ["对应托盘"] = ("Matching pallet", "Palé correspondiente"),
+        ["托盘 {0}"] = ("Pallet {0}", "Palé {0}"),
+        ["SN：{0}\n扫描时间：{1:yyyy-MM-dd HH:mm:ss}"] = ("SN: {0}\nScanned: {1:yyyy-MM-dd HH:mm:ss}", "SN: {0}\nEscaneado: {1:yyyy-MM-dd HH:mm:ss}"),
+        ["未找到该 SN 的托盘记录，请确认 SN 和上传数据。"] = ("No pallet found for this SN. Check the SN and uploaded data.", "No se encontró un palé para este SN. Compruebe el SN y los datos subidos."),
+        ["查询超时，请重试。"] = ("Search timed out. Please retry.", "La búsqueda agotó el tiempo de espera. Reintente."),
+        ["无法连接服务器，请检查网络后重试。"] = ("Cannot connect. Check the network and retry.", "No se puede conectar. Compruebe la red y reintente."),
+        ["查询失败（HTTP {0}）。"] = ("Search failed (HTTP {0}).", "Error de búsqueda (HTTP {0})."),
+        ["服务器返回的托盘信息无效，请重试。"] = ("Invalid pallet response. Please retry.", "Respuesta de palé no válida. Reintente."),
         ["壹仓·PDA"] = ("Yicang · PDA", "Yicang · PDA"),
         ["库位 ID"] = ("Location ID", "ID de ubicación"),
         ["上传"] = ("Upload", "Subir"),
@@ -128,11 +142,36 @@ public static class UiText
         ["上传失败 HTTP {0}，批次已保留。"] = ("Upload failed, HTTP {0}. The batch was retained.", "Error al subir, HTTP {0}. Se conservó el lote."),
         ["批次确认不完整，请重试。"] = ("Batch confirmation is incomplete. Try again.", "La confirmación del lote está incompleta. Vuelva a intentarlo."),
         ["请求失败，请重试。"] = ("Request failed. Try again.", "La solicitud falló. Vuelva a intentarlo."),
+        ["扫描库位"] = ("Scan location", "Escanear ubicación"),
+        ["扫描 SKU"] = ("Scan SKU", "Escanear SKU"),
+        ["操作人（必填）"] = ("Operator (required)", "Operador (obligatorio)"),
+        ["数量"] = ("Quantity", "Cantidad"),
+        ["重试未确认操作"] = ("Retry unconfirmed operation", "Reintentar operación sin confirmar"),
+        ["库位核对绑定"] = ("Verify and bind location", "Verificar y vincular ubicación"),
+        ["上架配件"] = ("Stock accessories", "Almacenar accesorios"),
+        ["查询库位"] = ("Find location", "Buscar ubicación"),
+        ["核对并绑定"] = ("Verify and bind", "Verificar y vincular"),
+        ["核对 SKU"] = ("Verify SKU", "Verificar SKU"),
+        ["↑ 增加数量"] = ("↑ Increase quantity", "↑ Aumentar cantidad"),
+        ["↓ 减少数量"] = ("↓ Decrease quantity", "↓ Reducir cantidad"),
+        ["库位 {0} / {1} 有未确认操作，请重试。"] = ("Unconfirmed operation for location {0} / {1}. Retry.", "Operación sin confirmar para ubicación {0} / {1}. Reintente."),
+        ["请扫描 SKU"] = ("Scan SKU", "Escanee el SKU"),
+        ["此库位暂无绑定 SKU"] = ("No SKU bound to this location", "No hay SKU vinculado a esta ubicación"),
+        ["{0}    数量：{1}"] = ("{0}    Quantity: {1}", "{0}    Cantidad: {1}"),
+        ["请先查询库位，再扫描 SKU。"] = ("Find the location before scanning SKU.", "Busque la ubicación antes de escanear el SKU."),
+        ["已核对 {0}，可增减数量。"] = ("Verified {0}. You can adjust the quantity.", "Verificado {0}. Puede ajustar la cantidad."),
+        ["SKU 与库位绑定信息不符。"] = ("SKU does not match the location binding.", "El SKU no coincide con la ubicación vinculada."),
+        ["请核对 SKU 并输入正整数数量。"] = ("Verify SKU and enter a positive whole quantity.", "Verifique el SKU e introduzca una cantidad entera positiva."),
+        ["请填写操作人。"] = ("Enter the operator.", "Introduzca el operador."),
+        ["服务器未确认，请重试。"] = ("Server did not confirm. Retry.", "El servidor no confirmó. Reintente."),
+        ["已保存并记录日志。"] = ("Saved and logged.", "Guardado y registrado."),
+        [" 操作结果未确认，请点重试；不要重复提交。"] = (" Operation unconfirmed. Tap Retry; do not submit again.", " Operación sin confirmar. Pulse Reintentar; no vuelva a enviar."),
+        ["请求失败（{0}）"] = ("Request failed ({0})", "Solicitud fallida ({0})"),
     };
-    public static string T(string key) => Messages.TryGetValue(key, out var text)
+    public static string T(string key) => Language == "zh" ? key : Messages.TryGetValue(key, out var text)
         ? Language == "es" ? text.Spanish : text.English : key;
     public static string F(string key, params object?[] values) => string.Format(
-        CultureInfo.GetCultureInfo(Language == "es" ? "es-ES" : "en-US"), T(key), values);
+        CultureInfo.GetCultureInfo(Language switch { "zh" => "zh-CN", "es" => "es-ES", _ => "en-US" }), T(key), values);
     public static string Error(Exception error) => error switch
     {
         TaskCanceledException => T("上传超时，未确认记录已保留，请重试。"),

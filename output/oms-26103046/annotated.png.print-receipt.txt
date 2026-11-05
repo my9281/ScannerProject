@@ -1,0 +1,2 @@
+Print attempt started 2026-10-29T03:19:07.2049905+08:00
+Submitted to Windows spooler: ZPL RP425 Rongta; job=OMS-LOG-CRP26103046-879377255485; copies=1; paper=4x6
