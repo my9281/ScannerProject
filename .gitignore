@@ -373,3 +373,12 @@ FodyWeavers.xsd
 bluetti.config
 bluetti.config.tmp
 *.ndjson
+
+*.inspect.ndjson
+
+
+*.inspect.ndjson
+
+
+*.inspect.ndjson
+
