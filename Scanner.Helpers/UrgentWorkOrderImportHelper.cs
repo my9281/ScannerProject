@@ -1,0 +1,313 @@
+using Microsoft.VisualBasic.FileIO;
+using Scanner.Models;
+using System.Globalization;
+using System.IO.Compression;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Linq;
+
+namespace Scanner.Helpers
+{
+    public sealed class UrgentWorkOrderImportHelper
+    {
+        private const int RemarkColumn = 10;
+        private const int ServiceTypeColumn = 11;
+        private const int RequiredColumnCount = 15;
+        private static readonly Regex Whitespace = new Regex(@"\s+", RegexOptions.Compiled);
+
+        public UrgentWorkOrderImportResult Import(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath))
+            {
+                throw new ArgumentException("预报文件路径不能为空。", nameof(filePath));
+            }
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException("找不到预报文件。", filePath);
+            }
+            string extension = Path.GetExtension(filePath);
+            IReadOnlyList<string[]> rows;
+            if (string.Equals(extension, ".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                rows = ReadXlsxRows(filePath);
+            }
+            else if (string.Equals(extension, ".csv", StringComparison.OrdinalIgnoreCase))
+            {
+                rows = ReadCsvRows(filePath);
+            }
+            else
+            {
+                throw new InvalidOperationException("仅支持 .xlsx 或 .csv 预报文件。");
+            }
+            return BuildRules(rows, Path.GetFileNameWithoutExtension(filePath));
+        }
+
+        private static UrgentWorkOrderImportResult BuildRules(IReadOnlyList<string[]> rows, string sourceName)
+        {
+            if (rows == null || rows.Count == 0)
+            {
+                throw new InvalidOperationException("预报文件中没有可读取的数据。");
+            }
+            int headerIndex = FindHeaderIndex(rows);
+            if (headerIndex < 0)
+            {
+                throw new InvalidOperationException("未找到预报表头，请导入 DTC客诉单导出文件（K：故障描述，L：售后处理类型，N：退货物流商，O：退货运单号）。");
+            }
+            int rmaColumn = Array.FindIndex(rows[headerIndex], value => NormalizeText(value).IndexOf("RMA", StringComparison.OrdinalIgnoreCase) >= 0);
+            var oidRules = new Dictionary<string, OidRuleBuilder>(StringComparer.OrdinalIgnoreCase);
+            int importedRows = 0;
+            long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            for (int index = headerIndex + 1; index < rows.Count; index++)
+            {
+                string[] row = rows[index];
+                if (!string.Equals(NormalizeIdentifier(GetField(row, 13)), "FedEx", StringComparison.OrdinalIgnoreCase)) continue;
+                string tracking = NormalizeIdentifier(GetField(row, 14));
+                if (tracking.Length <= 8) continue;
+                importedRows++;
+                string remark = NormalizeText(GetField(row, RemarkColumn));
+                bool isRepair = GetField(row, ServiceTypeColumn).Contains("维修");
+                if (!oidRules.TryGetValue(tracking, out OidRuleBuilder builder))
+                {
+                    builder = new OidRuleBuilder(tracking, sourceName, index + 1, timestamp);
+                    oidRules.Add(tracking, builder);
+                }
+                builder.Add(remark, isRepair, GetField(row, rmaColumn));
+            }
+            return new UrgentWorkOrderImportResult(oidRules.Values.Select(item => item.Build()).ToList(), importedRows, 0, oidRules.Count);
+        }
+
+        private static int FindHeaderIndex(IReadOnlyList<string[]> rows)
+        {
+            for (int index = 0; index < Math.Min(rows.Count, 20); index++)
+            {
+                if (GetField(rows[index], 10) == "故障描述" && GetField(rows[index], 11) == "售后处理类型" &&
+                    GetField(rows[index], 13) == "退货物流商" && GetField(rows[index], 14) == "退货运单号") return index;
+            }
+            return -1;
+        }
+
+        private static IReadOnlyList<string[]> ReadCsvRows(string filePath)
+        {
+            var rows = new List<string[]>();
+            int rowNumber = 0;
+            using (var parser = new TextFieldParser(filePath, Encoding.UTF8))
+            {
+                parser.TextFieldType = FieldType.Delimited;
+                parser.SetDelimiters(",");
+                parser.HasFieldsEnclosedInQuotes = true;
+                parser.TrimWhiteSpace = false;
+                while (!parser.EndOfData)
+                {
+                    rowNumber++;
+                    try
+                    {
+                        rows.Add(parser.ReadFields() ?? Array.Empty<string>());
+                    }
+                    catch (MalformedLineException ex)
+                    {
+                        throw new InvalidOperationException($"CSV 第 {rowNumber} 行格式错误：{ex.Message}", ex);
+                    }
+                }
+            }
+            return rows;
+        }
+
+        private static IReadOnlyList<string[]> ReadXlsxRows(string filePath)
+        {
+            using (FileStream stream = File.Open(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var archive = new ZipArchive(stream, ZipArchiveMode.Read, false))
+            {
+                XNamespace spreadsheet = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+                List<string> sharedStrings = ReadSharedStrings(archive, spreadsheet);
+                ZipArchiveEntry worksheetEntry = archive.GetEntry(GetFirstWorksheetPath(archive));
+                if (worksheetEntry == null)
+                {
+                    throw new InvalidOperationException("Excel 文件中找不到第一个工作表。");
+                }
+                XDocument worksheet = LoadXml(worksheetEntry);
+                var rows = new List<string[]>();
+                foreach (XElement rowElement in worksheet.Descendants(spreadsheet + "row"))
+                {
+                    var values = new string[Math.Max(RequiredColumnCount, rowElement.Elements(spreadsheet + "c").Select(cell => GetColumnIndex((string)cell.Attribute("r")) + 1).DefaultIfEmpty(0).Max())];
+                    foreach (XElement cell in rowElement.Elements(spreadsheet + "c"))
+                    {
+                        int columnIndex = GetColumnIndex((string)cell.Attribute("r"));
+                        if (columnIndex >= 0 && columnIndex < values.Length)
+                        {
+                            values[columnIndex] = ReadCellValue(cell, spreadsheet, sharedStrings);
+                        }
+                    }
+                    rows.Add(values);
+                }
+                return rows;
+            }
+        }
+
+        private static string GetFirstWorksheetPath(ZipArchive archive)
+        {
+            ZipArchiveEntry workbookEntry = archive.GetEntry("xl/workbook.xml");
+            ZipArchiveEntry relationshipsEntry = archive.GetEntry("xl/_rels/workbook.xml.rels");
+            if (workbookEntry == null || relationshipsEntry == null)
+            {
+                throw new InvalidOperationException("Excel 文件结构不完整。");
+            }
+            XNamespace spreadsheet = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+            XNamespace relationships = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+            XDocument workbook = LoadXml(workbookEntry);
+            XElement firstSheet = workbook.Descendants(spreadsheet + "sheet").FirstOrDefault();
+            string relationshipId = firstSheet == null ? null : (string)firstSheet.Attribute(relationships + "id");
+            XDocument relationDocument = LoadXml(relationshipsEntry);
+            XNamespace packageRelationships = "http://schemas.openxmlformats.org/package/2006/relationships";
+            XElement relation = relationDocument.Descendants(packageRelationships + "Relationship").FirstOrDefault(item => string.Equals((string)item.Attribute("Id"), relationshipId, StringComparison.Ordinal));
+            string target = relation == null ? null : (string)relation.Attribute("Target");
+            if (string.IsNullOrWhiteSpace(target))
+            {
+                throw new InvalidOperationException("Excel 文件中找不到第一个工作表关系。");
+            }
+            return target.StartsWith("/", StringComparison.Ordinal) ? target.TrimStart('/') : "xl/" + target.TrimStart('/');
+        }
+
+        private static List<string> ReadSharedStrings(ZipArchive archive, XNamespace spreadsheet)
+        {
+            ZipArchiveEntry entry = archive.GetEntry("xl/sharedStrings.xml");
+            if (entry == null)
+            {
+                return new List<string>();
+            }
+            XDocument document = LoadXml(entry);
+            return document.Descendants(spreadsheet + "si").Select(item => string.Concat(item.Descendants(spreadsheet + "t").Select(text => text.Value))).ToList();
+        }
+
+        private static XDocument LoadXml(ZipArchiveEntry entry)
+        {
+            using (Stream stream = entry.Open())
+            {
+                return XDocument.Load(stream, LoadOptions.None);
+            }
+        }
+
+        private static string ReadCellValue(XElement cell, XNamespace spreadsheet, IReadOnlyList<string> sharedStrings)
+        {
+            string type = (string)cell.Attribute("t");
+            if (string.Equals(type, "inlineStr", StringComparison.Ordinal))
+            {
+                return string.Concat(cell.Descendants(spreadsheet + "t").Select(text => text.Value));
+            }
+            string value = (string)cell.Element(spreadsheet + "v") ?? string.Empty;
+            int sharedIndex;
+            if (string.Equals(type, "s", StringComparison.Ordinal) && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out sharedIndex) && sharedIndex >= 0 && sharedIndex < sharedStrings.Count)
+            {
+                return sharedStrings[sharedIndex];
+            }
+            return value;
+        }
+
+        private static int GetColumnIndex(string cellReference)
+        {
+            if (string.IsNullOrWhiteSpace(cellReference))
+            {
+                return -1;
+            }
+            int index = 0;
+            int position = 0;
+            while (position < cellReference.Length && char.IsLetter(cellReference[position]))
+            {
+                index = index * 26 + char.ToUpperInvariant(cellReference[position]) - 'A' + 1;
+                position++;
+            }
+            return index - 1;
+        }
+
+        private static bool IsEmpty(string[] fields)
+        {
+            return fields == null || fields.All(string.IsNullOrWhiteSpace);
+        }
+
+        private static string GetField(string[] fields, int index)
+        {
+            return fields == null || index < 0 || index >= fields.Length || fields[index] == null ? string.Empty : fields[index].Trim().TrimStart('\uFEFF');
+        }
+
+        internal static string NormalizeIdentifier(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+            var builder = new StringBuilder(value.Length);
+            foreach (char character in value)
+            {
+                if (!char.IsWhiteSpace(character) && character != '\uFEFF' && character != '\u200B')
+                {
+                    builder.Append(character);
+                }
+            }
+            return builder.ToString();
+        }
+
+        private static string NormalizeText(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? string.Empty : Whitespace.Replace(value.Trim().TrimStart('\uFEFF'), " ");
+        }
+
+        private sealed class OidRuleBuilder
+        {
+            private readonly HashSet<string> _rmas = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            private readonly List<string> _remarks = new List<string>();
+            private readonly HashSet<string> _knownRemarks = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            private readonly string _id;
+            private readonly long _timestamp;
+            private bool _isRepair;
+
+            public OidRuleBuilder(string trackingNumber, string sourceName, int rowNumber, long timestamp)
+            {
+                TrackingNumber = trackingNumber;
+                _id = $"IMPORT-OID-{sourceName}-{rowNumber}";
+                _timestamp = timestamp;
+            }
+
+            public string TrackingNumber { get; }
+
+            public void Add(string remark, bool isRepair, string rma)
+            {
+                if (!string.IsNullOrWhiteSpace(remark) && _knownRemarks.Add(remark))
+                {
+                    _remarks.Add(remark);
+                }
+                if (!string.IsNullOrWhiteSpace(rma)) _rmas.Add(rma);
+                _isRepair |= isRepair;
+            }
+
+            public WorkOrderRemark Build()
+            {
+                return new WorkOrderRemark
+                {
+                    Id = _id,
+                    TrackingNumber = TrackingNumber,
+                    Remark = string.Join("；", _remarks),
+                    RmaNumber = string.Join("；", _rmas),
+                    IsForecast = true,
+                    IsRepair = _isRepair,
+                    IsOidRule = true,
+                    RemarkTimestamp = _timestamp
+                };
+            }
+        }
+    }
+
+    public sealed class UrgentWorkOrderImportResult
+    {
+        public UrgentWorkOrderImportResult(IReadOnlyList<WorkOrderRemark> rules, int importedRowCount, int snRuleCount, int oidRuleCount)
+        {
+            Rules = rules ?? throw new ArgumentNullException(nameof(rules));
+            ImportedRowCount = importedRowCount;
+            SnRuleCount = snRuleCount;
+            OidRuleCount = oidRuleCount;
+        }
+
+        public IReadOnlyList<WorkOrderRemark> Rules { get; }
+        public int ImportedRowCount { get; }
+        public int SnRuleCount { get; }
+        public int OidRuleCount { get; }
+    }
+}

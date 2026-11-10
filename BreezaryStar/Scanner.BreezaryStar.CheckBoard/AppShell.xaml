@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Scanner.BreezaryStar.CheckBoard.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Scanner.BreezaryStar.CheckBoard"
+    Title="风扇平板" FlyoutBehavior="Disabled">
+
+    <ShellContent
+        x:Name="HomeContent" Title="风扇平板"
+        Route="MainPage" />
+
+</Shell>

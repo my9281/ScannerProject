@@ -1,0 +1,93 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <UseSystemDrawing>true</UseSystemDrawing>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <RootNamespace>Scanner.WPF</RootNamespace>
+    <AssemblyName>Scanner.WPF</AssemblyName>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+    <CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
+    <CopyDocumentationFilesFromPackages>false</CopyDocumentationFilesFromPackages>
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Services\ApplyUpdate.ps1" LogicalName="Scanner.WPF.ApplyUpdate.ps1" />
+    <ProjectReference Include="..\Scanner.Models\Scanner.Models.csproj" />
+    <ProjectReference Include="..\Scanner.Helpers\Scanner.Helpers.csproj" />
+    <ProjectReference Include="..\Scanner.DI\Scanner.DI.csproj" />
+    <ProjectReference Include="..\Scanner.Controllers\Scanner.Controllers.csproj" />
+    <ProjectReference Include="..\Scanner.ViewModels\Scanner.ViewModels.csproj" />
+    <ProjectReference Include="..\Scanner.DashboardPlugin\Scanner.DashboardPlugin.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3179.45" />
+    <PackageReference Include="Mapsui.Wpf" Version="4.1.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="11.0.0-rc.1.26425.128" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.5-beta1" />
+    <PackageReference Include="System.Speech" Version="11.0.0-rc.1.26425.128" />
+    <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.16" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Include="..\SharedAssets\Languages\Language.en-US.xaml" Link="Languages\Language.en-US.xaml" />
+    <Page Include="..\SharedAssets\Languages\Language.es-ES.xaml" Link="Languages\Language.es-ES.xaml" />
+    <Page Include="..\SharedAssets\Languages\Language.zh-CN.xaml" Link="Languages\Language.zh-CN.xaml" />
+    <Resource Include="logo.png" />
+    <EmbeddedResource Include="Resources\Shipping\SkuCatalog-2026-11-03.xlsx" LogicalName="Scanner.Shipping.SkuCatalog.xlsx" />
+    <Resource Include="Resources\Fonts\IMing.ttf" />
+    <Resource Include="Resources\Fonts\OpenSans-Regular.ttf" />
+    <Resource Include="Resources\Fonts\GenJyuuGothic.ttf" />
+    <Resource Include="Resources\Fonts\ZiHunShouJin.ttf" />
+    <Content Include="Resources\Fonts\OpenSans-OFL.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <AutoGen>true</AutoGen>
+      <DesignTime>true</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <AutoGen>true</AutoGen>
+      <DesignTimeSharedInput>true</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <Target Name="GetDashboardPluginPath">
+    <MSBuild Projects="..\Scanner.DashboardPlugin\Scanner.DashboardPlugin.csproj" Targets="GetTargetPath" Properties="Configuration=$(Configuration)">
+      <Output TaskParameter="TargetOutputs" ItemName="DashboardPluginBinary" />
+    </MSBuild>
+  </Target>
+  <Target Name="CopyDashboardPlugin" AfterTargets="Build" DependsOnTargets="GetDashboardPluginPath">
+    <Copy SourceFiles="@(DashboardPluginBinary)" DestinationFolder="$(OutDir)Plugins" SkipUnchangedFiles="true" />
+  </Target>
+  <Target Name="PublishDashboardPlugin" BeforeTargets="ComputeFilesToPublish" DependsOnTargets="GetDashboardPluginPath">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="@(DashboardPluginBinary)" RelativePath="Plugins\Scanner.DashboardPlugin.dll" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+  <Target Name="ExcludePublishDiagnostics" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="@(ResolvedFileToPublish)" Condition="'%(ResolvedFileToPublish.Extension)' == '.pdb' Or '%(ResolvedFileToPublish.Extension)' == '.xml'" />
+    </ItemGroup>
+  </Target>
+</Project>

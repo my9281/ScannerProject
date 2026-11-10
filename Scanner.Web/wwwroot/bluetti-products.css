@@ -1,0 +1,13 @@
+body { margin: 0; color: #172033; background: #f3f5f8; font: 1rem/1.55 system-ui, sans-serif; }
+main { max-width: 54rem; margin: auto; padding: 1.5rem; }
+a { color: #124f9b; }
+.search, nav { display: flex; align-items: center; gap: .75rem; }
+.search { margin-top: .4rem; }
+input, button { font: inherit; padding: .55rem .7rem; border: 1px solid #7d899c; border-radius: .35rem; }
+input { flex: 1; min-width: 0; }
+button { background: #124f9b; color: white; cursor: pointer; }
+article { background: white; border: 1px solid #d5dce7; border-radius: .5rem; padding: 1rem; margin: .75rem 0; overflow-wrap: anywhere; }
+h2 { font-size: 1.1rem; margin: 0; }
+dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem .8rem; margin-bottom: 0; }
+dt { color: #46536a; }
+dd { margin: 0; white-space: pre-wrap; }

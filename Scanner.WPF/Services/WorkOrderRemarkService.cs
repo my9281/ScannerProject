@@ -1,0 +1,133 @@
+using Newtonsoft.Json;
+using Scanner.Models;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+
+namespace Scanner.WPF.Services
+{
+    public class WorkOrderRemarkService
+    {
+        private const string BaseUrl = "https://repair-rms.vercel.app";
+        private const string RemarksPath = "/api/v1/work-orders/remarks";
+        private static readonly HttpClient HttpClient = CreateHttpClient();
+        private static HttpClient CreateHttpClient()
+        {
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(30);
+            return client;
+        }
+
+        public async Task<WorkOrderRemarkResponse> GetRemarksAsync(string token, long? startTimestamp, int limit)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                throw new UnauthorizedAccessException(Scanner.WPF.Helpers.UiText.Get("WpfComplete244"));
+            }
+            if (limit < 1)
+            {
+                limit = 1;
+            }
+            if (limit > 200)
+            {
+                limit = 200;
+            }
+            long effectiveStartTimestamp = startTimestamp.HasValue ? startTimestamp.Value : GetCurrentMonthStartTimestamp();
+            string requestUrl = RemarksPath + "?start_timestamp=" + effectiveStartTimestamp.ToString(CultureInfo.InvariantCulture) + "&limit=" + limit.ToString(CultureInfo.InvariantCulture);
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, requestUrl))
+            {
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage response;
+                try
+                {
+                    response = await HttpClient.SendAsync(request);
+                }
+                catch (TaskCanceledException)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt024"));
+                }
+                catch (HttpRequestException ex)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt025") + ex.Message);
+                }
+                string responseJson = await response.Content.ReadAsStringAsync();
+                if (response.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt026")));
+                }
+                if (response.StatusCode == HttpStatusCode.Forbidden)
+                {
+                    throw new UnauthorizedAccessException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt027")));
+                }
+                if (!response.IsSuccessStatusCode)
+                {
+                    throw new InvalidOperationException(ReadErrorMessage(responseJson, Scanner.WPF.Helpers.UiText.Get("WpfPrompt028") + ((int)response.StatusCode).ToString()));
+                }
+                WorkOrderRemarkResponse result;
+                try
+                {
+                    result = JsonConvert.DeserializeObject<WorkOrderRemarkResponse>(responseJson);
+                }
+                catch (JsonException ex)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt029") + ex.Message);
+                }
+                if (result == null)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt030"));
+                }
+                if (!result.Success)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt031"));
+                }
+                if (result.WorkOrders == null)
+                {
+                    result.WorkOrders = new List<WorkOrderRemark>();
+                }
+                return result;
+            }
+        }
+
+        public Task<WorkOrderRemarkResponse> GetRemarksAsync(string token)
+        {
+            return GetRemarksAsync(token, null, 200);
+        }
+
+        private static long GetCurrentMonthStartTimestamp()
+        {
+            TimeZoneInfo easternTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime easternNow = TimeZoneInfo.ConvertTimeFromUtc(utcNow, easternTimeZone);
+            DateTime easternMonthStart = new DateTime(easternNow.Year, easternNow.Month, 1, 0, 0, 0, DateTimeKind.Unspecified);
+            DateTime utcMonthStart = TimeZoneInfo.ConvertTimeToUtc(easternMonthStart, easternTimeZone);
+            DateTimeOffset offset = new DateTimeOffset(utcMonthStart, TimeSpan.Zero);
+            return offset.ToUnixTimeSeconds();
+        }
+
+        private static string ReadErrorMessage(string json, string defaultMessage)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+            {
+                return defaultMessage;
+            }
+            try
+            {
+                ApiErrorResponse errorResponse = JsonConvert.DeserializeObject<ApiErrorResponse>(json);
+                if (errorResponse != null && errorResponse.Error != null && !string.IsNullOrWhiteSpace(errorResponse.Error.Message))
+                {
+                    return errorResponse.Error.Message;
+                }
+            }
+            catch
+            {
+            }
+            return defaultMessage;
+        }
+    }
+}

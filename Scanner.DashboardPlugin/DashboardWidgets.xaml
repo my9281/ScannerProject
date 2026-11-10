@@ -1,0 +1,11 @@
+<UserControl x:Class="Scanner.DashboardPlugin.DashboardWidgets" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Loaded="OnLoaded" Unloaded="OnUnloaded" Foreground="#315D7A" FontSize="12">
+ <UserControl.Resources><Style TargetType="TextBlock"><Setter Property="TextTrimming" Value="CharacterEllipsis"/><Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}"/></Style>
+  <Style TargetType="Border"><Setter Property="Background" Value="#EDF6FA"/><Setter Property="BorderBrush" Value="#B9D6E5"/><Setter Property="BorderThickness" Value="1"/><Setter Property="CornerRadius" Value="4"/><Setter Property="Padding" Value="7,4"/><Setter Property="Margin" Value="2"/></Style>
+ </UserControl.Resources>
+ <UniformGrid Columns="2">
+  <Border><StackPanel><TextBlock x:Name="NjClock"/><TextBlock x:Name="BeijingClock"/><TextBlock x:Name="Zones" FontSize="10"/></StackPanel></Border>
+  <Border ToolTip="Newark, NJ · 40.7357, -74.1724 · America/New_York"><StackPanel><TextBlock x:Name="SunTitle"/><TextBlock x:Name="Sun" Text="正在查询…"/><TextBlock x:Name="SunDate" FontSize="10"/></StackPanel></Border>
+  <Border x:Name="WeatherPanel"><StackPanel><TextBlock x:Name="WeatherTitle"/><TextBlock x:Name="Weather" Text="正在查询…"/><TextBlock x:Name="WeatherTime" FontSize="10"/></StackPanel></Border>
+  <Border><StackPanel><TextBlock x:Name="VersionTitle"/><TextBlock x:Name="VersionText"/><TextBlock x:Name="VersionHint" FontSize="10"/></StackPanel></Border>
+ </UniformGrid>
+</UserControl>

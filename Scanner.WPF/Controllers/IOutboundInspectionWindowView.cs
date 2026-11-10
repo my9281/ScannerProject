@@ -1,0 +1,17 @@
+using System.Windows;
+using System.Windows.Controls;
+namespace Scanner.WPF.Controllers
+{
+    public interface IOutboundInspectionWindowView
+    {
+        Window OwnerWindow { get; }
+        TextBlock TextFileTextBlock { get; }
+        TextBlock BaseFileTextBlock { get; }
+        TextBox PalletNumberTextBox { get; }
+        Button PrintButton { get; }
+        Button ExportButton { get; }
+        Button UploadButton { get; }
+        TextBlock SummaryTextBlock { get; }
+        DataGrid ResultDataGrid { get; }
+    }
+}

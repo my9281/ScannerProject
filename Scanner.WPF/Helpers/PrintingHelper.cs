@@ -1,0 +1,611 @@
+﻿using Scanner.Models;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Drawing.Printing;
+using System.IO;
+using System.Linq;
+using System.Printing;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using ZXing;
+using ZXing.Common;
+using ZXing.QrCode;
+using WpfBrushes = System.Windows.Media.Brushes;
+using WpfFontFamily = System.Windows.Media.FontFamily;
+using WpfImage = System.Windows.Controls.Image;
+
+namespace Scanner.WPF.Helpers
+{
+    public enum SpecialLabelKind { TradeIn, Scrapped }
+
+    public sealed class PrintingHelper
+    {
+        private static readonly WpfFontFamily PrintLatinAndNumberFont = new WpfFontFamily("/Scanner.WPF;component/Resources/Fonts/OpenSans-Regular.ttf#Open Sans");
+        private static readonly WpfFontFamily PrintChineseFont = new WpfFontFamily("/Scanner.WPF;component/Resources/Fonts/IMing.ttf#I.Ming");
+        private static readonly WpfFontFamily InspectionOkFont = new WpfFontFamily("字魂蝶影隶书,妙笔隶书梦影体,/Scanner.WPF;component/Resources/Fonts/ZiHunShouJin.ttf#字魂瘦金体");
+        public const string DefaultPaperSize = "4x6";
+        public const string SquarePaperSize = "4x4";
+        private const double WideLabelWidth = 576.0;
+        private const double LabelHeight = 384.0;
+        private const double SquareLabelWidth = 384.0;
+        public static BitmapSource PreviewSpecialLabel(SpecialLabelKind kind)
+        {
+            string text;
+            switch (kind)
+            {
+                case SpecialLabelKind.TradeIn: text = "以旧换新"; break;
+                case SpecialLabelKind.Scrapped: text = "报废"; break;
+                default: throw new ArgumentOutOfRangeException(nameof(kind));
+            }
+            var canvas = new Canvas { Width = WideLabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
+            var label = CreateText(text, 110, WideLabelWidth - 48);
+            label.Measure(new System.Windows.Size(WideLabelWidth - 48, LabelHeight));
+            Canvas.SetLeft(label, 24);
+            Canvas.SetTop(label, (LabelHeight - label.DesiredSize.Height) / 2);
+            canvas.Children.Add(label);
+            return Render(canvas, DefaultPaperSize);
+        }
+
+        public void PrintSpecialLabel(SpecialLabelKind kind, int copies)
+        {
+            if (copies <= 0) throw new ArgumentOutOfRangeException(nameof(copies), UiText.Get("WpfPrompt037"));
+            using (Bitmap bitmap = ToBitmap(PreviewSpecialLabel(kind)))
+            {
+                PrintBitmap(bitmap, DefaultPaperSize, copies);
+            }
+        }
+        public string GetDefaultPrinterName()
+        {
+            using (var server = new LocalPrintServer())
+            {
+                PrintQueue queue = server.DefaultPrintQueue;
+                if (queue == null)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt032"));
+                }
+                return queue.FullName;
+            }
+        }
+
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel)
+        {
+            PrintLabel(serialNumber, copies, workOrder, meterModel, DefaultPaperSize);
+        }
+
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize)
+        {
+            PrintLabel(serialNumber, copies, workOrder, meterModel, paperSize, false);
+        }
+
+        public void PrintLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, bool inspectionOk)
+        {
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk ? "检测OK" : string.Empty, false, false);
+        }
+
+        public void PrintReplacementLabel(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string description, bool repair)
+        {
+            PrintLabelCore(serialNumber, copies, workOrder, meterModel, paperSize, description, true, repair);
+        }
+
+        public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark)
+        {
+            if (string.IsNullOrWhiteSpace(remark)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt033"), nameof(remark));
+            PrintSkuSerialNumberLabel(sku, serialNumber, remark, false);
+        }
+
+        public void PrintSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped)
+        {
+            string normalizedSku = (sku ?? string.Empty).Trim();
+            string normalizedSerialNumber = (serialNumber ?? string.Empty).Trim();
+            string normalizedRemark = (remark ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(normalizedSku)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt034"), nameof(sku));
+            if (string.IsNullOrWhiteSpace(normalizedSerialNumber)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt035"), nameof(serialNumber));
+
+            Canvas label = CreateSkuSerialNumberLabel(normalizedSku, normalizedSerialNumber, normalizedRemark, scrapped);
+            BitmapSource source = Render(label, DefaultPaperSize);
+            using (Bitmap bitmap = ToBitmap(source)) PrintBitmap(bitmap, DefaultPaperSize);
+        }
+
+        public static BitmapSource PreviewSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped = false)
+        {
+            return Render(CreateSkuSerialNumberLabel(sku, serialNumber, remark, scrapped), DefaultPaperSize);
+        }
+
+        private static Canvas CreateSkuSerialNumberLabel(string sku, string serialNumber, string remark, bool scrapped = false)
+        {
+            const double border = 3;
+            const double middle = WideLabelWidth / 2;
+            const double headerBottom = 58;
+            const double remarkTop = 315;
+            var canvas = new Canvas { Width = WideLabelWidth, Height = LabelHeight, Background = WpfBrushes.White };
+
+            AddLine(canvas, border, border, WideLabelWidth - border, border, 3);
+            AddLine(canvas, border, LabelHeight - border, WideLabelWidth - border, LabelHeight - border, 3);
+            AddLine(canvas, border, border, border, LabelHeight - border, 3);
+            AddLine(canvas, WideLabelWidth - border, border, WideLabelWidth - border, LabelHeight - border, 3);
+            AddLine(canvas, middle, border, middle, remarkTop, 3);
+            AddLine(canvas, border, headerBottom, WideLabelWidth - border, headerBottom, 3);
+            AddLine(canvas, border, remarkTop, WideLabelWidth - border, remarkTop, 3);
+
+            AddText(canvas, "SKU", 21, border, 17, middle - border);
+            AddText(canvas, "SN/MESSN", 21, middle, 17, middle - border);
+            AddImage(canvas, CreateCode(sku, BarcodeFormat.QR_CODE, 220, 220), 73, 66, 142, 142, Stretch.Uniform);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 220, 220), middle + 73, 66, 142, 142, Stretch.Uniform);
+            AddText(canvas, Shorten(sku, 34), 15, 15, 218, middle - 30);
+            AddText(canvas, Shorten(serialNumber, 34), 15, middle + 15, 218, middle - 30);
+
+            var remarkLabel = CreateText(scrapped ? "报废" : "备注", 19, 92);
+            Canvas.SetLeft(remarkLabel, 18);
+            Canvas.SetTop(remarkLabel, 338);
+            canvas.Children.Add(remarkLabel);
+            var remarkText = CreateText(scrapped ? "Scrapped / Desechado" : Shorten(remark, 70), 18, WideLabelWidth - 128);
+            remarkText.TextAlignment = TextAlignment.Left;
+            remarkText.TextWrapping = TextWrapping.Wrap;
+            remarkText.Height = 55;
+            Canvas.SetLeft(remarkText, 108);
+            Canvas.SetTop(remarkText, 333);
+            canvas.Children.Add(remarkText);
+            if (scrapped)
+            {
+                AddLine(canvas, border, border, WideLabelWidth - border, LabelHeight - border, 6);
+                AddLine(canvas, WideLabelWidth - border, border, border, LabelHeight - border, 6);
+                Panel.SetZIndex(canvas.Children[canvas.Children.Count - 2], int.MaxValue);
+                Panel.SetZIndex(canvas.Children[canvas.Children.Count - 1], int.MaxValue);
+            }
+            return canvas;
+        }
+
+        private static void AddLine(Canvas canvas, double x1, double y1, double x2, double y2, double thickness)
+        {
+            canvas.Children.Add(new System.Windows.Shapes.Line
+            {
+                X1 = x1,
+                Y1 = y1,
+                X2 = x2,
+                Y2 = y2,
+                Stroke = WpfBrushes.Black,
+                StrokeThickness = thickness
+            });
+        }
+
+        private void PrintLabelCore(string serialNumber, int copies, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel, bool replacementRepair)
+        {
+            if (string.IsNullOrWhiteSpace(serialNumber))
+            {
+                throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt036"), nameof(serialNumber));
+            }
+            if (copies <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(copies), Scanner.WPF.Helpers.UiText.Get("WpfPrompt037"));
+            }
+            string normalizedPaperSize = NormalizePaperSize(paperSize);
+            Canvas label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, normalizedPaperSize, footerDescription, replacementLabel, replacementRepair);
+            BitmapSource source = Render(label, normalizedPaperSize);
+            using (Bitmap bitmap = ToBitmap(source))
+            {
+                for (int i = 0; i < copies; i++)
+                {
+                    PrintBitmap(bitmap, normalizedPaperSize);
+                }
+            }
+        }
+
+        public void PrintOutboundInspection(string palletNumber, IList<OutboundSkuSummary> skuItems)
+        {
+            string pallet = (palletNumber ?? string.Empty).Trim();
+            if (string.IsNullOrWhiteSpace(pallet)) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt038"), nameof(palletNumber));
+            if (skuItems == null || skuItems.Count == 0) throw new ArgumentException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt039"), nameof(skuItems));
+
+            const int itemsPerPage = 24;
+            int pageCount = (skuItems.Count + itemsPerPage - 1) / itemsPerPage;
+            int totalQuantity = skuItems.Sum(item => item.Quantity);
+            for (int pageIndex = 0; pageIndex < pageCount; pageIndex++)
+            {
+                IList<OutboundSkuSummary> pageItems = skuItems.Skip(pageIndex * itemsPerPage).Take(itemsPerPage).ToList();
+                Canvas label = CreateOutboundInspectionLabel(pallet, pageItems, totalQuantity, skuItems.Count, pageIndex + 1, pageCount);
+                BitmapSource source = RenderOutboundLabel(label);
+                using (Bitmap bitmap = ToBitmap(source)) PrintOutboundBitmap(bitmap);
+            }
+        }
+
+        private static Canvas CreateOutboundInspectionLabel(string palletNumber, IList<OutboundSkuSummary> items, int totalQuantity, int skuCount, int pageNumber, int pageCount)
+        {
+            var canvas = new Canvas { Width = SquareLabelWidth, Height = WideLabelWidth, Background = WpfBrushes.White };
+            AddText(canvas, Shorten(palletNumber, 32), 27, 18, 18, SquareLabelWidth - 36);
+            AddText(canvas, string.Format("总数量：{0}    SKU种类：{1}", totalQuantity, skuCount), 15, 18, 58, SquareLabelWidth - 36);
+            AddText(canvas, string.Format("第 {0}/{1} 页", pageNumber, pageCount), 12, 18, 82, SquareLabelWidth - 36);
+
+            for (int index = 0; index < items.Count; index++)
+            {
+                OutboundSkuSummary item = items[index];
+                string line = Shorten(item.Sku, 30) + "    × " + item.Quantity;
+                AddText(canvas, line, 14, 18, 108 + index * 18, SquareLabelWidth - 36);
+            }
+            AddText(canvas, "打印时间：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm"), 11, 18, 554, SquareLabelWidth - 36);
+            return canvas;
+        }
+
+        private static BitmapSource RenderOutboundLabel(Canvas canvas)
+        {
+            canvas.Measure(new System.Windows.Size(canvas.Width, canvas.Height));
+            canvas.Arrange(new Rect(0, 0, canvas.Width, canvas.Height));
+            canvas.UpdateLayout();
+            var bitmap = new RenderTargetBitmap(1200, 1800, 300, 300, PixelFormats.Pbgra32);
+            bitmap.Render(canvas);
+            bitmap.Freeze();
+            return bitmap;
+        }
+
+        private static void PrintOutboundBitmap(Bitmap bitmap)
+        {
+            using (var document = new PrintDocument())
+            {
+                document.PrintController = new StandardPrintController();
+                if (!document.PrinterSettings.IsValid) throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt040"));
+                document.DefaultPageSettings.PaperSize = new PaperSize("4x6 Portrait", 400, 600);
+                document.DefaultPageSettings.Landscape = false;
+                document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+                document.OriginAtMargins = false;
+                document.PrintPage += (sender, args) =>
+                {
+                    if (args.Graphics == null) throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt041"));
+                    args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
+                    args.HasMorePages = false;
+                };
+                document.Print();
+            }
+        }
+
+        public static string NormalizePaperSize(string paperSize)
+        {
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.OrdinalIgnoreCase) ? SquarePaperSize : DefaultPaperSize;
+        }
+
+        private static Canvas CreateLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string paperSize, string footerDescription, bool replacementLabel, bool replacementRepair)
+        {
+            return string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? CreateSquareLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel, replacementRepair) : CreateWideLabel(serialNumber, workOrder, meterModel, footerDescription, replacementLabel, replacementRepair);
+        }
+
+        private static Canvas CreateWideLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel, bool replacementRepair)
+        {
+            bool urgent = workOrder != null && workOrder.IsUrgent;
+            bool repair = workOrder != null && workOrder.IsRepair;
+            bool hasRemark = workOrder != null && (urgent || workOrder.IsForecast);
+            string remark = hasRemark ? Shorten(workOrder.Remark, 50) : string.Empty;
+            var canvas = new Canvas
+            {
+                Width = WideLabelWidth,
+                Height = LabelHeight,
+                Background = WpfBrushes.White
+            };
+            AddText(canvas, "SN : " + serialNumber, 27, 35, 12, WideLabelWidth - 70);
+            string tailText = LastFive(serialNumber);
+            if (!string.IsNullOrWhiteSpace(meterModel))
+            {
+                tailText = meterModel + "  " + tailText;
+            }
+            AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 52 : 40, 30, 62, string.IsNullOrWhiteSpace(meterModel) ? 280 : 390);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 190, 190), WideLabelWidth - 135, 52, 105, 105, Stretch.Uniform);
+            if (urgent)
+            {
+                AddMarker(canvas, "紧急", 95, 118, 150, 46, 32);
+            }
+            if (repair)
+            {
+                AddMarker(canvas, "修", urgent ? 265 : 95, 118, 62, 46, 32);
+            }
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 430, 85), 78, 170, 420, 68, Stretch.Fill);
+            AddText(canvas, serialNumber, 17, 35, 238, WideLabelWidth - 70);
+            if (hasRemark && !string.IsNullOrWhiteSpace(remark))
+            {
+                var remarkText = CreateText("备注：" + remark, 18, WideLabelWidth - 60);
+                remarkText.Height = 58;
+                remarkText.TextAlignment = TextAlignment.Left;
+                remarkText.TextWrapping = TextWrapping.Wrap;
+                Canvas.SetLeft(remarkText, 30);
+                Canvas.SetTop(remarkText, 267);
+                canvas.Children.Add(remarkText);
+            }
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), hasRemark ? 20 : 25, 35, hasRemark ? 348 : 310, WideLabelWidth - 70);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, replacementLabel ? 20 : 260, replacementLabel ? 278 : 280, replacementLabel ? 400 : 300, 102, replacementLabel ? 42 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
+            if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 425, 306, 130, 62, 48);
+            return canvas;
+        }
+
+        private static Canvas CreateSquareLabel(string serialNumber, WorkOrderRemark workOrder, string meterModel, string footerDescription, bool replacementLabel, bool replacementRepair)
+        {
+            bool urgent = workOrder != null && workOrder.IsUrgent;
+            bool repair = workOrder != null && workOrder.IsRepair;
+            bool hasRemark = workOrder != null && (urgent || workOrder.IsForecast);
+            string remark = hasRemark ? Shorten(workOrder.Remark, 38) : string.Empty;
+            var canvas = new Canvas
+            {
+                Width = SquareLabelWidth,
+                Height = LabelHeight,
+                Background = WpfBrushes.White
+            };
+            AddText(canvas, "SN : " + serialNumber, 20, 15, 8, SquareLabelWidth - 30);
+            string tailText = LastFive(serialNumber);
+            if (!string.IsNullOrWhiteSpace(meterModel))
+            {
+                tailText = meterModel + "  " + tailText;
+            }
+            AddText(canvas, tailText, string.IsNullOrWhiteSpace(meterModel) ? 40 : 31, 15, 48, 245);
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.QR_CODE, 170, 170), SquareLabelWidth - 100, 43, 85, 85, Stretch.Uniform);
+            if (urgent)
+            {
+                AddMarker(canvas, "紧急", 35, 101, 110, 40, 26);
+            }
+            if (repair)
+            {
+                AddMarker(canvas, "修", urgent ? 157 : 35, 101, 52, 40, 26);
+            }
+            AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 360, 80), 30, 151, 324, 60, Stretch.Fill);
+            AddText(canvas, serialNumber, 14, 15, 211, SquareLabelWidth - 30);
+            if (hasRemark && !string.IsNullOrWhiteSpace(remark))
+            {
+                var remarkText = CreateText("备注：" + remark, 15, SquareLabelWidth - 30);
+                remarkText.Height = 84;
+                remarkText.TextAlignment = TextAlignment.Left;
+                remarkText.TextWrapping = TextWrapping.Wrap;
+                Canvas.SetLeft(remarkText, 15);
+                Canvas.SetTop(remarkText, 238);
+                canvas.Children.Add(remarkText);
+            }
+            if (!replacementLabel) AddText(canvas, "Date : " + DateTime.Now.ToString("yyyy-MM-dd"), hasRemark ? 17 : 21, 15, hasRemark ? 352 : 320, SquareLabelWidth - 30);
+            if (!string.IsNullOrWhiteSpace(footerDescription)) AddFooterDescription(canvas, footerDescription, replacementLabel, 15, replacementLabel ? 278 : 280, replacementLabel ? 270 : 354, 102, replacementLabel ? 38 : 81, replacementLabel ? TextAlignment.Left : TextAlignment.Right);
+            if (replacementLabel && replacementRepair) AddRepairFooter(canvas, 284, 310, 85, 56, 40);
+            return canvas;
+        }
+
+        private static void AddFooterDescription(Canvas canvas, string description, bool includeReplacementDate, double left, double top, double width, double height, double fontSize, TextAlignment alignment)
+        {
+            DateTime replacementDate = includeReplacementDate ? NewJerseyNow() : default;
+            var text = new TextBlock
+            {
+                Text = includeReplacementDate ? description + Environment.NewLine + "替标日期 " + replacementDate.ToString("MMM d", System.Globalization.CultureInfo.GetCultureInfo("en-US")) + OrdinalSuffix(replacementDate.Day) : description,
+                Width = width,
+                Height = height,
+                FontFamily = InspectionOkFont,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Normal,
+                FontStyle = FontStyles.Italic,
+                Foreground = WpfBrushes.Black,
+                TextAlignment = alignment,
+                TextWrapping = TextWrapping.Wrap,
+                LineHeight = fontSize * 0.9
+            };
+            Canvas.SetLeft(text, left);
+            Canvas.SetTop(text, top);
+            canvas.Children.Add(text);
+        }
+
+        private static void AddRepairFooter(Canvas canvas, double left, double top, double width, double height, double fontSize)
+        {
+            var text = new TextBlock
+            {
+                Text = "维修",
+                Width = width,
+                Height = height,
+                FontFamily = InspectionOkFont,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Bold,
+                FontStyle = FontStyles.Italic,
+                Foreground = WpfBrushes.Black,
+                TextAlignment = TextAlignment.Right
+            };
+            Canvas.SetLeft(text, left);
+            Canvas.SetTop(text, top);
+            canvas.Children.Add(text);
+        }
+
+        private static DateTime NewJerseyNow()
+        {
+            string id = Environment.OSVersion.Platform == PlatformID.Win32NT ? "Eastern Standard Time" : "America/New_York";
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById(id));
+        }
+
+        private static string OrdinalSuffix(int day)
+        {
+            if (day % 100 >= 11 && day % 100 <= 13) return "th";
+            return day % 10 == 1 ? "st" : day % 10 == 2 ? "nd" : day % 10 == 3 ? "rd" : "th";
+        }
+
+        private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize)
+        {
+            TextBlock markerText = CreateText(text, fontSize, width);
+            markerText.VerticalAlignment = VerticalAlignment.Center;
+            var border = new Border
+            {
+                Width = width,
+                Height = height,
+                BorderBrush = WpfBrushes.Black,
+                BorderThickness = new Thickness(3),
+                Background = WpfBrushes.White,
+                Child = markerText
+            };
+            Canvas.SetLeft(border, left);
+            Canvas.SetTop(border, top);
+            canvas.Children.Add(border);
+        }
+
+        private static void AddText(Canvas canvas, string text, double fontSize, double left, double top, double width)
+        {
+            TextBlock block = CreateText(text, fontSize, width);
+            Canvas.SetLeft(block, left);
+            Canvas.SetTop(block, top);
+            canvas.Children.Add(block);
+        }
+
+        private static TextBlock CreateText(string text, double fontSize, double width)
+        {
+            var block = new TextBlock
+            {
+                Width = width,
+                FontSize = fontSize,
+                FontWeight = FontWeights.Bold,
+                FontFamily = PrintLatinAndNumberFont,
+                Foreground = WpfBrushes.Black,
+                TextAlignment = TextAlignment.Center,
+                TextWrapping = TextWrapping.NoWrap
+            };
+            AddFontRuns(block, text ?? string.Empty);
+            return block;
+        }
+
+        private static void AddFontRuns(TextBlock block, string text)
+        {
+            if (string.IsNullOrEmpty(text)) return;
+            int start = 0;
+            bool currentIsChinese = IsChineseCharacter(text[0]);
+            for (int index = 1; index <= text.Length; index++)
+            {
+                bool boundary = index == text.Length || IsChineseCharacter(text[index]) != currentIsChinese;
+                if (!boundary) continue;
+                block.Inlines.Add(new Run(text.Substring(start, index - start))
+                {
+                    FontFamily = currentIsChinese ? PrintChineseFont : PrintLatinAndNumberFont
+                });
+                if (index < text.Length)
+                {
+                    start = index;
+                    currentIsChinese = IsChineseCharacter(text[index]);
+                }
+            }
+        }
+
+        private static bool IsChineseCharacter(char character)
+        {
+            return char.IsDigit(character) || (character >= '\u3000' && character <= '\u303F') ||
+                   (character >= '\u3400' && character <= '\u4DBF') ||
+                   (character >= '\u4E00' && character <= '\u9FFF') ||
+                   (character >= '\uF900' && character <= '\uFAFF') ||
+                   (character >= '\uFF00' && character <= '\uFFEF');
+        }
+
+        private static void AddImage(Canvas canvas, BitmapSource source, double left, double top, double width, double height, Stretch stretch)
+        {
+            var image = new WpfImage
+            {
+                Source = source,
+                Width = width,
+                Height = height,
+                Stretch = stretch
+            };
+            Canvas.SetLeft(image, left);
+            Canvas.SetTop(image, top);
+            canvas.Children.Add(image);
+        }
+
+        private static BitmapSource CreateCode(string content, BarcodeFormat format, int width, int height)
+        {
+            EncodingOptions options = format == BarcodeFormat.QR_CODE ? (EncodingOptions)new QrCodeEncodingOptions
+            {
+                Width = width,
+                Height = height,
+                Margin = 1,
+                CharacterSet = "UTF-8"
+            }
+            : new EncodingOptions
+            {
+                Width = width,
+                Height = height,
+                Margin = 2,
+                PureBarcode = true
+            };
+            var writer = new ZXing.Windows.Compatibility.BarcodeWriter
+            {
+                Format = format,
+                Options = options
+            };
+            using (Bitmap bitmap = writer.Write(content))
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+                stream.Position = 0;
+                var image = new BitmapImage();
+                image.BeginInit();
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.StreamSource = stream;
+                image.EndInit();
+                image.Freeze();
+                return image;
+            }
+        }
+
+        private static BitmapSource Render(Canvas canvas, string paperSize)
+        {
+            canvas.Measure(new System.Windows.Size(canvas.Width, canvas.Height));
+            canvas.Arrange(new Rect(0, 0, canvas.Width, canvas.Height));
+            canvas.UpdateLayout();
+            int pixelWidth = string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal) ? 1200 : 1800;
+            var bitmap = new RenderTargetBitmap(pixelWidth, 1200, 300, 300, PixelFormats.Pbgra32);
+            bitmap.Render(canvas);
+            bitmap.Freeze();
+            return bitmap;
+        }
+
+        private static Bitmap ToBitmap(BitmapSource source)
+        {
+            using (var stream = new MemoryStream())
+            {
+                var encoder = new PngBitmapEncoder();
+                encoder.Frames.Add(BitmapFrame.Create(source));
+                encoder.Save(stream);
+                stream.Position = 0;
+                using (var temporary = new Bitmap(stream))
+                {
+                    return new Bitmap(temporary);
+                }
+            }
+        }
+
+        private static void PrintBitmap(Bitmap bitmap, string paperSize, int copies = 1)
+        {
+            using (var document = new PrintDocument())
+            {
+                document.PrintController = new StandardPrintController();
+                if (!document.PrinterSettings.IsValid)
+                {
+                    throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt040"));
+                }
+                bool square = string.Equals(paperSize, SquarePaperSize, StringComparison.Ordinal);
+                document.DefaultPageSettings.PaperSize = square ? new PaperSize("4x4", 400, 400) : new PaperSize("4x6", 400, 600);
+                document.DefaultPageSettings.Landscape = !square;
+                document.DefaultPageSettings.Margins = new Margins(0, 0, 0, 0);
+                document.OriginAtMargins = false;
+                int printedPages = 0;
+                document.PrintPage += (sender, args) =>
+                {
+                    if (args.Graphics == null)
+                    {
+                        throw new InvalidOperationException(Scanner.WPF.Helpers.UiText.Get("WpfPrompt041"));
+                    }
+                    args.Graphics.DrawImage(bitmap, new Rectangle(args.PageBounds.Left, args.PageBounds.Top, args.PageBounds.Width, args.PageBounds.Height));
+                    args.HasMorePages = ++printedPages < copies;
+                };
+                document.Print();
+            }
+        }
+
+        private static string LastFive(string value)
+        {
+            return value.Length <= 5 ? value : value.Substring(value.Length - 5);
+        }
+
+        private static string Shorten(string value, int maxLength)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+            string clean = string.Join(" ", value.Split((char[])null, StringSplitOptions.RemoveEmptyEntries));
+            return clean.Length <= maxLength ? clean : clean.Substring(0, maxLength) + "…";
+        }
+    }
+}

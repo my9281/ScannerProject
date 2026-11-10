@@ -1,0 +1,69 @@
+using Scanner.Server.BLL;
+using Scanner.Server.DAL;
+using Scanner.Server.Model;
+using Scanner.Web.Filters;
+using Scanner.Web.Services;
+using System.Text.Json;
+
+namespace Scanner.Web.Extensions;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddScannerWeb(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilter>())
+            .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
+        services.Configure<UploadOptions>(configuration.GetSection(UploadOptions.SectionName));
+        services.Configure<FeishuRobotOptions>(configuration.GetSection(FeishuRobotOptions.SectionName));
+        services.AddHttpClient<IFeishuRobotService, FeishuRobotService>();
+        services.AddScoped<ApiKeyAuthorizationFilter>();
+        services.AddScoped<ApiExceptionFilter>();
+        services.AddScoped<IUploadService, UploadService>();
+        services.AddSingleton<WpfUpdateService>();
+        services.AddSingleton<DocumentationService>();
+        services.AddMemoryCache();
+        services.Configure<TencentDocsOptions>(configuration.GetSection(TencentDocsOptions.SectionName));
+        services.AddHttpClient(TencentDocsService.HttpClientName, client => client.Timeout = TimeSpan.FromSeconds(30))
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })
+            .RemoveAllLoggers();
+        services.AddSingleton<TencentDocsTokenStore>();
+        services.AddSingleton<TencentDocsService>();
+        services.AddScoped<IBreezaryStore, MySqlBreezaryStore>();
+        services.AddScoped<IBreezaryRemote, BreezaryRemote>();
+        services.AddScoped<BreezarySyncService>();
+        services.AddScoped<IBreezaryInboundStore, MySqlBreezaryInboundStore>();
+        services.AddScoped<BreezaryInboundService>();
+        services.AddHostedService<BreezarySyncWorker>();
+        services.AddScoped<HomeMetricsService>();
+        services.AddScoped<IAccountService, MySqlAccountService>();
+        services.AddScoped<IWorkOrderService, MySqlWorkOrderService>();
+        services.AddScoped<WorkOrderBatchService>();
+        services.AddScannerDataAccess(configuration);
+        services.AddScannerBusinessLogic();
+        return services;
+    }
+
+    private static IServiceCollection AddScannerDataAccess(this IServiceCollection services, IConfiguration configuration)
+    {
+        DatabaseOptions options = configuration.GetSection(DatabaseOptions.SectionName).Get<DatabaseOptions>() ?? new();
+        services.AddSingleton(options);
+        services.AddSingleton<IMySqlConnectionFactory, MySqlConnectionFactory>();
+        services.AddScoped<IDatabaseHealthRepository, DatabaseHealthRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IShelvedPalletRepository, ShelvedPalletRepository>();
+        services.AddScoped<IPalletScanRepository, PalletScanRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
+        services.AddScoped<SkuSnBatchRepository>();
+        return services;
+    }
+
+    private static IServiceCollection AddScannerBusinessLogic(this IServiceCollection services)
+    {
+        services.AddScoped<IDatabaseHealthService, DatabaseHealthService>();
+        services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<IShelvedPalletService, ShelvedPalletService>();
+        services.AddScoped<IPalletScanService, PalletScanService>();
+        services.AddScoped<ILocationService, LocationService>();
+        return services;
+    }
+}

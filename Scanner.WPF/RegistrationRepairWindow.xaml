@@ -1,0 +1,48 @@
+<Window Icon="{DynamicResource Logo}" x:Class="Scanner.WPF.RegistrationRepairWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="{DynamicResource WpfComplete053}" Width="750" Height="760" ResizeMode="CanResize" MinWidth="700" MinHeight="550"
+        WindowStartupLocation="CenterOwner" Background="#EAF3F7" FontFamily="{DynamicResource AppFontFamily}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto"><StackPanel Margin="28">
+        <TextBlock Text="{DynamicResource WpfComplete053}" FontSize="28" FontWeight="Bold" Foreground="#082F4D"/>
+        <TextBlock Text="{DynamicResource WpfComplete071}" TextWrapping="Wrap" Margin="0,12,0,14"/>
+        <TextBlock Text="{DynamicResource WpfComplete072}" TextWrapping="Wrap" Margin="0,0,0,8"/>
+        <TextBlock Text="{DynamicResource WpfComplete073}" TextWrapping="Wrap" Margin="0,0,0,18"/>
+        <Button x:Name="ImportButton" Content="{DynamicResource WpfComplete074}" Click="Import_Click" MinWidth="180" Padding="12,0" Height="36" HorizontalAlignment="Left"/>
+        <TextBlock x:Name="FileText" Text="{DynamicResource WpfComplete075}" TextTrimming="CharacterEllipsis" Margin="0,8,0,12"/>
+        <TextBlock Text="{DynamicResource WpfComplete076}" TextWrapping="Wrap"/>
+        <TextBlock x:Name="StatusText" Text="{DynamicResource WpfComplete077}" TextWrapping="Wrap" Margin="0,14,0,0"/>
+        <Button x:Name="ExportButton" Content="{DynamicResource WpfComplete078}" Click="Export_Click" IsEnabled="False" MinWidth="180" Padding="12,0" Height="40" HorizontalAlignment="Right" Margin="0,18,0,0"/>
+        <Separator Margin="0,18,0,14"/>
+        <TextBlock Text="{DynamicResource WpfComplete079}" FontSize="21" FontWeight="Bold" Foreground="#082F4D"/>
+        <TextBlock Text="{DynamicResource WpfComplete080}" TextWrapping="Wrap" Margin="0,8,0,12"/>
+        <TextBlock x:Name="BaseFileText" TextTrimming="CharacterEllipsis" Margin="0,0,0,10"/>
+        <WrapPanel Orientation="Horizontal">
+            <TextBlock Text="{DynamicResource WpfComplete081}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+            <ComboBox x:Name="YearBox" IsEditable="True" Width="110"/>
+            <TextBlock Text="{DynamicResource WpfComplete064}" VerticalAlignment="Center" Margin="18,0,8,0"/>
+            <ComboBox x:Name="MonthBox" Width="80"/>
+            <Button x:Name="WarehouseExportButton" Content="{DynamicResource WpfComplete082}" Click="WarehouseExport_Click" IsEnabled="False" Margin="20,0,0,0" Padding="12,8"/>
+        </WrapPanel>
+        <Separator Margin="0,18,0,14"/>
+        <TextBlock Text="{DynamicResource WpfComplete083}" FontSize="21" FontWeight="Bold" Foreground="#082F4D"/>
+        <TextBlock Text="{DynamicResource WpfComplete084}" TextWrapping="Wrap" Margin="0,8,0,12"/>
+        <WrapPanel>
+            <Button x:Name="WebInventoryButton" Content="{DynamicResource WpfComplete085}" Click="ImportWebInventory_Click" Padding="12,8" Margin="0,0,8,8"/>
+            <Button x:Name="InventoryFileButton" Content="{DynamicResource WpfComplete086}" Click="ImportInventoryFile_Click" Padding="12,8" Margin="0,0,8,8"/>
+            <Button x:Name="InventoryTemplateButton" Content="{DynamicResource WpfComplete087}" Click="InventoryTemplate_Click" Padding="12,8" Margin="0,0,0,8"/>
+        </WrapPanel>
+        <TextBlock Text="{DynamicResource WpfComplete088}" TextWrapping="Wrap"/>
+        <TextBlock x:Name="InventoryText" Text="{DynamicResource WpfComplete089}" TextWrapping="Wrap" Margin="0,8,0,10"/>
+        <WrapPanel>
+            <TextBlock Text="{DynamicResource WpfComplete090}" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <DatePicker x:Name="SnapshotDateBox" Width="145" Margin="0,0,16,8"/>
+            <TextBlock Text="{DynamicResource WpfComplete091}" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <ComboBox x:Name="RentYearBox" IsEditable="True" Width="95" Margin="0,0,16,8"/>
+            <TextBlock Text="{DynamicResource WpfComplete064}" VerticalAlignment="Center" Margin="0,0,8,8"/>
+            <ComboBox x:Name="RentMonthBox" Width="65" Margin="0,0,0,8"/>
+        </WrapPanel>
+        <Button x:Name="RentExportButton" Content="{DynamicResource WpfComplete092}" IsEnabled="False" Click="RentExport_Click" Padding="14,8" HorizontalAlignment="Right" Margin="0,8,0,0"/>
+        <TextBlock x:Name="RentStatusText" TextWrapping="Wrap" Margin="0,10,0,0"/>
+    </StackPanel></ScrollViewer>
+</Window>

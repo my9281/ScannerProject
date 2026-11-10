@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>BreezaryStar · 腾讯文档</title><link rel="stylesheet" href="/account.css">
+<style>
+.card{max-width:1100px;width:calc(100% - 48px)}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}button{width:auto;padding:10px 18px}button:disabled{opacity:.5}dl{overflow-wrap:anywhere}.table-wrap{overflow:auto;max-height:480px;border:1px solid #dce4ed;border-radius:8px}table{border-collapse:collapse;width:100%;white-space:pre-wrap;font-size:14px}th,td{padding:12px;text-align:left;border-bottom:1px solid #e3e8ef;min-width:130px}th{background:#f4f7fa;position:sticky;top:0}.raw{max-height:240px;overflow:auto;white-space:pre-wrap}.note{color:#596579;font-size:14px;line-height:1.7}
+</style></head>
+<body><main class="card">
+<h1>BreezaryStar · 腾讯文档</h1>
+<p class="sub">Breezary 收货记录保存在服务器数据库。日常查看读取本地表，修改后推送回腾讯文档。仅管理员可操作。</p>
+<dl class="profile"><dt>服务器配置</dt><dd id="configured">检查中…</dd><dt>授权状态</dt><dd id="connected">—</dd><dt>回调地址</dt><dd id="callback">—</dd><dt>文档 / 工作表</dt><dd id="target">—</dd></dl>
+<div class="actions">
+<button id="connect" disabled>连接 / 重新授权腾讯文档</button>
+<button id="sheets" disabled>检查工作表</button>
+<button id="load" disabled>查看本地数据</button>
+<button id="pull" disabled>从腾讯同步入库</button>
+<button id="push" disabled>推送待同步改动</button>
+<button id="cancel" disabled>取消读取</button>
+</div>
+<p id="message" class="message" role="status" aria-live="polite"></p>
+<p class="note">首次使用先执行建表 SQL，再点“从腾讯同步入库”。查看本地数据不调用腾讯接口；编辑先保存在本地，推送仅更新改过的字段。同一字段在腾讯被修改时会提示冲突。定时同步可在服务器配置中开启。</p>
+<div class="table-wrap"><table id="records"><thead><tr><th>收货记录</th></tr></thead><tbody><tr><td>尚未读取</td></tr></tbody></table></div>
+<details><summary>工作表检查结果</summary><pre id="sheet-result" class="raw">尚未检查</pre></details>
+<dialog id="edit-dialog" style="width:min(760px,85vw);border:1px solid #dce4ed;border-radius:10px;padding:24px">
+<h2>编辑本地字段</h2><p class="note">仅用于管理员同步调试。修改字段值 JSON 并保留原有类型，保存后进入待推送队列。</p>
+<form id="edit-form"><textarea id="edit-values" aria-label="本地字段值 JSON" rows="12" style="width:100%;box-sizing:border-box;font-family:monospace"></textarea>
+<details id="conflict-detail" hidden><summary>腾讯最新字段值（供核对）</summary><pre id="remote-values" class="raw"></pre></details>
+<label id="rebase-label" hidden><input id="rebase" type="checkbox"> 我已核对腾讯最新值，以其为基准重新提交此次改动</label>
+<p id="edit-message" role="status"></p><div class="actions"><button type="submit" id="save-edit">保存到本地</button><button type="button" id="close-edit">取消</button></div></form></dialog>
+<p><a href="/account.html">返回账户</a> · <a href="https://docs.qq.com/open/" target="_blank" rel="noopener noreferrer">腾讯文档开放平台</a></p>
+</main><script src="/tencent-docs.js"></script></body></html>
