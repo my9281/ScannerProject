@@ -1,5 +1,11 @@
 # Goods Receiving Procedure
 
+[中文](../sop/收货SOP.md) | [English](../sop-en/Receiving-SOP.md) | [Español](../sop-es/Recepcion-SOP.md)
+
+[Back to SOP index](README.md) | [Multilingual reading guide](Language-Guide.md)
+
+Translation/index review: 2026-11-09. Workflow status is unchanged; unresolved rules remain pending confirmation.
+
 This procedure is for the receiving manager. It explains how to record received goods in the shared spreadsheet **“美国Logistar仓收件登记表-更新版9.02”**. Receiving registration and inventory putaway are separate processes; this procedure covers receiving registration.
 
 Chinese button names and spreadsheet tab names are retained so staff can identify them in the system.

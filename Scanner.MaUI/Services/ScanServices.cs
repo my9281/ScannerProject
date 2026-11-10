@@ -100,7 +100,25 @@ public sealed class ScanService
 public sealed class MeterModelService
 {
     private static readonly string[] Models = { "AC200PL", "AC200L", "AC200P", "AC200M", "AC180P", "AC180T", "EL100V2", "EL200V2", "B300K2", "SP100L", "AC180", "AC240", "AC300", "AC500", "EL30V2", "EL300", "EL400", "B300K", "B300S", "B500K", "PV350", "PV200", "AP300", "AC50B", "AC2A", "AC2P", "EB3A", "AC60", "AC70", "EL10", "B230", "B300", "PS54", "EB55", "EB70", "PINA" };
-    public string Find(string code) => Models.OrderByDescending(model => model.Length)
+    public string Find(string code) => GetModels().OrderByDescending(model => model.Length)
         .FirstOrDefault(model => (code ?? string.Empty).Contains(model, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
-    public IReadOnlyList<string> GetModels() => Models.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToArray();
+    public IReadOnlyList<string> GetModels() => Models.Concat(ReadCustomModels()).OrderBy(x => x, StringComparer.OrdinalIgnoreCase).ToArray();
+
+    private const string CustomModelsKey = "CustomMeterModels";
+
+    public string AddCustomModel(string input)
+    {
+        string model = string.Concat(input.Where(character => !char.IsWhiteSpace(character))).ToUpperInvariant();
+        if (model.Length == 0) throw new ArgumentException(LocalizationService.Current.Get("ModelRequired"));
+        string? existing = GetModels().FirstOrDefault(value => value.Equals(model, StringComparison.OrdinalIgnoreCase));
+        if (existing is not null) return existing;
+
+        string[] customModels = ReadCustomModels().Append(model).ToArray();
+        Preferences.Default.Set(CustomModelsKey, System.Text.Json.JsonSerializer.Serialize(customModels));
+        return model;
+    }
+
+    private static string[] ReadCustomModels() =>
+        System.Text.Json.JsonSerializer.Deserialize<string[]>(Preferences.Default.Get(CustomModelsKey, "[]")) ?? [];
+
 }

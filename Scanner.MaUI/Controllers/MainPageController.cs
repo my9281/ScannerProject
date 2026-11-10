@@ -14,8 +14,12 @@ public sealed class MainPageController : ControllerBase
 
     private async Task<string?> SelectModelAsync(IReadOnlyList<string> models)
     {
-        string cancel = LocalizationService.Current.Get("Cancel");
-        string? selected = await _window.SelectActionAsync(LocalizationService.Current.Get("ModelSelectionTitle"), cancel, models.ToArray());
+        LocalizationService text = LocalizationService.Current;
+        string cancel = text.Get("Cancel");
+        string addModel = text.Get("AddModelLabel");
+        string? selected = await _window.SelectActionAsync(LocalizationService.Current.Get("ModelSelectionTitle"), cancel, models.Prepend(addModel).ToArray());
+        if (selected == addModel)
+            return await _window.PromptAsync(addModel, text.Get("AddAndPrintModel"), cancel);
         return selected == cancel ? null : selected;
     }
     public async Task AppearingAsync()

@@ -1,18 +1,22 @@
 # 仓库操作 SOP
 
-| SOP | 内容状态 |
-| --- | --- |
-| [收货 SOP](收货SOP.md) | 已整理：经理扫码录单、Excel 复制与共享表格登记 |
-| [太阳能板测试 SOP](太阳能板测试SOP.md) | 待梳理 |
-| [良品区操作 SOP](良品区操作SOP.md) | 已补系统操作、待现场验收：PDA 入托/上传、WPF 核对、良品区换托；已上架移库与工单位置更正流程待明确 |
-| [上架 SOP](上架SOP.md) | 部分完成：检测/翻新、标签、逐箱扫码、WPF 打印、签字、缠膜及送达待确认区；确认、上传、正式上架与交接未闭环 |
-| [退回返修 SOP](退回返修SOP.md) | 已整理：维修记录、面单、出库和装车；最终提交界面细节待补充 |
-| [报废 SOP](报废SOP.md) | 待梳理 |
-| [月底结算 SOP](月底结算SOP.md) | 待梳理 |
-| [年度结算 SOP](年度结算SOP.md) | 待梳理 |
+[文档总目录](../README.md) | [English](../sop-en/README.md) | [Español](../sop-es/README.md)
 
-`images/` 保存操作截图，`attachments/` 保存参考 Excel。文档中的相对链接可以直接打开对应资料。
+更新：2026-11-09。先选择语言，再按作业打开 SOP。每篇顶部可切换同一流程的中、英、西版本。
 
-上架流程的逐项检查、系统行为和待确认清单见 [上架 SOP 完备性检查](../上架SOP完备性检查.md)。目录中的“已整理”描述文档覆盖范围，不表示现场已验收。
+[多语言阅读指引](Language-Guide.md)：语言选择、按钮识别、截图和附件、流程状态及异常处理。
 
-首次安装、环境初始化及维护见 [系统使用与维护](../系统使用与维护.md)。良品区换托使用重新扫描更新归属，不等同于已上架库存库位间移动；后者仍缺专用流程。
+| SOP | 内容状态 | 中文 | English | Español |
+| --- | --- | --- | --- | --- |
+| [收货](收货SOP.md) | 已整理：收货扫码、Excel 和共享表登记 | [中文](../sop/收货SOP.md) | [English](../sop-en/Receiving-SOP.md) | [Español](../sop-es/Recepcion-SOP.md) |
+| [太阳能板测试](太阳能板测试SOP.md) | 待梳理：原文仅占位 | [中文](../sop/太阳能板测试SOP.md) | [English](../sop-en/Solar-Panel-Testing-SOP.md) | [Español](../sop-es/Pruebas-Paneles-Solares-SOP.md) |
+| [良品区操作](良品区操作SOP.md) | 已补系统操作，待现场验收；已上架移库等规则待明确 | [中文](../sop/良品区操作SOP.md) | [English](../sop-en/Good-Stock-SOP.md) | [Español](../sop-es/Stock-Apto-SOP.md) |
+| [上架](上架SOP.md) | 部分完成：止于整托送达待确认；正式上架未闭环 | [中文](../sop/上架SOP.md) | [English](../sop-en/Putaway-SOP.md) | [Español](../sop-es/Ubicacion-SOP.md) |
+| [退回返修](退回返修SOP.md) | 已整理：核实、维修登记、面单、出库及装车；现场变更须同步维护 | [中文](../sop/退回返修SOP.md) | [English](../sop-en/退回返修SOP-en.md) | [Español](../sop-es/Retorno-Reparacion-SOP.md) |
+| [报废](报废SOP.md) | 待梳理：原文仅占位 | [中文](../sop/报废SOP.md) | [English](../sop-en/Scrapping-SOP.md) | [Español](../sop-es/Descarte-SOP.md) |
+| [月底结算](月底结算SOP.md) | 待梳理：原文仅占位 | [中文](../sop/月底结算SOP.md) | [English](../sop-en/Month-End-Settlement-SOP.md) | [Español](../sop-es/Cierre-Mensual-SOP.md) |
+| [年度结算](年度结算SOP.md) | 待梳理：原文仅占位 | [中文](../sop/年度结算SOP.md) | [English](../sop-en/Annual-Settlement-SOP.md) | [Español](../sop-es/Cierre-Anual-SOP.md) |
+
+“已整理”表示文档覆盖范围，不表示现场已验收；“待梳理”翻译版同样保留占位，不作为完整可执行流程。上架缺口见[完备性检查](../上架SOP完备性检查.md)。
+
+截图存于 `images/`，参考 Excel 存于 `attachments/`；翻译版共用。首次安装和维护见[系统使用与维护](../系统使用与维护.md)。良品区换托不等于已上架库存库位间移动。

@@ -46,7 +46,7 @@ public sealed class DocumentationService
     public IReadOnlyList<DocumentationEntry> List() => Files()
         .Where(item => item.Key.EndsWith(".md", StringComparison.OrdinalIgnoreCase))
         .Select(item => new DocumentationEntry(item.Key, Title(item.Value), Section(item.Key)))
-        .OrderBy(item => item.Section == "仓库 SOP" ? 0 : item.Section == "SOP (English)" ? 1 : item.Section == "系统资料" ? 2 : item.Section == "数据库资料" ? 3 : 4)
+        .OrderBy(item => item.Section == "仓库 SOP" ? 0 : item.Section == "SOP (English)" ? 1 : item.Section == "SOP (Español)" ? 2 : item.Section == "系统资料" ? 3 : item.Section == "数据库资料" ? 4 : 5)
         .ThenBy(item => item.Path, StringComparer.Ordinal).ToArray();
 
     public (string File, string Mime)? FindFile(string? path)
@@ -82,7 +82,8 @@ public sealed class DocumentationService
                     : "/api/documents/file?path=" + Uri.EscapeDataString(target);
         }
         string title = Title(file);
-        string language = path.StartsWith("sop-en/", StringComparison.Ordinal) ? "en" : "zh-CN";
+        string language = path.StartsWith("sop-en/", StringComparison.Ordinal) ? "en"
+            : path.StartsWith("sop-es/", StringComparison.Ordinal) ? "es" : "zh-CN";
         string html = "<!doctype html><html lang=\"" + language + "\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>"
             + WebUtility.HtmlEncode(title) + "</title><style>"
             + "body{font:17px/1.8 system-ui,sans-serif;color:#172b3a;background:#fff;margin:0;padding:20px;overflow-wrap:anywhere}"
@@ -112,5 +113,6 @@ public sealed class DocumentationService
         ?? System.IO.Path.GetFileNameWithoutExtension(file);
     private static string Section(string path) => path.StartsWith("sop/") ? "仓库 SOP"
         : path.StartsWith("sop-en/") ? "SOP (English)"
+        : path.StartsWith("sop-es/") ? "SOP (Español)"
         : path.StartsWith("history/") ? "历史归档" : path.StartsWith("database/") ? "数据库资料" : "系统资料";
 }

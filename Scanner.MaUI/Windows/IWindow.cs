@@ -7,5 +7,6 @@ public interface IWindow
     Task OpenOperationsAsync();
     Task ShowAlertAsync(string title, string message, string cancel);
     Task<string?> SelectActionAsync(string title, string cancel, string[] options);
+    Task<string?> PromptAsync(string title, string accept, string cancel);
     void Dispatch(Action action);
 }

@@ -25,6 +25,10 @@ internal static class Program
         Check(ShippingSkuCatalog.Search(sku.Sku.ToLowerInvariant()).Any(r => r.Sku == sku.Sku), "Case insensitive SKU lookup");
         Check(ShippingSkuCatalog.Search("PV61.5KW 配件包").Any(r => r.Sku == sku.Sku), "Description multi keyword lookup");
         Check(sku.Length == "" && sku.Width == "" && sku.Height == "", "Missing dimensions remain blank");
+        Check(!sku.HasShippingMeasurements, "Empty package measurements cannot be applied");
+        var measuredSku = ShippingSkuCatalog.Search("P-EL200V2-CL-GY-10").First();
+        Check(measuredSku.LengthInches == 17 && measuredSku.WidthInches == 13 &&
+            measuredSku.HeightInches == 19 && measuredSku.WeightPounds == 52, "Package measurements round up after conversion");
         Check(ShippingSkuCatalog.Search("不存在的SKU-xyz123").Length == 0, "No match");
         Check(ShippingSkuCatalog.Search("  ").Length == ShippingSkuCatalog.Entries.Count, "Empty query");
         string root = Path.Combine(Environment.CurrentDirectory, "output", "OmsCodeValidation"); Directory.CreateDirectory(root);

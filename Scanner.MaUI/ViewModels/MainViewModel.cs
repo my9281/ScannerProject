@@ -20,12 +20,15 @@ public sealed class MainViewModel : ViewModelBase
         _paperSize = Preferences.Default.Get("LabelPaperSize", "4 × 6");
         RefreshLocalizedText();
         ProcessCommand = new Command(async () => await ProcessAsync(), () => !Busy); OpenLogCommand = new Command(async () => await OpenLogAsync(), () => !Busy);
+        InspectionOkCommand = new Command(async () => await ProcessAsync(inspectionOk: true), () => !Busy && CanPrint);
         UploadCommand = new Command(async () => await UploadAsync(), () => !Busy); ImportCommand = new Command(async () => await ImportAsync(), () => !Busy);
         RefreshCommand = new Command(async () => await RefreshAsync(true), () => !Busy); LogoutCommand = new Command(async () => await LogoutAsync(), () => !Busy);
     }
     public event EventHandler? FocusRequested; public event EventHandler? LogoutRequested;
     public Func<IReadOnlyList<string>, Task<string?>>? ModelSelectionRequested { get; set; }
     public ICommand ProcessCommand { get; }
+    public bool CanPrint => _printer.IsSupported;
+    public ICommand InspectionOkCommand { get; }
     public ICommand OpenLogCommand { get; }
     public ICommand UploadCommand { get; }
     public ICommand ImportCommand { get; }
@@ -45,9 +48,9 @@ public sealed class MainViewModel : ViewModelBase
     public string PaperSize { get => _paperSize; set { if (SetProperty(ref _paperSize, value)) Preferences.Default.Set("LabelPaperSize", value); } }
 
     public async Task InitializeAsync() { Notify(nameof(OperatorText)); Notify(nameof(ServiceText)); if (_sessions.Current?.IsLocalMode != true) await RefreshAsync(false); RequestFocus(); }
-    private async Task ProcessAsync()
+    private async Task ProcessAsync(bool inspectionOk = false)
     {
-        if (Busy) return;
+        if (Busy || (inspectionOk && !CanPrint)) return;
         string code = ScanService.NormalizeCode(ScanCode);
         if (string.IsNullOrWhiteSpace(code))
         {
@@ -65,22 +68,28 @@ public sealed class MainViewModel : ViewModelBase
                 ScanCode = string.Empty;
                 return;
             }
-            ScanResult result = await _scan.RecordAsync(code);
+            ScanResult result = inspectionOk
+                ? new ScanResult(code, false, OidService.IsOid(code) ? new OidScanResult(true, 0) : OidScanResult.NotOid)
+                : await _scan.RecordAsync(code);
             WorkOrderMatch? match = _workOrders.Resolve(result.Code, result.Oid.IsOid);
             WorkOrderRemark? workOrder = match?.WorkOrder;
             string printCode = match?.GetPrintCode(result.Code) ?? result.Code;
             string model = _models.Find(printCode);
             if (result.Oid.IsOid) await _speech.SpeakOidAsync();
-            int copies = _printer.IsSupported ? PrintCopies : 0;
-            if (result.Oid.IsOid && !result.Oid.ShouldPrint) SetStatus(L.Format("MobileOidFirst", result.Code), false);
+            int copies = inspectionOk ? 1 : CanPrint ? PrintCopies : 0;
+            if (!inspectionOk && result.Oid.IsOid && !result.Oid.ShouldPrint) SetStatus(L.Format("MobileOidFirst", result.Code), false);
             else if (copies > 0)
             {
-                if (string.IsNullOrWhiteSpace(model) && ModelSelectionRequested is not null) model = await ModelSelectionRequested(_models.GetModels()) ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(model) && ModelSelectionRequested is not null)
+                {
+                    string? selected = await ModelSelectionRequested(_models.GetModels());
+                    if (selected is not null) model = _models.AddCustomModel(selected);
+                }
                 if (string.IsNullOrWhiteSpace(model))
                 {
                     SetStatus(L.Format("ModelSelectionCancelled", printCode), true); return;
                 }
-                await _printer.PrintAsync(printCode, copies, workOrder, model, PaperSize);
+                await _printer.PrintAsync(printCode, copies, workOrder, model, PaperSize, inspectionOk);
                 await _speech.SpeakTailAsync(printCode);
                 SetStatus(L.Format("MobilePrinted", copies, printCode), false);
             }
@@ -114,7 +123,7 @@ public sealed class MainViewModel : ViewModelBase
     private async Task UploadAsync() { Busy = true; try { ScanUploadResult result = await _upload.UploadAsync(_log.FilePath); SetStatus(L.Format("UploadScanLogSuccess", result.FileName), false); } catch (Exception ex) { SetStatus(L.Format("UploadScanLogFailed", ex.Message), true); } finally { Busy = false; } }
     private async Task LogoutAsync() { await _sessions.ClearSessionAsync(); LogoutRequested?.Invoke(this, EventArgs.Empty); }
     private void SetStatus(string text, bool error) { Status = text; StatusColor = Color.FromArgb(error ? "#C43D4B" : "#25805A"); }
-    private void RefreshCommands() { foreach (Command command in new[] { (Command)ProcessCommand, (Command)OpenLogCommand, (Command)UploadCommand, (Command)ImportCommand, (Command)RefreshCommand, (Command)LogoutCommand }) command.ChangeCanExecute(); }
+    private void RefreshCommands() { foreach (Command command in new[] { (Command)ProcessCommand, (Command)InspectionOkCommand, (Command)OpenLogCommand, (Command)UploadCommand, (Command)ImportCommand, (Command)RefreshCommand, (Command)LogoutCommand }) command.ChangeCanExecute(); }
     public void RefreshLocalizedText()
     {
         foreach (string property in new[] { nameof(OperatorText), nameof(CountText), nameof(LogText), nameof(ServiceText), nameof(LastRefreshText), nameof(PrintCopies) }) Notify(property);

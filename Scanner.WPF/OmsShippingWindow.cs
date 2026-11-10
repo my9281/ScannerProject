@@ -58,7 +58,20 @@ namespace Scanner.WPF
             _products.SelectionChanged += (_, _) => InvalidateQuote();
             Field("customer", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow33"), row?.WorkOrder); Field("name", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow34"), row?.Name); Field("email", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow35"), row?.Email); Field("phone", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow36"), row?.Phone); Field("address", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow37"), row?.Address);
             Label(Scanner.WPF.Helpers.UiText.Get("WpfNewWindow38"));
-            Button("查询 SKU 尺寸 / 类型 / 描述", () => { new ShippingSkuWindow(row?.Model ?? "") { Owner = this }.ShowDialog(); return Task.CompletedTask; });
+            Button("查询并应用 SKU 尺寸 / 重量", () =>
+            {
+                var lookup = new ShippingSkuWindow(row?.Model ?? "") { Owner = this };
+                if (lookup.ShowDialog() == true)
+                {
+                    var sku = lookup.SelectedSku;
+                    _fields["length"].Text = sku.LengthInches?.ToString(CultureInfo.InvariantCulture) ?? "";
+                    _fields["width"].Text = sku.WidthInches?.ToString(CultureInfo.InvariantCulture) ?? "";
+                    _fields["height"].Text = sku.HeightInches?.ToString(CultureInfo.InvariantCulture) ?? "";
+                    _fields["weight"].Text = sku.WeightPounds?.ToString(CultureInfo.InvariantCulture) ?? "";
+                    _status.Text = $"已应用 SKU {sku.Sku} 的包装尺寸和重量（IN / LB）。";
+                }
+                return Task.CompletedTask;
+            });
             Field("length", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow39")); Field("width", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow40")); Field("height", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow41")); Field("weight", Scanner.WPF.Helpers.UiText.Get("WpfNewWindow42"));
             Button(Scanner.WPF.Helpers.UiText.Get("WpfNewWindow43"), async () =>
             {

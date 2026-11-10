@@ -1,5 +1,11 @@
 # Procedimiento de recepción de mercancía
 
+[中文](../sop/收货SOP.md) | [English](../sop-en/Receiving-SOP.md) | [Español](../sop-es/Recepcion-SOP.md)
+
+[Volver al índice](README.md) | [Guía multilingüe](Language-Guide.md)
+
+Revisión de traducción/índice: 2026-11-09. Se conserva el estado del proceso; las reglas pendientes siguen sin confirmar.
+
 Este procedimiento está dirigido al responsable de recepción. Su objetivo es registrar la mercancía recibida en la hoja compartida **“美国Logistar仓收件登记表-更新版9.02”**. El registro de recepción y el ingreso al inventario son procesos independientes; este documento describe el registro de recepción.
 
 Los nombres de botones, archivos y pestañas se conservan en chino para facilitar su identificación en el sistema.

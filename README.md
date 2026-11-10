@@ -11,7 +11,7 @@
 | [文档总目录](docs/README.md) | 操作 SOP、技术资料与历史归档 |
 | [系统使用与维护](docs/系统使用与维护.md) | 首次安装、数据库与账号初始化、客户端配置、升级、备份与排障 |
 | [PDA 良品区操作](docs/sop/良品区操作SOP.md) | SN 入托、上传核对、良品区换托及移库限制 |
-| [仓库操作 SOP](docs/sop/README.md) | 收货、测试、上架、良品区、返修、报废和结算 |
+| [仓库操作 SOP](docs/sop/README.md) / [English](docs/sop-en/README.md) / [Español](docs/sop-es/README.md) | 三语目录：收货、测试、上架、良品区、返修、报废和结算；[多语言指引](docs/sop/Language-Guide.md) |
 | [工程总览](docs/项目结构审计.md) | 全部 17 个工程的职责、平台、依赖与遗留目录 |
 | [上架 SOP 完备性检查](docs/上架SOP完备性检查.md) | 已覆盖步骤、缺口、系统行为及闭环验收条件 |
 | [总需求与实现](request.md) | 全平台需求、WPF 目录、Web/API/SQL/部署、Mac MAUI、验收与限制 |

@@ -22,6 +22,11 @@
   <ItemGroup>
     <PackageReference Include="Markdig" Version="0.41.3" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Scanner.WPF\Services\ShippingSkuCatalog.cs" Link="Services\ShippingSkuCatalog.cs" />
+    <EmbeddedResource Include="..\Scanner.WPF\Resources\Shipping\SkuCatalog-2026-11-03.xlsx"
+                      LogicalName="Scanner.Shipping.SkuCatalog.xlsx" />
+  </ItemGroup>
   <PropertyGroup>
     <PublishTrimmed>false</PublishTrimmed>
     <CompressionEnabled>false</CompressionEnabled>

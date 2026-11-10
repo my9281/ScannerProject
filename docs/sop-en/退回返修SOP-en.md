@@ -1,5 +1,11 @@
 # BLUETTI Return-for-Repair Standard Operating Procedure (SOP)
 
+[中文](../sop/退回返修SOP.md) | [English](../sop-en/退回返修SOP-en.md) | [Español](../sop-es/Retorno-Reparacion-SOP.md)
+
+[Back to SOP index](README.md) | [Multilingual reading guide](Language-Guide.md)
+
+Translation/index review: 2026-11-09. Workflow status is unchanged; unresolved rules remain pending confirmation.
+
 ## 1. Document Information
 
 | Item | Description |

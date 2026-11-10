@@ -28,7 +28,7 @@ public interface ILabelPrinter
 {
     bool IsSupported { get; }
     string GetDefaultPrinterName();
-    Task PrintAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize);
+    Task PrintAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize, bool inspectionOk = false);
 }
 
 public sealed class LabelPrinter : ILabelPrinter
@@ -62,21 +62,21 @@ public sealed class LabelPrinter : ILabelPrinter
         return "当前平台不支持自动标签打印";
 #endif
     }
-    public Task PrintAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize)
+    public Task PrintAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize, bool inspectionOk = false)
     {
 #if WINDOWS
-        return Task.Run(() => { EnsureWindowsPrintFonts(); PrintWindows(serialNumber, copies, workOrder, meterModel, paperSize); });
+        return Task.Run(() => { EnsureWindowsPrintFonts(); PrintWindows(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk); });
 #elif MACCATALYST
-        return PrintMacAsync(serialNumber, copies, workOrder, meterModel, paperSize);
+        return PrintMacAsync(serialNumber, copies, workOrder, meterModel, paperSize, inspectionOk);
 #else
         throw new PlatformNotSupportedException("自动标签打印当前仅支持 Windows。	");
 #endif
     }
 #if WINDOWS
-    private static void PrintWindows(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize)
+    private static void PrintWindows(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize, bool inspectionOk)
     {
         if (string.IsNullOrWhiteSpace(serialNumber)) throw new ArgumentException("打印编号不能为空。");
-        using Bitmap label = CreateLabel(serialNumber.Trim(), workOrder, meterModel);
+        using Bitmap label = CreateLabel(serialNumber.Trim(), workOrder, meterModel, inspectionOk);
         for (int index = 0; index < copies; index++)
         {
             using PrintDocument document = new();
@@ -90,7 +90,7 @@ public sealed class LabelPrinter : ILabelPrinter
             document.Print();
         }
     }
-    private static Bitmap CreateLabel(string serialNumber, WorkOrderRemark? workOrder, string meterModel)
+    private static Bitmap CreateLabel(string serialNumber, WorkOrderRemark? workOrder, string meterModel, bool inspectionOk)
     {
         Bitmap bitmap = new(1800, 1200, PixelFormat.Format32bppArgb);
         bitmap.SetResolution(300, 300);
@@ -108,6 +108,7 @@ public sealed class LabelPrinter : ILabelPrinter
             graphics.DrawRectangle(new Pen(DrawingColor.Black, 8), 285, 355, 450, 130);
             DrawMixedCentered(graphics, "紧急", 30, new RectangleF(285, 365, 450, 110));
         }
+        if (inspectionOk) DrawMixedCentered(graphics, "检测OK", 30, new RectangleF(760, 365, 480, 110));
         using Bitmap barcode = CreateBarcode(serialNumber, BarcodeFormat.CODE_128, 1320, 220);
         graphics.DrawImage(barcode, 240, 510, 1320, 220);
         DrawMixedCentered(graphics, serialNumber, 17, new RectangleF(100, 745, 1600, 80));
@@ -211,9 +212,9 @@ public sealed class LabelPrinter : ILabelPrinter
 #endif
 
 #if MACCATALYST
-    private static async Task PrintMacAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize)
+    private static async Task PrintMacAsync(string serialNumber, int copies, WorkOrderRemark? workOrder, string meterModel, string paperSize, bool inspectionOk)
     {
-        string pdf = CreateMacLabelPdf(serialNumber, workOrder, meterModel, paperSize);
+        string pdf = CreateMacLabelPdf(serialNumber, workOrder, meterModel, paperSize, inspectionOk);
         await MainThread.InvokeOnMainThreadAsync(async () =>
         {
             UIPrintInteractionController controller = UIPrintInteractionController.SharedPrintController;
@@ -225,7 +226,7 @@ public sealed class LabelPrinter : ILabelPrinter
         });
     }
 
-    private static string CreateMacLabelPdf(string serialNumber, WorkOrderRemark? workOrder, string meterModel, string paperSize)
+    private static string CreateMacLabelPdf(string serialNumber, WorkOrderRemark? workOrder, string meterModel, string paperSize, bool inspectionOk)
     {
         string path = Path.Combine(FileSystem.CacheDirectory, $"label_{Guid.NewGuid():N}.pdf");
         CGRect page = paperSize.Contains("4 × 4", StringComparison.Ordinal) ? new CGRect(0, 0, 288, 288) : new CGRect(0, 0, 432, 288);
@@ -240,6 +241,7 @@ public sealed class LabelPrinter : ILabelPrinter
         DrawCentered(string.IsNullOrWhiteSpace(meterModel) ? tail : $"{meterModel}  {tail}", 30, 42, 310);
         DrawCode(context, serialNumber, BarcodeFormat.QR_CODE, new CGRect(330, 12, 88, 88));
         if (workOrder?.IsUrgent == true) { context.SetLineWidth(3); context.StrokeRect(new CGRect(55, 88, 110, 35)); DrawCentered("紧急", 22, 93, 220); }
+        if (inspectionOk) DrawCentered("检测OK", 22, 93, 432);
         DrawCode(context, serialNumber, BarcodeFormat.CODE_128, new CGRect(42, 132, 348, 62));
         DrawCentered(serialNumber, 13, 200, 432);
         if (workOrder?.IsUrgent == true && !string.IsNullOrWhiteSpace(workOrder.Remark)) DrawCentered("备注：" + workOrder.Remark.Replace('\r', ' ').Replace('\n', ' '), 11, 226, 432);

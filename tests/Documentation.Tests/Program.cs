@@ -112,6 +112,31 @@ try
                 Check(english!.Html.Contains(Convert.ToBase64String(File.ReadAllBytes(Path.Combine(repoDocs, "sop", reference.Groups[1].Value)))), "English SOP displays shared image: " + reference.Groups[1].Value);
             Check(english!.Html.Contains("/api/documents/file?path=sop%2Fattachments%2F"), "English SOP uses protected shared attachment links");
         }
+        foreach (var (folder, language, section) in new[]
+        {
+            ("sop", "zh-CN", "仓库 SOP"),
+            ("sop-en", "en", "SOP (English)"),
+            ("sop-es", "es", "SOP (Español)")
+        })
+        {
+            var localized = library!.Where(item => item.Path.StartsWith(folder + "/", StringComparison.Ordinal)
+                && File.Exists(Path.Combine(repoDocs, item.Path))).ToArray();
+            Check(localized.Length == 10 && localized.All(item => item.Section == section), "Each language lists eight SOPs, its index and reading guide: " + folder);
+            foreach (var item in localized)
+            {
+                var view = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=" + Uri.EscapeDataString(item.Path));
+                Check(view!.Html.Contains("<html lang=\"" + language + "\">"), "Reader language metadata: " + item.Path);
+                Check(!view.Html.Contains("href=\"#\">English") && !view.Html.Contains("href=\"#\">Español"), "Language links resolve: " + item.Path);
+            }
+        }
+        Check(Array.FindIndex(library!, item => item.Section == "SOP (English)") < Array.FindIndex(library!, item => item.Section == "SOP (Español)")
+            && Array.FindIndex(library!, item => item.Section == "SOP (Español)") < Array.FindIndex(library!, item => item.Section == "系统资料"),
+            "SOP language sections precede technical documentation");
+        var spanish = await client.GetFromJsonAsync<DocumentationView>("api/documents/render?path=sop-es/Retorno-Reparacion-SOP.md");
+        foreach (System.Text.RegularExpressions.Match reference in imageReferences)
+            Check(spanish!.Html.Contains(Convert.ToBase64String(File.ReadAllBytes(Path.Combine(repoDocs, "sop", reference.Groups[1].Value)))),
+                "Spanish repair SOP displays shared image: " + reference.Groups[1].Value);
+        Check(spanish!.Html.Contains("/api/documents/file?path=sop%2Fattachments%2F"), "Spanish SOP uses protected shared attachment links");
     }
     Console.WriteLine($"PASS: {checks} documentation integration checks.");
     if (preview)

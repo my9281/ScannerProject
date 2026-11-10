@@ -31,6 +31,7 @@
                             <Picker Grid.Column="1" ItemsSource="{Binding PaperSizes}" SelectedItem="{Binding PaperSize}" HorizontalOptions="Fill" />
                         </Grid>
                         <Button Text="{DynamicResource ProcessScanLabel}" Command="{Binding ProcessCommand}" HeightRequest="50" BackgroundColor="#2457D6" TextColor="White" FontAttributes="Bold" CornerRadius="10"/>
+                        <Button Text="{DynamicResource WpfComplete095}" Command="{Binding InspectionOkCommand}" IsVisible="{Binding CanPrint}" />
                     </VerticalStackLayout>
                 </Border>
                 <Border Padding="18" BackgroundColor="White" Stroke="#DDE4F0" StrokeShape="RoundRectangle 14">

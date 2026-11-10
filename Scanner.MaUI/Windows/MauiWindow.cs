@@ -12,5 +12,7 @@ public sealed class MauiWindow : IWindow
     public Task OpenOperationsAsync() => Page.Navigation.PushAsync(_services.GetRequiredService<OperationsPage>());
     public Task ShowAlertAsync(string title, string message, string cancel) => Page.Navigation.NavigationStack.Last().DisplayAlertAsync(title, message, cancel);
     public Task<string?> SelectActionAsync(string title, string cancel, string[] options) => Page.Navigation.NavigationStack.Last().DisplayActionSheetAsync(title, cancel, null, options);
+    public Task<string?> PromptAsync(string title, string accept, string cancel) =>
+        Page.Navigation.NavigationStack.Last().DisplayPromptAsync(title, string.Empty, accept, cancel);
     public void Dispatch(Action action) => MainThread.BeginInvokeOnMainThread(action);
 }

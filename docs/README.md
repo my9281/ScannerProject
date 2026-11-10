@@ -1,6 +1,6 @@
 # 文档目录
 
-更新：2026-10-21。按用途查阅：现场操作看 SOP；了解各工程看工程总览；业务细节看总需求及专项说明；部署看数据库、发布与配置文档。历史归档仅供追溯。
+更新：2026-11-09。按用途查阅：现场操作看 SOP；了解各工程看工程总览；业务细节看总需求及专项说明；部署看数据库、发布与配置文档。历史归档仅供追溯。
 
 ## 优先阅读
 
@@ -10,7 +10,7 @@
 | 首次安装、初始化与日常维护 | [系统使用与维护](系统使用与维护.md)：数据库、服务端、账号、WPF、PDA、平板、升级和故障处理 |
 | PDA 良品区扫描与换托 | [良品区操作 SOP](sop/良品区操作SOP.md)：入托、上传、换托核对及尚缺的移库流程 |
 | 判断上架流程能否完整执行 | [上架 SOP 完备性检查](上架SOP完备性检查.md)：当前未闭环，列明待确认事项 |
-| 按步骤执行仓库操作 | [中文 SOP](sop/README.md)；英文目前仅有返修 SOP |
+| 按步骤执行仓库操作 | [中文](sop/README.md) / [English](sop-en/README.md) / [Español](sop-es/README.md)；[多语言指引](sop/Language-Guide.md) |
 | 维护功能和接口 | [总需求与实现](../request.md)及下方专项文档 |
 
 本文档目录与专项说明共同维护。工程清单以工程总览为准；现场操作以对应 SOP 为准，技术实现不自动构成已批准的现场规则。工程源码及工程内 README 链接用于仓库查阅，未随 Web 发布的文件不能在在线文档阅读器中打开。
@@ -19,7 +19,13 @@
 
 [SOP 目录](sop/README.md) 包含收货、测试、良品区、返修、报废和结算流程，截图与参考表格随 SOP 保存。
 
-[英文 SOP 目录](sop-en/README.md) 提供独立的英文版本，图片及附件与中文版本共用。
+| 语言 / Language / Idioma | SOP 目录 / Index / Índice | 阅读指引 / Guide / Guía |
+| --- | --- | --- |
+| 中文 | [中文 SOP](sop/README.md) | [多语言阅读指引](sop/Language-Guide.md) |
+| English | [Warehouse SOPs](sop-en/README.md) | [Multilingual reading guide](sop-en/Language-Guide.md) |
+| Español | [Procedimientos de almacén](sop-es/README.md) | [Guía multilingüe](sop-es/Language-Guide.md) |
+
+三种语言覆盖相同的 8 项 SOP 入口；收货、良品区、上架和返修有正文，太阳能板测试、报废、月底和年度结算的中文源文仍待梳理，翻译版保留相同状态。图片及附件与中文版本共用。文档语言切换与应用界面语言设置分别操作。
 
 ## 系统功能与技术资料
 

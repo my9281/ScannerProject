@@ -1,0 +1,71 @@
+@model Scanner.Web.Controllers.BluettiProductsPage
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BLUETTI 产品查询</title>
+    <link rel="stylesheet" href="/bluetti-products.css">
+</head>
+<body>
+<main>
+    <a href="/">返回首页</a>
+    <h1>BLUETTI 产品查询</h1>
+    <form action="/bluetti-products" method="get" role="search">
+        <label for="q">输入 SKU、型号、料号、条码或产品关键词</label>
+        <div class="search">
+            <input type="search" name="q" id="q" value="@Model.Query" maxlength="120" required>
+            <button type="submit">查询</button>
+        </div>
+    </form>
+    @if (Model.Query.Length > 0)
+    {
+        <p>匹配 @Model.MatchCount.ToString("N0") 条</p>
+        @foreach (var product in Model.Products)
+        {
+            <article>
+                <h2>@product.Sku</h2>
+                <p>@product.Description</p>
+                <dl>
+                    <dt>型号</dt><dd>@product.Model</dd>
+                    <dt>料号</dt><dd>@product.MaterialNumber</dd>
+                    <dt>物料名称</dt><dd>@product.MaterialName</dd>
+                    <dt>类别 / 版本</dt><dd>@product.Category / @product.Version</dd>
+                    @if (product.HasShippingMeasurements)
+                    {
+                        <dt>发货尺寸 (cm)</dt><dd>@product.Length × @product.Width × @product.Height</dd>
+                        <dt>重量 (kg)</dt><dd>@product.Weight</dd>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(product.Specification))
+                    {
+                        <dt>规格</dt><dd>@product.Specification</dd>
+                    }
+                    @{
+                        var barcodes = new[] { product.Upc, product.Ean, product.Jan }
+                            .Where(value => !string.IsNullOrWhiteSpace(value)).ToArray();
+                    }
+                    @if (barcodes.Length > 0)
+                    {
+                        <dt>条码</dt><dd>@string.Join(" / ", barcodes)</dd>
+                    }
+                </dl>
+            </article>
+        }
+        @if (Model.PageCount > 1)
+        {
+            <nav aria-label="搜索结果分页">
+                @if (Model.Page > 1)
+                {
+                    <a href="@Url.Action("Index", new { q = Model.Query, page = Model.Page - 1 })">上一页</a>
+                }
+                <span>第 @Model.Page / @Model.PageCount 页</span>
+                @if (Model.Page < Model.PageCount)
+                {
+                    <a href="@Url.Action("Index", new { q = Model.Query, page = Model.Page + 1 })">下一页</a>
+                }
+            </nav>
+        }
+    }
+</main>
+</body>
+</html>

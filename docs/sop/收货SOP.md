@@ -1,5 +1,11 @@
 # 收货 SOP
 
+[中文](../sop/收货SOP.md) | [English](../sop-en/Receiving-SOP.md) | [Español](../sop-es/Recepcion-SOP.md)
+
+[返回本语言目录](README.md) | [多语言阅读指引](Language-Guide.md)
+
+翻译与目录整理：2026-11-09。各语言保留相同流程状态；未明确的规则仍待确认。
+
 本 SOP 供经理使用，目标是把收到的货物登记到共享表格 **“美国Logistar仓收件登记表-更新版9.02”**。收货登记和入库是两个独立过程，这里只讲收货登记。
 
 ## 1. 导出预报和工单

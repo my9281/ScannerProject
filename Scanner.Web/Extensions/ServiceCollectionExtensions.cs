@@ -11,7 +11,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddScannerWeb(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddControllers(options => options.Filters.Add<ApiExceptionFilter>())
+        services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilter>())
             .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase);
         services.Configure<UploadOptions>(configuration.GetSection(UploadOptions.SectionName));
         services.Configure<FeishuRobotOptions>(configuration.GetSection(FeishuRobotOptions.SectionName));
