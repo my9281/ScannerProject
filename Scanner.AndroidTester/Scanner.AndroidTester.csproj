@@ -79,6 +79,7 @@
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="appsettings.xml" LogicalName="Scanner.AndroidTester.appsettings.xml" />
+        <Compile Include="..\Scanner.Server.Model\RepairScan.cs" Link="Contracts\RepairScan.cs" />
         <Compile Include="..\Scanner.Server.Model\PalletScan.cs" Link="Contracts\PalletScan.cs" />
         <Compile Include="..\Scanner.Server.Model\LocationScan.cs" Link="Contracts\LocationScan.cs" />
         <Compile Include="..\Scanner.Server.Model\SkuSnBatch.cs" Link="Contracts\SkuSnBatch.cs" />

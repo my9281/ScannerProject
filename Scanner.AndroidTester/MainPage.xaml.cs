@@ -41,25 +41,9 @@ public partial class MainPage : ContentPage
             await Navigation.PushAsync(new PalletLookupPage(services.GetRequiredService<PalletScanApiService>(), services.GetRequiredService<AppSettings>()));
         };
         layout.Add(lookup);
-        var print = new Button { ImageSource = "menu_print.png", ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 12), Text = UiText.T("打印标签"), HeightRequest = 72, FontSize = 22 };
-        print.Clicked += async (_, _) => await Navigation.PushAsync(new PrintLabelPage(Handler!.MauiContext!.Services.GetRequiredService<Services.LatestScan>()));
-        layout.Add(print);
-        var pairs = new Button { ImageSource = "menu_pairs.png", ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 12), Text = UiText.T("SKU / SN 扫描"), HeightRequest = 72, FontSize = 22 };
-        pairs.Clicked += async (_, _) => {
-            var services = Handler!.MauiContext!.Services;
-            await Navigation.PushAsync(new SkuSnScanPage(services.GetRequiredService<Services.SkuSnSession>(), services.GetRequiredService<Services.AppSettings>()));
-        };
-        layout.Add(pairs);
-        layout.Add(new Label { Text = UiText.T("基础资料"), FontSize = 18, TextColor = Color.FromArgb("#92979D"), Margin = new Thickness(0, 12, 0, 0) });
-        var locations = new Button { ImageSource = "menu_locations.png", ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 12), Text = UiText.T("库位扫描"), HeightRequest = 72, FontSize = 22 };
-        locations.Clicked += async (_, _) => {
-            var services = Handler!.MauiContext!.Services;
-            await Navigation.PushAsync(new LocationScanPage(services.GetRequiredService<Services.LocationScanSession>(), services.GetRequiredService<Services.LocationScanApiService>()));
-        };
-        layout.Add(locations);
-        var accessories = new Button { ImageSource = "menu_accessories.png", ContentLayout = new Button.ButtonContentLayout(Button.ButtonContentLayout.ImagePosition.Left, 12), Text = UiText.T("上架配件"), HeightRequest = 72, FontSize = 22 };
-        accessories.Clicked += async (_, _) => await Navigation.PushAsync(new LocationSkuPage(Handler!.MauiContext!.Services.GetRequiredService<AppSettings>(), false));
-        layout.Add(accessories);
+        var records = new Button { ImageSource = "menu_pairs.png", Text = "扫描记录", HeightRequest = 72, FontSize = 22 };
+        records.Clicked += async (_, _) => await Navigation.PushAsync(new RepairScanPage(Handler!.MauiContext!.Services.GetRequiredService<AppSettings>()));
+        layout.Add(records);
          Content = new ScrollView { Content = layout };
     }
 }
