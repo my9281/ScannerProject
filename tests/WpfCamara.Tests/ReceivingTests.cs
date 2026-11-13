@@ -11,7 +11,7 @@ internal static class ReceivingTests
 {
     public static void Run()
     {
-        var report = ReceivingForecast.LoadDefault();
+        var report = CurrentBatchTests.History().CreateForecast();
         Check(report.Pallets.Count == 19 && report.Rows.Count == 158, "预报卡板或行数错误");
         Check(report.Rows.Sum(x => x.Quantity) == 621, "预报总量错误");
         Check(report.Rows.Where(x => x.CanPrint).Sum(x => x.Quantity) == 573, "已知数量错误");
@@ -53,7 +53,7 @@ internal static class ReceivingTests
             try { ReceivingForecast.Parse(text); throw new Exception("无效预报未拒绝"); } catch (System.FormatException) { }
         }
         Directory.CreateDirectory("artifacts/camara/receiving");
-        foreach (var row in report.Rows.Where(x => x.CanPrint))
+        foreach (var row in report.Rows.Concat(ReceivingForecast.LoadDefault().Rows).Where(x => x.CanPrint))
         {
             var label = ReceivingLabel.Create(row, 1, row.Quantity);
             Layout(label);
@@ -80,25 +80,17 @@ internal static class ReceivingTests
         }
         var window = new MainWindow();
         Check(((TabControl)window.FindName("Mode")).SelectedIndex == 2, "未默认打开按板模式");
-        ((ComboBox)window.FindName("Pallet")).SelectedValue = 17;
         var grid = (DataGrid)window.FindName("ReceivingRows");
-        Check(grid.Items.Cast<ReceivingRow>().All(x => x.Pallet == 17), "卡板切换失败");
-        grid.SelectedIndex = 0;
-        Check(((TextBox)window.FindName("Copies")).Text == "3", "未带入数量");
+        Check(grid.Items.Count == 66 && grid.Items.Cast<ReceivingRow>().All(x => x.Pallet == -3), "Current UI must contain batch2 only");
+        grid.SelectedIndex = 14;
+        Check(((TextBox)window.FindName("Copies")).Text == "18", "Batch2 quantity must populate print copies");
         ((ComboBox)window.FindName("LabelPolicy")).SelectedIndex = 1;
-        Check(((TextBox)window.FindName("Copies")).Text == "1", "每行一张未更新");
-        ((ComboBox)window.FindName("Pallet")).SelectedValue = -1;
-        Check(grid.Items.Count == 17 && grid.Items.Cast<ReceivingRow>().All(x => x.Pallet == -1), "散货1切换失败");
-        Check(((TextBlock)window.FindName("PalletSummary")).Text.Contains("散货1：共 33 件"), "散货1摘要错误");
-        Check(Descendants((FrameworkElement)((ContentControl)window.FindName("Preview")).Content).OfType<TextBlock>().Any(x => x.Text.Contains("散货1")), "标签未使用散货名称");
-        ((ComboBox)window.FindName("Pallet")).SelectedValue = -2;
-        Check(grid.Items.Count == 1 && grid.Items.Cast<ReceivingRow>().Single().Sku == "S68R", "散货2切换失败");
-        Check(((TextBlock)window.FindName("PalletSummary")).Text.Contains("散货2：共 1 件"), "散货2摘要错误");
-        Check(Descendants((FrameworkElement)((ContentControl)window.FindName("Preview")).Content).OfType<TextBlock>().Any(x => x.Text.Contains("散货2")), "标签未使用散货2名称");
+        Check(((TextBox)window.FindName("Copies")).Text == "1", "One-label-per-row policy");
+        Check(((TextBlock)window.FindName("PalletSummary")).Text.Contains("261"), "Batch2 quantity summary");
         var root = (FrameworkElement)window.Content; root.Width = 1204; root.Height = 650; Layout(root);
         Save(Render(root), "artifacts/camara/receiving/window.png");
         window.Close();
-        Console.WriteLine("PASS: 原17板及散货1、散货2/158行/621件；已知573件；129行Code128与SKU二维码解码；4x6布局不溢出；整板筛选、两种份数模式、未知跳过、校对码及UI切换。");
+        Console.WriteLine("PASS: historical labels and batch2 barcodes/QR codes render and decode; current UI shows 66 rows / 261 items with per-piece and per-row policies.");
     }
     private static void Check(bool value, string message) { if (!value) throw new Exception(message); }
     private static void Layout(FrameworkElement e) { e.Measure(new Size(e.Width,e.Height));e.Arrange(new Rect(0,0,e.Width,e.Height));e.UpdateLayout(); }

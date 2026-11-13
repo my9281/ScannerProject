@@ -7,6 +7,8 @@
  <Grid Margin="28">
   <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
   <StackPanel Margin="0,0,0,24"><TextBlock Text="摄像头标签打印" FontSize="26" FontWeight="Bold"/><TextBlock Text="按卡板选择收货预报，打印4×6条码与SKU标签；未知SKU自动跳过。" Foreground="#667085" Margin="0,8,0,0"/></StackPanel>
+  <Button Content="开始维修录入" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="18,10" Click="StartRepair_Click"/>
+  <Button Content="导出标签数据" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,160,0" Padding="18,10" Click="ExportLabelData_Click"/>
   <Grid Grid.Row="1">
    <Grid.ColumnDefinitions><ColumnDefinition Width="650"/><ColumnDefinition Width="24"/><ColumnDefinition/></Grid.ColumnDefinitions>
    <Border Background="White" CornerRadius="10" Padding="16"><DockPanel><StackPanel DockPanel.Dock="Bottom">
@@ -26,7 +28,7 @@
      <TabItem Header="型号与规格"><StackPanel Margin="12"><TextBlock Text="产品型号 / SKU"/><ComboBox x:Name="Sku" SelectionChanged="RefreshPreview"/><TextBlock Text="完整 SKU / 电缆与米数规格"/><ComboBox x:Name="Meters" SelectionChanged="RefreshPreview"/></StackPanel></TabItem>
      <TabItem Header="按卡板打印4×6"><DockPanel Margin="8">
       <StackPanel DockPanel.Dock="Top">
-       <StackPanel Orientation="Horizontal"><TextBlock Text="选择卡板"/><ComboBox x:Name="Pallet" DisplayMemberPath="Name" SelectedValuePath="Number" Width="120" Margin="10,0,10,8" SelectionChanged="Pallet_Changed"/><Button Content="导入其他预报" Height="30" VerticalAlignment="Top" Click="ImportForecast_Click"/></StackPanel>
+       <StackPanel Orientation="Horizontal"><TextBlock Text="选择卡板"/><ComboBox x:Name="Pallet" DisplayMemberPath="Name" SelectedValuePath="Number" Width="120" Margin="10,0,10,8" SelectionChanged="Pallet_Changed"/><Button Content="导入其他预报" Height="30" VerticalAlignment="Top" Click="ImportForecast_Click"/><Button Content="查看历史数据" Height="30" VerticalAlignment="Top" Margin="8,0,0,0" Click="ViewLabelHistory_Click"/></StackPanel>
        <ComboBox x:Name="LabelPolicy" Margin="0,0,0,8" SelectionChanged="Receiving_Changed"><ComboBoxItem Content="逐件打印：每件一张，按预报数量"/><ComboBoxItem Content="作业单：每行一张，标签注明该行数量"/></ComboBox>
        <TextBlock x:Name="PalletSummary" TextWrapping="Wrap" Margin="0,0,0,8"/>
       </StackPanel>

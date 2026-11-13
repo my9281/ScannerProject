@@ -11,6 +11,12 @@ namespace WPF.Camara;
 
 public partial class MainWindow : Window
 {
+    private void StartRepair_Click(object sender, RoutedEventArgs e)
+    {
+        try { new RepairStartWindow { Owner = this }.ShowDialog(); }
+        catch (Exception ex) { MessageBox.Show(this, "无法打开开始维修录入，请检查配置、待上传文件或是否有另一窗口正在使用：" + ex.Message, "开始维修"); }
+    }
+
     private bool ready;
     public MainWindow()
     {

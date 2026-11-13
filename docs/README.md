@@ -45,3 +45,14 @@
 | [MAUI 包体优化](MAUI包体优化.md) | 客户端包体优化 |
 | [数据库资料](database/README.md) | 数据库结构、修复与部署 |
 | [历史归档](history/) | 整理前资料，当前状态以总需求与实现为准 |
+
+
+## 待规划需求
+
+- [维修过程、扫码收货与 Web 看板需求草案](repair-receiving-records-plan.md)：记录系统方向、WPF/PDA 职责、收货确认、看板范围及待定事项；仅整理需求，暂不实施。
+
+## 开始维修录入
+
+- [Camara.WPF 开始维修录入](camara-repair-start.md)：SN/SKU 录入、首扫时间、配置、重试恢复和部署。
+
+- [Camara.WPF 标签数据序列化](camara-label-data.md)：默认 JSON、当前数据导出与后续 Excel 导入准备。

@@ -1,0 +1,34 @@
+import fs from 'node:fs/promises';
+import {Workbook,SpreadsheetFile} from 'file:///C:/Users/Thomas/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/@oai/artifact-tool/dist/artifact_tool.mjs';
+const wb=Workbook.create(),s=wb.worksheets.add('照片记录');
+const decoded=JSON.parse(await fs.readFile('.tmp-camaralog/third-batch-decoded.json','utf8'));
+const english=['NO self leveling','NO self leveling','Can not self level / NO self leveling','Images are unclear & Blurry','Missing Pieces'];
+const chinese=['无法自动调平','无法自动调平','无法自动调平（同标签两种写法）','图像不清晰、模糊','缺少配件'];
+const labels=['第6板；9/14','第6板；2/14','第4板；9/10','第4板；10/13','第9板；2/6'];
+const notes=['按原意整理','按原意整理；与照片1编码相同，按箱号分别保留','斜线两侧文字均保留，表达同一含义','单词拼写无明显问题','原文 Missing Pieces，未注明缺少的具体配件'];
+const rows=[['照片','手写记录（英文）','中文整理','条形码内容（Code 128）','二维码内容','收货贴标','核对说明']];
+for(let i=1;i<=5;i++){
+const file=`${i}-照片-${i}.jpg`,codes=decoded.find(x=>x.file===file).codes;
+const bar=codes.find(x=>x.format==='Code 128'&&x.text.startsWith('X00'));
+const qr=codes.find(x=>x.format==='QR Code');
+if(!bar||!qr)throw Error('Missing code '+file);
+rows.push([file,english[i-1],chinese[i-1],bar.text,qr.text,labels[i-1],notes[i-1]]);
+}
+const extra=wb.worksheets.add('其他可见编码');
+extra.getRange('A2').values=[['其他标签编码']];
+extra.getRange('A4:E6').values=[['照片','位置','编码类型','内容','说明'],['3-照片-3.jpg','右侧背景运输标签','Data Matrix','SRbl4NPGkb_001_v','背景标签，不关联主箱故障'],['4-照片-4.jpg','UN3481电池运输标识','Code 128','UN3481BotBar','运输标识条码，不是产品编号']];
+extra.tables.add('A4:E6',true,'OtherCodes3');extra.showGridLines=false;
+for(const [c,w] of Object.entries({A:20,B:32,C:20,D:32,E:46}))extra.getRange(`${c}:${c}`).format.columnWidth=w;
+extra.getRange('A2:E6').format.font={name:'Arial',size:11};extra.getRange('A2').format.font={bold:true,size:16};extra.getRange('A4:E4').format={fill:'#263D52',font:{bold:true,color:'#FFFFFF'},rowHeight:30};extra.getRange('A5:E6').format.wrapText=true;extra.getRange('A5:E6').format.rowHeight=50;
+s.getRange('A2').values=[['照片与故障识别记录（第三批）']];
+s.getRange('A3').values=[['英文按原意整理，笔迹或拼写疑点见核对说明；条形码及二维码为机器解码结果。']];
+s.getRange('A5:G10').values=rows;s.tables.add('A5:G10',true,'PhotoRecords3');s.showGridLines=false;
+s.getRange('A1:G10').format.font={name:'Arial',size:11};s.getRange('A2').format.font={bold:true,size:16};s.getRange('A3').format.font={size:10,color:'#64748B'};
+for(const [c,w] of Object.entries({A:20,B:43,C:36,D:29,E:32,F:22,G:46}))s.getRange(`${c}:${c}`).format.columnWidth=w;
+s.getRange('A5:G5').format={fill:'#263D52',font:{bold:true,color:'#FFFFFF'},rowHeight:30};
+s.getRange('A6:G10').format.wrapText=true;s.getRange('A6:G10').format.rowHeight=80;s.getRange('A5:G10').format.verticalAlignment='center';
+s.getRange('D6:E10').setNumberFormat('@');s.freezePanes.freezeRows(5);s.freezePanes.freezeColumns(1);
+wb.recalculate();console.log((await wb.inspect({kind:'table',range:'照片记录!A5:G10',tableMaxRows:5,tableMaxCols:7,maxChars:2200})).ndjson);
+const p=await wb.render({sheetName:'照片记录',range:'A5:G10',scale:1,format:'png'});await fs.writeFile('.tmp-camaralog/third-batch.png',new Uint8Array(await p.arrayBuffer()));
+const ep=await wb.render({sheetName:'其他可见编码',range:'A2:E6',scale:1,format:'png'});await fs.writeFile('.tmp-camaralog/third-batch-other.png',new Uint8Array(await ep.arrayBuffer()));
+await (await SpreadsheetFile.exportXlsx(wb)).save('camaralog/第三批/照片识别记录_第三批.xlsx');

@@ -20,6 +20,7 @@ foreach (var accepted in new[] { valid, valid with { Sn = new string('S', 50), S
     catch (DatabaseReached) { }
 }
 Console.WriteLine("PASS: required pair, 50/51-character boundaries, scan ID, control characters and timestamp validation.");
+await DesktopRepairChecks.RunAsync();
 
 sealed class DatabaseReached : Exception { }
 sealed class UnusedDatabase : IMySqlConnectionFactory

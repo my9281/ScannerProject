@@ -8,6 +8,22 @@ namespace WPF.Camara;
 
 public partial class MainWindow
 {
+    private void ExportLabelData_Click(object sender, RoutedEventArgs e)
+    {
+        if (!Catalog.CommitEdit(DataGridEditingUnit.Cell, true) || !Catalog.CommitEdit(DataGridEditingUnit.Row, true))
+        { Status.Text = "请先修正贴标清单中的数量。"; return; }
+        var dialog = new SaveFileDialog { Filter = "标签数据 (*.json)|*.json", DefaultExt = ".json", AddExtension = true,
+            FileName = "camara-label-data.json", Title = "保存当前核对打印数据" };
+        if (dialog.ShowDialog(this) != true) return;
+        try
+        {
+            var data = LabelDataArchive.Capture(forecast, (IEnumerable<LabelItem>)Catalog.ItemsSource, CameraModel.All);
+            data.Save(dialog.FileName);
+            Status.Text = $"已保存：{data.ForecastRows.Length} 行核对明细、{data.LabelCatalog.Length} 项贴标清单、{data.CameraModels.Length} 个型号。文件：{dialog.FileName}";
+        }
+        catch (Exception ex) { Status.Text = "导出失败，当前数据未更改：" + ex.Message; }
+    }
+
     private ReceivingForecast forecast = ReceivingForecast.LoadDefault();
     private bool receivingReady;
     private bool IsReceiving => Mode.SelectedIndex == 2;

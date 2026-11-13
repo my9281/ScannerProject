@@ -1,0 +1,1582 @@
+{
+  "schemaVersion": 1,
+  "forecastRows": [
+    {
+      "line": 1,
+      "pallet": 1,
+      "originalCode": "X004RGDUPL",
+      "quantity": 15,
+      "barcode": "X004RGDUPL",
+      "sku": "S5517DC-5C-20m"
+    },
+    {
+      "line": 2,
+      "pallet": 1,
+      "originalCode": "X004RGNB2D",
+      "quantity": 13,
+      "barcode": "X004RGNB2D",
+      "sku": "S5517DC-5C-30m"
+    },
+    {
+      "line": 3,
+      "pallet": 1,
+      "originalCode": "X004RSIC3J",
+      "quantity": 24,
+      "barcode": "X004RSIC3J",
+      "sku": "S5517DC-5C-20m"
+    },
+    {
+      "line": 4,
+      "pallet": 1,
+      "originalCode": "X004RS7UAZ",
+      "quantity": 26,
+      "barcode": "X004RS7UAZ",
+      "sku": "S5517DC-5C-30m"
+    },
+    {
+      "line": 5,
+      "pallet": 1,
+      "originalCode": "X0051LSZEP",
+      "quantity": 1,
+      "barcode": "X0051LS2EP",
+      "sku": "S5517DC-5C-30m-Blue"
+    },
+    {
+      "line": 6,
+      "pallet": 1,
+      "originalCode": "LPNNK5293W848",
+      "quantity": 1,
+      "barcode": "LPNNK5293W848",
+      "sku": "#N/A"
+    },
+    {
+      "line": 7,
+      "pallet": 1,
+      "originalCode": "X004Z96RQJ",
+      "quantity": 2,
+      "barcode": "X004Z96RQJ",
+      "sku": "S5517DC-5C-20m-Blue"
+    },
+    {
+      "line": 8,
+      "pallet": 1,
+      "originalCode": "SPR3N56BSN",
+      "quantity": 1,
+      "barcode": "SPR3N56BSN",
+      "sku": "#N/A"
+    },
+    {
+      "line": 9,
+      "pallet": 1,
+      "originalCode": "LPNNL58HDJ7SS",
+      "quantity": 1,
+      "barcode": "LPNNL58HDJ7SS",
+      "sku": "S5517DC-5C-20m"
+    },
+    {
+      "line": 10,
+      "pallet": 2,
+      "originalCode": "X004UT4MOX",
+      "quantity": 7,
+      "barcode": "X004UT4MOX",
+      "sku": "S8981DM-5C-30M"
+    },
+    {
+      "line": 11,
+      "pallet": 2,
+      "originalCode": "X004UT00HB",
+      "quantity": 5,
+      "barcode": "X004UT00HB",
+      "sku": "S8981DM-5C-20M"
+    },
+    {
+      "line": 12,
+      "pallet": 2,
+      "originalCode": "X004USY3FF",
+      "quantity": 1,
+      "barcode": "X004USY37F",
+      "sku": "S8981DM-5C-20M"
+    },
+    {
+      "line": 13,
+      "pallet": 2,
+      "originalCode": "SPA8RLWNCDF",
+      "quantity": 1,
+      "barcode": "SPA8RLWNCDF",
+      "sku": "#N/A"
+    },
+    {
+      "line": 14,
+      "pallet": 2,
+      "originalCode": "X0040SY537",
+      "quantity": 1,
+      "barcode": "X004USY537",
+      "sku": "S8981DM-5C-30M"
+    },
+    {
+      "line": 15,
+      "pallet": 2,
+      "originalCode": "X004UT6BIP",
+      "quantity": 2,
+      "barcode": "X004UT6B1P",
+      "sku": "S8981DM-5C-50M"
+    },
+    {
+      "line": 16,
+      "pallet": 2,
+      "originalCode": "X004USY537",
+      "quantity": 1,
+      "barcode": "X004USY537",
+      "sku": "S8981DM-5C-30M"
+    },
+    {
+      "line": 17,
+      "pallet": 2,
+      "originalCode": "ABC123",
+      "quantity": 1,
+      "barcode": "ABC123",
+      "sku": "#N/A"
+    },
+    {
+      "line": 18,
+      "pallet": 2,
+      "originalCode": "ABC145",
+      "quantity": 1,
+      "barcode": "ABC145",
+      "sku": "#N/A"
+    },
+    {
+      "line": 19,
+      "pallet": 2,
+      "originalCode": "ABC146",
+      "quantity": 1,
+      "barcode": "ABC146",
+      "sku": "#N/A"
+    },
+    {
+      "line": 20,
+      "pallet": 2,
+      "originalCode": "ABC147",
+      "quantity": 1,
+      "barcode": "ABC147",
+      "sku": "#N/A"
+    },
+    {
+      "line": 21,
+      "pallet": 2,
+      "originalCode": "ABC148",
+      "quantity": 2,
+      "barcode": "ABC148",
+      "sku": "#N/A"
+    },
+    {
+      "line": 22,
+      "pallet": 2,
+      "originalCode": "ABC150",
+      "quantity": 1,
+      "barcode": "ABC150",
+      "sku": "#N/A"
+    },
+    {
+      "line": 23,
+      "pallet": 3,
+      "originalCode": "X004RGNB2D",
+      "quantity": 11,
+      "barcode": "X004RGNB2D",
+      "sku": "S5517DC-5C-30m"
+    },
+    {
+      "line": 24,
+      "pallet": 3,
+      "originalCode": "X004RS7UAZ",
+      "quantity": 18,
+      "barcode": "X004RS7UAZ",
+      "sku": "S5517DC-5C-30m"
+    },
+    {
+      "line": 25,
+      "pallet": 3,
+      "originalCode": "X004RGDUPL",
+      "quantity": 8,
+      "barcode": "X004RGDUPL",
+      "sku": "S5517DC-5C-20m"
+    },
+    {
+      "line": 26,
+      "pallet": 3,
+      "originalCode": "ABC",
+      "quantity": 1,
+      "barcode": "ABC",
+      "sku": "#N/A"
+    },
+    {
+      "line": 27,
+      "pallet": 3,
+      "originalCode": "X004RSIC3J",
+      "quantity": 1,
+      "barcode": "X004RSIC3J",
+      "sku": "S5517DC-5C-20m"
+    },
+    {
+      "line": 28,
+      "pallet": 3,
+      "originalCode": "X004JKM1EV",
+      "quantity": 6,
+      "barcode": "X004JKM1EV",
+      "sku": "S68R"
+    },
+    {
+      "line": 29,
+      "pallet": 3,
+      "originalCode": "X004HFUJD",
+      "quantity": 1,
+      "barcode": "X004HFUJND",
+      "sku": "S68R"
+    },
+    {
+      "line": 30,
+      "pallet": 3,
+      "originalCode": "X004P3HPUH",
+      "quantity": 7,
+      "barcode": "X004P3HPUH",
+      "sku": "S68R"
+    },
+    {
+      "line": 31,
+      "pallet": 3,
+      "originalCode": "X004HFUJND",
+      "quantity": 19,
+      "barcode": "X004HFUJND",
+      "sku": "S68R"
+    },
+    {
+      "line": 32,
+      "pallet": 3,
+      "originalCode": "ABC123",
+      "quantity": 2,
+      "barcode": "ABC123",
+      "sku": "#N/A"
+    },
+    {
+      "line": 33,
+      "pallet": 3,
+      "originalCode": "ABC124",
+      "quantity": 1,
+      "barcode": "ABC124",
+      "sku": "#N/A"
+    },
+    {
+      "line": 34,
+      "pallet": 4,
+      "originalCode": "X004HIRJF1.",
+      "quantity": 13,
+      "barcode": "X004HIRJF1",
+      "sku": "S8951DSRTMS68-50M"
+    },
+    {
+      "line": 35,
+      "pallet": 4,
+      "originalCode": "X004HIRJCJ",
+      "quantity": 3,
+      "barcode": "X004HIRJCJ",
+      "sku": "S8951DSRTMS68-20M"
+    },
+    {
+      "line": 36,
+      "pallet": 4,
+      "originalCode": "X004H107LP",
+      "quantity": 10,
+      "barcode": "X004HIO7LP",
+      "sku": "S8951DSRTMS68-30M"
+    },
+    {
+      "line": 37,
+      "pallet": 4,
+      "originalCode": "X0033AQ165",
+      "quantity": 1,
+      "barcode": "X0033AQI65",
+      "sku": "F929DJTX-50M"
+    },
+    {
+      "line": 38,
+      "pallet": 4,
+      "originalCode": "Abc",
+      "quantity": 1,
+      "barcode": "Abc",
+      "sku": "#N/A"
+    },
+    {
+      "line": 39,
+      "pallet": 4,
+      "originalCode": "X0038NVW27",
+      "quantity": 2,
+      "barcode": "X0038NVW27",
+      "sku": "F929ADFBAB8R-50M"
+    },
+    {
+      "line": 40,
+      "pallet": 4,
+      "originalCode": "X0038NTRSN",
+      "quantity": 1,
+      "barcode": "X0038NTRSN",
+      "sku": "F929ADFBAB8R-30M"
+    },
+    {
+      "line": 41,
+      "pallet": 4,
+      "originalCode": "X0033AQFRH",
+      "quantity": 1,
+      "barcode": "X0033AQFRH",
+      "sku": "F929DJTX-20M"
+    },
+    {
+      "line": 42,
+      "pallet": 5,
+      "originalCode": "X004HRJCJ",
+      "quantity": 5,
+      "barcode": "X004HIRJCJ",
+      "sku": "S8951DSRTMS68-20M"
+    },
+    {
+      "line": 43,
+      "pallet": 5,
+      "originalCode": "LPNPMEW008",
+      "quantity": 1,
+      "barcode": "LPNPMEW008",
+      "sku": "S8951DSRTMS68-50M"
+    },
+    {
+      "line": 44,
+      "pallet": 5,
+      "originalCode": "X0038NTRSN",
+      "quantity": 1,
+      "barcode": "X0038NTRSN",
+      "sku": "F929ADFBAB8R-30M"
+    },
+    {
+      "line": 45,
+      "pallet": 5,
+      "originalCode": "X0038NVW27",
+      "quantity": 1,
+      "barcode": "X0038NVW27",
+      "sku": "F929ADFBAB8R-50M"
+    },
+    {
+      "line": 46,
+      "pallet": 5,
+      "originalCode": "X0033AQFRH",
+      "quantity": 2,
+      "barcode": "X0033AQFRH",
+      "sku": "F929DJTX-20M"
+    },
+    {
+      "line": 47,
+      "pallet": 5,
+      "originalCode": "X004H1RJF1",
+      "quantity": 9,
+      "barcode": "X004HIRJF1",
+      "sku": "S8951DSRTMS68-50M"
+    },
+    {
+      "line": 48,
+      "pallet": 5,
+      "originalCode": "X004H107LP",
+      "quantity": 5,
+      "barcode": "X004HIO7LP",
+      "sku": "S8951DSRTMS68-30M"
+    },
+    {
+      "line": 49,
+      "pallet": 5,
+      "originalCode": "SPPBYKLKVY",
+      "quantity": 1,
+      "barcode": "SPPBYKLKVY",
+      "sku": "#N/A"
+    },
+    {
+      "line": 50,
+      "pallet": 5,
+      "originalCode": "ABC123",
+      "quantity": 1,
+      "barcode": "ABC123",
+      "sku": "#N/A"
+    },
+    {
+      "line": 51,
+      "pallet": 5,
+      "originalCode": "X003AHBNH",
+      "quantity": 1,
+      "barcode": "X00334AHBN",
+      "sku": "F929DJTX-30M"
+    },
+    {
+      "line": 52,
+      "pallet": 5,
+      "originalCode": "X004H107LP",
+      "quantity": 4,
+      "barcode": "X004HIO7LP",
+      "sku": "S8951DSRTMS68-30M"
+    },
+    {
+      "line": 53,
+      "pallet": 5,
+      "originalCode": "TSSCRU662709",
+      "quantity": 1,
+      "barcode": "TSSCRU662709",
+      "sku": "#N/A"
+    },
+    {
+      "line": 54,
+      "pallet": 6,
+      "originalCode": "X003VLERJ1",
+      "quantity": 10,
+      "barcode": "X003VLERJ1",
+      "sku": "S8951DM-50M"
+    },
+    {
+      "line": 55,
+      "pallet": 6,
+      "originalCode": "X003VLS3ZP",
+      "quantity": 14,
+      "barcode": "X003VLS3ZP",
+      "sku": "S8951DM-30M"
+    },
+    {
+      "line": 56,
+      "pallet": 6,
+      "originalCode": "X004HIVEQV",
+      "quantity": 8,
+      "barcode": "X004HIVEQV",
+      "sku": "S8951DSTM-50M"
+    },
+    {
+      "line": 57,
+      "pallet": 6,
+      "originalCode": "X004HITGE3",
+      "quantity": 4,
+      "barcode": "X004HITGE3",
+      "sku": "S8951DSTM-20M"
+    },
+    {
+      "line": 58,
+      "pallet": 6,
+      "originalCode": "X004H1QOBZ",
+      "quantity": 8,
+      "barcode": "X004HIQ0BZ",
+      "sku": "S8951DSTM-30M"
+    },
+    {
+      "line": 59,
+      "pallet": 6,
+      "originalCode": "X004UT00HB",
+      "quantity": 1,
+      "barcode": "X004UT00HB",
+      "sku": "S8981DM-5C-20M"
+    },
+    {
+      "line": 60,
+      "pallet": 6,
+      "originalCode": "X004UT4MDX",
+      "quantity": 1,
+      "barcode": "X004UT4MOX",
+      "sku": "S8981DM-5C-30M"
+    },
+    {
+      "line": 61,
+      "pallet": 6,
+      "originalCode": "X004UT8IP",
+      "quantity": 1,
+      "barcode": "X004UT6B1P",
+      "sku": "S8981DM-5C-50M"
+    },
+    {
+      "line": 62,
+      "pallet": 7,
+      "originalCode": "Abc",
+      "quantity": 9,
+      "barcode": "Abc",
+      "sku": "#N/A"
+    },
+    {
+      "line": 63,
+      "pallet": 7,
+      "originalCode": "X004USY37F",
+      "quantity": 1,
+      "barcode": "X004USY37F",
+      "sku": "S8981DM-5C-20M"
+    },
+    {
+      "line": 64,
+      "pallet": 7,
+      "originalCode": "X0044LFZLDH",
+      "quantity": 2,
+      "barcode": "X004LFZLDH",
+      "sku": "S8417DC-50m"
+    },
+    {
+      "line": 65,
+      "pallet": 7,
+      "originalCode": "X004USY537",
+      "quantity": 1,
+      "barcode": "X004USY537",
+      "sku": "S8981DM-5C-30M"
+    },
+    {
+      "line": 66,
+      "pallet": 7,
+      "originalCode": "X004USZEC3",
+      "quantity": 1,
+      "barcode": "X004USZEC3",
+      "sku": "S8981DM-5C-50M"
+    },
+    {
+      "line": 67,
+      "pallet": 8,
+      "originalCode": "X0041JV3IX",
+      "quantity": 11,
+      "barcode": "X004IJV3IX",
+      "sku": "S840DSRTMS68-7C-50M"
+    },
+    {
+      "line": 68,
+      "pallet": 8,
+      "originalCode": "X004L3K0M9",
+      "quantity": 6,
+      "barcode": "X004L3M0M9",
+      "sku": "S840DSM-5C-30M"
+    },
+    {
+      "line": 69,
+      "pallet": 8,
+      "originalCode": "X004S5X9NT",
+      "quantity": 3,
+      "barcode": "X004S5X9NT",
+      "sku": "S860DSTKM-7C-50M"
+    },
+    {
+      "line": 70,
+      "pallet": 8,
+      "originalCode": "X004L5S1JB",
+      "quantity": 2,
+      "barcode": "X004L5SIJB",
+      "sku": "S840DSM-5C-70M"
+    },
+    {
+      "line": 71,
+      "pallet": 8,
+      "originalCode": "X004KXUHAR",
+      "quantity": 1,
+      "barcode": "X004KXUHAR",
+      "sku": "S840DSM-5C-50M"
+    },
+    {
+      "line": 72,
+      "pallet": 9,
+      "originalCode": "X004IJHF6H",
+      "quantity": 10,
+      "barcode": "X004IJHF6H",
+      "sku": "S840DSRTMS68-7C-70M"
+    },
+    {
+      "line": 73,
+      "pallet": 9,
+      "originalCode": "X0041JV3IX",
+      "quantity": 6,
+      "barcode": "X004IJV3IX",
+      "sku": "S840DSRTMS68-7C-50M"
+    },
+    {
+      "line": 74,
+      "pallet": 9,
+      "originalCode": "X004219NH",
+      "quantity": 4,
+      "barcode": "X00421GINH",
+      "sku": "S610ASMKTCP-50M"
+    },
+    {
+      "line": 75,
+      "pallet": 9,
+      "originalCode": "X003VMPO57",
+      "quantity": 1,
+      "barcode": "X003VMPO57",
+      "sku": "#N/A"
+    },
+    {
+      "line": 76,
+      "pallet": 10,
+      "originalCode": "X004H107LP",
+      "quantity": 14,
+      "barcode": "X004HIO7LP",
+      "sku": "S8951DSRTMS68-30M"
+    },
+    {
+      "line": 77,
+      "pallet": 10,
+      "originalCode": "X004HIRJCJ",
+      "quantity": 11,
+      "barcode": "X004HIRJCJ",
+      "sku": "S8951DSRTMS68-20M"
+    },
+    {
+      "line": 78,
+      "pallet": 10,
+      "originalCode": "X004HIRJF1",
+      "quantity": 7,
+      "barcode": "X004HIRJF1",
+      "sku": "S8951DSRTMS68-50M"
+    },
+    {
+      "line": 79,
+      "pallet": 11,
+      "originalCode": "X003VMFWF",
+      "quantity": 1,
+      "barcode": "X003VMXFWF",
+      "sku": "S8968DM-50M"
+    },
+    {
+      "line": 80,
+      "pallet": 11,
+      "originalCode": "X00465F36N",
+      "quantity": 45,
+      "barcode": "X00465F26N",
+      "sku": "YCQJ-Robot"
+    },
+    {
+      "line": 81,
+      "pallet": 11,
+      "originalCode": "X004HG6OUJ.",
+      "quantity": 2,
+      "barcode": "X004HG6OUJ",
+      "sku": "S891DSRTC-30M"
+    },
+    {
+      "line": 82,
+      "pallet": 11,
+      "originalCode": "X004JBTD87",
+      "quantity": 2,
+      "barcode": "X004JBTD87",
+      "sku": "S891DSRTC-20M"
+    },
+    {
+      "line": 83,
+      "pallet": 11,
+      "originalCode": "X0032HEZ3H",
+      "quantity": 1,
+      "barcode": "X0032HEZ3H",
+      "sku": "9723D-50M"
+    },
+    {
+      "line": 84,
+      "pallet": 11,
+      "originalCode": "X0032H9135",
+      "quantity": 1,
+      "barcode": "X0032HSI35",
+      "sku": "9723D-30M"
+    },
+    {
+      "line": 85,
+      "pallet": 11,
+      "originalCode": "X00372EWQ7",
+      "quantity": 1,
+      "barcode": "X00372EWQ7",
+      "sku": "F927ADFB-50M"
+    },
+    {
+      "line": 86,
+      "pallet": 11,
+      "originalCode": "A",
+      "quantity": 2,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 87,
+      "pallet": 11,
+      "originalCode": "X003231DRR",
+      "quantity": 1,
+      "barcode": "X003231DRR",
+      "sku": "9300D-50M"
+    },
+    {
+      "line": 88,
+      "pallet": 11,
+      "originalCode": "X003VMXV6X",
+      "quantity": 1,
+      "barcode": "X003VMXV8X",
+      "sku": "S8968DM-20M"
+    },
+    {
+      "line": 89,
+      "pallet": 11,
+      "originalCode": "X003VMDG5J",
+      "quantity": 1,
+      "barcode": "X003VMPG5J",
+      "sku": "S8968DM-30M"
+    },
+    {
+      "line": 90,
+      "pallet": 12,
+      "originalCode": "X004IJHF6H",
+      "quantity": 5,
+      "barcode": "X004IJHF6H",
+      "sku": "S840DSRTMS68-7C-70M"
+    },
+    {
+      "line": 91,
+      "pallet": 12,
+      "originalCode": "X0047MTW8R",
+      "quantity": 1,
+      "barcode": "X004TMTW8R",
+      "sku": "S840DSRTMS68-7C-100M"
+    },
+    {
+      "line": 92,
+      "pallet": 12,
+      "originalCode": "X0041JGTRX",
+      "quantity": 3,
+      "barcode": "X0041JGTRX",
+      "sku": "#N/A"
+    },
+    {
+      "line": 93,
+      "pallet": 12,
+      "originalCode": "A",
+      "quantity": 1,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 94,
+      "pallet": 12,
+      "originalCode": "X004SMTNWN",
+      "quantity": 1,
+      "barcode": "X004SMTNWN",
+      "sku": "S850DSTKM-7C-50M"
+    },
+    {
+      "line": 95,
+      "pallet": 12,
+      "originalCode": "X004HGD55L",
+      "quantity": 7,
+      "barcode": "X004HGD55L",
+      "sku": "S891DSRTM8R-30M"
+    },
+    {
+      "line": 96,
+      "pallet": 12,
+      "originalCode": "X004JBRVJZ",
+      "quantity": 2,
+      "barcode": "X004JBRVJZ",
+      "sku": "S891DSRTM8R-50M"
+    },
+    {
+      "line": 97,
+      "pallet": 12,
+      "originalCode": "BOBBJVKLZT",
+      "quantity": 1,
+      "barcode": "BOBBJVKLZT",
+      "sku": "#N/A"
+    },
+    {
+      "line": 98,
+      "pallet": 13,
+      "originalCode": "X004J0BB1N",
+      "quantity": 4,
+      "barcode": "X004J0BBIN",
+      "sku": "S510DSRKM-7C-50M"
+    },
+    {
+      "line": 99,
+      "pallet": 13,
+      "originalCode": "X004IJHF6H",
+      "quantity": 8,
+      "barcode": "X004IJHF6H",
+      "sku": "S840DSRTMS68-7C-70M"
+    },
+    {
+      "line": 100,
+      "pallet": 13,
+      "originalCode": "X004TMTW8R",
+      "quantity": 2,
+      "barcode": "X004TMTW8R",
+      "sku": "S840DSRTMS68-7C-100M"
+    },
+    {
+      "line": 101,
+      "pallet": 13,
+      "originalCode": "A",
+      "quantity": 2,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 102,
+      "pallet": 13,
+      "originalCode": "X003VMPG5J",
+      "quantity": 2,
+      "barcode": "X003VMPG5J",
+      "sku": "S8968DM-30M"
+    },
+    {
+      "line": 103,
+      "pallet": 13,
+      "originalCode": "X003231DRR",
+      "quantity": 2,
+      "barcode": "X003231DRR",
+      "sku": "9300D-50M"
+    },
+    {
+      "line": 104,
+      "pallet": 13,
+      "originalCode": "X003728UVT",
+      "quantity": 1,
+      "barcode": "X003729UVT",
+      "sku": "F927ADFB-30M"
+    },
+    {
+      "line": 105,
+      "pallet": 13,
+      "originalCode": "X003DBYVTH",
+      "quantity": 1,
+      "barcode": "X003QBYVTH",
+      "sku": "9723WF-20M"
+    },
+    {
+      "line": 106,
+      "pallet": 14,
+      "originalCode": "X00421G1NG",
+      "quantity": 8,
+      "barcode": "X00421GINH",
+      "sku": "S610ASMKTCP-50M"
+    },
+    {
+      "line": 107,
+      "pallet": 14,
+      "originalCode": "X004SJ466L",
+      "quantity": 3,
+      "barcode": "X004SJ466J",
+      "sku": "S610DSTKMCPS68-7C-50M"
+    },
+    {
+      "line": 108,
+      "pallet": 14,
+      "originalCode": "X004SS32PL",
+      "quantity": 1,
+      "barcode": "X004SS32PL",
+      "sku": "S610DSTKMCPS68-7C-30M"
+    },
+    {
+      "line": 109,
+      "pallet": 14,
+      "originalCode": "X0039E9BR3",
+      "quantity": 1,
+      "barcode": "X0039E9BR3",
+      "sku": "F5800ADJKABTX-50M-7C"
+    },
+    {
+      "line": 110,
+      "pallet": 14,
+      "originalCode": "X003GKPKFH",
+      "quantity": 3,
+      "barcode": "X003GKPKFH",
+      "sku": "F5800ADJKABTX-100M-5C"
+    },
+    {
+      "line": 111,
+      "pallet": 14,
+      "originalCode": "A",
+      "quantity": 1,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 112,
+      "pallet": 15,
+      "originalCode": "X004SMV347",
+      "quantity": 3,
+      "barcode": "X004SMN347",
+      "sku": "S850DSTKM-7C-30M"
+    },
+    {
+      "line": 113,
+      "pallet": 15,
+      "originalCode": "X004L3M0M9",
+      "quantity": 5,
+      "barcode": "X004L3M0M9",
+      "sku": "S840DSM-5C-30M"
+    },
+    {
+      "line": 114,
+      "pallet": 15,
+      "originalCode": "X004KXVHAR",
+      "quantity": 4,
+      "barcode": "X004KXUHAR",
+      "sku": "S840DSM-5C-50M"
+    },
+    {
+      "line": 115,
+      "pallet": 15,
+      "originalCode": "X003WOLBJB",
+      "quantity": 2,
+      "barcode": "X003WOLBJB",
+      "sku": "S8958MRT-50M"
+    },
+    {
+      "line": 116,
+      "pallet": 15,
+      "originalCode": "X004L5S1JB",
+      "quantity": 1,
+      "barcode": "X004L5SIJB",
+      "sku": "S840DSM-5C-70M"
+    },
+    {
+      "line": 117,
+      "pallet": 15,
+      "originalCode": "X004SMTNWN.",
+      "quantity": 3,
+      "barcode": "X004SMTNWN",
+      "sku": "S850DSTKM-7C-50M"
+    },
+    {
+      "line": 118,
+      "pallet": 15,
+      "originalCode": "X003WQNJ37",
+      "quantity": 1,
+      "barcode": "X003WONJ37",
+      "sku": "S8958MRT-20M"
+    },
+    {
+      "line": 119,
+      "pallet": 15,
+      "originalCode": "X003WQLBJB",
+      "quantity": 8,
+      "barcode": "X003WOLBJB",
+      "sku": "S8958MRT-50M"
+    },
+    {
+      "line": 120,
+      "pallet": 15,
+      "originalCode": "X003WORN8J",
+      "quantity": 3,
+      "barcode": "X003WORN8J",
+      "sku": "S8958MRT-30M"
+    },
+    {
+      "line": 121,
+      "pallet": 15,
+      "originalCode": "X004HGC09T",
+      "quantity": 1,
+      "barcode": "X004HGCO9T",
+      "sku": "S891DSRTC-50M"
+    },
+    {
+      "line": 122,
+      "pallet": 15,
+      "originalCode": "X004KE10JJ",
+      "quantity": 1,
+      "barcode": "X004KE1OJJ",
+      "sku": "CDL-S610ASMKTCP-50M"
+    },
+    {
+      "line": 123,
+      "pallet": 15,
+      "originalCode": "A",
+      "quantity": 1,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 124,
+      "pallet": 16,
+      "originalCode": "X004CR911Z",
+      "quantity": 6,
+      "barcode": "X004CR9I1Z",
+      "sku": "S830ASMKT-9C-50M"
+    },
+    {
+      "line": 125,
+      "pallet": 16,
+      "originalCode": "X003VP7UNR",
+      "quantity": 2,
+      "barcode": "X003VP7UNR",
+      "sku": "S810ASMKT-50M"
+    },
+    {
+      "line": 126,
+      "pallet": 16,
+      "originalCode": "X004Y53ILKF",
+      "quantity": 1,
+      "barcode": "X00453ILKF",
+      "sku": "U8R"
+    },
+    {
+      "line": 127,
+      "pallet": 16,
+      "originalCode": "A",
+      "quantity": 4,
+      "barcode": "A",
+      "sku": "#N/A"
+    },
+    {
+      "line": 128,
+      "pallet": 16,
+      "originalCode": "B",
+      "quantity": 1,
+      "barcode": "B",
+      "sku": "#N/A"
+    },
+    {
+      "line": 129,
+      "pallet": 16,
+      "originalCode": "X003JICJBV",
+      "quantity": 3,
+      "barcode": "X003JLCJBV",
+      "sku": "U8R"
+    },
+    {
+      "line": 130,
+      "pallet": 16,
+      "originalCode": "X0042T9SJF",
+      "quantity": 6,
+      "barcode": "X0042T9SJF",
+      "sku": "U8R"
+    },
+    {
+      "line": 131,
+      "pallet": 16,
+      "originalCode": "X004YOEOGD",
+      "quantity": 3,
+      "barcode": "X004YOEOGD",
+      "sku": "#N/A"
+    },
+    {
+      "line": 132,
+      "pallet": 16,
+      "originalCode": "X004YOKBBB",
+      "quantity": 1,
+      "barcode": "X004YOKBBB",
+      "sku": "#N/A"
+    },
+    {
+      "line": 133,
+      "pallet": 17,
+      "originalCode": "X00528RY5F",
+      "quantity": 3,
+      "barcode": "X00528RY5F",
+      "sku": "S850DSTKMS68-7C-30M"
+    },
+    {
+      "line": 134,
+      "pallet": 17,
+      "originalCode": "X0053XZ3F7",
+      "quantity": 3,
+      "barcode": "X0053XZ3F7",
+      "sku": "S850DSTKMS68-7C-50M"
+    },
+    {
+      "line": 135,
+      "pallet": 17,
+      "originalCode": "X004506HCH",
+      "quantity": 6,
+      "barcode": "X004506HCH",
+      "sku": "F5100DJKABTX-40M-7C"
+    },
+    {
+      "line": 136,
+      "pallet": 17,
+      "originalCode": "X0046T3QXZ",
+      "quantity": 3,
+      "barcode": "X0046T3QXZ",
+      "sku": "F5100DJKABTX-70M-5C"
+    },
+    {
+      "line": 137,
+      "pallet": 17,
+      "originalCode": "X0039CX5SB",
+      "quantity": 1,
+      "barcode": "X0039CX5SB",
+      "sku": "F5100DJKABTX-50M-5C"
+    },
+    {
+      "line": 138,
+      "pallet": 17,
+      "originalCode": "X0039E88Z9",
+      "quantity": 1,
+      "barcode": "X0039E88Z9",
+      "sku": "F5100DJKABTX-70M-5C"
+    },
+    {
+      "line": 139,
+      "pallet": 17,
+      "originalCode": "X004TQXVTN",
+      "quantity": 1,
+      "barcode": "X004TQYVTN",
+      "sku": "F5100DJKABTX-50M-5C"
+    },
+    {
+      "line": 140,
+      "pallet": 17,
+      "originalCode": "X003WMZ0TT",
+      "quantity": 6,
+      "barcode": "X003WMZ0TF",
+      "sku": "SU9432-1.5M"
+    },
+    {
+      "line": 141,
+      "pallet": -1,
+      "originalCode": "SANYI-X004SJ466J",
+      "quantity": 1,
+      "barcode": "X004SJ466J",
+      "sku": "S610DSTKMCPS68-7C-50M"
+    },
+    {
+      "line": 142,
+      "pallet": -1,
+      "originalCode": "SANYI-X004Z9R7S1",
+      "quantity": 1,
+      "barcode": "X004Z9R7S1",
+      "sku": "XSP-S5517DC"
+    },
+    {
+      "line": 143,
+      "pallet": -1,
+      "originalCode": "SANYI-X004TR4X4F",
+      "quantity": 1,
+      "barcode": "X004TR4X4F",
+      "sku": "S810ASMKT-100M"
+    },
+    {
+      "line": 144,
+      "pallet": -1,
+      "originalCode": "SANYI-X004HFUJND",
+      "quantity": 3,
+      "barcode": "X004HFUJND",
+      "sku": "S68R"
+    },
+    {
+      "line": 145,
+      "pallet": -1,
+      "originalCode": "SANYI-X0053S67OX",
+      "quantity": 1,
+      "barcode": "X0053S67OX",
+      "sku": "S880DSTKM-7C-50M"
+    },
+    {
+      "line": 146,
+      "pallet": -1,
+      "originalCode": "SANYI-X004S5PMT3",
+      "quantity": 2,
+      "barcode": "X004S5PMT3",
+      "sku": "S860DSTKM-7C-30M"
+    },
+    {
+      "line": 147,
+      "pallet": -1,
+      "originalCode": "SANYI-X004J0BBIN",
+      "quantity": 1,
+      "barcode": "X004J0BBIN",
+      "sku": "S510DSRKM-7C-50M"
+    },
+    {
+      "line": 148,
+      "pallet": -1,
+      "originalCode": "SANYI-X0053XZ5B9",
+      "quantity": 1,
+      "barcode": "X0053XZ5B9",
+      "sku": "S860DSTKMS68-7C-30M"
+    },
+    {
+      "line": 149,
+      "pallet": -1,
+      "originalCode": "SANYI-X004TQW30R",
+      "quantity": 1,
+      "barcode": "X004TQW30R",
+      "sku": "S810ASMKT-50M"
+    },
+    {
+      "line": 150,
+      "pallet": -1,
+      "originalCode": "SANYI-X004S5X9NT",
+      "quantity": 1,
+      "barcode": "X004S5X9NT",
+      "sku": "S860DSTKM-7C-50M"
+    },
+    {
+      "line": 151,
+      "pallet": -1,
+      "originalCode": "SANYI-X0053FYWGV",
+      "quantity": 1,
+      "barcode": "X0053FYWGV",
+      "sku": "S880DSTKMS68-7C-30M"
+    },
+    {
+      "line": 152,
+      "pallet": -1,
+      "originalCode": "SANYI-X003W9CS39",
+      "quantity": 2,
+      "barcode": "X003W9CS39",
+      "sku": "S8417DC-30m"
+    },
+    {
+      "line": 153,
+      "pallet": -1,
+      "originalCode": "SANYI-X004HIO7LP",
+      "quantity": 3,
+      "barcode": "X004HIO7LP",
+      "sku": "S8951DSRTMS68-30M"
+    },
+    {
+      "line": 154,
+      "pallet": -1,
+      "originalCode": "SANYI-X004HIRJF1",
+      "quantity": 5,
+      "barcode": "X004HIRJF1",
+      "sku": "S8951DSRTMS68-50M"
+    },
+    {
+      "line": 155,
+      "pallet": -1,
+      "originalCode": "SANYI-X004HIRJCJ",
+      "quantity": 1,
+      "barcode": "X004HIRJCJ",
+      "sku": "S8951DSRTMS68-20M"
+    },
+    {
+      "line": 156,
+      "pallet": -1,
+      "originalCode": "SANYI-X004IJHF6H",
+      "quantity": 4,
+      "barcode": "X004IJHF6H",
+      "sku": "S840DSRTMS68-7C-70M"
+    },
+    {
+      "line": 157,
+      "pallet": -1,
+      "originalCode": "SANYI-X004IJV3IX",
+      "quantity": 4,
+      "barcode": "X004IJV3IX",
+      "sku": "S840DSRTMS68-7C-50M"
+    },
+    {
+      "line": 158,
+      "pallet": -2,
+      "originalCode": "SANYI-S68R",
+      "quantity": 1,
+      "barcode": "S68R",
+      "sku": "S68R"
+    }
+  ],
+  "labelCatalog": [
+    {
+      "sku": "F5100DJKABTX-40M-7C",
+      "checkCodes": "X004506HCH",
+      "quantity": 6
+    },
+    {
+      "sku": "F5100DJKABTX-50M-5C",
+      "checkCodes": "X0039CX5SB, X004TQYVTN",
+      "quantity": 2
+    },
+    {
+      "sku": "F5100DJKABTX-70M-5C",
+      "checkCodes": "X0046T3QXZ, X0039E88Z9",
+      "quantity": 4
+    },
+    {
+      "sku": "F5800ADJKABTX-100M-5C",
+      "checkCodes": "X003GKPKFH",
+      "quantity": 3
+    },
+    {
+      "sku": "F5800ADJKABTX-50M-7C",
+      "checkCodes": "X0039E9BR3",
+      "quantity": 1
+    },
+    {
+      "sku": "S840DSM-5C-30M",
+      "checkCodes": "X004L3M0M9",
+      "quantity": 11
+    },
+    {
+      "sku": "S840DSM-5C-50M",
+      "checkCodes": "X004KXUHAR",
+      "quantity": 5
+    },
+    {
+      "sku": "S840DSM-5C-70M",
+      "checkCodes": "X004L5SIJB",
+      "quantity": 3
+    },
+    {
+      "sku": "S840DSRTMS68-7C-100M",
+      "checkCodes": "X004TMTW8R",
+      "quantity": 3
+    },
+    {
+      "sku": "S840DSRTMS68-7C-50M",
+      "checkCodes": "X004IJV3IX",
+      "quantity": 17
+    },
+    {
+      "sku": "S840DSRTMS68-7C-70M",
+      "checkCodes": "X004IJHF6H",
+      "quantity": 23
+    },
+    {
+      "sku": "S850DSTKM-7C-30M",
+      "checkCodes": "X004SMN347",
+      "quantity": 3
+    },
+    {
+      "sku": "S850DSTKM-7C-50M",
+      "checkCodes": "X004SMTNWN",
+      "quantity": 4
+    },
+    {
+      "sku": "S850DSTKMS68-7C-30M",
+      "checkCodes": "X00528RY5F",
+      "quantity": 3
+    },
+    {
+      "sku": "S850DSTKMS68-7C-50M",
+      "checkCodes": "X0053XZ3F7",
+      "quantity": 3
+    },
+    {
+      "sku": "S860DSTKM-7C-30M",
+      "checkCodes": "X004S5PMT3",
+      "quantity": 0
+    },
+    {
+      "sku": "S860DSTKM-7C-50M",
+      "checkCodes": "X004S5X9NT",
+      "quantity": 3
+    },
+    {
+      "sku": "S860DSTKMS68-7C-30M",
+      "checkCodes": "X0053XZ5B9",
+      "quantity": 0
+    },
+    {
+      "sku": "S8951DM-30M",
+      "checkCodes": "X003VLS3ZP",
+      "quantity": 14
+    },
+    {
+      "sku": "S8951DM-50M",
+      "checkCodes": "X003VLERJ1",
+      "quantity": 10
+    },
+    {
+      "sku": "S8951DSRTMS68-20M",
+      "checkCodes": "X004HIRJCJ",
+      "quantity": 19
+    },
+    {
+      "sku": "S8951DSRTMS68-30M",
+      "checkCodes": "X004HIO7LP",
+      "quantity": 33
+    },
+    {
+      "sku": "S8951DSRTMS68-50M",
+      "checkCodes": "X004HIRJF1",
+      "quantity": 30
+    },
+    {
+      "sku": "S8951DSTM-20M",
+      "checkCodes": "X004HITGE3",
+      "quantity": 4
+    },
+    {
+      "sku": "S8951DSTM-30M",
+      "checkCodes": "X004HIQ0BZ",
+      "quantity": 8
+    },
+    {
+      "sku": "S8951DSTM-50M",
+      "checkCodes": "X004HIVEQV",
+      "quantity": 8
+    },
+    {
+      "sku": "S68R",
+      "checkCodes": "X004JKM1EV, X004HFUJND, X004P3HPUH",
+      "quantity": 33
+    },
+    {
+      "sku": "S840DSM-7C-100M",
+      "checkCodes": "",
+      "quantity": 0
+    },
+    {
+      "sku": "F5800ADJKABTX-70M-5C",
+      "checkCodes": "",
+      "quantity": 0
+    }
+  ],
+  "cameraModels": [
+    {
+      "sku": "S8981DM",
+      "transmitter": false,
+      "detector": false,
+      "whiteBalance": false,
+      "speaker": false,
+      "specifications": [
+        "5C-20M",
+        "5C-30M",
+        "5C-50M"
+      ]
+    },
+    {
+      "sku": "S8981DSTM",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": false,
+      "specifications": [
+        "5C-20M",
+        "5C-30M",
+        "5C-50M"
+      ]
+    },
+    {
+      "sku": "S8981DSRTMS68",
+      "transmitter": true,
+      "detector": true,
+      "whiteBalance": true,
+      "speaker": false,
+      "specifications": [
+        "5C-20M",
+        "5C-30M",
+        "5C-50M"
+      ]
+    },
+    {
+      "sku": "S8951DM",
+      "transmitter": false,
+      "detector": false,
+      "whiteBalance": false,
+      "speaker": false,
+      "specifications": [
+        "20M",
+        "30M",
+        "50M"
+      ]
+    },
+    {
+      "sku": "S8951DSTM",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": false,
+      "specifications": [
+        "20M",
+        "30M",
+        "50M"
+      ]
+    },
+    {
+      "sku": "S8951DSRTMS68",
+      "transmitter": true,
+      "detector": true,
+      "whiteBalance": true,
+      "speaker": false,
+      "specifications": [
+        "20M",
+        "30M",
+        "50M"
+      ]
+    },
+    {
+      "sku": "S840DSM",
+      "transmitter": false,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "5C-50M",
+        "5C-70M",
+        "7C-100M"
+      ]
+    },
+    {
+      "sku": "S840DSRTMS68",
+      "transmitter": true,
+      "detector": true,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "7C-50M",
+        "7C-70M",
+        "7C-100M"
+      ]
+    },
+    {
+      "sku": "F5800ADJKABTX",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "70M-5C",
+        "100M-5C",
+        "50M-7C"
+      ]
+    },
+    {
+      "sku": "F5100DJKABTX",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "40M-7C",
+        "50M-5C",
+        "70M-5C"
+      ]
+    },
+    {
+      "sku": "S850DSTKM",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "7C-30M",
+        "7C-50M"
+      ]
+    },
+    {
+      "sku": "S850DSTKMS68",
+      "transmitter": true,
+      "detector": true,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "7C-30M",
+        "7C-50M"
+      ]
+    },
+    {
+      "sku": "S860DSTKM",
+      "transmitter": true,
+      "detector": false,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "7C-30M",
+        "7C-50M"
+      ]
+    },
+    {
+      "sku": "S860DSTKMS68",
+      "transmitter": true,
+      "detector": true,
+      "whiteBalance": true,
+      "speaker": true,
+      "specifications": [
+        "7C-30M",
+        "7C-50M"
+      ]
+    }
+  ]
+}

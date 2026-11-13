@@ -10,5 +10,13 @@
   <ItemGroup><EmbeddedResource Include="Data/ReceivingForecast.tsv" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Data/LooseGoods1.tsv" /></ItemGroup>
   <ItemGroup><EmbeddedResource Include="Data/LooseGoods2.tsv" /></ItemGroup>
+  <ItemGroup><EmbeddedResource Include="Data/label-data.json" /></ItemGroup>
+  <ItemGroup>
+    <None Update="Data/history/*.json" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Scanner.Server.Model/RepairScan.cs" Link="Contracts/RepairScan.cs" />
+    <None Update="repair-upload.xml" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
 

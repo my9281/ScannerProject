@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RepairUpload>
+  <BaseUrl>https://wms.ymforever.com/</BaseUrl>
+  <!-- Use the same upload key as Scanner.Web. Or enter it in the window for this session. -->
+  <ApiKey></ApiKey>
+</RepairUpload>

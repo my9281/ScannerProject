@@ -2,23 +2,7 @@ namespace WPF.Camara;
 
 public sealed record CameraModel(string Sku, bool Transmitter, bool Detector, bool WhiteBalance, bool Speaker, params string[] Specifications)
 {
-    public static IReadOnlyList<CameraModel> All { get; } =
-    [
-        new("S8981DM", false, false, false, false, "5C-20M", "5C-30M", "5C-50M"),
-        new("S8981DSTM", true, false, true, false, "5C-20M", "5C-30M", "5C-50M"),
-        new("S8981DSRTMS68", true, true, true, false, "5C-20M", "5C-30M", "5C-50M"),
-        new("S8951DM", false, false, false, false, "20M", "30M", "50M"),
-        new("S8951DSTM", true, false, true, false, "20M", "30M", "50M"),
-        new("S8951DSRTMS68", true, true, true, false, "20M", "30M", "50M"),
-        new("S840DSM", false, false, true, true, "5C-50M", "5C-70M", "7C-100M"),
-        new("S840DSRTMS68", true, true, true, true, "7C-50M", "7C-70M", "7C-100M"),
-        new("F5800ADJKABTX", true, false, true, true, "70M-5C", "100M-5C", "50M-7C"),
-        new("F5100DJKABTX", true, false, true, true, "40M-7C", "50M-5C", "70M-5C"),
-        new("S850DSTKM", true, false, true, true, "7C-30M", "7C-50M"),
-        new("S850DSTKMS68", true, true, true, true, "7C-30M", "7C-50M"),
-        new("S860DSTKM", true, false, true, true, "7C-30M", "7C-50M"),
-        new("S860DSTKMS68", true, true, true, true, "7C-30M", "7C-50M")
-    ];
+    public static IReadOnlyList<CameraModel> All { get; } = LabelDataArchive.LoadDefault().CreateModels();
 
     public IReadOnlyList<string> VariantSkus => Specifications.Select(x => $"{Sku}-{x}").ToArray();
 

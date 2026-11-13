@@ -15,19 +15,8 @@ public sealed class ReceivingForecast(IReadOnlyList<ReceivingRow> rows)
     public IReadOnlyList<ReceivingRow> Rows { get; } = rows;
     public IReadOnlyList<int> Pallets => Rows.Select(x => x.Pallet).Distinct().ToArray();
     public IEnumerable<ReceivingPallet> PalletChoices => Pallets.Select(x => new ReceivingPallet(x, PalletName(x)));
-    public static string PalletName(int pallet) => pallet < 0 ? $"散货{-pallet}" : $"第 {pallet} 板";
-    public static ReceivingForecast LoadDefault()
-    {
-        var rows = new List<ReceivingRow>();
-        foreach (var name in new[] { "ReceivingForecast.tsv", "LooseGoods1.tsv", "LooseGoods2.tsv" })
-        {
-            using var stream = typeof(ReceivingForecast).Assembly.GetManifestResourceStream($"WPF.Camara.Data.{name}")!;
-            using var reader = new StreamReader(stream);
-            int offset = rows.Count;
-            rows.AddRange(Parse(reader.ReadToEnd()).Rows.Select(x => x with { Line = x.Line + offset }));
-        }
-        return new(rows);
-    }
+    public static string PalletName(int pallet) => pallet == -3 ? "第二批" : pallet < 0 ? $"散货{-pallet}" : $"第 {pallet} 板";
+    public static ReceivingForecast LoadDefault() => LabelDataArchive.LoadDefault().CreateForecast();
 
     public static ReceivingForecast Parse(string text)
     {

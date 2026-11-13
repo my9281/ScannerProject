@@ -15,7 +15,7 @@ internal static class DirectPrintTests
     {
         var rows = ReceivingForecast.LoadDefault().Rows;
         foreach (int dpi in new[] { 203, 300 })
-        foreach (int line in new[] { 1, 9, 34, 72, 109, 122, 137 })
+        foreach (int line in new[] { 1, 9, 34, 45, 58, 62, 66 })
         {
             var row = rows.Single(x => x.Line == line);
             var label = ReceivingLabel.Create(row, 1, row.Quantity);

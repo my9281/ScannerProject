@@ -9,11 +9,19 @@ using ZXing;
 internal static class Program
 {
     [STAThread]
-    private static void Main()
+    private static void Main(string[] args)
     {
+        if (args is ["--export-label-data", var path])
+        {
+            LabelDataArchive.Capture(ReceivingForecast.LoadDefault(), LabelCatalog.Create(), CameraModel.All).Save(path);
+            Console.WriteLine("Saved label data: " + path);
+            return;
+        }
+        CurrentBatchTests.Run();
+        LabelDataTests.Run();
         DirectPrintTests.Run();
         ReceivingTests.Run();
-        var items = LabelCatalog.Create();
+        var items = CurrentBatchTests.History().CreateCatalog();
         if (items.Count != 29 || items.Sum(x => x.Quantity) != 253 || items.Count(x => x.Quantity == 0) != 4) throw new Exception("清单数量错误");
         if (items[0].Sku != "F5100DJKABTX-40M-7C" || items[3].Sku != "F5800ADJKABTX-100M-5C" || items[18].Sku != "S8951DM-30M" || items[26].Sku != "S68R") throw new Exception("SKU 被改写");
         var jobs = LabelCatalog.BuildJobs(items);
@@ -56,8 +64,8 @@ internal static class Program
         var window = new MainWindow();
         ((TabControl)window.FindName("Mode")).SelectedIndex = 0;
         var grid = (DataGrid)window.FindName("Catalog");
-        grid.SelectedIndex = 26;
-        if (((TextBox)window.FindName("Copies")).Text != "33") throw new Exception("选择行未更新份数");
+        grid.SelectedIndex = 0;
+        if (((TextBox)window.FindName("Copies")).Text != "1") throw new Exception("选择行未更新份数");
         ((TextBox)window.FindName("LabelWidth")).Text = "NaN";
         if (((ContentControl)window.FindName("Preview")).Content != null) throw new Exception("无效尺寸仍显示预览");
         var mode = (TabControl)window.FindName("Mode");

@@ -1,4 +1,4 @@
--- Execute before deploying the updated Web API and PDA.
+-- Execute before deploying the updated Web API and WPF/PDA clients.
 CREATE TABLE IF NOT EXISTS repair_scan_records (
  id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
  scan_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
