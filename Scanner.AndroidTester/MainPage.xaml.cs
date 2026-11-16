@@ -44,6 +44,17 @@ public partial class MainPage : ContentPage
         var records = new Button { ImageSource = "menu_pairs.png", Text = "扫描记录", HeightRequest = 72, FontSize = 22 };
         records.Clicked += async (_, _) => await Navigation.PushAsync(new RepairScanPage(Handler!.MauiContext!.Services.GetRequiredService<AppSettings>()));
         layout.Add(records);
+        var receiving = new Button { Text = "包裹收货 · FedEx / USPS", HeightRequest = 72, FontSize = 20 };
+        receiving.Clicked += async (_, _) =>
+        {
+            try
+            {
+                var services = Handler!.MauiContext!.Services;
+                await Navigation.PushAsync(new CarrierReceivingPage(services.GetRequiredService<CarrierReceivingQueue>(), services.GetRequiredService<CarrierReceivingApi>(), services.GetRequiredService<AppSettings>()));
+            }
+            catch (Exception ex) { await DisplayAlertAsync("无法打开包裹收货", ex.Message, "确定"); }
+        };
+        layout.Add(receiving);
          Content = new ScrollView { Content = layout };
     }
 }

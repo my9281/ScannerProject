@@ -21,9 +21,9 @@ public static class AccountSecurity
     public static bool IsKnownRole(string role) => role is "admin" or "user" or "viewer";
     public static string[] Permissions(string role) => role switch
     {
-        "admin" => ["checklist.read", "checklist.write", "system.configure"],
-        "user" => ["checklist.read", "checklist.write"],
-        "viewer" => ["checklist.read"],
+        "admin" => ["checklist.read", "checklist.write", "system.configure", "receiving.read", "receiving.write"],
+        "user" => ["checklist.read", "checklist.write", "receiving.read", "receiving.write"],
+        "viewer" => ["checklist.read", "receiving.read"],
         _ => []
     };
     public static string LoginMessage(string role) => role switch

@@ -94,3 +94,9 @@ APK 更新需使用与现有安装一致的签名。实机验收：已上传 SN�
 ## 扫描记录（开始维修）
 
 SN 和 SKU 分别扫描，各 1–50 位，上传前可分别清除。记录首个编码录入时间，两项齐全后手动上传；成功后清空开始下一条。上传失败保留并锁定内容供原编号重试，重启后恢复待上传记录。部署先执行 `Scanner.Web/Database/021_repair_scan_records.sql`；新表和接口说明见 [repair_scans.md](../Scanner.Web/Database/repair_scans.md)。
+
+## 包裹收货（FedEx / USPS）
+
+新增原生菜单，使用 Web 人员账号登录并确认站点，支持本机离线收货、重启恢复、分批幂等上传与服务器逐条确认。密码不保存；未确认记录不会因切换页面移除。使用与 Web 相同的服务器地址，不使用设备上传密钥代替人员身份。
+
+部署 SQL、权限、重试和条码范围详见 [PDA 收货说明](../docs/pda-carrier-receiving.md)。

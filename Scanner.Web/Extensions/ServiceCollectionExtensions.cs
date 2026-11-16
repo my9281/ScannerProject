@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.DataProtection;
 using Scanner.Server.BLL;
 using Scanner.Server.DAL;
 using Scanner.Server.Model;
@@ -22,6 +23,20 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<WpfUpdateService>();
         services.AddSingleton<DocumentationService>();
         services.AddMemoryCache();
+        // Keep this key directory across deployments; carrier credentials live encrypted in MySQL.
+        services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "App_Data", "carrier-keys")))
+            .SetApplicationName("Scanner.Web.Carriers");
+        services.AddScoped<CarrierReceivingStore>();
+        services.AddScoped<CarrierReceiptService>();
+        services.AddScoped<ReceivingSyncStore>();
+        services.AddScoped<ReceivingTrackingScheduler>();
+        services.AddHostedService<ReceivingSyncWorker>();
+        services.AddHttpClient<BluettiReceivingClient>(client => client.Timeout = Timeout.InfiniteTimeSpan)
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })
+            .RemoveAllLoggers();
+        services.AddHttpClient<CarrierTrackingClient>(client => client.Timeout = TimeSpan.FromSeconds(35))
+            .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })
+            .RemoveAllLoggers();
         services.Configure<TencentDocsOptions>(configuration.GetSection(TencentDocsOptions.SectionName));
         services.AddHttpClient(TencentDocsService.HttpClientName, client => client.Timeout = TimeSpan.FromSeconds(30))
             .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false, UseCookies = false })

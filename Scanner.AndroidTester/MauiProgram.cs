@@ -17,6 +17,8 @@ namespace Scanner.AndroidTester
 
             var settings = Services.AppSettings.Load();
             builder.Services.AddSingleton(settings);
+            builder.Services.AddSingleton(_ => new Services.CarrierReceivingQueue(Path.Combine(FileSystem.AppDataDirectory, "carrier-receiving-outbox.json")));
+            builder.Services.AddSingleton(new Services.CarrierReceivingApi(new HttpClient { BaseAddress = settings.UploadBaseUrl, Timeout = TimeSpan.FromSeconds(60) }));
             builder.Services.AddSingleton(new Services.SkuSnSession(Path.Combine(FileSystem.AppDataDirectory, "sku-sn-batch.json")));
             builder.Services.AddSingleton<Services.ScanSession>();
             builder.Services.AddSingleton<Services.LatestScan>();

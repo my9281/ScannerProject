@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>承运商收货对账</title>
+<link rel="stylesheet" href="/account.css"><style>input,select,button{width:auto}main{width:100%;max-width:1200px;margin:30px auto;padding:24px}section{background:white;padding:20px;margin:20px 0;border:1px solid #ddd;border-radius:8px}label{display:inline-block;margin:8px}input,select,button{padding:8px;margin:4px}table{border-collapse:collapse;width:100%}td,th{padding:10px;border-bottom:1px solid #ddd;text-align:left}.scroll{overflow:auto}.warning{background:#fff0d9}#message{white-space:pre-wrap}button{cursor:pointer}input[type=checkbox]{width:auto}</style></head>
+<body><main><a href="/account.html">返回账户</a><h1>FedEx / USPS 收货对账</h1>
+<p>逐件登记预报和实收，对比承运商状态。整板签收不等于逐件实收；“显示送达但未实收”须人工核查。</p>
+<p id="message" role="status" aria-live="polite"></p>
+<section><h2>管理员配置</h2><p>配置按当前账户所属域隔离，保存后下一次查询生效。密钥留空保留原值。</p>
+<label>承运商 <select id="settingCarrier"><option value="fedex">FedEx</option><option value="usps">USPS</option></select></label>
+<form id="settings"><fieldset id="settingFields" disabled><label><input id="enabled" type="checkbox">启用查询</label><label><input id="sandbox" type="checkbox">测试环境</label><br>
+<label>Client ID / API Key <input id="clientId" maxlength="512" autocomplete="off"></label>
+<label>Client Secret <input id="secret" type="password" maxlength="4096" autocomplete="new-password"></label><span id="secretState"></span>
+<label><input id="clearSecret" type="checkbox">清除已保存密钥</label><button type="submit">保存配置</button></fieldset></form>
+<button id="reloadSettings" type="button">重新加载配置</button>
+<p>当前支持已知运单号查询，不提供按仓库地址自动发现全部来件。USPS 使用 Tracking v3r2，需获相应查询授权。</p></section>
+<section><h2>预报 / 扫码收货</h2><form id="scan"><label>承运商 <select id="carrier"><option value="fedex">FedEx</option><option value="usps">USPS</option></select></label>
+<label>运单号 <input id="number" required minlength="8" maxlength="40" pattern="[A-Za-z0-9]{8,40}" autocomplete="off"></label><label>RMA / 备注 <input id="reference" maxlength="200"></label>
+<label>登记类型 <select id="mode"><option value="forecast">预报来件</option><option value="receive">仓库已实收</option></select></label><button type="submit">登记</button></form></section>
+<section><h2>收货记录</h2><form id="searchForm"><label>运单 / RMA 搜索 <input id="search" maxlength="200"></label><button type="submit">搜索 / 刷新</button></form>
+<p>每页最多 100 条。查询物流会使用当前配置调用承运商，失败时保留上次成功结果。时间按浏览器当地时区显示。</p>
+<div class="scroll"><table><thead><tr><th>承运商 / 运单</th><th>RMA / 备注</th><th>承运商状态</th><th>最后查询</th><th>实收时间 / 人员</th><th>对账</th><th>操作</th></tr></thead><tbody id="rows"></tbody></table></div>
+<button id="next" type="button" disabled>下一页</button></section></main><script src="/carrier-receiving.js"></script></body></html>

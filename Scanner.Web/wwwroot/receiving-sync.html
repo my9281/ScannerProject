@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BLUETTI 预报自动同步</title>
+<style>body{font:16px system-ui,sans-serif;margin:0;background:#f5f6f8;color:#172033}main{max-width:1100px;margin:auto;padding:24px}section{background:white;padding:22px;margin:20px 0;border:1px solid #dbe0e8;border-radius:8px}label{display:inline-block;margin:8px}input,button{font:inherit;padding:8px}input[type=number]{width:110px}button{cursor:pointer;margin:6px}button:disabled{opacity:.5}table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px;border-bottom:1px solid #ddd}.scroll{overflow:auto}.error{color:#9b241d}pre{white-space:pre-wrap;font:inherit}.hint{color:#536174}#message{white-space:pre-wrap}</style></head>
+<body><main><a href="/account.html">返回账户</a> · <a href="/carrier-receiving.html">承运商配置 / 收货对账</a><h1>BLUETTI 预报自动同步</h1>
+<p>从 BLUETTI 导出预报工单，识别退货 FedEx / USPS 运单，自动加入跟踪清单。</p><p id="message" role="status" aria-live="polite"></p>
+<section><h2>管理员配置</h2><form id="settings"><fieldset id="fields" disabled>
+<label><input type="checkbox" id="enabled">启用 BLUETTI 定时同步</label><br>
+<label>用户名 <input id="username" maxlength="200" autocomplete="off"></label><label>密码 <input id="password" type="password" maxlength="4096" autocomplete="new-password"></label><span id="hasPassword"></span>
+<label><input type="checkbox" id="clearPassword">清除原密码</label><br>
+<label>站点 ID <input id="siteId" maxlength="100"></label><label>客户同步周期（秒） <input id="intervalSeconds" type="number" min="300" max="86400" required></label><br>
+<label><input type="checkbox" id="autoTrack">启用已知运单自动查询</label><label>运单查询周期（秒） <input id="trackIntervalSeconds" type="number" min="60" max="86400" required></label><br>
+<button type="submit">保存配置</button></fieldset></form><button id="reload" type="button">重新加载配置</button><button id="run" type="button" disabled>立即请求同步</button>
+<p class="hint">密码留空保留原值。查询物流前，需在承运商页面配置并启用 FedEx / USPS。自动查询仅覆盖已登记且未实收运单，每批最多 20 件。</p>
+<p class="hint">本连接对应当前账户域下的一个 BLUETTI 站点。使用与 WPF 相同的站点 ID；修改站点后旧数据保留，新的成功导出会切换当前预报快照。</p></section>
+<section><h2>运行状态</h2><pre id="status">正在读取…</pre><p class="hint">状态每 15 秒刷新。一个实例按域依次执行，运行中的任务会影响后续任务开始时间。页面关闭不影响服务后台运行，Web 进程需持续运行。</p></section>
+<section><h2>客户预报池 · 最近成功快照</h2><p>保留无法识别或缺少运单的记录，供人工补资料。快照消失不等于工单取消，不删除已收记录。</p><button id="first" type="button">刷新 / 返回首页</button>
+<div class="scroll"><table><thead><tr><th>RMA</th><th>承运商</th><th>退货运单</th><th>资料问题</th><th>最后同步</th></tr></thead><tbody id="rows"></tbody></table></div><button id="next" disabled type="button">下一页</button></section></main><script src="/receiving-sync.js"></script></body></html>
