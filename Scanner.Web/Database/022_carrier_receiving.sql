@@ -1,4 +1,5 @@
--- Run once in the existing Web MySQL database. All times are UTC.
+-- Existing Scanner.Web database; MySQL 5.7+. UTC timestamps.
+-- Rerunnable CREATEs preserve existing tables/data; they do not repair different definitions.
 CREATE TABLE IF NOT EXISTS carrier_settings (
  domain_id INT NOT NULL,
  carrier VARCHAR(10) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,

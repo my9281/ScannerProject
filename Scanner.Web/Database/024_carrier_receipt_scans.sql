@@ -1,4 +1,5 @@
 -- Run after 022 and 023. Append-only PDA scan events; timestamps UTC.
+-- P0 receipt/time audit. Does not implement the P2 checklist or P3 personal tasks.
 CREATE TABLE IF NOT EXISTS carrier_receipt_scans (
  scan_id CHAR(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL PRIMARY KEY,
  domain_id INT NOT NULL,

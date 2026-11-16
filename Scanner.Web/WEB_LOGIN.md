@@ -1,5 +1,7 @@
 # CheckListBoard Web 登录
 
+2026-11-16：账户页已改为分组 Dashboard，新增管理员创建用户、同域用户列表/密码重置及个人改密功能。沿用现有账号与凭据版本字段，不开放公共注册；详见 [账户工作台说明](../docs/account-dashboard.md)。
+
 ## 改动文件
 
 - `Scanner.Web/Services/AccountSecurity.cs`：密码兼容校验、状态判断、权限和登录提示。

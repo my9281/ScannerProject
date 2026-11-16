@@ -30,7 +30,7 @@ internal static class Program
             Check(view != null, "Runtime DLL and embedded XAML load successfully");
             Check(((TextBlock)view.FindName("VersionText")).Text == "v8.7.6.5", "Shows host version rather than plugin version");
             Check(!view.GetType().Assembly.GetReferencedAssemblies().Any(a => a.Name == "Scanner.WPF"), "Plugin is independent of host");
-            var host = new Window { Content = view, Width = 500, Height = 160, Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
+            var host = new Window { Content = view, Width = 500, Height = 240, Left = -10000, Top = -10000, ShowActivated = false, ShowInTaskbar = false };
             host.Show();
             Check(((TextBlock)view.FindName("NjClock")).Text.Contains("新泽西"), "Clock starts on load");
             // Seed cached values, then switch the host resource without another network request.
@@ -67,7 +67,7 @@ internal static class Program
             view.Measure(new Size(500, double.PositiveInfinity));
             view.Arrange(new Rect(0, 0, 500, view.DesiredSize.Height));
             view.UpdateLayout();
-            Check(view.ActualHeight > 0 && view.ActualHeight <= 122, "Fits existing header slot");
+            Check(view.ActualHeight > 0 && view.ActualHeight >= 144, "Cards reserve enough height for all three text rows");
             if (args.Length > 1)
             {
                 var bitmap = new RenderTargetBitmap(500, (int)Math.Ceiling(view.ActualHeight), 96, 96, PixelFormats.Pbgra32);

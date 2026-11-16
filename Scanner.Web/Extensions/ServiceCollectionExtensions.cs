@@ -51,6 +51,7 @@ public static class ServiceCollectionExtensions
         services.AddHostedService<BreezarySyncWorker>();
         services.AddScoped<HomeMetricsService>();
         services.AddScoped<IAccountService, MySqlAccountService>();
+        services.AddScoped<IAccountManagementService, AccountManagementService>();
         services.AddScoped<IWorkOrderService, MySqlWorkOrderService>();
         services.AddScoped<WorkOrderBatchService>();
         services.AddScannerDataAccess(configuration);

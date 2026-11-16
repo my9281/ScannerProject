@@ -1,4 +1,6 @@
 -- Run after 022_carrier_receiving.sql. UTC timestamps; MySQL 5.7 compatible.
+-- P0 uses receiving_sync_settings.site_id to bind PDA scope, with sync disabled.
+-- P1 uses the remaining synchronization settings and forecast tables.
 CREATE TABLE IF NOT EXISTS receiving_sync_settings (
  domain_id INT NOT NULL PRIMARY KEY,
  enabled BOOLEAN NOT NULL DEFAULT FALSE,
