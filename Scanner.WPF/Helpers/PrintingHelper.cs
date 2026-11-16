@@ -297,7 +297,7 @@ namespace Scanner.WPF.Helpers
             }
             if (repair)
             {
-                AddMarker(canvas, "修", urgent ? 265 : 95, 118, 62, 46, 32);
+                AddMarker(canvas, "Repair", urgent ? 265 : 95, 118, 150, 46, 32, true);
             }
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 430, 85), 78, 170, 420, 68, Stretch.Fill);
             AddText(canvas, serialNumber, 17, 35, 238, WideLabelWidth - 70);
@@ -343,7 +343,7 @@ namespace Scanner.WPF.Helpers
             }
             if (repair)
             {
-                AddMarker(canvas, "修", urgent ? 157 : 35, 101, 52, 40, 26);
+                AddMarker(canvas, "Repair", urgent ? 157 : 35, 101, 115, 40, 26, true);
             }
             AddImage(canvas, CreateCode(serialNumber, BarcodeFormat.CODE_128, 360, 80), 30, 151, 324, 60, Stretch.Fill);
             AddText(canvas, serialNumber, 14, 15, 211, SquareLabelWidth - 30);
@@ -416,9 +416,18 @@ namespace Scanner.WPF.Helpers
             return day % 10 == 1 ? "st" : day % 10 == 2 ? "nd" : day % 10 == 3 ? "rd" : "th";
         }
 
-        private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize)
+        private static void AddMarker(Canvas canvas, string text, double left, double top, double width, double height, double fontSize, bool subscriptStar = false)
         {
             TextBlock markerText = CreateText(text, fontSize, width);
+            if (subscriptStar)
+            {
+                markerText.Inlines.Add(new Run("★")
+                {
+                    FontFamily = new WpfFontFamily("Segoe UI Symbol"),
+                    FontSize = fontSize * 0.5,
+                    BaselineAlignment = BaselineAlignment.Subscript
+                });
+            }
             markerText.VerticalAlignment = VerticalAlignment.Center;
             var border = new Border
             {
