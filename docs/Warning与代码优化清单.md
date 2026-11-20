@@ -8,7 +8,7 @@
 | --- | --- | --- |
 | Scanner.Web | 重新编译通过，0 warning / 0 error | 同时覆盖 Server.Model、DAL、BLL 的当前目标 |
 | Scanner.WPF | 重新编译通过，0 warning / 0 error | 同时覆盖引用的共享工程当前目标，不代表所有共享目标均通过 |
-| Scanner.AndroidTester | 构建通过，16 warning / 0 error | 16 条均来自打印 SDK 生成的绑定代码；未做设备实测 |
+| Scanner.ShippingCowAndroid | 构建通过，16 warning / 0 error | 16 条均来自打印 SDK 生成的绑定代码；未做设备实测 |
 | 其他 MAUI、BreezaryStar、独立测试工程 | 未完整构建 | 不据此宣称全解决方案零告警；Apple 目标另需对应工具链 |
 
 日志：`build/warning-audit-web.log`、`build/warning-audit-wpf.log`、`build/warning-audit-android.log`。日志可能被忽略规则排除，不作为版本库中的长期凭证。

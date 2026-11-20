@@ -6,7 +6,7 @@
 
 Translation/index review: 2026-11-09. Workflow status is unchanged; unresolved rules remain pending confirmation.
 
-Source updated: 2026-10-21. Application: **Scanner.AndroidTester (Yicang PDA)**, with WPF “查看良品区” (view good stock) and “自动匹配” (automatic matching). Covers SN-to-pallet assignment, upload, verification, pallet reassignment within the good-stock area and subsequent work. Scanning does not establish that a unit has passed inspection.
+Source updated: 2026-10-21. Application: **Scanner.ShippingCowAndroid (Yicang PDA)**, with WPF “查看良品区” (view good stock) and “自动匹配” (automatic matching). Covers SN-to-pallet assignment, upload, verification, pallet reassignment within the good-stock area and subsequent work. Scanning does not establish that a unit has passed inspection.
 
 Status: system instructions checked against code; on-site acceptance is pending. Admission, move authorization, independent verification and handover rules remain unresolved (section 9).
 

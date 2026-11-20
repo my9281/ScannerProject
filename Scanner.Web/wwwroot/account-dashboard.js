@@ -1,15 +1,14 @@
 'use strict';
 (() => {
-  const $ = id => document.getElementById(id), token = sessionStorage.getItem('accountToken') || '';
+  const $ = id => document.getElementById(id);
   const roles = { admin: '管理员', user: '普通用户', viewer: '只读用户' };
-  let current = null, usersAfter = '0', nextAfter = '', usersBusy = false, resetUser = null;
+  let current = null, usersAfter = '0', nextAfter = '', usersBusy = false, resetUser = null, assignUser = null;
   function notice(text, error = false) { $('message').textContent = text; $('message').className = 'notice' + (error ? ' error' : ''); }
-  function expire() { sessionStorage.removeItem('accountToken'); location.replace('/login.html'); }
+  function expire() { location.replace('/login.html'); }
   async function api(path, method = 'GET', body) {
     let response;
     try {
-      response = await fetch('/api/' + path, { method, cache: 'no-store', headers: { Authorization: 'Bearer ' + token,
-        ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
+      response = await fetch('/api/' + path, { method, cache: 'no-store', headers: { ...(body ? { 'Content-Type': 'application/json' } : {}) }, ...(body ? { body: JSON.stringify(body) } : {}) });
     } catch { throw new Error('无法连接服务器，请检查网络后重试。'); }
     const data = await response.json().catch(() => ({}));
     if (response.status === 401) { expire(); throw new Error('登录已失效，请重新登录。'); }
@@ -48,11 +47,7 @@
       $('username').textContent = current.username;
       $('displayName').textContent = current.displayName || current.username;
       $('domain').textContent = current.domain.domainName;
-      $('create-domain').textContent = current.domain.domainName;
       $('role').textContent = roles[current.role] || current.role;
-      $('sidebar-name').textContent = current.displayName || current.username;
-      $('sidebar-role').textContent = roles[current.role] || current.role;
-      $('avatar').textContent = [...current.username].slice(0, 2).join('').toUpperCase();
       $('expires').textContent = new Date(current.expiresAt).toLocaleString('zh-CN', { hour12: false });
       $('welcome-text').textContent = '你好，' + (current.displayName || current.username) + '。从这里进入你的业务工具。';
       $('permissions').replaceChildren();
@@ -70,15 +65,58 @@
     try { await api('account/logout', 'POST'); expire(); }
     catch (error) { notice('退出未确认：' + error.message + ' 可重试退出。', true); buttons.forEach(b => { b.disabled = false; }); }
   }
-  $('logout').addEventListener('click', logout);
   $('logout-mobile')?.addEventListener('click', logout);
   $('open-password').addEventListener('click', () => openDialog('password-dialog'));
-  $('open-create').addEventListener('click', () => openDialog('create-dialog'));
+  async function openDomainDialog(id, selectId, selectedId, user) {
+    try {
+      const domains = await api('account-management/domains');
+      if (document.querySelector('dialog[open]')) return;
+      if (user) {
+        assignUser = user;
+        $('assign-name').textContent = user.username;
+      }
+      if (selectId) {
+        const select = $(selectId);
+        select.replaceChildren(...domains.map(domain => new Option(domain.domainName, domain.id)));
+      } else {
+        showDomains(domains);
+      }
+      openDialog(id);
+      if (selectId && domains.some(domain => domain.id === selectedId)) $(selectId).value = selectedId;
+    } catch (error) { notice(error.message, true); }
+  }
+  function showDomains(domains) {
+    $('domain-list').textContent = domains.length
+      ? '已启用的域：' + domains.map(domain => domain.domainName).join('、')
+      : '暂无已启用的域。';
+  }
+  $('open-create').addEventListener('click', () => openDomainDialog('create-dialog', 'create-domain', current.domain.id));
+  $('open-domain').addEventListener('click', () => openDomainDialog('domain-dialog'));
+  $('domain-form').addEventListener('submit', e => {
+    e.preventDefault(); submit(e.currentTarget, async status => {
+      const domain = await api('account-management/domains', 'POST', { domainName: $('domain-name').value.trim() });
+      $('domain-name').value = '';
+      const list = $('domain-list');
+      list.textContent = list.textContent.startsWith('已启用的域：')
+        ? list.textContent + '、' + domain.domainName : '已启用的域：' + domain.domainName;
+      status.textContent = '已创建域 ' + domain.domainName + '。';
+    });
+  });
+  $('assign-form').addEventListener('submit', e => {
+    e.preventDefault(); submit(e.currentTarget, async status => {
+      const domainId = Number($('assign-domain').value);
+      if (assignUser.domain.id === domainId) { status.textContent = '该用户已在此域。'; return; }
+      await api('account-management/users/' + encodeURIComponent(assignUser.id) + '/domain', 'POST', { domainId });
+      if (assignUser.id === String(current.userId)) { expire(); return; }
+      $('assign-dialog').close();
+      await loadUsers();
+    });
+  });
   $('password-form').addEventListener('submit', e => {
     e.preventDefault(); submit(e.currentTarget, async status => {
       const result = await api('account-management/password', 'POST', { currentPassword: $('current-password').value,
         newPassword: $('new-password').value, confirmPassword: $('confirm-password').value });
-      sessionStorage.removeItem('accountToken'); e.target.reset(); status.textContent = result.message;
+      e.target.reset(); status.textContent = result.message;
       $('open-password').disabled = true; setTimeout(() => location.replace('/login.html'), 1200);
     });
   });
@@ -86,6 +124,7 @@
     e.preventDefault(); submit(e.currentTarget, async status => {
       const result = await api('account-management/users', 'POST', { username: $('create-username').value.trim(),
         displayName: $('create-display').value.trim() || null, role: $('create-role').value,
+        domainId: Number($('create-domain').value),
         password: $('create-password').value, confirmPassword: $('create-confirm').value });
       $('create-password').value = $('create-confirm').value = '';
       status.textContent = '已创建用户 ' + result.username + '，可使用初始密码登录。';
@@ -101,19 +140,25 @@
       $('user-rows').replaceChildren();
       for (const user of rows) {
         const row = document.createElement('tr');
-        for (const text of [user.username, user.displayName || '—', roles[user.role] || user.role,
+        for (const text of [user.username, user.displayName || '—', roles[user.role] || user.role, user.domain.domainName,
           ({ active: '正常', locked: '已锁定', disabled: '已停用' })[user.status] || user.status]) {
           const cell = document.createElement('td'); cell.textContent = text; row.append(cell);
         }
         const cell = document.createElement('td');
         if (user.id === String(current.userId)) cell.textContent = '当前账户';
-        else {
+        else if (user.domain.id === current.domain.id) {
           const button = document.createElement('button'); button.type = 'button'; button.className = 'text-button'; button.textContent = '重置密码';
           button.addEventListener('click', () => { resetUser = user; $('reset-name').textContent = user.username; openDialog('reset-dialog'); }); cell.append(button);
         }
+        const assign = document.createElement('button');
+        assign.type = 'button'; assign.className = 'text-button'; assign.textContent = '调整所属域';
+        assign.addEventListener('click', () => {
+          openDomainDialog('assign-dialog', 'assign-domain', user.domain.id, user);
+        });
+        cell.append(' ', assign);
         row.append(cell); $('user-rows').append(row);
       }
-      $('user-message').textContent = rows.length ? '仅显示 ' + current.domain.domainName + ' 域的用户。' : '没有符合条件的用户。';
+      $('user-message').textContent = rows.length ? '' : '没有符合条件的用户。';
       $('user-message').className = 'form-message';
     } catch (error) { nextAfter = ''; $('user-message').textContent = error.message; $('user-message').className = 'form-message error'; }
     finally { usersBusy = false; $('users-next').disabled = !nextAfter; $('users-first').disabled = usersAfter === '0'; }
@@ -137,6 +182,5 @@
   document.querySelectorAll('.nav-link').forEach(link => link.addEventListener('click', () => {
     document.querySelectorAll('.nav-link').forEach(el => el.classList.toggle('active', el === link));
   }));
-  if (!token) { expire(); return; }
   load();
 })();

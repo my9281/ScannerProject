@@ -9,7 +9,7 @@
 | 工程 | 定位与状态 | 文档 |
 | --- | --- | --- |
 | Scanner.WPF | .NET 10 Windows WPF，主仓库工作台 | 本文第 3 节 |
-| Scanner.AndroidTester | androidtest，原生 MAUI PDA 扫码、上传、打印 | [PDA 文档](Scanner.AndroidTester/README.md) |
+| Scanner.ShippingCowAndroid | androidtest，原生 MAUI PDA 扫码、上传、打印 | [PDA 文档](Scanner.ShippingCowAndroid/README.md) |
 | Scanner.CheckListBoard | 原生 MAUI 平板登录、权限、真实工单读写 | [平板文档](Scanner.CheckListBoard/README.md) |
 | Scanner.Web | ASP.NET Core 10 Web 页面和统一业务 API | 本文第 6–8 节 |
 | Scanner.MaUI | 原 Mac 迁移客户端，已接入业务，不是空模板 | 本文第 5 节 |
@@ -78,7 +78,7 @@ WPF 标题、目录、按钮和提示提供中文、英文、西班牙语资源�
 
 PDA 首页提供 English / Español 切换，默认英语，本机记住选择；菜单、扫码状态、错误提示及打印机选择提供英西双语，业务字段和条码原值保持不变。
 
-三个上传模块共用嵌入 XML 中的地址和 Upload Key，修改需重新构建安装。详见 [PDA 完整文档](Scanner.AndroidTester/README.md)。
+三个上传模块共用嵌入 XML 中的地址和 Upload Key，修改需重新构建安装。详见 [PDA 完整文档](Scanner.ShippingCowAndroid/README.md)。
 
 ### 平板 CheckListBoard
 
@@ -163,12 +163,12 @@ MySQL 5.7 不执行 CHECK 范围约束，托盘和输入校验依赖客户端及
 
 Web：Database 的 Enabled、Server、Port、Database、UserId、Password；Upload 的 ApiKey、Directory、MaxBytes、MaxPreviewBytes；可选 FeishuRobot。密码和密钥不复制到文档，可通过 `Database__Password`、`Upload__ApiKey` 环境变量覆盖。默认上传 10 MiB、预览 1 MiB，目录需写权限。
 
-PDA 使用嵌入 [appsettings.xml 配置](Scanner.AndroidTester/APPSETTINGS.md)；平板修改 HTTPS 地址并使用账号会话，不能用 Upload Key 代替登录。
+PDA 使用嵌入 [appsettings.xml 配置](Scanner.ShippingCowAndroid/APPSETTINGS.md)；平板修改 HTTPS 地址并使用账号会话，不能用 Upload Key 代替登录。
 
 ```powershell
 dotnet build Scanner.WPF/Scanner.WPF.csproj
 dotnet build Scanner.Web/Scanner.Web.csproj
-dotnet build Scanner.AndroidTester/Scanner.AndroidTester.csproj -f net10.0-android
+dotnet build Scanner.ShippingCowAndroid/Scanner.ShippingCowAndroid.csproj -f net10.0-android
 dotnet build Scanner.CheckListBoard/Scanner.CheckListBoard.csproj -f net10.0-android
 ```
 

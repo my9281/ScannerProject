@@ -1,0 +1,33 @@
+@model Scanner.Web.Services.PublicSiteSeo
+@using Scanner.Web.Services
+@{
+    string canonical = PublicSiteSeo.AbsoluteUrl(Context.Request, Model.Path);
+    string image = PublicSiteSeo.AbsoluteUrl(Context.Request, "/shipping-cow.png");
+}
+<title>@Model.PageTitle</title>
+<meta name="description" content="@Model.Description">
+<link rel="canonical" href="@canonical">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:site_name" content="维修管理平台">
+<meta property="og:title" content="@Model.PageTitle">
+<meta property="og:description" content="@Model.Description">
+<meta property="og:url" content="@canonical">
+<meta property="og:image" content="@image">
+<meta property="og:image:alt" content="维修管理平台标志">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="@Model.PageTitle">
+<meta name="twitter:description" content="@Model.Description">
+<meta name="twitter:image" content="@image">
+@if (Model.Path == "/")
+{
+    var schema = System.Text.Json.JsonSerializer.Serialize(new Dictionary<string, object>
+    {
+        ["@context"] = "https://schema.org",
+        ["@type"] = "WebSite",
+        ["name"] = "维修管理平台",
+        ["url"] = canonical,
+        ["inLanguage"] = "zh-CN"
+    });
+    <script type="application/ld+json">@Html.Raw(schema)</script>
+}

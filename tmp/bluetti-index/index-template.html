@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLUETTI 配件文字索引</title>
+<style>
+:root{font:15px/1.55 system-ui,"Microsoft YaHei",sans-serif;color:#172b3d;background:#f6f8fb}*{box-sizing:border-box}
+body{max-width:1230px;margin:auto;padding:30px clamp(14px,4vw,48px)}h1{font-size:clamp(24px,4vw,38px);margin:0}p{margin:6px 0 16px}
+a{color:#0958a6}label{display:grid;gap:5px;font-weight:600}input,select,button{font:inherit;color:inherit;padding:8px 10px;border:1px solid #bac8d7;background:white;border-radius:6px;min-width:0}
+button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #0968b4;outline-offset:2px}
+form{display:grid;grid-template-columns:minmax(240px,2fr) minmax(140px,1fr) 140px auto;gap:12px;align-items:end;margin:20px 0 12px}
+.toolbar{display:flex;gap:16px;flex-wrap:wrap;margin:10px 0}.toolbar a{font-weight:600}.muted{color:#425970}.table{overflow:auto;border:1px solid #d3deea;background:white;border-radius:7px}
+table{width:100%;border-collapse:collapse;text-align:left}th,td{padding:8px 11px;border-bottom:1px solid #e3eaf1;vertical-align:top}
+th{background:#eaf0f7;white-space:nowrap}tbody tr:hover{background:#f3f8fd}.quantity{white-space:nowrap;text-align:center}
+details{background:white;border:1px solid #d3deea;border-radius:7px;margin:6px 0;padding:8px 12px}summary{cursor:pointer;font-weight:650}pre{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}
+[hidden]{display:none!important}@media(max-width:760px){form{grid-template-columns:1fr 1fr}form label:first-child{grid-column:1/-1}}
+</style>
+<main>
+<h1>BLUETTI 配件文字索引</h1>
+<p class="muted">按型号、配件英文名或规格搜索。数量为空表示未能从原图确认。OCR 条目和归类仍需以对应原页核对。</p>
+<div class="toolbar"><a href="./BLUETTI%20配件清单合订本.pdf">打开截图合订本</a><a href="./BLUETTI%20配件文字索引.csv" download>下载 CSV</a></div>
+<form>
+<label>搜索<input id="q" type="search" placeholder="例如 AC180、charging cable、XT60"></label>
+<label>型号<select id="model"><option value="">全部型号</option></select></label>
+<label>归类<select id="category"><option value="">全部归类</option></select></label>
+<button type="button" id="clear">清除筛选</button>
+</form>
+<p id="count" aria-live="polite"></p>
+<div class="table" id="results"><table><thead><tr><th>型号</th><th>配件或条目</th><th>数量</th><th>归类</th><th>来源</th></tr></thead><tbody id="rows"></tbody></table></div>
+<p id="empty" hidden>没有匹配的条目。下方仍可查看匹配的页面原始识别文字。</p>
+<h2>逐页识别文字</h2>
+<p class="muted">展开可查看配件候选表未收录的识别文字，例如图注、规格碎片或说明。</p>
+<div id="pages"></div>
+</main>
+<script type="application/json" id="dataset">__DATA__</script>
+<script>
+const {items,pages,categories}=JSON.parse(document.getElementById('dataset').textContent);
+const $=id=>document.getElementById(id);
+const pdf='./BLUETTI%20配件清单合订本.pdf';
+const models=[...new Set(pages.map(p=>p.model))];
+for(const value of models) $('model').add(new Option(value,value));
+for(const value of categories) $('category').add(new Option(value,value));
+const norm=s=>String(s).normalize('NFKC').toLowerCase().replace(/[–—‑]/g,'-');
+const el=(tag,text)=>{const x=document.createElement(tag);if(text!==undefined)x.textContent=text;return x;};
+function pageLink(p, label) {
+  const link=el('a',label); link.href=pdf+'#page='+p.page;
+  link.target='_blank'; link.rel='noopener'; return link;
+}
+function render() {
+  const query=norm($('q').value).trim().split(/\s+/).filter(Boolean);
+  const model=$('model').value,category=$('category').value;
+  const matches=values=>{const hay=norm(values.join(' '));return query.every(word=>hay.includes(word));};
+  const selected=items.filter(i=>(!model||i.model===model)&&(!category||i.status===category)&&matches([i.model,i.name,i.qty,i.source,i.status]));
+  const pageIds=new Set(selected.map(i=>i.page));
+  const shown=pages.filter(p=>(!model||p.model===model)&&(!category||pageIds.has(p.page))&&
+    (pageIds.has(p.page)||matches([p.model,p.source,...p.raw])));
+  $('count').textContent=selected.length+' 条配件候选 · '+shown.length+' 页原始识别文字';
+  $('results').hidden=selected.length===0; $('empty').hidden=selected.length!==0;
+  $('rows').replaceChildren(...selected.map(i=>{
+    const tr=el('tr'), qty=el('td',i.qty||'—'); qty.className='quantity';
+    const source=el('td'); source.append(pageLink(i,i.source+' · 原页 '+i.sourcePage),el('small',' · 合订第 '+i.page+' 页'));
+    const name=el('td',i.name); if(i.origin!=='OCR')name.title=i.origin;
+    tr.append(el('td',i.model),name,qty,el('td',i.status),source);return tr;
+  }));
+  $('pages').replaceChildren(...shown.map(p=>{
+    const block=el('details');
+    block.append(el('summary',p.model+' · '+p.source+' · 原页 '+p.sourcePage+' · 合订第 '+p.page+' 页'),
+      pageLink(p,'查看原页截图'),el('pre',p.raw.join('\n')));
+    return block;
+  }));
+}
+for(const id of ['q','model','category']) $(id).addEventListener('input',render);
+$('clear').addEventListener('click',()=>{for(const id of ['q','model','category'])$(id).value='';render();$('q').focus();});
+document.querySelector('form').addEventListener('submit',e=>e.preventDefault());
+render();
+</script>
+

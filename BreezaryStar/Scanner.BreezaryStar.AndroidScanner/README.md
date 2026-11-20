@@ -1,6 +1,6 @@
 # Scanner.BreezaryStar.AndroidScanner
 
-从 Scanner.AndroidTester 的 MAUI 平台与资源模板独立复制，只保留「扫码入库」新业务。应用标识为 `com.scanner.breezarystar.androidscanner`，不覆盖原 PDA 应用，不包含旧预扫描、检测、打印、库位或 SKU/SN 模块。
+从 Scanner.ShippingCowAndroid 的 MAUI 平台与资源模板独立复制，只保留「扫码入库」新业务。应用标识为 `com.scanner.breezarystar.androidscanner`，不覆盖原 PDA 应用，不包含旧预扫描、检测、打印、库位或 SKU/SN 模块。
 
 ## Android 使用
 

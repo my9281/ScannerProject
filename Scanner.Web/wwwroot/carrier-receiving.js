@@ -1,12 +1,12 @@
 'use strict';
 (() => {
-  const $ = id => document.getElementById(id), token = sessionStorage.getItem('accountToken') || '';
+  const $ = id => document.getElementById(id);
   let revision = 0, before = 0, next = 0, busy = false, loadedCarrier = '';
   const message = text => { $('message').textContent = text; };
   const date = value => value ? new Date(value).toLocaleString() : '—';
   async function api(path, method = 'GET', body) {
     const response = await fetch('/api/carrier-receiving/' + path, { method, cache: 'no-store',
-      headers: { Authorization: 'Bearer ' + token, ...(body ? { 'Content-Type': 'application/json' } : {}) },
+      headers: { ...(body ? { 'Content-Type': 'application/json' } : {}) },
       ...(body ? { body: JSON.stringify(body) } : {}) });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(data.message || '请求失败（HTTP ' + response.status + '）');
@@ -68,6 +68,5 @@
   }); });
   $('searchForm').addEventListener('submit', event => { event.preventDefault(); run(async () => { before = 0; await list(); }); });
   $('next').addEventListener('click', () => run(async () => { before = next; await list(); }));
-  if (!token) { location.replace('/login.html'); return; }
   run(async () => { await settings(); await list(); });
 })();

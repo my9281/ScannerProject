@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.HttpOverrides;
 using Scanner.Web.Extensions;
+using Scanner.Web.Services;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
@@ -28,13 +29,16 @@ app.Use(async (context, next) =>
     }
     await next();
 });
-app.UseDefaultFiles();
 app.Use(async (context, next) =>
 {
-    context.Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
+    string requestPath = context.Request.Path.Value ?? "";
+    bool publicPage = !context.Request.QueryString.HasValue &&
+        PublicSiteSeo.Pages.Any(page => page.Path.Equals(requestPath, StringComparison.Ordinal));
+    if (!publicPage && requestPath is not ("/robots.txt" or "/sitemap.xml"))
+        context.Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
     // Keep registration disabled while allowing direct pallet links.
     // Device and desktop APIs retain their existing authentication and behavior.
-    string path = (context.Request.Path.Value ?? "").TrimEnd('/');
+    string path = requestPath.TrimEnd('/');
     if (path.Equals("/register.html", StringComparison.OrdinalIgnoreCase)
         || path.Equals("/account/register", StringComparison.OrdinalIgnoreCase)
         || path.Equals("/api/account/register", StringComparison.OrdinalIgnoreCase)

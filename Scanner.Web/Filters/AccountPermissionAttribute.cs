@@ -9,19 +9,16 @@ namespace Scanner.Web.Filters;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public sealed class AccountPermissionAttribute(string permission) : Attribute, IAsyncAuthorizationFilter
 {
+    public bool AllowPdaReceiver { get; set; }
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        string header = context.HttpContext.Request.Headers.Authorization.ToString();
-        AccountResult? account = null;
-        if (header.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-        {
-            var service = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
-            try { account = await service.GetCurrentAsync(header[7..].Trim(), context.HttpContext.RequestAborted); }
-            catch (FormatException) { }
-        }
+        context.HttpContext.Response.Headers.CacheControl = "no-store";
+        var service = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
+        AccountResult? account = await WebAccountSession.ResolveAsync(context.HttpContext, service);
         if (account is null)
             context.Result = new UnauthorizedObjectResult(new { message = "请先登录或重新登录。" });
-        else if (!account.Permissions.Contains(permission, StringComparer.Ordinal))
+        else if (!account.Permissions.Contains(permission, StringComparer.Ordinal)
+            && !(AllowPdaReceiver && permission == "receiving.write" && account.Username.Equals("PDA01", StringComparison.OrdinalIgnoreCase)))
             context.Result = new ObjectResult(new { message = "当前账户没有此操作权限。" }) { StatusCode = 403 };
         else
         {

@@ -12,6 +12,18 @@ public sealed record ReceivingSyncSettings(bool Enabled, string Username, bool H
 
 public sealed class ReceivingSyncStore(IMySqlConnectionFactory connections, IDataProtectionProvider protection)
 {
+    internal const string BluettiDomainName = "Bluetti";
+
+    public async Task<int> BluettiDomain(CancellationToken ct)
+    {
+        await using var c = await connections.OpenConnectionAsync(ct);
+        using var cmd = c.CreateCommand();
+        cmd.CommandText = "SELECT id FROM user_domains WHERE domain_name=@name AND is_enabled=1";
+        cmd.Parameters.AddWithValue("@name", BluettiDomainName);
+        var id = await cmd.ExecuteScalarAsync(ct) ?? throw new ApiException(409, "请先在域管理中创建 Bluetti 域。");
+        return Convert.ToInt32(id);
+    }
+
     private IDataProtector Protector(int domain) => protection.CreateProtector("Scanner.Receiving.Bluetti.Password.v1", domain.ToString());
     public static void Validate(ReceivingSyncEdit edit)
     {
@@ -103,7 +115,13 @@ public sealed class ReceivingSyncStore(IMySqlConnectionFactory connections, IDat
         try
         {
             using var cmd = c.CreateCommand(); cmd.Parameters.AddWithValue("@domain", domain);
-            cmd.CommandText = "SELECT username,password_protected,site_id,revision FROM receiving_sync_settings WHERE domain_id=@domain AND enabled=1 AND next_run_at<=UTC_TIMESTAMP(3)";
+            cmd.CommandText = """
+                SELECT s.username,s.password_protected,s.site_id,s.revision
+                FROM receiving_sync_settings s JOIN user_domains d ON d.id=s.domain_id
+                WHERE s.domain_id=@domain AND d.domain_name=@bluetti AND d.is_enabled=1
+                  AND s.enabled=1 AND s.next_run_at<=UTC_TIMESTAMP(3)
+                """;
+            cmd.Parameters.AddWithValue("@bluetti", BluettiDomainName);
             string username, encrypted, site; int revision;
             await using (var r = await cmd.ExecuteReaderAsync(ct))
             {

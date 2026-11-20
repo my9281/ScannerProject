@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
-using Scanner.AndroidTester.Services;
+using Scanner.ShippingCowAndroid.Services;
 using Scanner.Server.Model;
 using Scanner.Server.BLL;
 using Scanner.Server.DAL;

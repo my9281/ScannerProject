@@ -18,7 +18,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
     {
         await using MySqlConnection connection = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await using MySqlCommand command = connection.CreateCommand();
-        command.CommandText = "SELECT `id`, `domain_name` FROM `user_domains` WHERE `is_enabled` = 1 ORDER BY `id`;";
+        command.CommandText = "SELECT `id`, `domain_name` FROM `user_domains` WHERE `is_enabled` = 1 AND `allows_self_registration` = 1 ORDER BY `id`;";
         List<AccountDomain> domains = new();
         await using MySqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
         while (await reader.ReadAsync(cancellationToken)) domains.Add(new AccountDomain(reader.GetInt32("id"), reader.GetString("domain_name")));
@@ -37,7 +37,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         try
         {
             AccountDomain domain = await GetDomainAsync(connection, transaction, request.DomainId, cancellationToken)
-                ?? throw new ArgumentException("选择的域不存在或已停用。");
+                ?? throw new ArgumentException("该域未开放自助注册，请联系管理员。");
             await using MySqlCommand insert = connection.CreateCommand();
             insert.Transaction = transaction;
             insert.CommandText = """
@@ -68,7 +68,13 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         }
     }
 
-    public async Task<AccountResult?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default)
+    public Task<AccountResult?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default) =>
+        LoginAsync(request, TokenLifetime, cancellationToken);
+
+    public Task<AccountResult?> LoginWebAsync(LoginRequest request, CancellationToken cancellationToken = default) =>
+        LoginAsync(request, WebAccountSession.Lifetime, cancellationToken);
+
+    private async Task<AccountResult?> LoginAsync(LoginRequest request, TimeSpan lifetime, CancellationToken cancellationToken)
     {
         string username = RequiredUsername(request.Username);
         await using MySqlConnection connection = await connectionFactory.OpenConnectionAsync(cancellationToken);
@@ -123,7 +129,7 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
                 await success.ExecuteNonQueryAsync(cancellationToken);
             }
             AccountResult result = await CreateSessionAsync(connection, transaction, user.Id, user.Username, user.DisplayName,
-                new AccountDomain(user.DomainId, user.DomainName), user.Role, now, cancellationToken);
+                new AccountDomain(user.DomainId, user.DomainName), user.Role, now, cancellationToken, lifetime);
             await transaction.CommitAsync(cancellationToken);
             return result;
         }
@@ -134,25 +140,47 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
         }
     }
 
-    public async Task<AccountResult?> GetCurrentAsync(string token, CancellationToken cancellationToken = default)
+    public Task<AccountResult?> GetCurrentAsync(string token, CancellationToken cancellationToken = default) =>
+        GetCurrentAsync(token, false, cancellationToken);
+
+    public Task<AccountResult?> RenewWebSessionAsync(string token, CancellationToken cancellationToken = default) =>
+        GetCurrentAsync(token, true, cancellationToken);
+
+    private async Task<AccountResult?> GetCurrentAsync(string token, bool renew, CancellationToken cancellationToken)
     {
         byte[] tokenHash = TokenHash(token);
         await using MySqlConnection connection = await connectionFactory.OpenConnectionAsync(cancellationToken);
         await using MySqlCommand command = connection.CreateCommand();
-        command.CommandText = """
-            SELECT u.`id`, u.`username`, u.`display_name`, u.`role`, d.`id` AS `domain_id`, d.`domain_name`, s.`expires_at`
-            FROM `user_sessions` s
+        const string tables = """
+            `user_sessions` s
             INNER JOIN `app_users` u ON u.`id` = s.`user_id`
             INNER JOIN `user_domains` d ON d.`id` = u.`domain_id`
+            """;
+        const string validSession = """
             WHERE s.`token_hash`=@tokenHash AND s.`revoked_at` IS NULL AND s.`expires_at`>@now
               AND u.`status`='active' AND d.`is_enabled`=1
               AND (u.`locked_until` IS NULL OR u.`locked_until`<=@now)
               AND u.`role` IN ('admin','user','viewer')
               AND u.`credential_version`=s.`credential_version`
-              AND (u.`password_changed_at` IS NULL OR u.`password_changed_at`<=s.`created_at`) LIMIT 1;
+              AND (u.`password_changed_at` IS NULL OR u.`password_changed_at`<=s.`created_at`)
             """;
         command.Parameters.Add("@tokenHash", MySqlDbType.Binary, 32).Value = tokenHash;
-        command.Parameters.Add("@now", MySqlDbType.DateTime).Value = DateTime.UtcNow;
+        var now = DateTime.UtcNow;
+        command.Parameters.Add("@now", MySqlDbType.DateTime).Value = now;
+        if (renew)
+        {
+            command.CommandText = $"UPDATE {tables} SET s.`expires_at`=GREATEST(s.`expires_at`,@expires), " +
+                $"s.`last_used_at`=GREATEST(s.`last_used_at`,@now) {validSession};";
+            var expiration = command.Parameters.Add("@expires", MySqlDbType.DateTime);
+            expiration.Value = now.Add(WebAccountSession.Lifetime);
+            await command.ExecuteNonQueryAsync(cancellationToken);
+            command.Parameters.Remove(expiration);
+        }
+        command.CommandText = $"""
+            SELECT u.`id`, u.`username`, u.`display_name`, u.`role`, d.`id` AS `domain_id`, d.`domain_name`, s.`expires_at`
+            FROM {tables}
+            {validSession} LIMIT 1;
+            """;
         await using MySqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
         if (!await reader.ReadAsync(cancellationToken)) return null;
         return new AccountResult(reader.GetString("username"), reader.IsDBNull(reader.GetOrdinal("display_name")) ? null : reader.GetString("display_name"),
@@ -174,17 +202,18 @@ public sealed class MySqlAccountService(IMySqlConnectionFactory connectionFactor
     {
         await using MySqlCommand command = connection.CreateCommand();
         command.Transaction = transaction;
-        command.CommandText = "SELECT `id`, `domain_name` FROM `user_domains` WHERE `id`=@id AND `is_enabled`=1 LIMIT 1;";
+        command.CommandText = "SELECT `id`, `domain_name` FROM `user_domains` WHERE `id`=@id AND `is_enabled`=1 AND `allows_self_registration`=1 LOCK IN SHARE MODE;";
         command.Parameters.AddWithValue("@id", id);
         await using MySqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
         return await reader.ReadAsync(cancellationToken) ? new AccountDomain(reader.GetInt32("id"), reader.GetString("domain_name")) : null;
     }
 
     private static async Task<AccountResult> CreateSessionAsync(MySqlConnection connection, MySqlTransaction transaction, ulong userId,
-        string username, string? displayName, AccountDomain domain, string role, DateTime now, CancellationToken cancellationToken)
+        string username, string? displayName, AccountDomain domain, string role, DateTime now,
+        CancellationToken cancellationToken, TimeSpan? lifetime = null)
     {
         string token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
-        DateTime expiresAt = now.Add(TokenLifetime);
+        DateTime expiresAt = now.Add(lifetime ?? TokenLifetime);
         await using MySqlCommand command = connection.CreateCommand();
         command.Transaction = transaction;
         command.CommandText = "INSERT INTO `user_sessions` (`user_id`,`token_hash`,`expires_at`,`created_at`,`last_used_at`,`credential_version`) VALUES (@userId,@tokenHash,@expiresAt,@now,@now,(SELECT credential_version FROM app_users WHERE id=@userId));";

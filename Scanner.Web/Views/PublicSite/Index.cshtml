@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+@await Html.PartialAsync("_PublicSeo", Scanner.Web.Services.PublicSiteSeo.Home)
+<link rel="icon" href="/shipping-cow-icon.png">
+<link rel="stylesheet" href="/shipping-cow.css">
+<link rel="stylesheet" href="/home.css">
+<script src="/workspace.js?v=3" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <a class="cow-brand" href="/"><img src="/shipping-cow-icon.png" width="145" height="138" alt=""><span>维修管理平台<small>ShippingCow</small></span></a>
+      <a id="home-login" class="action" href="/login.html">登录</a>
+    </div>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>维修管理平台</h1>
+        <p id="home-account-greeting" role="status" hidden></p>
+        <p>查找 BLUETTI 产品、手册配件和发货 SKU，处理维修收货、包裹对账与托盘查询。</p>
+        <a class="action action-gold" href="/account.html">进入工作台</a>
+      </div>
+      <div class="hero-logo"><img src="/shipping-cow.png" width="217" height="173" alt=""></div>
+    </section>
+    <section class="metrics" aria-labelledby="metrics-title">
+      <h2 id="metrics-title">运营概览</h2>
+      <dl aria-live="polite">
+        <div><dt>物流线路</dt><dd data-metric="routes">—</dd></div>
+        <div><dt>服务用户</dt><dd data-metric="users">—</dd></div>
+        <div><dt>托盘数据</dt><dd data-metric="pallets">—</dd></div>
+        <div><dt>仓储记录</dt><dd data-metric="records">—</dd></div>
+        <div><dt>提供维修方案的托盘</dt><dd data-metric="repairs">—</dd></div>
+      </dl>
+    </section>
+  </main>
+  <footer class="shell"><div class="footer-links"><a href="/bluetti-products">BLUETTI 产品查询 ↗</a><a href="/shipping-skus">配件与发货 SKU 查询 ↗</a><a href="/manual-accessories">手册配件查询 ↗</a><a href="https://shippingcow.ai/">ShippingCow 母站 ↗</a></div></footer>
+<script>
+(async()=>{try{const response=await fetch('/api/home/metrics',{cache:'no-store'});if(!response.ok)return;const metrics=await response.json();document.querySelectorAll('[data-metric]').forEach(node=>{const value=metrics[node.dataset.metric];node.textContent=Number.isSafeInteger(value)&&value>=0?value.toLocaleString('zh-CN'):'—';});}catch{}})();
+</script></body></html>

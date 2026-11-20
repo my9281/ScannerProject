@@ -7,7 +7,11 @@ public interface IAccountService
     Task<IReadOnlyList<AccountDomain>> GetDomainsAsync(CancellationToken cancellationToken = default);
     Task<AccountResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
     Task<AccountResult?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default);
+    Task<AccountResult?> LoginWebAsync(LoginRequest request, CancellationToken cancellationToken = default) =>
+        LoginAsync(request, cancellationToken);
     Task<AccountResult?> GetCurrentAsync(string token, CancellationToken cancellationToken = default);
+    Task<AccountResult?> RenewWebSessionAsync(string token, CancellationToken cancellationToken = default) =>
+        GetCurrentAsync(token, cancellationToken);
     Task LogoutAsync(string token, CancellationToken cancellationToken = default);
 }
 

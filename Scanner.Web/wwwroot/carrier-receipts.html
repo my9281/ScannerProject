@@ -1,6 +1,15 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PDA 包裹实收记录</title>
-<style>body{font:16px system-ui;background:#f6f7f9;color:#172033;margin:0}main{max-width:1300px;margin:auto;padding:24px}table{background:white;border-collapse:collapse;width:100%}th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd}input,button{font:inherit;padding:8px;margin:8px}.scroll{overflow:auto}.warning{background:#fff2dc}</style></head><body><main>
-<a href="/account.html">返回账户</a><h1>PDA 包裹实收记录</h1><p>按扫描事件保留审计；同一包裹多次扫描可出现多条记录，包裹实收数量按运单去重。关联预报会在后续同步后自动显示。</p>
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PDA 收货</title>
+<style>body{font:16px system-ui;background:#f6f7f9;color:#172033;margin:0}main{max-width:1300px;margin:auto;padding:24px}table{background:white;border-collapse:collapse;width:100%}th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd}input,button{font:inherit;padding:8px;margin:8px}.scroll{overflow:auto}.warning{background:#fff2dc}</style><link rel="icon" href="/shipping-cow-icon.png">
+<link rel="stylesheet" href="/shipping-cow.css">
+<link rel="stylesheet" href="/workspace.css?v=3">
+<script src="/workspace.js?v=3" defer></script>
+</head><body class="workspace">
+<div class="workspace-layout">
+<aside class="workspace-menu" aria-label="侧边栏"></aside>
+<main class="workspace-content">
+<a href="/account.html">返回账户</a><nav aria-label="收货视图"><a id="pool-link" href="/carrier-receipts.html">PDA 公共池</a> · <a id="board-link" href="/carrier-receipts.html?view=board">所属域收货看板</a></nav>
+<h1 class="workspace-heading" id="heading">PDA 公共池</h1><p id="description">所有已登录用户均可查看 PDA01 上传的扫描记录。</p>
 <form id="filter"><label>运单 / 批次 <input id="search" maxlength="200"></label><button>搜索 / 刷新</button></form><p id="message" role="status" aria-live="polite"></p>
-<div class="scroll"><table><thead><tr><th>站点</th><th>批次</th><th>承运商 / 运单</th><th>人员</th><th>设备扫描时间</th><th>服务器确认时间</th><th>客户预报</th></tr></thead><tbody id="rows"></tbody></table></div><button id="previous">上一页</button><span id="page"></span><button id="next">下一页</button>
-</main><script src="/carrier-receipts.js"></script></body></html>
+<div class="scroll"><table><thead><tr><th>站点</th><th>批次</th><th>承运商 / 运单</th><th>人员</th><th>设备扫描时间</th><th>服务器确认时间</th><th id="rma" hidden>预报 RMA</th></tr></thead><tbody id="rows"></tbody></table></div><button id="previous">上一页</button><span id="page"></span><button id="next">下一页</button>
+</main>
+</div><script src="/carrier-receipts.js?v=3"></script></body></html>

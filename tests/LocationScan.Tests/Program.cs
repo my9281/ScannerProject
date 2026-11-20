@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Scanner.Server.Model;
 using Scanner.Server.BLL;
-using Scanner.AndroidTester.Services;
+using Scanner.ShippingCowAndroid.Services;
 var repo = new FakeRepository();
 var service = new LocationService(repo);
 var time = DateTimeOffset.Now;

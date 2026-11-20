@@ -1,6 +1,6 @@
 # MAUI 包体优化
 
-适用工程：Scanner.AndroidTester、Scanner.CheckListBoard、Scanner.MaUI。统一配置见 build/MauiPackageSize.targets。
+适用工程：Scanner.ShippingCowAndroid、Scanner.CheckListBoard、Scanner.MaUI。统一配置见 build/MauiPackageSize.targets。
 
 ## 打包调整
 
@@ -16,7 +16,7 @@
 安装 .NET 10 和对应 MAUI 工作负载后，使用：
 
 ```powershell
-dotnet publish Scanner.AndroidTester/Scanner.AndroidTester.csproj -c Release -f net10.0-android -p:ScannerTargetFramework=net10.0-android
+dotnet publish Scanner.ShippingCowAndroid/Scanner.ShippingCowAndroid.csproj -c Release -f net10.0-android -p:ScannerTargetFramework=net10.0-android
 dotnet publish Scanner.CheckListBoard/Scanner.CheckListBoard.csproj -c Release -f net10.0-android -p:ScannerTargetFramework=net10.0-android
 # 在 Mac 上执行
 dotnet publish Scanner.MaUI/Scanner.MaUI.csproj -c Release -f net10.0-maccatalyst -p:ScannerTargetFramework=net10.0-maccatalyst

@@ -4,13 +4,20 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BLUETTI 产品查询</title>
+    @await Html.PartialAsync("_PublicSeo", Scanner.Web.Services.PublicSiteSeo.Products)
     <link rel="stylesheet" href="/bluetti-products.css">
+<link rel="icon" href="/shipping-cow-icon.png">
+<link rel="stylesheet" href="/shipping-cow.css">
+<link rel="stylesheet" href="/workspace.css?v=3">
+<script src="/workspace.js?v=3" defer></script>
 </head>
-<body>
-<main>
+<body class="workspace">
+<div class="workspace-layout">
+<aside class="workspace-menu" aria-label="侧边栏"></aside>
+
+<main class="workspace-content">
     <a href="/">返回首页</a>
-    <h1>BLUETTI 产品查询</h1>
+    <h1 class="workspace-heading">BLUETTI 产品查询</h1>
     <form action="/bluetti-products" method="get" role="search">
         <label for="q">输入 SKU、型号、料号、条码或产品关键词</label>
         <div class="search">
@@ -67,5 +74,6 @@
         }
     }
 </main>
+</div>
 </body>
 </html>

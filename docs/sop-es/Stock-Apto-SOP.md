@@ -6,7 +6,7 @@
 
 Revisión de traducción/índice: 2026-11-09. Se conserva el estado del proceso; las reglas pendientes siguen sin confirmar.
 
-Fuente actualizada: 2026-10-21. Aplicación: **Scanner.AndroidTester (PDA Yicang)**, con “查看良品区” (consultar stock apto) y “自动匹配” (asociación automática) en WPF. Incluye asignación de SN a pallets, carga, verificación, cambios de pallet dentro del área y pasos posteriores. Escanear no acredita que el equipo haya aprobado la inspección.
+Fuente actualizada: 2026-10-21. Aplicación: **Scanner.ShippingCowAndroid (PDA Yicang)**, con “查看良品区” (consultar stock apto) y “自动匹配” (asociación automática) en WPF. Incluye asignación de SN a pallets, carga, verificación, cambios de pallet dentro del área y pasos posteriores. Escanear no acredita que el equipo haya aprobado la inspección.
 
 Estado: instrucciones del sistema contrastadas con el código; validación en almacén pendiente. Faltan reglas de admisión, autorización de movimientos, doble revisión y entrega (sección 9).
 

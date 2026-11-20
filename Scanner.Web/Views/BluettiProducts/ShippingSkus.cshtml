@@ -1,0 +1,84 @@
+@model bool
+@{
+    var title = Model ? "手册配件查询" : "配件与发货 SKU 查询";
+    var catalog = Model ? "manual" : "shipping";
+}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @await Html.PartialAsync("_PublicSeo", Model ? Scanner.Web.Services.PublicSiteSeo.Accessories : Scanner.Web.Services.PublicSiteSeo.Shipping)
+    <link rel="icon" href="/shipping-cow-icon.png">
+    <link rel="stylesheet" href="/shipping-cow.css">
+    <link rel="stylesheet" href="/bluetti-products.css?v=2">
+    <link rel="stylesheet" href="/workspace.css?v=3">
+    <script src="/workspace.js?v=3" defer></script>
+    <script src="/catalog-storage.js?v=2" defer></script>
+    <script src="/catalog-search.js?v=2" defer></script>
+</head>
+<body class="workspace">
+<div class="workspace-layout">
+    <aside class="workspace-menu" aria-label="侧边栏"></aside>
+    <main class="workspace-content" data-catalog="@catalog">
+        <header class="workspace-heading">
+            <h1>@title</h1>
+            <p>@(Model ? "按型号、配件名称或规格查找手册条目。识别内容和数量以原 PDF 为准。" : "查询发货目录中的配件和整机。英寸和磅向上取整。")</p>
+        </header>
+        <button id="open-catalog-preferences" class="catalog-secondary" type="button">Cookie 和本地数据库设置</button>
+        <dialog id="catalog-preferences" aria-labelledby="catalog-preference-title">
+            <h2 id="catalog-preference-title">Cookie 和本地数据库许可</h2>
+            <p>允许本地数据库后，浏览器会保存配件和 SKU 目录，方便后续搜索。Cookie 用于记录许可。两项许可可单独选择，保存后会在当前浏览器记住。</p>
+            <div class="catalog-settings">
+                <label><input id="allow-cookies" type="checkbox"> 允许 Cookie</label>
+                <label><input id="allow-local-db" type="checkbox"> 允许本地数据库</label>
+            </div>
+            <div class="catalog-settings">
+                <button id="decline-catalog-preferences" class="catalog-secondary" type="button">全部拒绝</button>
+                <button id="save-catalog-preferences" type="button">保存选择</button>
+            </div>
+        </dialog>
+        <div class="catalog-settings">
+            <span id="catalog-sync" role="status"></span>
+            <button id="retry-catalog-sync" class="catalog-secondary" type="button" hidden>重新加载目录</button>
+        </div>
+        <form id="catalog-form" role="search">
+            <label for="catalog-query">@(Model ? "型号、配件英文名或规格" : "SKU、型号、描述或备注")</label>
+            <div class="search">
+                <input type="search" id="catalog-query" maxlength="120">
+                <button type="submit">查询</button>
+            </div>
+            @if (Model)
+            {
+                <div class="catalog-settings">
+                    <label>型号 <select id="catalog-model"><option value="">全部型号</option></select></label>
+                    <label>归类 <select id="catalog-category"><option value="">全部归类</option></select></label>
+                </div>
+            }
+        </form>
+        <p id="catalog-count" role="status"></p>
+        <div id="catalog-results" class="scroll" role="region" aria-label="搜索结果" tabindex="0" hidden>
+            <table class="sku-results">
+                <thead>
+                @if (Model)
+                {
+                    <tr><th scope="col">型号</th><th scope="col">配件或条目</th><th scope="col">数量</th><th scope="col">归类</th><th scope="col">手册来源</th></tr>
+                }
+                else
+                {
+                    <tr><th scope="col">SKU</th><th scope="col">描述 / 备注</th><th scope="col">类别</th><th scope="col">型号</th><th scope="col">包装尺寸 (in)</th><th scope="col">重量 (lb)</th><th scope="col">原始尺寸 / 重量 (cm / kg)</th></tr>
+                }
+                </thead>
+                <tbody id="catalog-rows"></tbody>
+            </table>
+        </div>
+        <nav id="catalog-pagination" class="sku-pagination" aria-label="搜索结果分页" hidden>
+            <button id="catalog-prev" type="button">上一页</button>
+            <span id="catalog-page"></span>
+            <button id="catalog-next" type="button">下一页</button>
+        </nav>
+        <noscript><p>请启用 JavaScript 以在浏览器内搜索目录。</p></noscript>
+    </main>
+</div>
+</body>
+</html>

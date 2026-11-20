@@ -1,13 +1,12 @@
 'use strict';
 (() => {
-  const byId = id => document.getElementById(id), token = sessionStorage.getItem('accountToken') || '';
+  const byId = id => document.getElementById(id);
   let cursor = '0', busy = false, count = 0, filter = {}, generation = 0;
   for (let number = 1; number <= 100; number++) {
     const option = document.createElement('option'); option.value = String(number); option.textContent = '位置 ' + number; byId('location').append(option);
   }
   async function load(reset) {
     if (busy) return;
-    if (!token) { location.replace('/login.html'); return; }
     busy = true; byId('more').disabled = true;
     const current = ++generation;
     try {
@@ -18,7 +17,7 @@
       byId('message').textContent = '正在读取数据库…';
       const query = new URLSearchParams({ beforeId: cursor, limit: '100', search: filter.search });
       if (filter.location) query.set('location', filter.location);
-      const response = await fetch('/api/breezary-inbound-scans?' + query, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' });
+      const response = await fetch('/api/breezary-inbound-scans?' + query, { cache: 'no-store' });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.message || '查询失败（HTTP ' + response.status + '）');
       if (!Array.isArray(result.records)) throw new Error('服务器返回的记录格式无效。');

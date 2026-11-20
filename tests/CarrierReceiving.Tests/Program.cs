@@ -68,12 +68,20 @@ foreach (var role in new[] { "viewer", "user", "admin" })
         Check((context.Result is null) == (permission == "receiving.read" || role != "viewer"), role + " " + permission);
     }
 }
+foreach (var (name, permission, allowed) in new[] { ("PDA01", "receiving.write", true), ("tester", "receiving.write", false), ("PDA01", "system.configure", false) })
+{
+    using var provider = new ServiceCollection().AddSingleton<IAccountService>(new TestAccounts("viewer", name)).BuildServiceProvider();
+    var http = new DefaultHttpContext { RequestServices = provider }; http.Request.Headers.Authorization = "Bearer test-session";
+    var context = new AuthorizationFilterContext(new ActionContext(http, new RouteData(), new ActionDescriptor()), []);
+    await new AccountPermissionAttribute(permission) { AllowPdaReceiver = true }.OnAuthorizationAsync(context);
+    Check((context.Result is null) == allowed, "PDA authorization remains restricted to authenticated receiver and receipt permission");
+}
 Console.WriteLine($"Passed {checks} carrier receiving checks.");
 
-sealed class TestAccounts(string role) : IAccountService
+sealed class TestAccounts(string role, string username = "tester") : IAccountService
 {
     public Task<AccountResult?> GetCurrentAsync(string token, CancellationToken cancellationToken = default) =>
-        Task.FromResult<AccountResult?>(new("tester", null, new AccountDomain(7, "test-domain"), role, token, DateTimeOffset.UtcNow.AddMinutes(1)));
+        Task.FromResult<AccountResult?>(new(username, null, new AccountDomain(7, "test-domain"), role, token, DateTimeOffset.UtcNow.AddMinutes(1)));
     public Task<IReadOnlyList<AccountDomain>> GetDomainsAsync(CancellationToken cancellationToken = default) => throw new NotSupportedException();
     public Task<AccountResult> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     public Task<AccountResult?> LoginAsync(LoginRequest request, CancellationToken cancellationToken = default) => throw new NotSupportedException();

@@ -1,6 +1,5 @@
 'use strict';
 (() => {
-  const token = sessionStorage.getItem('accountToken') || '';
   const byId = id => document.getElementById(id);
   const buttons = ['connect', 'sheets', 'load', 'pull', 'push'];
   let state = null, busy = false, abort = null, editing = null;
@@ -16,7 +15,7 @@
   };
   async function api(path, options = {}) {
     const response = await fetch('/api/tencent-docs/' + path, {
-      ...options, cache: 'no-store', headers: { Authorization: 'Bearer ' + token, ...(options.body ? { 'Content-Type': 'application/json' } : {}) }
+      ...options, cache: 'no-store', headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}) }
     });
     const result = await response.json().catch(() => ({}));
     if (response.status === 401) throw new Error('登录已失效，请重新登录 Scanner。');
@@ -136,7 +135,6 @@
   });
   byId('cancel').addEventListener('click', () => abort?.abort());
   (async () => {
-    if (!token) { location.replace('/login.html'); return; }
     try {
       const result = new URLSearchParams(location.search).get('oauth');
       history.replaceState(null, '', location.pathname);

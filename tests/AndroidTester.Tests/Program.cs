@@ -1,4 +1,4 @@
-using Scanner.AndroidTester.Services;
+using Scanner.ShippingCowAndroid.Services;
 void Check(bool value, string message) { if (!value) throw new Exception(message); }
 var session = new ScanSession();
 Check(!session.AddPreScan(" \r\n"), "Blank pre-scan ignored");
@@ -63,6 +63,7 @@ try
 }
 finally { File.Delete(cachePath); File.Delete(cachePath + ".tmp"); }
 Console.WriteLine("PASS: durable batch and half-pair recovery.");
+await ReceivingConnectionChecks.Run();
 sealed class PairHandler : HttpMessageHandler
 {
     public bool Success;

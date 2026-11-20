@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <appSettings>
+    <add key="UploadBaseUrl" value="https://wms.ymforever.com/" />
+    <add key="UploadApiKey" value="Logistarinc" />
+    <add key="ReceivingUsername" value="PDA01" />
+    <add key="ReceivingPassword" value="chen_1992" />
+  </appSettings>
+</configuration>

@@ -4,8 +4,8 @@
     <Compile Include="../../Scanner.Server.Model/PalletScan.cs" Link="PalletScan.cs"/>
     <Compile Include="../../Scanner.Server.DAL/IPalletScanRepository.cs" Link="IPalletScanRepository.cs"/>
     <Compile Include="../../Scanner.Server.BLL/PalletScanService.cs" Link="PalletScanService.cs"/>
-    <Compile Include="../../Scanner.AndroidTester/Services/PalletScanSession.cs" Link="PalletScanSession.cs"/>
-    <Compile Include="../../Scanner.AndroidTester/Services/PalletScanApiService.cs" Link="PalletScanApiService.cs"/>
+    <Compile Include="../../Scanner.ShippingCowAndroid/Services/PalletScanSession.cs" Link="PalletScanSession.cs"/>
+    <Compile Include="../../Scanner.ShippingCowAndroid/Services/PalletScanApiService.cs" Link="PalletScanApiService.cs"/>
   </ItemGroup>
-  <ItemGroup><Compile Include="../../Scanner.AndroidTester/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../Scanner.ShippingCowAndroid/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
 </Project>

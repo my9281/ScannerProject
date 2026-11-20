@@ -4,9 +4,9 @@
 <Compile Include="../../Scanner.Server.DAL/ILocationRepository.cs" />
 <Compile Include="../../Scanner.Server.Model/LocationScan.cs" />
 <Compile Include="../../Scanner.Server.BLL/LocationService.cs" />
-<Compile Include="../../Scanner.AndroidTester/Services/LocationScanSession.cs" />
-<Compile Include="../../Scanner.AndroidTester/Services/LocationScanApiService.cs" />
+<Compile Include="../../Scanner.ShippingCowAndroid/Services/LocationScanSession.cs" />
+<Compile Include="../../Scanner.ShippingCowAndroid/Services/LocationScanApiService.cs" />
 </ItemGroup>
-  <ItemGroup><Compile Include="../../Scanner.AndroidTester/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
+  <ItemGroup><Compile Include="../../Scanner.ShippingCowAndroid/Services/UiText.cs" Link="UiText.cs" /></ItemGroup>
 </Project>
 

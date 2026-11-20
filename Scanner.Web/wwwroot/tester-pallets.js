@@ -36,12 +36,10 @@
     byId('message').textContent = count ? `共 ${groups.size} 个托盘，${count} 条记录。` : '没有符合条件的扫描记录。';
   }
   async function load() {
-    const token = sessionStorage.getItem('accountToken') || '';
-    if (!token) { location.replace('/login.html'); return; }
     byId('refresh').disabled = true;
     byId('message').className = ''; byId('message').textContent = '正在读取数据…';
     try {
-      const response = await fetch('/api/tester-pallet-view', { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' });
+      const response = await fetch('/api/tester-pallet-view', { cache: 'no-store' });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(result.message || `查询失败（HTTP ${response.status}）`);
       if (!Array.isArray(result)) throw new Error('服务器返回的数据格式无效。');

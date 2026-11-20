@@ -15,9 +15,9 @@
 | [工程总览](docs/项目结构审计.md) | 全部 17 个工程的职责、平台、依赖与遗留目录 |
 | [上架 SOP 完备性检查](docs/上架SOP完备性检查.md) | 已覆盖步骤、缺口、系统行为及闭环验收条件 |
 | [总需求与实现](request.md) | 全平台需求、WPF 目录、Web/API/SQL/部署、Mac MAUI、验收与限制 |
-| [PDA AndroidTester](Scanner.AndroidTester/README.md) | 良品区、库位、SKU/SN、打印、恢复和配置 |
+| [PDA AndroidTester](Scanner.ShippingCowAndroid/README.md) | 良品区、库位、SKU/SN、打印、恢复和配置 |
 | [平板 CheckListBoard](Scanner.CheckListBoard/README.md) | 登录、权限、真实工单、待接入模块 |
-| [PDA 配置](Scanner.AndroidTester/APPSETTINGS.md) | 嵌入 XML 地址与密钥 |
+| [PDA 配置](Scanner.ShippingCowAndroid/APPSETTINGS.md) | 嵌入 XML 地址与密钥 |
 | [PDA 打印](docs/AndroidTester打印.md) | 蓝牙 SDK、配对、标签 |
 | [WPF 发布与自动更新](docs/WPF发布与自动更新.md) | 精简发布、默认更新开关、版本清单与部署 |
 | [共享工程](docs/shared-projects.md) | 模型和工程引用 |
@@ -31,7 +31,7 @@ Web 和原 Mac MAUI 统一记录在总文档，专项接口说明保留作技术
 ```powershell
 dotnet build Scanner.WPF/Scanner.WPF.csproj
 dotnet build Scanner.Web/Scanner.Web.csproj
-dotnet build Scanner.AndroidTester/Scanner.AndroidTester.csproj -f net10.0-android
+dotnet build Scanner.ShippingCowAndroid/Scanner.ShippingCowAndroid.csproj -f net10.0-android
 dotnet build Scanner.CheckListBoard/Scanner.CheckListBoard.csproj -f net10.0-android
 ```
 

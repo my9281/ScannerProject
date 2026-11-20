@@ -5,15 +5,23 @@
   <style>
     :root{font-family:"Microsoft YaHei UI",system-ui,sans-serif;color:#172033;background:#f4f7fb}*{box-sizing:border-box}body{margin:0}.shell{width:min(920px,calc(100% - 28px));margin:32px auto}.summary{background:linear-gradient(135deg,#173a70,#2457d6);color:#fff;border-radius:16px;padding:24px 28px;box-shadow:0 12px 34px #18345c26}.summary h1{margin:0 0 20px;font-size:27px}.facts{display:grid;grid-template-columns:1fr 1fr;gap:18px}.label{font-size:13px;opacity:.75;margin-bottom:5px}.value{font-size:22px;font-weight:700;word-break:break-all}.message{min-height:25px;margin:13px 3px;color:#18714b}.error{color:#b02b2b}.card{background:#fff;border:1px solid #dfe6f0;border-radius:14px;box-shadow:0 10px 32px #1720330d;overflow:hidden}table{width:100%;border-collapse:collapse}th,td{padding:14px 20px;border-bottom:1px solid #edf0f5;text-align:left}th{background:#f7f9fc;color:#596579;font-size:14px}tbody tr:last-child td{border-bottom:0}tbody tr:hover td{background:#f8fbff}.empty{text-align:center;padding:48px;color:#7a8496}.number{width:76px;color:#7a8496}@media(max-width:600px){.shell{margin:18px auto}.summary{padding:20px}.facts{grid-template-columns:1fr}.value{font-size:19px}th,td{padding:12px}}
   </style>
+<link rel="icon" href="/shipping-cow-icon.png">
+<link rel="stylesheet" href="/shipping-cow.css">
+<link rel="stylesheet" href="/workspace.css?v=3">
+<script src="/workspace.js?v=3" defer></script>
 </head>
-<body><main class="shell">
-  <section class="summary"><h1>上架托盘数据</h1><div class="facts">
+<body class="workspace">
+<div class="workspace-layout">
+<aside class="workspace-menu" aria-label="侧边栏"></aside>
+<main class="workspace-content shell">
+  <section class="summary workspace-heading"><h1>上架托盘数据</h1><div class="facts">
     <div><div class="label">上架日期</div><div id="date" class="value">—</div></div>
     <div><div class="label">托盘号</div><div id="pallet" class="value">—</div></div>
   </div></section>
   <p id="message" class="message"></p>
   <section class="card"><table><thead><tr><th class="number">序号</th><th>SKU</th><th>SN</th></tr></thead><tbody id="rows"><tr><td colspan="3" class="empty">正在加载……</td></tr></tbody></table></section>
-</main><script>
+</main>
+</div><script>
   const params=new URLSearchParams(location.search),date=params.get('t')?.trim()||'',pallet=params.get('p')?.trim()||'';
   const rows=document.querySelector('#rows'),message=document.querySelector('#message');
   document.querySelector('#date').textContent=date||'未指定';document.querySelector('#pallet').textContent=pallet||'未指定';

@@ -1,0 +1,33 @@
+:root {
+  --cow-blue: #0052c9;
+  --cow-blue-hover: #003f9c;
+  --cow-yellow: #feb81b;
+  --cow-ink: #1a202c;
+  --cow-muted: #515e72;
+  --cow-line: #dce4ef;
+  --cow-surface: #f2f6fc;
+}
+
+.cow-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cow-ink);
+  font-weight: 800;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.cow-brand img {
+  width: 44px;
+  height: auto;
+  flex: none;
+}
+
+.cow-brand small {
+  display: block;
+  margin-top: 4px;
+  color: var(--cow-muted);
+  font-size: 12px;
+  font-weight: 500;
+}

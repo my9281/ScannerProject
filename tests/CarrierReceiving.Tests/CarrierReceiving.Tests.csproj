@@ -2,7 +2,7 @@
   <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
   <ItemGroup><ProjectReference Include="../../Scanner.Web/Scanner.Web.csproj" /></ItemGroup>
   <ItemGroup>
-    <Compile Include="../../Scanner.AndroidTester/Services/CarrierReceivingQueue.cs" Link="CarrierReceivingQueue.cs" />
-    <Compile Include="../../Scanner.AndroidTester/Services/CarrierReceivingApi.cs" Link="CarrierReceivingApi.cs" />
+    <Compile Include="../../Scanner.ShippingCowAndroid/Services/CarrierReceivingQueue.cs" Link="CarrierReceivingQueue.cs" />
+    <Compile Include="../../Scanner.ShippingCowAndroid/Services/CarrierReceivingApi.cs" Link="CarrierReceivingApi.cs" />
   </ItemGroup>
 </Project>

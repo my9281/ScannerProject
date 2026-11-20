@@ -6,31 +6,51 @@ namespace Scanner.Web.Services;
 
 public sealed class CarrierReceiptService(IMySqlConnectionFactory connections)
 {
-    public async Task<object> List(int domain, int page, string search, CancellationToken ct)
+    public async Task<object> List(int domain, int page, string search, bool board, CancellationToken ct)
     {
         if (page is < 0 or > 10000 || search.Length > 200) throw new ArgumentException("分页或搜索条件无效。");
         await using var c = await connections.OpenConnectionAsync(ct); using var cmd = c.CreateCommand();
-        cmd.CommandText = """
+        cmd.CommandText = board ? """
             SELECT s.scan_id,s.site_id,s.batch_number,s.carrier,s.tracking_number,s.operator_username,s.scanned_at,s.uploaded_at,
-              EXISTS(SELECT 1 FROM bluetti_receiving_forecasts f WHERE f.domain_id=s.domain_id AND f.site_id=s.site_id
-                AND f.carrier=s.carrier AND f.tracking_number=s.tracking_number AND f.issue='') AS has_forecast
-            FROM carrier_receipt_scans s WHERE s.domain_id=@domain AND (@search='' OR LOCATE(@search,s.tracking_number)>0 OR LOCATE(@search,s.batch_number)>0)
+                   CASE WHEN d.id=@domain THEN
+                     (SELECT f.rma FROM bluetti_receiving_forecasts f
+                      WHERE f.domain_id=d.id AND f.carrier=s.carrier AND f.tracking_number=s.tracking_number AND f.issue=''
+                      ORDER BY f.last_seen_at DESC,f.id DESC LIMIT 1)
+                   ELSE NULL END AS rma
+            FROM carrier_receipt_scans s
+            LEFT JOIN user_domains d ON d.domain_name=@bluetti AND d.is_enabled=1
+            WHERE (UPPER(s.operator_username)='PDA01' OR s.domain_id=@domain)
+              AND ((d.id=@domain AND EXISTS(
+                     SELECT 1 FROM bluetti_receiving_forecasts f WHERE f.domain_id=d.id
+                       AND f.carrier=s.carrier AND f.tracking_number=s.tracking_number AND f.issue=''))
+                OR (COALESCE(d.id,0)<>@domain AND NOT EXISTS(
+                     SELECT 1 FROM bluetti_receiving_forecasts f WHERE f.domain_id=d.id
+                       AND f.carrier=s.carrier AND f.tracking_number=s.tracking_number AND f.issue='')))
+            """ : """
+            SELECT s.scan_id,s.site_id,s.batch_number,s.carrier,s.tracking_number,s.operator_username,s.scanned_at,s.uploaded_at,NULL AS rma
+            FROM carrier_receipt_scans s
+            WHERE UPPER(s.operator_username)='PDA01'
+            """;
+        cmd.CommandText += """
+
+              AND (@search='' OR LOCATE(@search,s.tracking_number)>0 OR LOCATE(@search,s.batch_number)>0)
             ORDER BY s.uploaded_at DESC,s.scan_id DESC LIMIT 100 OFFSET @offset
             """;
-        cmd.Parameters.AddWithValue("@domain", domain); cmd.Parameters.AddWithValue("@search", search); cmd.Parameters.AddWithValue("@offset", page * 100);
+        if (board)
+        {
+            cmd.Parameters.AddWithValue("@domain", domain);
+            cmd.Parameters.AddWithValue("@bluetti", ReceivingSyncStore.BluettiDomainName);
+        }
+        cmd.Parameters.AddWithValue("@search", search); cmd.Parameters.AddWithValue("@offset", page * 100);
         await using var r = await cmd.ExecuteReaderAsync(ct); var rows = new List<object>();
         while (await r.ReadAsync(ct)) rows.Add(new { scanId = r.GetGuid(0), siteId = r.GetString(1), batchNumber = r.GetString(2), carrier = r.GetString(3), trackingNumber = r.GetString(4),
-            receivedBy = r.GetString(5), scannedAt = DateTime.SpecifyKind(r.GetDateTime(6), DateTimeKind.Utc), uploadedAt = DateTime.SpecifyKind(r.GetDateTime(7), DateTimeKind.Utc), hasForecast = r.GetBoolean(8) });
+            receivedBy = r.GetString(5), scannedAt = DateTime.SpecifyKind(r.GetDateTime(6), DateTimeKind.Utc), uploadedAt = DateTime.SpecifyKind(r.GetDateTime(7), DateTimeKind.Utc),
+            rma = r.IsDBNull(8) ? null : r.GetString(8) });
         return rows;
     }
-    public async Task<CarrierReceiptContext> Context(AccountResult account, CancellationToken ct)
-    {
-        await using var c = await connections.OpenConnectionAsync(ct); using var cmd = c.CreateCommand();
-        cmd.CommandText = "SELECT site_id FROM receiving_sync_settings WHERE domain_id=@domain"; cmd.Parameters.AddWithValue("@domain", account.Domain.Id);
-        string site = (await cmd.ExecuteScalarAsync(ct)) as string ?? "";
-        if (site.Length == 0) throw new ApiException(409, "请管理员先在预报同步配置中保存本站点 ID。");
-        return new(account.Domain.Id, account.UserId, account.Username, site);
-    }
+    // P0 receipt belongs to the authenticated WMS domain, independently of customer forecast configuration.
+    public Task<CarrierReceiptContext> Context(AccountResult account, CancellationToken ct) =>
+        Task.FromResult(new CarrierReceiptContext(account.Domain.Id, account.UserId, account.Username, "domain-" + account.Domain.Id));
 
     public static void ValidateBatch(CarrierReceiptBatch batch, AccountResult account)
     {
@@ -45,15 +65,18 @@ public sealed class CarrierReceiptService(IMySqlConnectionFactory connections)
         }
     }
 
+    public static CarrierReceiptBatch AttributePdaReceipt(CarrierReceiptBatch batch, AccountResult account) =>
+        account.Username.Equals("PDA01", StringComparison.OrdinalIgnoreCase) && batch.Items is not null
+            ? new(batch.Items.Select(s => s is not null && (s.DomainId == 0 || s.DomainId == account.Domain.Id)
+                ? s with { DomainId = account.Domain.Id, OperatorUserId = account.UserId } : s!).ToArray())
+            : batch;
+
     public async Task<CarrierReceiptAcknowledgement> Upload(CarrierReceiptBatch batch, AccountResult account, CancellationToken ct)
     {
+        batch = AttributePdaReceipt(batch, account);
         ValidateBatch(batch, account);
         await using var c = await connections.OpenConnectionAsync(ct); await using var tx = await c.BeginTransactionAsync(ct);
-        using var cmd = c.CreateCommand(); cmd.Transaction = tx;
-        // Lock configured scope until commit. A changed site must never silently receive an old offline batch.
-        cmd.CommandText = "SELECT site_id FROM receiving_sync_settings WHERE domain_id=@domain LOCK IN SHARE MODE";
-        cmd.Parameters.AddWithValue("@domain", account.Domain.Id);
-        string site = (await cmd.ExecuteScalarAsync(ct)) as string ?? "";
+        await AccountManagementService.Revalidate(c, tx, account, false, ct);
         int newlyReceived = 0;
         foreach (var scan in batch.Items.OrderBy(s => s.ScanId))
         {
@@ -77,7 +100,8 @@ public sealed class CarrierReceiptService(IMySqlConnectionFactory connections)
                     throw new ApiException(409, "扫描 ID 已对应其他内容，整批未确认。");
             }
             if (exists) continue;
-            if (site.Length == 0 || scan.SiteId != site) throw new ApiException(409, "站点配置已变更，离线记录已保留，请联系管理员核对原站点。");
+            // Domain/user ownership is validated above. SiteId is retained as scan metadata, including older offline records.
+            // Neither a customer forecast nor the currently configured BLUETTI site is a prerequisite for receipt.
             insert.CommandText = """
                 INSERT INTO carrier_receipt_scans(scan_id,domain_id,operator_user_id,operator_username,device_id,batch_id,batch_number,site_id,carrier,tracking_number,raw_barcode,scanned_at,uploaded_at)
                 VALUES(@id,@domain,@userId,@user,@device,@batchId,@batch,@site,@carrier,@number,@raw,@scanned,UTC_TIMESTAMP(3))

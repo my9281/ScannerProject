@@ -1,6 +1,6 @@
 # 空白输入法
 
-独立的 Android 原生输入法，用于 PDA 扫码时使用紧凑单行数字软键盘。最低 Android 7.0（API 24），与 Scanner.AndroidTester PDA 项目一致；纯 Java，无 CPU 架构限制，无第三方库、无联网或其他 uses-permission。
+独立的 Android 原生输入法，用于 PDA 扫码时使用紧凑单行数字软键盘。最低 Android 7.0（API 24），与 Scanner.ShippingCowAndroid PDA 项目一致；纯 Java，无 CPU 架构限制，无第三方库、无联网或其他 uses-permission。
 
 APK：`../output/NullKeyboard/NullKeyboard-1.1.apk`。
 

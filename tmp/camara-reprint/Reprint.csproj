@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="WPF.Camara"><HintPath>../../WPF.Camara/bin/Debug/net10.0-windows/WPF.Camara.dll</HintPath></Reference>
+    <Reference Include="zxing"><HintPath>../../WPF.Camara/bin/Debug/net10.0-windows/zxing.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>

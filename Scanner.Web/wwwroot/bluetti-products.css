@@ -11,3 +11,15 @@ h2 { font-size: 1.1rem; margin: 0; }
 dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .25rem .8rem; margin-bottom: 0; }
 dt { color: #46536a; }
 dd { margin: 0; white-space: pre-wrap; }
+.sku-results { border-collapse: collapse; width: 100%; }
+.sku-results th, .sku-results td { padding: 12px; border-bottom: 1px solid var(--cow-line); text-align: left; vertical-align: top; }
+.sku-results tbody th { background: white; color: var(--cow-ink); }
+.sku-results .measurements { white-space: nowrap; }
+.sku-pagination { margin-block: 16px; }
+.catalog-settings { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; margin-block: .75rem; }
+.catalog-settings select { font: inherit; max-width: 100%; padding: .35rem; }
+#catalog-preferences { width: min(32rem, calc(100vw - 2rem)); box-sizing: border-box; padding: 1.4rem; border: 1px solid #d5dce7; border-radius: .75rem; color: #172033; }
+#catalog-preferences::backdrop { background: rgb(15 23 42 / 52%); }
+[data-catalog] .catalog-secondary { background: white; color: #124f9b; }
+[data-catalog] [hidden] { display: none; }
+[data-catalog] button:disabled { opacity: .55; cursor: default; }
